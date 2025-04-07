@@ -8,11 +8,8 @@ const SearchButton = () => {
 					<RiSearch2Line className="text-white text-xl" />
 				</div>
 			</div>
-			<div className="flex-1 text-center text-white text-sm">
-				Search for services
-			</div>
+			<div className="flex-1 text-white text-sm">Search for services</div>
 		</button>
 	);
 };
-
 export default SearchButton;

@@ -37,7 +37,7 @@ const Hero = () => {
 						whileInView="show"
 						viewport={{ once: false, amount: 0.8 }}
 					>
-						<div className="flex flex-row gap-4 mt-12">
+						<div className="flex flex-col gap-4 mt-12 md:flex-row">
 							<SearchButton />
 							<CustomButton text="Get Started" />
 						</div>

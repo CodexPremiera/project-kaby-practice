@@ -66,8 +66,8 @@ const Footer = () => {
 								placeholder="Enter your email"
 								className="bg-[#222427] h-16 w-full pl-7 rounded-none outline-none flex items-center"
 							/>
-							<button className="bg-accent w-12 h-12 absolute right-2 top-2 bottom-2 text-primary text-xl flex items-center justify-center">
-								<RiArrowRightLine />
+							<button className="bg-black w-8 h-8 absolute right-2 top-1/2 -translate-y-1/2 text-primary text-xl flex items-center justify-center group rounded-[30px]">
+								<RiArrowRightLine className="text-white text-xl group-hover:rotate-45 transition-all duration-200" />
 							</button>
 						</div>
 					</div>

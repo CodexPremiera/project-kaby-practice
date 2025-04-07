@@ -15,7 +15,7 @@ const FaqItem: React.FC<FaqItemProps> = ({ title, description }) => {
 			<div className="flex items-center justify-between py-6">
 				<h4 className="h4 max-w-[300px] sm:max-w-md md:max-w-max">{title}</h4>
 				<button
-					className="w-[44px] h-[44px] bg-orange-accent-100 flex items-center justify-center"
+					className="w-[44px] h-[44px] bg-orange-accent-100 flex items-center justify-center rounded-[10px]"
 					onClick={() => setIsOpen(!isOpen)}
 				>
 					{isOpen ? (

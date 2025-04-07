@@ -78,7 +78,9 @@ const Header = () => {
 						</ul>
 
 						{/* buttons */}
-						<Button variant="default" className="text-white-primary">Login</Button>
+						<Button variant="default" className="text-white-primary z-20">
+								Login
+						</Button>
 						<Button variant="secondary" className="text-black-100">
 							Signup
 						</Button>

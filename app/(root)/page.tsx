@@ -1,39 +1,54 @@
-import Navbar from "@/components/Navbar";
+"use client";
+import { useEffect, useState } from "react";
 
-export default async function Home( {searchParams}: {
-  searchParams: Promise<{ query?: string }>
-} ) {
-  const query = (await searchParams).query;
+//components
+import Topbar from "@/components/landing/Topbar";
+import Header from "@/components/landing/Header";
+import Hero from "@/components/landing/Hero";
+import About from "@/components/landing/About";
+import Stats from "@/components/landing/Stats";
+import GetStarted from "@/components/landing/GetStarted";
+import Faq from "@/components/landing/Faq";
+import Contact from "@/components/landing/Contact";
+import Footer from "@/components/landing/Footer";
 
-  const posts = [{
-    _createdAt: new Date(),
-    views: 55,
-    author: { _id: 1, name: "Ashley Ken" },
-    description: 'This is a description',
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkx5ZFWDHQo7hnTQYa0LKTQuoEDwqryttKmQ&s",
-    category: 'Robots',
-    title: 'We Robots'
-  }]
+const Home = () => {
+	const [headerActive, setHeaderActive] = useState(false);
 
-  return (
-    <>
-      <Navbar />
-      <section className="pink_container">
-        <h1 className="heading">
-          Pitch Your Startup, <br/>
-          Connect With Entrepreneurs
-        </h1>
+	useEffect(() => {
+		const handleScroll = () => {
+			setHeaderActive(window.scrollY > 200);
+		};
+		window.addEventListener("scroll", handleScroll);
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
 
-        <p className="sub-heading !max-w-3xl">
-          Submit Ideas, Vote on Pitches, and Get Noticed in Virtual Competitions.
-        </p>
-      </section>
+	return (
+		<div className="overflow-hidden">
+			<Topbar />
+			{/* static header */}
+			<div className="relative z-10">
+				<Header />
+			</div>
+			{/* animated header */}
+			<div
+				className={`w-full transition-transform duration-500 fixed top-0 left-0 z-50 ${
+					headerActive ? "translate-y-0" : "-translate-y-full"
+				}`}
+			>
+				<Header />
+			</div>
+			<Hero />
+			<About />
+			<Stats />
+      <GetStarted/>
+			<Faq />
+			<Contact />
+			<Footer />
+		</div>
+	);
+};
 
-      <section className="section_container">
-        <p className="text-30-semibold">
-          {query ? `Search results for ${query}` : 'All startups'}
-        </p>
-      </section>
-    </>
-  );
-}
+export default Home;

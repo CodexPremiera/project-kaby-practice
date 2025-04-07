@@ -33,6 +33,7 @@ const Stats = () => {
 	const ref = useRef<HTMLDivElement>(null);
 	const inView = useInView(ref);
 
+	
 	return (
 		<div ref={ref} className="mt-8 xl:mt-32 bg-black-100 py-10 w-full">
 			<div className="container mx-auto h-full">

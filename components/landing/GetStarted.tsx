@@ -6,6 +6,7 @@ import { RiArrowRightUpLine, RiCheckboxCircleFill } from "react-icons/ri";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
 import Pretitle from "../Pretitle";
+import Testimonial from "./Testimonial";
 
 const userTypeData = [
 	{
@@ -28,7 +29,7 @@ const userTypeData = [
 
 const GetStarted = () => {
 	return (
-		<section className="pt-16 xl:pt-32">
+		<section className="pt-16 xl:pt-32" id="get_started">
 			<div className="container mx-auto">
 				<div className="flex flex-col xl:flex-row relative">
 					{/* text */}
@@ -39,12 +40,13 @@ const GetStarted = () => {
 						viewport={{ once: false, amount: 0.2 }}
 						className="flex-1 max-w-[484px] xl:pt-[54px] mb-12 xl:mb-0 ml-3"
 					>
-						<h2 className="h2 mb-3">Get Started</h2>
+						<Pretitle text="Get Started" />
 						<p className="mb-11 max-w-[480px] mx-auto">
 							Transform with us. Lorem ipsum dolor sit amet, consectetur
 							adipiscing elit, sed do eiusmod tempor incididunt ut labore et
 							dolore magna aliqua.
 						</p>
+						<Testimonial />
 					</motion.div>
 					{/* img */}
 					<motion.div
@@ -82,7 +84,7 @@ const GetStarted = () => {
 										</div>
 
 										{/* Hover Effect: Description and Orange Accent Hue */}
-										<div className="w-full h-[260px] bg-orange-accent-300 absolute bottom-0 left-0 right-0 flex justify-between items-center text-black-100 group-hover:translate-y-0 translate-y-[100%] transition-all duration-500">
+										<div className="w-full h-[260px] bg-orange-accent-300 absolute bottom-0 left-0 right-0 flex justify-between items-center text-black-100 group-hover:translate-y-0 translate-y-[100%] transition-all duration-500 ">
 											<div className="pl-4">
 												<h4 className="text-black-100 font-primary font-semibold tracking-[1px] uppercase mb-2">
 													{item.name}
@@ -98,7 +100,7 @@ const GetStarted = () => {
 											</div>
 											<Link
 												href={item.href}
-												className="w-[44px] xl:w-[60px] xl:h-[60px] h-[20px] bg-orange-accent-100 text-primary text-2xl flex justify-center items-center absolute right-3"
+												className="w-[44px] xl:w-[60px] xl:h-[60px] h-[20px] bg-orange-accent-100 text-primary text-2xl flex justify-center items-center absolute right-3 rounded-[10px]"
 											>
 												<RiArrowRightUpLine />
 											</Link>

@@ -8,7 +8,6 @@ import Hero from "@/components/landing/Hero";
 import About from "@/components/landing/About";
 import GetStarted from "@/components/landing/GetStarted";
 import Faq from "@/components/landing/Faq";
-import Contact from "@/components/landing/Contact";
 import Footer from "@/components/landing/Footer";
 
 const Home = () => {
@@ -43,7 +42,6 @@ const Home = () => {
 			<About />
       		<GetStarted/>
 			<Faq />
-			<Contact />
 			<Footer />
 		</div>
 	);

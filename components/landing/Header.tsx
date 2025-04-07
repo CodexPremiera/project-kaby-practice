@@ -42,11 +42,9 @@ export function ModeToggle() {
 }
 
 const links = [
-	{ name: "home", path: "home" },
 	{ name: "about", path: "about" },
-	{ name: "get started", path: "about" },
-	{ name: "about", path: "about" },
-	{ name: "contact", path: "contact" },
+	{ name: "get started", path: "get_started" },
+	{ name: "faq", path: "faq" },
 ];
 
 const Header = () => {
@@ -62,7 +60,7 @@ const Header = () => {
 							{links.map((link, index) => (
 								<li
 									key={index}
-									className="text-black-100 text-sm uppercase font-primary font-medium tracking-[1.2px] after:content-['/'] after:mx-4 last:after:content-none after:text-accent"
+									className="text-black-100 text-sm uppercase font-primary font-medium tracking-[1.2px] after:mx-4 last:after:content-none after:text-orange-accent-100"
 								>
 									<ScrollLink
 										to={link.path}

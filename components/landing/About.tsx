@@ -3,7 +3,7 @@ import React from 'react'
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
 import Pretitle from '../Pretitle';
-import Stats from './Stats';
+import Stats from './Stat';
 
 const About = () => {
   return (
@@ -14,14 +14,10 @@ const About = () => {
 					initial="hidden"
 					whileInView="show"
 					viewport={{ once: false, amount: 0.8 }}
-					className="text-center max-w-[640px] mx-auto xl:mb-20"
+					className="text-center max-w-[full] mx-auto xl:mb-20"
 				>
-					<Pretitle text="About us" center />
-					<h2 className="h2 mb-3">
-						{" "}
-						Connecting Communities, Empowering Citizens
-					</h2>
-					<p className="mb-4 max-w-[480px] mx-auto">
+					<Pretitle text="About Kaby" center />
+					<p className="mb-4 max-w-[560px] mx-auto">
 						Kaby bridges the gap between barangays and citizens, making public
 						services more efficient, transparent, and accessible for all.
 					</p>

@@ -8,13 +8,20 @@
     --color-gray-100: #E3E3E3;
     --color-gray-300: #CCCCCC; 
     --color-gray-500: #626466;
-    --color-orange-accent: #FB7C1F;
-    --color-yellow-accent: #FB7C1F;
+
+    --color-black-100: #1F1F1F;
+    
+    --color-orange-accent-100: #FFC029;
+    --color-orange-accent-300: #FD9F24;
+    --color-orange-accent-500: #FB7C1F;
+
+    --color-yellow-accent: #FFD856;
     --color-border: #D7D7D7;
 
+    
 
     --shadow-100: 2px 2px 0px 0px rgb(0, 0, 0);
-    --backgroundImage: url('/assets/img/hero/bg.jpg');
+    --backgroundImage: url('/assets/img/hero/bg.png');
     --boxShadow: 0px 4px 54px 10px rgb(18, 19, 21, 0.05);
 }
 
@@ -25,11 +32,13 @@
   }
 
   body {
-    color: var(--color-secondary);
+    color: var(--color-white-primary);
+     font-family: var(--font-work-sans); 
   }
 
   h1, h2, h3, h4, h5, h6 {
-    color: var(--color-primary);
+    color: var(--color-white-primary);
+     font-family: var(--font-work-sans); 
   }
 }
 

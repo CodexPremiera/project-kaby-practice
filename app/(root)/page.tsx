@@ -6,7 +6,6 @@ import Topbar from "@/components/landing/Topbar";
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
 import About from "@/components/landing/About";
-import Stats from "@/components/landing/Stats";
 import GetStarted from "@/components/landing/GetStarted";
 import Faq from "@/components/landing/Faq";
 import Contact from "@/components/landing/Contact";
@@ -42,8 +41,7 @@ const Home = () => {
 			</div>
 			<Hero />
 			<About />
-			<Stats />
-      <GetStarted/>
+      		<GetStarted/>
 			<Faq />
 			<Contact />
 			<Footer />

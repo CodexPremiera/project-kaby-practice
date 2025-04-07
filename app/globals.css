@@ -32,12 +32,12 @@
   }
 
   body {
-    color: var(--color-white-primary);
-     font-family: var(--font-work-sans); 
+    color: var(--color-black-100);
+    font-family: var(--font-work-sans); 
   }
 
   h1, h2, h3, h4, h5, h6 {
-    color: var(--color-white-primary);
+    color: var(--color-black-100);
      font-family: var(--font-work-sans); 
   }
 }

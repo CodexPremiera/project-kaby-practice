@@ -5,7 +5,7 @@ import CustomButton from "../CustomButton";
 
 const Hero = () => {
 	return (
-		<section className="h-[70vh] bg-hero  bg-no-repeat bg-cover bg-center relative">
+		<section className="h-[72vh] bg-hero  bg-no-repeat bg-cover bg-center relative">
 			{/* overlay */}
 			<div className="absolute inset-0 bg-gradient-to-l from-black/0 via-black/50 to-black/70 z-10"></div>
 			<div className="container mx-auto h-full flex items-center">

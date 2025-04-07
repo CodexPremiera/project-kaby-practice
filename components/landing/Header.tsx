@@ -4,7 +4,6 @@ import { Link as ScrollLink } from "react-scroll";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Logo from "../Logo";
-import HeaderMobile from "../HeaderMobile";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -13,6 +12,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import HeaderMobile from "./HeaderMobile";
 
 export function ModeToggle() {
 	const { setTheme } = useTheme();
@@ -78,7 +78,7 @@ const Header = () => {
 						</ul>
 
 						{/* buttons */}
-						<Button variant="default">Login</Button>
+						<Button variant="default" className="text-white-primary">Login</Button>
 						<Button variant="secondary" className="text-black-100">
 							Signup
 						</Button>

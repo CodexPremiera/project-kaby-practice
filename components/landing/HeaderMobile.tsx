@@ -11,9 +11,10 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
+import Logo from "../Logo";
+import Socials from "../Socials";
 
-import Logo from "./Logo";
-import Socials from "./Socials";
+
 
 
 const links = [

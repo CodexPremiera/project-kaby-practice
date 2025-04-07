@@ -14,30 +14,10 @@ import {
 import Logo from "../Logo";
 import Socials from "../Socials";
 
-
-
-
 const links = [
-	{
-		name: "home",
-		path: "home",
-	},
-	{
-		name: "about",
-		path: "about",
-	},
-	{
-		name: "services",
-		path: "services",
-	},
-	{
-		name: "work",
-		path: "work",
-	},
-	{
-		name: "contact",
-		path: "contact",
-	},
+	{ name: "about", path: "about" },
+	{ name: "get started", path: "get_started" },
+	{ name: "faq", path: "faq" },
 ];
 
 const HeaderMobile = () => {
@@ -45,12 +25,12 @@ const HeaderMobile = () => {
 	return (
 		<Sheet open={isOpen} onOpenChange={setIsOpen}>
 			<SheetTrigger
-				className="text-white flex items-center justify-center text-3xl"
+				className="text-black flex items-center justify-center text-3xl"
 				onClick={() => setIsOpen(true)}
 			>
 				<RiMenu3Fill />
 			</SheetTrigger>
-			<SheetContent className="bg-primary border-none text-white">
+			<SheetContent className="bg-white-primary border-none text-black">
 				<div className="flex flex-col pt16 pb-8 items-center justify-between h-full">
 					<SheetHeader>
 						<SheetTitle>
@@ -60,12 +40,12 @@ const HeaderMobile = () => {
 							Navigation Menu
 						</SheetDescription>
 					</SheetHeader>
-					<ul className="w-full flex flex-col gap-10 justify-center text-center">
+					<ul className="w-full flex flex-col gap-14 justify-center text-center">
 						{links.map((link, index) => {
 							return (
 								<li
 									key={index}
-									className="text-white uppercase font-primary font-medium tracking-[1.2px]"
+									className="text-black uppercase font-primary font-medium tracking-[1.2px]"
 								>
 									<ScrollLink
 										to={link.path}
@@ -73,7 +53,7 @@ const HeaderMobile = () => {
 										spy
 										duration={500}
 										className="cursor-pointer"
-										activeClass="text-accent"
+										activeClass="text-orange-accent-500"
 										onClick={() => setIsOpen(false)}
 									>
 										{link.name}
@@ -83,7 +63,7 @@ const HeaderMobile = () => {
 						})}
 					</ul>
 					{/* socials */}
-					<Socials containerStyles="text-white text-xl flex gap-6" />
+					<Socials containerStyles="text-black text-xl flex gap-6" />
 				</div>
 			</SheetContent>
 		</Sheet>

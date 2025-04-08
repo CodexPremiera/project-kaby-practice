@@ -9,7 +9,7 @@ import GetStarted from "@/components/landing/GetStarted";
 import Faq from "@/components/landing/Faq";
 import Footer from "@/components/landing/Footer";
 
-const Home = () => {
+const Landing = () => {
 	const [headerActive, setHeaderActive] = useState(false);
 
 	useEffect(() => {
@@ -30,14 +30,15 @@ const Home = () => {
 					headerActive ? "translate-y-0" : "-translate-y-full"
 				}`}
 			>
-				<Header />
+			<Header />
 			</div>
 			<Hero />
 			<GetStarted />
+			<About />
 			<Faq />
 			<Footer />
 		</div>
 	);
 };
 
-export default Home;
+export default Landing;

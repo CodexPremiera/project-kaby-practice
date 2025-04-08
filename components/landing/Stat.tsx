@@ -35,9 +35,12 @@ const Stats = () => {
 
 	
 	return (
-		<div ref={ref} className="mt-8 xl:mt-32 bg-black-100 py-10 w-full">
+		<div
+			ref={ref}
+			className="relative mt-8 xl:mt-22 bg-primary py-10 w-[80%] card-custom flex justify-center mx-auto"
+		>
 			<div className="container mx-auto h-full">
-				<div className="text-white flex flex-col items-center justify-between xl:flex-row h-full gap-12 text-center xl:text-left">
+				<div className="text-black flex flex-col items-center justify-between xl:flex-row h-full gap-8 text-center xl:text-left mx-[30px]">
 					{statsData.map((item, index) => (
 						<div className="w-full" key={index}>
 							<div className="text-5xl font-semibold">

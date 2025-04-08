@@ -4,23 +4,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme static {
-    --color-white-primary: #FAFAFA;
-    --color-gray-100: #E3E3E3;
-    --color-gray-300: #CCCCCC; 
-    --color-gray-500: #626466;
+    --color-primary: #FAFAFA;
+    --color-secondary: #FB7C1F;
+    --color-accent: #FFC029;
+    --color-black: #1A1A1A;
+    --color-gray: #CCCCCC;
 
-    --color-black-100: #1F1F1F;
-    
-    --color-orange-accent-100: #FFC029;
-    --color-orange-accent-300: #FD9F24;
-    --color-orange-accent-500: #FB7C1F;
-
-    --color-yellow-accent: #FFD856;
-    --color-border: #D7D7D7;
-
-    
-
-    --shadow-100: 2px 2px 0px 0px rgb(0, 0, 0);
     --backgroundImage: url('/assets/img/hero/bg.png');
     --boxShadow: 0px 4px 54px 10px rgb(18, 19, 21, 0.05);
 }
@@ -38,7 +27,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     color: var(--color-black-100);
-     font-family: var(--font-work-sans); 
+    font-family: var(--font-work-sans); 
   }
 }
 
@@ -46,15 +35,15 @@
   .bg-hero {
     background-image: var(--backgroundImage);
   }
-  .shadow-custom {
-    box-shadow: var(--boxShadow);
+  .card-custom {
+    @apply shadow-md rounded-[20px]
   }
   .h1 {
     @apply text-[40px] xl:text-[54px] uppercase font-black leading-[1.1];
   }
 
   .h2 {
-    @apply text-[36px] leading-[1.3] xl:text-[46px] xl:leading-[56px] capitalize font-bold;
+    @apply text-[36px] leading-[1.3] xl:text-[46px] xl:leading-[56px] capitalize font-semibold;
   }
 
   .h3 {
@@ -62,7 +51,7 @@
   }
 
   .h4 {
-    @apply text-2xl font-semibold;
+    @apply text-2xl font-bold;
   }
 }
 

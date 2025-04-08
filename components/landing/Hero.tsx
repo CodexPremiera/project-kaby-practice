@@ -15,9 +15,9 @@ const Hero = () => {
 						initial="hidden"
 						whileInView="show"
 						viewport={{ once: false, amount: 0.8 }}
-						className="h1 text-white-primary mb-4"
+						className="h1 text-black mb-4"
 					>
-						<span className="text-orange-accent-100">Filipinos</span> Public
+						<span className="text-primary">Filipinos</span> Public
 						Service Tool
 					</motion.h1>
 					<motion.p

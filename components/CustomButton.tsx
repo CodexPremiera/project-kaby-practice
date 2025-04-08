@@ -10,7 +10,7 @@ const CustomButton = ({ text }: ButtonProps) => {
 			<div className="flex-1 text-center tracking-[1.2px] text-primary text-sm">
 				{text}
 			</div>
-			<div className="w-8 h-8 mr-1 bg-black-100 rounded-full flex items-center justify-center">
+			<div className="w-8 h-8 mr-1 flex items-center justify-center">
 				<div>
 					<RiArrowRightUpLine className="text-white text-xl group-hover:rotate-45 transition-all duration-200" />
 				</div>

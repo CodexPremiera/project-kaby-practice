@@ -40,7 +40,7 @@ const faqItemVariants = {
 const Faq = () => {
 	return (
 		<section className="pt-16 xl:pt-32" id="faq">
-			<div className="container mx-auto w-full xl:h-auto shadow-custom p-4 xl:p-8 xl:px-[90px] xl:py-[36px] border-t-4 border-orange-accent-300">
+			<div className="container mx-auto w-full xl:h-auto card-custom p-4 xl:p-8 xl:px-[90px] xl:py-[36px]">
 				{/* Text Section */}
 				<motion.div
 					variants={fadeIn("up", 0.2)}

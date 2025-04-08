@@ -17,7 +17,7 @@ const userTypeData = [
 	},
 	{
 		img: "/assets/img/get_started/img.png",
-		name: "For Barangay Officials",
+		name: "For Barangays",
 		description: [
 			"Stay informed",
 			"Access and avail services",
@@ -61,7 +61,7 @@ const GetStarted = () => {
 								return (
 									<div
 										key={index}
-										className="w-full h-[492px] flex-1 relative overflow-hidden group flex justify-center"
+										className="w-full h-[492px] flex-1 relative overflow-hidden group flex justify-center card-custom"
 									>
 										<Image
 											src={item.img}
@@ -77,30 +77,28 @@ const GetStarted = () => {
 										{/* Default Overlay */}
 										<div className="w-full h-[86px] absolute bottom-0 left-0 right-0 flex justify-between items-center text-black-100">
 											<div className="pl-8">
-												<h4 className="text-black-100 font-primary font-semibold tracking-[1px] uppercase">
+												<h4 className="text-black font-primary font-semibold tracking-[1px] uppercase">
 													{item.name}
 												</h4>
 											</div>
 										</div>
 
-										{/* Hover Effect: Description and Orange Accent Hue */}
-										<div className="w-full h-[260px] bg-orange-accent-300 absolute bottom-0 left-0 right-0 flex justify-between items-center text-black-100 group-hover:translate-y-0 translate-y-[100%] transition-all duration-500 ">
-											<div className="pl-4">
-												<h4 className="text-black-100 font-primary font-semibold tracking-[1px] uppercase mb-2">
+										{/* Hover Effect */}
+										<div className="w-full h-[360px] bg-secondary absolute bottom-0 left-0 right-0 flex justify-between pt-[40px] group-hover:translate-y-0 translate-y-[100%] transition-all duration-500 ">
+											<div className="pl-8">
+												<h4 className="text-black h4 font-semibold uppercase mb-2">
 													{item.name}
 												</h4>
 												{item.description.map((desc, idx) => (
 													<div key={idx} className="flex items-center gap-1">
-														<RiCheckboxCircleFill className="text-black-100 text-xl" />
-														<p className="text-black-100 w-[90%] my-1">
-															{desc}
-														</p>
+														<RiCheckboxCircleFill className="text-accent text-xl" />
+														<p className="text-black w-[90%] my-1">{desc}</p>
 													</div>
 												))}
 											</div>
 											<Link
 												href={item.href}
-												className="w-[44px] xl:w-[60px] xl:h-[60px] h-[20px] bg-orange-accent-100 text-primary text-2xl flex justify-center items-center absolute right-3 rounded-[10px]"
+												className="w-[44px] xl:w-[60px] xl:h-[60px] h-[20px] bg-accent text-black text-2xl flex justify-center items-center absolute right-3 bottom-10 rounded-[10px]"
 											>
 												<RiArrowRightUpLine />
 											</Link>

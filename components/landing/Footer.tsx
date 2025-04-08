@@ -11,6 +11,7 @@ import {
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
 import Socials from "../Socials";
+import { Button } from "@/components/ui/button";
 
 
 
@@ -21,11 +22,10 @@ const Footer = () => {
 			initial="hidden"
 			whileInView="show"
 			viewport={{ once: false, amount: 0.1 }}
-			className="mt-16 xl:mt-32 bg-black"
+			className="mt-16 xl:mt-32 bg-black text-primary"
 		>
 			<div className="container mx-auto">
-				<div className="py-12 xl:py-[30px] flex flex-col xl:flex-row gap-[30px] xl:gap-[20px]">
-					{/* logo & text */}
+				<div className="py-12 xl:py-[30px] flex flex-col xl:flex-row gap-[10px] xl:gap-[20px]">
 					{/* contact */}
 					<div className="flex-1 text-border ml-8">
 						<Link href="/" className="flex mb-6">
@@ -53,28 +53,28 @@ const Footer = () => {
 						</ul>
 					</div>
 					{/* newsletter */}
-					<div className="flex-1 text-border ml-8">
+					<div className="flex-1 text-border ml-8 ">
 						<h4 className="h4 text-white mb-10"> Newsletter</h4>
-						<p className="mb-9">
+						<p className="mb-9 max-w-[400px]">
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
 							eiusmod tempor incididunt ut labore et dolore magna aliqua.
 						</p>
 						{/* input */}
-						<div className="relative max-w-[370px]">
+						<div className="relative max-w-[370px] flex flex-col">
 							<input
 								type="text"
 								placeholder="Enter your email"
-								className="bg-[#222427] h-16 w-full pl-7 rounded-none outline-none flex items-center"
+								className="bg-[#222427] h-16 w-full pl-7 rounded-none outline-none flex items-center text-primary"
 							/>
-							<button className="bg-black w-8 h-8 absolute right-2 top-1/2 -translate-y-1/2 text-primary text-xl flex items-center justify-center group rounded-[30px]">
-								<RiArrowRightLine className="text-white text-xl group-hover:rotate-45 transition-all duration-200" />
-							</button>
+							<Button variant="secondary" className="text-black mt-4">
+								Subscribe
+							</Button>
 						</div>
 					</div>
 				</div>
 			</div>
 			{/* copyright */}
-			<div className="container mx-auto xl:px=0 py-10 border-t border-border/10 text-center">
+			<div className="container mx-auto xl:px=0 py-10 border-t border-border/1 text-center">
 				<p className="text-border">
 					Copyright &copy; 2025 UrbanBuild. All rights reserved.
 				</p>

@@ -49,7 +49,7 @@ const links = [
 
 const Header = () => {
 	return (
-		<header className="bg-white-primary py-4">
+		<header className="bg-primary py-4">
 			<div className="container mx-auto">
 				<div className="flex items-center justify-between">
 					{/* logo */}
@@ -76,10 +76,10 @@ const Header = () => {
 						</ul>
 
 						{/* buttons */}
-						<Button variant="default" className="text-white-primary z-20">
+						<Button variant="default" className="text-primary z-20">
 								Login
 						</Button>
-						<Button variant="secondary" className="text-black-100">
+						<Button variant="secondary">
 							Signup
 						</Button>
 						<ModeToggle />

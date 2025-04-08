@@ -42,8 +42,8 @@ export function ModeToggle() {
 }
 
 const links = [
-	{ name: "about", path: "about" },
 	{ name: "get started", path: "get_started" },
+	{ name: "about", path: "about" },
 	{ name: "faq", path: "faq" },
 ];
 
@@ -67,7 +67,7 @@ const Header = () => {
 										smooth
 										spy
 										className="cursor-pointer"
-										activeClass="text-orange-accent-100"
+										activeClass="text-secondary"
 									>
 										{link.name}
 									</ScrollLink>

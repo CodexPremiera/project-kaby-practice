@@ -6,7 +6,7 @@ import SliderBtn from "./SliderBtn";
 
 const Testimonial = () => {
 	return (
-		<Swiper className="bg-white card-custom w-full max-w-[630px] h-[200px] rounded-[20px]">
+		<Swiper className="card-shadow-custom w-full max-w-[630px] h-[200px] rounded-[20px]">
 			{/* slider 1 */}
 			<SwiperSlide>
 				<div className="px-12 md:pl-[60px]  flex items-center gap-9 h-full">
@@ -21,14 +21,12 @@ const Testimonial = () => {
 						/>
 					</div>
 					{/* text */}
-					<div className="flex-1 xl:max-w-[340px] flex flex-col gap-2">
+					<div className="flex-1 xl:max-w-[340px] flex flex-col gap-2 text-black">
 						<p>
 							As a Kapitan, I absolutely love the app! It has been incredibly
 							helpful. I highly recommend it!
 						</p>
-						<p className="font-primary font-semibold text-secondarys">
-							Kap. Derrick C. Yap
-						</p>
+						<p className="text-secondary">Kap. Derrick C. Yap</p>
 					</div>
 				</div>
 			</SwiperSlide>
@@ -46,14 +44,12 @@ const Testimonial = () => {
 						/>
 					</div>
 					{/* text */}
-					<div className="flex-1 xl:max-w-[340px] flex flex-col gap-2">
+					<div className="flex-1 xl:max-w-[340px] flex flex-col gap-2 text-black">
 						<p>
 							As a Kapitan, I absolutely love the app! It has been incredibly
 							helpful. I highly recommend it!
 						</p>
-						<p className="font-primary font-semibold text-secondary">
-							Kap. Derrick C. Yap
-						</p>
+						<p className="text-secondary">Kap. Derrick C. Yap</p>
 					</div>
 				</div>
 			</SwiperSlide>
@@ -71,14 +67,12 @@ const Testimonial = () => {
 						/>
 					</div>
 					{/* text */}
-					<div className="flex-1 xl:max-w-[340px] flex flex-col gap-2">
+					<div className="flex-1 xl:max-w-[340px] flex flex-col gap-2 text-black">
 						<p>
 							As a Kapitan, I absolutely love the app! It has been incredibly
 							helpful. I highly recommend it!
 						</p>
-						<p className="font-primary font-semibold text-secondary">
-							Kap. Derrick C. Yap
-						</p>
+						<p className="text-secondary">Kap. Derrick C. Yap</p>
 					</div>
 				</div>
 			</SwiperSlide>

@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
 import Pretitle from "../Pretitle";
 import Testimonial from "./Testimonial";
+import Stat from "./Stat";
 
 const userTypeData = [
 	{
@@ -29,7 +30,7 @@ const userTypeData = [
 
 const GetStarted = () => {
 	return (
-		<section className="pt-16 xl:pt-32" id="get_started">
+		<section className="pt-16 xl:pt-38" id="get_started">
 			<div className="container mx-auto">
 				<div className="flex flex-col xl:flex-row relative">
 					{/* text */}
@@ -41,13 +42,14 @@ const GetStarted = () => {
 						className="flex-1 max-w-[484px] xl:pt-[54px] mb-12 xl:mb-0 ml-3"
 					>
 						<Pretitle text="Get Started" />
-						<p className="mb-11 max-w-[480px] mx-auto">
-							Transform with us. Lorem ipsum dolor sit amet, consectetur
-							adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-							dolore magna aliqua.
+						<p className="mb-4 max-w-[480px] mx-auto mt-12">
+							Kaby bridges the gap between barangays and citizens, making
+							public services more efficient, transparent, and accessible for
+							all.
 						</p>
-						<Testimonial />
+						<Stat/>
 					</motion.div>
+
 					{/* img */}
 					<motion.div
 						variants={fadeIn("left", 0.2)}
@@ -61,7 +63,7 @@ const GetStarted = () => {
 								return (
 									<div
 										key={index}
-										className="w-full h-[492px] flex-1 relative overflow-hidden group flex justify-center card-custom"
+										className="w-full h-[492px] flex-1 relative overflow-hidden group flex justify-center card-shadow-custom"
 									>
 										<Image
 											src={item.img}

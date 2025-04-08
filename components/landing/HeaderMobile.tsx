@@ -30,7 +30,7 @@ const HeaderMobile = () => {
 			>
 				<RiMenu3Fill />
 			</SheetTrigger>
-			<SheetContent className="bg-white-primary border-none text-black">
+			<SheetContent className="bg-primary border-none text-black">
 				<div className="flex flex-col pt16 pb-8 items-center justify-between h-full">
 					<SheetHeader>
 						<SheetTitle>

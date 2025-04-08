@@ -3,7 +3,6 @@ import React from 'react'
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
 import Pretitle from '../Pretitle';
-import Stats from './Stat';
 
 const About = () => {
   return (
@@ -23,7 +22,6 @@ const About = () => {
 					</p>
 				</motion.div>
 			</div>
-      <Stats/>
 		</div>
 	);
 }

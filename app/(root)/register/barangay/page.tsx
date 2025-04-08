@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Page(props) {
+function Page() {
   return (
     <>
       <div className="bg-blue-100 flex w-full min-h-screen">

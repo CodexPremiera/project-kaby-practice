@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 
 //components
-import Topbar from "@/components/landing/Topbar";
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
 import About from "@/components/landing/About";
@@ -25,11 +24,6 @@ const Home = () => {
 
 	return (
 		<div className="overflow-hidden">
-			<Topbar />
-			{/* static header */}
-			<div className="relative z-10">
-				<Header />
-			</div>
 			{/* animated header */}
 			<div
 				className={`w-full transition-transform duration-500 fixed top-0 left-0 z-50 ${
@@ -39,8 +33,7 @@ const Home = () => {
 				<Header />
 			</div>
 			<Hero />
-			<About />
-      		<GetStarted/>
+			<GetStarted />
 			<Faq />
 			<Footer />
 		</div>

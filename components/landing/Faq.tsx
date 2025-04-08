@@ -55,7 +55,7 @@ const Faq = () => {
 				</motion.div>
 
 				{/* FAQ Items */}
-				<ul className="w-full flex flex-col">
+				<ul className="w-full flex flex-col gap-6">
 					{faqItemsData.map((item, index) => {
 						return (
 							<motion.li

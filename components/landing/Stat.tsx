@@ -22,14 +22,9 @@ const statsData: StatItem[] = [
 		endCountText: "k",
 		text: "Happy Barangays",
 	},
-	{
-		endCountNum: 42,
-		endCountText: "k",
-		text: "Barangays in the Philippines",
-	},
 ];
 
-const Stats = () => {
+const Stat = () => {
 	const ref = useRef<HTMLDivElement>(null);
 	const inView = useInView(ref);
 
@@ -37,7 +32,7 @@ const Stats = () => {
 	return (
 		<div
 			ref={ref}
-			className="relative mt-8 xl:mt-22 bg-primary py-10 w-[80%] card-custom flex justify-center mx-auto"
+			className="relative mt-8 xl:mt-18 py-10 card-shadow-custom flex justify-center mx-auto"
 		>
 			<div className="container mx-auto h-full">
 				<div className="text-black flex flex-col items-center justify-between xl:flex-row h-full gap-8 text-center xl:text-left mx-[30px]">
@@ -63,4 +58,4 @@ const Stats = () => {
 	);
 };
 
-export default Stats;
+export default Stat;

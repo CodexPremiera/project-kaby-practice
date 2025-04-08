@@ -35,8 +35,8 @@
   .bg-hero {
     background-image: var(--backgroundImage);
   }
-  .card-custom {
-    @apply shadow-md rounded-[20px]
+  .card-shadow-custom {
+    @apply shadow-md rounded-[20px] bg-primary;
   }
   .h1 {
     @apply text-[40px] xl:text-[54px] uppercase font-black leading-[1.1];

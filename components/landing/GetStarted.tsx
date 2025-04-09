@@ -6,7 +6,6 @@ import { RiArrowRightUpLine, RiCheckboxCircleFill } from "react-icons/ri";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
 import Pretitle from "../Pretitle";
-import Testimonial from "./Testimonial";
 import Stat from "./Stat";
 
 const userTypeData = [
@@ -14,7 +13,7 @@ const userTypeData = [
 		img: "/assets/img/get_started/img.png",
 		name: "For Citizens",
 		description: ["Streamline processes", "Keep your community engaged."],
-		href: "",
+		href: "/register/citizen",
 	},
 	{
 		img: "/assets/img/get_started/img.png",
@@ -24,7 +23,7 @@ const userTypeData = [
 			"Access and avail services",
 			"Showcase your skills",
 		],
-		href: "",
+		href: "/register/barangay",
 	},
 ];
 

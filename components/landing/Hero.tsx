@@ -1,7 +1,6 @@
 import {motion} from "framer-motion";
 import {fadeIn} from "@/variants";
 import SearchButton from "../SearchButton";
-import CustomButton from "../CustomButton";
 import Logo from "../Logo";
 
 const Hero = () => {

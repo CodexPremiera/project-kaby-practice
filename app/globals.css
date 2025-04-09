@@ -4,54 +4,74 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme static {
-    --color-primary: #FAFAFA;
-    --color-secondary: #FB7C1F;
-    --color-accent: #FFC029;
-    --color-black: #1A1A1A;
-    --color-gray: #CCCCCC;
+	--color-primary: #fafafa;
+	--color-secondary: #fb7c1f;
+	--color-accent: #ffc029;
+	--color-black: #1a1a1a;
+	--color-gray: #cccccc;
 
-    --backgroundImage: url('/assets/img/hero/bg.png');
-    --boxShadow: 0px 4px 54px 10px rgb(18, 19, 21, 0.05);
+	--backgroundImage: url("/assets/img/hero/bg.png");
+	--boxShadow: 0px 4px 54px 10px rgb(18, 19, 21, 0.05);
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
-    outline-color: rgba(0, 0, 0, 0.5);
-  }
+	* {
+		border-color: var(--color-border);
+		outline-color: rgba(0, 0, 0, 0.5);
+	}
 
-  body {
-    color: var(--color-black-100);
-    font-family: var(--font-work-sans); 
-  }
+	body {
+		color: var(--color-black-100);
+		font-family: var(--font-work-sans);
+	}
 
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--color-black-100);
-    font-family: var(--font-work-sans); 
-  }
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		color: var(--color-black-100);
+		font-family: var(--font-work-sans);
+	}
 }
 
 @layer utilities {
-  .bg-hero {
-    background-image: var(--backgroundImage);
-  }
-  .card-shadow-custom {
-    @apply shadow-md rounded-[20px] bg-primary;
-  }
-  .h1 {
-    @apply text-[40px] xl:text-[54px] uppercase font-black leading-[1.1];
-  }
+	.bg-hero {
+		background-image: var(--backgroundImage);
+	}
+	.card-shadow-custom {
+		@apply shadow-md rounded-[20px] bg-primary;
+	}
+	.h1 {
+		@apply text-[40px] xl:text-[54px] uppercase font-black leading-[1.1];
+	}
 
-  .h2 {
-    @apply text-[36px] leading-[1.3] xl:text-[46px] xl:leading-[56px] capitalize font-semibold;
-  }
+	.h2 {
+		@apply text-[36px] leading-[1.3] xl:text-[46px] xl:leading-[56px] capitalize font-semibold;
+	}
 
-  .h3 {
-    @apply text-3xl font-bold; 
-  }
+	.h3 {
+		@apply text-3xl font-bold;
+	}
 
-  .h4 {
-    @apply text-2xl font-bold;
-  }
+	.h4 {
+		@apply text-2xl font-bold;
+	}
+
+	.floating-input {
+		@apply w-full px-2 pt-3 pb-3 text-sm text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black;
+	}
+
+	.floating-label {
+		@apply absolute left-2 top-1/2 transform -translate-y-1/2 text-sm text-gray-500 transition-all duration-200;
+	}
+
+	.floating-input:focus + .floating-label,
+	.floating-input:not(:placeholder-shown) + .floating-label {
+		top: -4px;
+		left: 5px;
+		font-size: 0.75rem;
+		color: #333;
+	}
 }
-

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 //components
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
-import About from "@/components/landing/About";
 import GetStarted from "@/components/landing/GetStarted";
 import Faq from "@/components/landing/Faq";
 import Footer from "@/components/landing/Footer";
@@ -34,7 +33,6 @@ const Landing = () => {
 			</div>
 			<Hero />
 			<GetStarted />
-			<About />
 			<Faq />
 			<Footer />
 		</div>

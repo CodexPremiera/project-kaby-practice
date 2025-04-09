@@ -7,16 +7,17 @@ const supabase = createClient(
   
 
 export async function POST(req) {
+  console.log("pasok here");
   // const supabase = await createClient();
   
   try {
     const body = await req.json();
-    const { barangay_name, city, email, message} = body;
-
+    const { barangay_name, city, region,email, message} = body;
+    console.log(body);
     // const { data, error } = await supabase
     const { data, error } = await supabase
       .from('BarangayAppointment')
-      .insert([{ barangay_name, city, email, message, status:'pending' }]);
+      .insert([{ barangay_name:barangay_name, city, region,email, message, status:'pending' }]);
 
     if (error) {
       return new Response(JSON.stringify({ error: error.message }), { status: 400 });

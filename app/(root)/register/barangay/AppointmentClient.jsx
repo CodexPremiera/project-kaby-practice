@@ -1,30 +1,52 @@
-import Logo from "@/components/Logo";
-import Link from "next/link";
-import AppointmentClientForm from './AppointmentClient';
-const AppointmentForm = () => {
-	return (
-		<section className="flex flex-wrap xl:flex-nowrap">
-			{/* Side Image */}
-			<div className="relative w-full xl:w-1/2 h-[100vh] bg-hero bg-no-repeat bg-cover bg-center">
-				<div className="absolute inset-0 bg-gradient-to-l from-black/0 via-black/50 to-black/70 z-10"></div>
-				<div className="absolute top-4 left-4 z-20">
-					<Logo />
-				</div>
-			</div>
-			<div className="w-full xl:w-1/2 flex justify-center items-center">
-				<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
-					<p className="h4 text-center">Book an Appointment</p>
-					<AppointmentClientForm/>
-					{/* <form className="w-full mt-6">
+// NOTE: https://www.youtube.com/watch?v=TWRA7C0SF40&t=281s  ==== cannot submit etc onclick etc and making the page tsx client side loses benefit of server
+//  side rendering so have that thing into a separate client component then place it so only that part is rendered in the client while rest is server rendered
+'use client'
+import {useState} from 'react'
+import { useRouter } from 'next/navigation';
+
+export default function AppointmentClientForm(){
+    const router = useRouter();
+    const [form,setForm] = useState({
+        barangay_name: '',
+        city: '',
+        region: '',
+        email: '',
+        message: '',
+      });
+      const handleChange = (e) =>{
+        console.log(e.target.value);
+        setForm({...form,[e.target.name]:e.target.value});
+      }
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("submitted");
+        const res = await fetch('/api/auth/register/barangay',{
+            method : 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify(form),
+        })
+        const data = await res.json();
+        print(data);
+        if(res.ok){
+            alert('Request submitted');
+            router.push('/');
+        }else{
+            alert(`Error ${data.error}`);
+        }
+      };
+
+      return (
+                    <form onSubmit={handleSubmit}>
 						<div className="flex gap-3 justify-between">
 							<div className="relative w-full">
 								<input
 									className="floating-input mt-1 w-full text-black"
 									type="text"
-									id="barangay"
-									name="barangay"
+									id="barangay_name"
+									name="barangay_name"
 									placeholder=" "
 									required
+                                    onChange={handleChange}
 								/>
 								<label htmlFor="barangay" className="floating-label">
 									Barangay Name
@@ -38,6 +60,7 @@ const AppointmentForm = () => {
 									name="city"
 									placeholder=" "
 									required
+                                    onChange={handleChange}
 								/>
 								<label htmlFor="city" className="floating-label">
 									City
@@ -52,7 +75,8 @@ const AppointmentForm = () => {
 								name="region"
 								placeholder=" "
 								required
-							/>
+                                onChange={handleChange}
+                                />
 							<label htmlFor="region" className="floating-label">
 								Region
 							</label>
@@ -66,7 +90,8 @@ const AppointmentForm = () => {
 								name="email"
 								placeholder=" "
 								required
-							/>
+                                onChange={handleChange}
+                            />
 							<label htmlFor="email" className="floating-label">
 								Email
 							</label>
@@ -78,7 +103,8 @@ const AppointmentForm = () => {
 								name="message"
 								placeholder=" "
 								required
-							/>
+                                onChange={handleChange}
+                            />
 							<label htmlFor="message" className="floating-label">
 								Message
 							</label>
@@ -91,18 +117,6 @@ const AppointmentForm = () => {
 								Submit
 							</button>
 						</div>
-					</form> */}
-
-					<div className="flex flex-col justify-between items-center mt-5">
-						<p className="text-[12px]">Already have an account? </p>
-						<Link href="/login" className="text-[12px] text-secondary mt-1">
-							Login
-						</Link>
-					</div>
-				</div>
-			</div>
-		</section>
-	);
-};
-
-export default AppointmentForm;
+					</form>
+      );
+}

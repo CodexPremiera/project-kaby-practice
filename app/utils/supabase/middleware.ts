@@ -47,7 +47,7 @@ export async function updateSession(request: NextRequest) {
     url.pathname = '/login'
     // url.pathname = '/'
     console.log(user);
-    console.log(url);
+    // console.log(url);
     // return NextResponse.redirect(url)
     return supabaseResponse;
   }

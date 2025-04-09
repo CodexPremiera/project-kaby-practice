@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 
 //components
-import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
 import GetStarted from "@/components/landing/GetStarted";
 import Faq from "@/components/landing/Faq";
 import Footer from "@/components/landing/Footer";
+import GuestHeader from "@/components/header/GuestHeader";
 
 const Landing = () => {
 	const [headerActive, setHeaderActive] = useState(false);
@@ -29,7 +29,7 @@ const Landing = () => {
 					headerActive ? "translate-y-0" : "-translate-y-full"
 				}`}
 			>
-			<Header />
+				<GuestHeader />
 			</div>
 			<Hero />
 			<GetStarted />

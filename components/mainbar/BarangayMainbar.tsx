@@ -9,14 +9,14 @@ import Logo from "../Logo";
 
 const links = [
 	{ name: "Home", path: "/barangay" },
-	{ name: "Citizen Desk", path: "/barangay/citizen_desk" },
-	{ name: "Service Desk", path: "/barangay/service_desk" },
+	{ name: "Citizens", path: "/barangay/citizen_desk" },
+	{ name: "Services", path: "/barangay/service_desk" },
 	{ name: "Settings", path: "/barangay/account" },
 ];
 
 const BarangayMainbar = () => {
 	return (
-		<div className="z-10 h-[75px] w-screen text-white p-4 fixed left-0 card-shadow-custom bottom-0 sm:w-[75px] sm:h-screen sm:fixed sm:bottom-0 sm:left-0 sm:flex sm:flex-start flex flex-row justify-center items-center py-5 sm:flex-col">
+		<div className="z-10 h-[75px] w-full text-white p-4 fixed left-0 card-shadow-custom bottom-0 sm:w-[75px] sm:h-full sm:fixed sm:bottom-0 sm:left-0 sm:flex sm:flex-start flex flex-row justify-center items-center py-5 sm:flex-col">
 			{links.map((link, index) => (
 				<Link key={index} href={link.path}>
 					<div className="relative flex items-center px-3 py-3 cursor-pointer group transition-all duration-300 hover:bg-gray rounded-[10px] m-6">
@@ -25,10 +25,10 @@ const BarangayMainbar = () => {
 							{link.name === "Home" && (
 								<RiHome4Line className="w-6 h-6 text-black" />
 							)}
-							{link.name === "Citizen Desk" && (
+							{link.name === "Citizens" && (
 								<RiCommunityLine className="w-6 h-6 text-black" />
 							)}
-							{link.name === "Service Desk" && (
+							{link.name === "Services" && (
 								<RiServiceLine className="w-6 h-6 text-black" />
 							)}
 							{link.name === "Settings" && (

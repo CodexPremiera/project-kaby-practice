@@ -8,10 +8,12 @@ const BarangayLayout = ({ children }: { children: ReactNode }) => {
 			{/* Main Bar Area */}
 			<BarangayMainbar />
 			{/* Main Content Area */}
-			<div className="h-full w-full mb-[75px] text-black p-4 fixed sm:w-full sm:h-full sm:fixed sm:ml-[75px] mt-[65px] sm:flex ">
-				{children}
+			<div className="h-screen w-full mb-[75px] text-black fixed sm:h-full sm:ml-[75px] sm:flex-row">
+				<div>
+					<BarangayHeader />
+				</div>
+				<div>{children}</div>
 			</div>
-			<BarangayHeader />
 		</div>
 	);
 };

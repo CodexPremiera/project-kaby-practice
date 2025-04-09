@@ -43,9 +43,9 @@ export function ModeToggle() {
 }
 
 const links = [
-	{ name: "get started", path: "get_started" },
-	{ name: "about", path: "about" },
-	{ name: "faq", path: "faq" },
+	{ name: "about", path: "/about", scroll: false },
+	{ name: "get started", path: "get_started", scroll: true },
+	{ name: "faq", path: "faq", scroll: true },
 ];
 
 const Header = () => {
@@ -53,9 +53,10 @@ const Header = () => {
 		<header className="bg-primary py-4">
 			<div className="container mx-auto">
 				<div className="flex items-center justify-between">
-					{/* logo */}
+					{/* Logo */}
 					<Logo />
-					{/* nav */}
+
+					{/* Navigation */}
 					<nav className="hidden xl:flex items-center gap-12">
 						<ul className="flex">
 							{links.map((link, index) => (
@@ -63,30 +64,40 @@ const Header = () => {
 									key={index}
 									className="text-black-100 text-sm uppercase font-primary font-medium tracking-[1.2px] after:mx-4 last:after:content-none after:text-orange-accent-100"
 								>
-									<ScrollLink
-										to={link.path}
-										smooth
-										spy
-										className="cursor-pointer"
-										activeClass="text-secondary"
-									>
-										{link.name}
-									</ScrollLink>
+									{link.scroll ? (
+										<ScrollLink
+											to={link.path}
+											smooth={true}
+											spy={true}
+											className="cursor-pointer hover:text-secondary"
+											activeClass="text-secondary"
+										>
+											{link.name}
+										</ScrollLink>
+									) : (
+										<Link
+											href={link.path}
+											className="cursor-pointer hover:text-secondary"
+										>
+											{link.name}
+										</Link>
+									)}
 								</li>
 							))}
 						</ul>
 
-						{/* buttons */}
+						{/* Login Button */}
 						<Link href="/login" passHref>
 							<Button asChild variant="default" className="text-black">
 								<span>Login</span>
 							</Button>
 						</Link>
 
+						{/* Theme Toggle */}
 						<ModeToggle />
 					</nav>
 
-					{/* mobile nav */}
+					{/* Mobile Menu */}
 					<div className="xl:hidden">
 						<HeaderMobile />
 					</div>

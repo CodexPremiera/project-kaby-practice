@@ -13,8 +13,6 @@ import { fadeIn } from "@/variants";
 import Socials from "../Socials";
 import { Button } from "@/components/ui/button";
 
-
-
 const Footer = () => {
 	return (
 		<motion.footer
@@ -60,13 +58,16 @@ const Footer = () => {
 							eiusmod tempor incididunt ut labore et dolore magna aliqua.
 						</p>
 						{/* input */}
-						<div className="relative max-w-[370px] flex flex-col">
+						<div className="relative max-w-[400px] flex flex-col items-end">
 							<input
 								type="text"
 								placeholder="Enter your email"
 								className="bg-[#222427] h-16 w-full pl-7 rounded-none outline-none flex items-center text-primary"
 							/>
-							<Button variant="secondary" className="text-black mt-4">
+							<Button
+								variant="secondary"
+								className="text-black font-semibold mt-4 w-[200px]"
+							>
 								Subscribe
 							</Button>
 						</div>

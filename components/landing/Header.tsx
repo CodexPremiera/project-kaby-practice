@@ -76,11 +76,8 @@ const Header = () => {
 						</ul>
 
 						{/* buttons */}
-						<Button variant="default" className="text-primary z-20">
-								Login
-						</Button>
-						<Button variant="secondary">
-							Signup
+						<Button variant="default" className="text-black">
+							Login
 						</Button>
 						<ModeToggle />
 					</nav>

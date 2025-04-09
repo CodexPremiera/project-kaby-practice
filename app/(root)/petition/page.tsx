@@ -1,6 +1,7 @@
 import Logo from "@/components/Logo";
 import Link from "next/link";
-const AppointmentForm = () => {
+
+const Petition = () => {
 	return (
 		<section className="flex flex-wrap xl:flex-nowrap">
 			{/* Side Image */}
@@ -12,58 +13,46 @@ const AppointmentForm = () => {
 				<div className="absolute z-10 container h-full flex items-end justify-end pb-20">
 					<div className="card-shadow-custom bg-primary py-3 px-3 w-full mx-8">
 						<p className="text-secondary mx-3 font-semibold">
-							Interested in transforming your Barangay?
+							Your petition matters.
 						</p>{" "}
-						<p className="mx-3">Let's talk. Book an appointment.</p>
+						<p className="mx-3">
+							This information will be used to invite your Barangay.
+						</p>
 					</div>
 				</div>
 			</div>
 			<div className="w-full xl:w-1/2 flex justify-center items-center">
 				<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
-					<p className="h4 text-center">Book an Appointment</p>
+					<p className="h4 text-center">Make a Petition</p>
 					<form className="w-full mt-6">
 						<div className="flex gap-3 justify-between">
 							<div className="relative w-full">
 								<input
 									className="floating-input mt-1 w-full text-black"
 									type="text"
-									id="barangay"
-									name="barangay"
+									id="first-name"
+									name="first-name"
 									placeholder=" "
 									required
 								/>
-								<label htmlFor="barangay" className="floating-label">
-									Barangay Name
+								<label htmlFor="first-name" className="floating-label">
+									First Name
 								</label>
 							</div>
 							<div className="relative w-full">
 								<input
 									className="floating-input mt-1 w-full text-black"
 									type="text"
-									id="city"
-									name="city"
+									id="last-name"
+									name="last-name"
 									placeholder=" "
 									required
 								/>
-								<label htmlFor="city" className="floating-label">
-									City
+								<label htmlFor="last-name" className="floating-label">
+									Last Name
 								</label>
 							</div>
 						</div>
-						<div className="relative mt-4">
-							<input
-								className="floating-input mt-1 w-full text-black"
-								type="text"
-								id="region"
-								name="region"
-								placeholder=" "
-								required
-							/>
-							<label htmlFor="region" className="floating-label">
-								Region
-							</label>
-						</div>
-
 						<div className="relative mt-4">
 							<input
 								className="floating-input mt-1 w-full text-black"
@@ -78,15 +67,28 @@ const AppointmentForm = () => {
 							</label>
 						</div>
 						<div className="relative mt-4">
-							<textarea
-								className="floating-input mt-1 w-full text-black h-[100px] resize-none"
-								id="message"
-								name="message"
-								placeholder=" "
+							<input
+								className="floating-input mt-1 w-full text-black"
+								type="text"
+								id="barangay"
+								name="barangay"
+								placeholder=""
 								required
 							/>
-							<label htmlFor="message" className="floating-label">
-								Message
+							<label htmlFor="email" className="floating-label">
+								Barangay
+							</label>
+						</div>
+						<div className="relative mt-8">
+							<input
+								className="floating-input mt-1 w-full text-black"
+								type="file"
+								id="file-upload"
+								name="file-upload"
+								required
+							/>
+							<label htmlFor="file-upload" className="floating-label">
+								Proof of Residence
 							</label>
 						</div>
 						<div className="mt-6 flex justify-center items-center">
@@ -110,4 +112,4 @@ const AppointmentForm = () => {
 	);
 };
 
-export default AppointmentForm;
+export default Petition;

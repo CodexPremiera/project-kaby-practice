@@ -1,5 +1,5 @@
-import {motion} from "framer-motion";
-import {fadeIn} from "@/variants";
+import { motion } from "framer-motion";
+import { fadeIn } from "@/variants";
 import SearchButton from "../SearchButton";
 import Logo from "../Logo";
 

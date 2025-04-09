@@ -1,53 +1,42 @@
-import SearchForm from "@/components/SearchForm";
-import StartupCard from "@/components/StartupCard";
-import Navbar from "@/components/Navbar";
+"use client";
+import { useEffect, useState } from "react";
 
-export default async function Home( {searchParams}: {
-  searchParams: Promise<{ query?: string }>
-} ) {
-  const query = (await searchParams).query;
+//components
+import Header from "@/components/landing/Header";
+import Hero from "@/components/landing/Hero";
+import GetStarted from "@/components/landing/GetStarted";
+import Faq from "@/components/landing/Faq";
+import Footer from "@/components/landing/Footer";
 
-  const posts = [{
-    _createdAt: new Date(),
-    views: 55,
-    author: { _id: 1, name: "Ashley Ken" },
-    description: 'This is a description',
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkx5ZFWDHQo7hnTQYa0LKTQuoEDwqryttKmQ&s",
-    category: 'Robots',
-    title: 'We Robots'
-  }]
+const Landing = () => {
+	const [headerActive, setHeaderActive] = useState(false);
 
-  return (
-    <>
-      <Navbar />
-      <section className="pink_container">
-        <h1 className="heading">
-          Pitch Your Startup, <br/>
-          Connect With Entrepreneurs
-        </h1>
+	useEffect(() => {
+		const handleScroll = () => {
+			setHeaderActive(window.scrollY > 200);
+		};
+		window.addEventListener("scroll", handleScroll);
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
 
-        <p className="sub-heading !max-w-3xl">
-          Submit Ideas, Vote on Pitches, and Get Noticed in Virtual Competitions.
-        </p>
+	return (
+		<div className="overflow-hidden">
+			{/* animated header */}
+			<div
+				className={`w-full transition-transform duration-500 fixed top-0 left-0 z-50 ${
+					headerActive ? "translate-y-0" : "-translate-y-full"
+				}`}
+			>
+			<Header />
+			</div>
+			<Hero />
+			<GetStarted />
+			<Faq />
+			<Footer />
+		</div>
+	);
+};
 
-        <SearchForm query={query}/>
-      </section>
-
-      <section className="section_container">
-        <p className="text-30-semibold">
-          {query ? `Search results for ${query}` : 'All startups'}
-        </p>
-
-        <ul className="mt-7 card_grid">
-          {posts?.length > 0 ? (
-            posts.map((post:StartupCardType, index: number) => (
-              <StartupCard key={post?._id} post={post} />
-            ))
-          ) : (
-            <p className="no-results">No startups found</p>
-          )}
-        </ul>
-      </section>
-    </>
-  );
-}
+export default Landing;

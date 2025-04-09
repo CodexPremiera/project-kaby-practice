@@ -8,7 +8,9 @@ const supabase = createClient(
   );
 
   export async function GET() {
-    const {data, error} = await supabase.from('BarangayAppointment').select('*')
+    const {data, error} = await supabase.from('BarangayAppointment').select('*').from()
+    // const {data1,error1} 
+    // const {data : BarangayAppointment} = await supabase.from('BarangayAppointment').select('*');
     console.log(data);
 
     if (error) {

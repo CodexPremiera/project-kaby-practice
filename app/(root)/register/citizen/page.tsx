@@ -1,6 +1,10 @@
 import Logo from "@/components/Logo";
 import Link from "next/link";
-const AppointmentForm = () => {
+
+import { motion } from "framer-motion";
+import { fadeIn } from "@/variants";
+
+const RegisterForm = () => {
 	return (
 		<section className="flex flex-wrap xl:flex-nowrap">
 			{/* Side Image */}
@@ -11,59 +15,48 @@ const AppointmentForm = () => {
 				</div>
 				<div className="absolute z-10 container h-full flex items-end justify-end pb-20">
 					<div className="card-shadow-custom bg-primary py-3 px-3 w-full mx-8">
-						<p className="text-secondary mx-3 font-semibold">
-							Interested in transforming your Barangay?
-						</p>{" "}
-						<p className="mx-3">Let's talk. Book an appointment.</p>
+						<p className="text-black mx-3 font-semibold">Barangay Not Found?</p>{" "}
+						<Link
+							href="/petition"
+							className="mx-4 text-[14px] text-secondary hover:text-black"
+						>
+							Submit a Petition here
+						</Link>
 					</div>
 				</div>
 			</div>
 			<div className="w-full xl:w-1/2 flex justify-center items-center">
 				<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
-					<p className="h4 text-center">Book an Appointment</p>
+					<p className="h4 text-center">Sign Up (Citizen)</p>
 					<form className="w-full mt-6">
 						<div className="flex gap-3 justify-between">
 							<div className="relative w-full">
 								<input
 									className="floating-input mt-1 w-full text-black"
 									type="text"
-									id="barangay"
-									name="barangay"
+									id="first-name"
+									name="first-name"
 									placeholder=" "
 									required
 								/>
-								<label htmlFor="barangay" className="floating-label">
-									Barangay Name
+								<label htmlFor="first-name" className="floating-label">
+									First Name
 								</label>
 							</div>
 							<div className="relative w-full">
 								<input
 									className="floating-input mt-1 w-full text-black"
 									type="text"
-									id="city"
-									name="city"
+									id="last-name"
+									name="last-name"
 									placeholder=" "
 									required
 								/>
-								<label htmlFor="city" className="floating-label">
-									City
+								<label htmlFor="last-name" className="floating-label">
+									Last Name
 								</label>
 							</div>
 						</div>
-						<div className="relative mt-4">
-							<input
-								className="floating-input mt-1 w-full text-black"
-								type="text"
-								id="region"
-								name="region"
-								placeholder=" "
-								required
-							/>
-							<label htmlFor="region" className="floating-label">
-								Region
-							</label>
-						</div>
-
 						<div className="relative mt-4">
 							<input
 								className="floating-input mt-1 w-full text-black"
@@ -78,15 +71,42 @@ const AppointmentForm = () => {
 							</label>
 						</div>
 						<div className="relative mt-4">
-							<textarea
-								className="floating-input mt-1 w-full text-black h-[100px] resize-none"
-								id="message"
-								name="message"
+							<input
+								className="floating-input mt-1 w-full text-black"
+								type="text"
+								id="barangay"
+								name="barangay"
 								placeholder=" "
 								required
 							/>
-							<label htmlFor="message" className="floating-label">
-								Message
+							<label htmlFor="barangay" className="floating-label">
+								Barangay
+							</label>
+						</div>
+						<div className="relative mt-4">
+							<input
+								className="floating-input mt-1 w-full text-black"
+								type="password"
+								id="password"
+								name="password"
+								placeholder=" "
+								required
+							/>
+							<label htmlFor="password" className="floating-label">
+								Password
+							</label>
+						</div>
+						<div className="relative mt-4">
+							<input
+								className="floating-input mt-1 w-full text-black"
+								type="password"
+								id="password"
+								name="password"
+								placeholder=" "
+								required
+							/>
+							<label htmlFor="password" className="floating-label">
+								Confirm Password
 							</label>
 						</div>
 						<div className="mt-6 flex justify-center items-center">
@@ -94,7 +114,7 @@ const AppointmentForm = () => {
 								type="submit"
 								className="w-[300px] py-2 text-white bg-gray rounded-md hover:bg-black"
 							>
-								Submit
+								Sign Up
 							</button>
 						</div>
 					</form>
@@ -110,4 +130,4 @@ const AppointmentForm = () => {
 	);
 };
 
-export default AppointmentForm;
+export default RegisterForm;

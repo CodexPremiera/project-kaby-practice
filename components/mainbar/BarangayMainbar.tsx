@@ -18,9 +18,9 @@ const BarangayMainbar = () => {
 		<div className="z-10 h-[75px] w-screen text-white p-4 fixed left-0 card-shadow-custom bottom-0 sm:w-[75px] sm:h-screen sm:fixed sm:bottom-0 sm:left-0 sm:flex sm:flex-start flex flex-row justify-center items-center py-5 sm:flex-col">
 			{links.map((link, index) => (
 				<Link key={index} href={link.path}>
-					<div className="relative flex items-center py-3 px-3 cursor-pointer group transition-all duration-300 hover:bg-gray rounded-[10px]">
+					<div className="relative flex items-center px-3 py-3 cursor-pointer group transition-all duration-300 hover:bg-gray rounded-[10px] m-6">
 						{/* Icon */}
-						<div className="flex space-around items-center">
+						<div className="flex flex-col sm:flex-row text-[13px] text-center text-black justify-center items-center">
 							{link.name === "Home" && (
 								<RiHome4Line className="w-6 h-6 text-black" />
 							)}
@@ -30,15 +30,14 @@ const BarangayMainbar = () => {
 							{link.name === "Service Desk" && (
 								<RiServiceLine className="w-6 h-6 text-black" />
 							)}
-							<div className="relative top-0">
-								{link.name === "Settings" && (
-									<RiSettings4Line className="w-6 h-6 text-black" />
-								)}
-							</div>
+							{link.name === "Settings" && (
+								<RiSettings4Line className="w-6 h-6 text-black" />
+							)}
+							<p className="sm:hidden">{link.name}</p>
 						</div>
 
-						{/* Text - Appears when hovered, positioned absolutely next to the icon */}
-						<span className="absolute left-full ml-2 text-black text-[12px] text-center group-hover:text-white group-hover:bg-black px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300">
+						{/* Text - Appears when hovered*/}
+						<span className="hidden sm:block sm:absolute sm:left-full sm:ml-2 sm:text-black sm:text-[12px] sm:text-center sm:group-hover:text-white sm:group-hover:bg-black sm:px-2 sm:py-1 sm:rounded-lg sm:opacity-0 sm:group-hover:opacity-100 sm:transition-all sm:duration-300">
 							{link.name}
 						</span>
 					</div>

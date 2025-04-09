@@ -22,7 +22,7 @@ const links = [
 	{ name: "faq", path: "faq", scroll: true },
 ];
 
-const HeaderMobile = () => {
+const GuestHeaderMobile = () => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
@@ -83,4 +83,4 @@ const HeaderMobile = () => {
 	);
 };
 
-export default HeaderMobile;
+export default GuestHeaderMobile;

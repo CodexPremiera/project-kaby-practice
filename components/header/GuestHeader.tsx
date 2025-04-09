@@ -12,8 +12,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import HeaderMobile from "./HeaderMobile";
 import Link from "next/link";
+import GuestHeaderMobile from "./GuestHeaderMobile";
 
 export function ModeToggle() {
 	const { setTheme } = useTheme();
@@ -48,7 +48,7 @@ const links = [
 	{ name: "faq", path: "faq", scroll: true },
 ];
 
-const Header = () => {
+const GuestHeader = () => {
 	return (
 		<header className="bg-primary py-4">
 			<div className="container mx-auto">
@@ -99,7 +99,7 @@ const Header = () => {
 
 					{/* Mobile Menu */}
 					<div className="xl:hidden">
-						<HeaderMobile />
+						<GuestHeaderMobile />
 					</div>
 				</div>
 			</div>
@@ -107,4 +107,4 @@ const Header = () => {
 	);
 };
 
-export default Header;
+export default GuestHeader;

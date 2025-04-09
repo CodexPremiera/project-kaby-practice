@@ -5,6 +5,7 @@ import {
 	RiSettings4Line,
 } from "react-icons/ri";
 import Link from "next/link";
+import Logo from "../Logo";
 
 const links = [
 	{ name: "Home", path: "/barangay" },

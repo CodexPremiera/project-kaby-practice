@@ -1,7 +1,6 @@
 'use server';
 
 import { createClient } from '@supabase/supabase-js';
-import { redirect } from 'next/navigation';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -12,34 +11,32 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const {
-      firstName,
-      lastName,
+      first_name,
+      last_name,
       email,
       barangay,
       password,
-      confirmPassword
+      confirm_password
     } = body;
+ 
+    if (password !== confirm_password) {
 
-    // Optional: validate passwords match
-    if (password !== confirmPassword) {
       return new Response(JSON.stringify({ error: 'Passwords do not match' }), {
         status: 400
       });
     }
-
-    // 1. Sign up user
+    // Sign up user
     const { data: userData, error: error1 } = await supabase.auth.signUp({
       email,
       password
     });
-
     if (error1) {
       return new Response(JSON.stringify({ error: error1.message }), {
         status: 500
       });
     }
-
-    const userId = userData.user?.id;
+    // Save in usertable
+    const userId = userData.user.id;
     if (!userId) {
       return new Response(JSON.stringify({ error: 'No user ID returned' }), {
         status: 500
@@ -47,26 +44,27 @@ export async function POST(request) {
     }
 
     // 2. Insert into userroles with user_id
-    const { error: error2 } = await supabase.from('UserRoles').insert([
+    const { data,error: error2 } = await supabase.from('userroles').insert([
       {
         user_id: userId,
         role: 'citizen'
       }
-    ]);
+    ]).select().single();
 
     if (error2) {
       return new Response(JSON.stringify({ error: error2.message }), {
         status: 500
       });
     }
+    const userId2 = data.id;
 
     // 3. Insert into CitizenProfile with user_id
     const { error: error3 } = await supabase.from('CitizenProfile').insert([
       {
-        user_id: userId,
-        firstName,
-        lastName,
-        barangay
+        user_id: userId2,
+        last_name:last_name,
+        first_name:first_name,
+        barangay:barangay
       }
     ]);
 

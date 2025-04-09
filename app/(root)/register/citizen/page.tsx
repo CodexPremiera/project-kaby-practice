@@ -1,5 +1,6 @@
 import Logo from "@/components/Logo";
 import Link from "next/link";
+import CitizenRegisterForm from './CitizenRegisterClient'
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
@@ -28,7 +29,8 @@ const RegisterForm = () => {
 			<div className="w-full xl:w-1/2 flex justify-center items-center">
 				<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
 					<p className="h4 text-center">Sign Up (Citizen)</p>
-					<form className="w-full mt-6">
+					<CitizenRegisterForm />
+					{/* <form className="w-full mt-6">
 						<div className="flex gap-3 justify-between">
 							<div className="relative w-full">
 								<input
@@ -117,7 +119,7 @@ const RegisterForm = () => {
 								Sign Up
 							</button>
 						</div>
-					</form>
+					</form> */}
 					<div className="flex flex-col justify-between items-center mt-5">
 						<p className="text-[12px]">Already have an account? </p>
 						<Link href="/login" className="text-[12px] text-secondary mt-1">

@@ -1,5 +1,3 @@
-// NOTE: https://www.youtube.com/watch?v=TWRA7C0SF40&t=281s  ==== cannot submit etc onclick etc and making the page tsx client side loses benefit of server
-//  side rendering so have that thing into a separate client component then place it so only that part is rendered in the client while rest is server rendered
 'use client'
 import {useState} from 'react'
 import { useRouter } from 'next/navigation';
@@ -7,25 +5,27 @@ import { useRouter } from 'next/navigation';
 export default function AppointmentClientForm(){
     const router = useRouter();
     const [form,setForm] = useState({
-        barangay_name: '',
-        city: '',
-        region: '',
-        email: '',
-        message: '',
-      });
-      const handleChange = (e) =>{
+        first_name : '',
+        last_name :'',
+        email : '',
+        barangay :'',
+        password: '',
+        confirm_password:''
+    });
+    const handleChange = (e) =>{
         console.log(e.target.value);
         setForm({...form,[e.target.name]:e.target.value});
-      }
-      const handleSubmit = async (e) => {
+    }
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("submitted");
-        const res = await fetch('/api/auth/register/barangay',{
+        const res = await fetch('/api/auth/register/citizen',{
             method : 'POST',
             headers: {'Content-Type': 'application/json'},
             body:JSON.stringify(form),
         })
         const data = await res.json();
+        console.log(data);
         if(res.ok){
             alert('Request submitted');
             router.push('/');
@@ -34,53 +34,39 @@ export default function AppointmentClientForm(){
         }
       };
 
-      return (
-                    <form onSubmit={handleSubmit} className="w-full mt-6">
+    return (
+        <div>
+            <form className="w-full mt-6" onSubmit={handleSubmit}>
 						<div className="flex gap-3 justify-between">
 							<div className="relative w-full">
 								<input
 									className="floating-input mt-1 w-full text-black"
 									type="text"
-									id="barangay_name"
-									name="barangay_name"
+									id="first-name"
+									name="first_name"
 									placeholder=" "
-									required
                                     onChange={handleChange}
+									required
 								/>
-								<label htmlFor="barangay" className="floating-label">
-									Barangay Name
+								<label htmlFor="first-name" className="floating-label">
+									First Name
 								</label>
 							</div>
 							<div className="relative w-full">
 								<input
 									className="floating-input mt-1 w-full text-black"
 									type="text"
-									id="city"
-									name="city"
+									id="last-name"
+									name="last_name"
 									placeholder=" "
-									required
                                     onChange={handleChange}
+									required
 								/>
-								<label htmlFor="city" className="floating-label">
-									City
+								<label htmlFor="last-name" className="floating-label">
+									Last Name
 								</label>
 							</div>
 						</div>
-						<div className="relative mt-4">
-							<input
-								className="floating-input mt-1 w-full text-black"
-								type="text"
-								id="region"
-								name="region"
-								placeholder=" "
-								required
-                                onChange={handleChange}
-                                />
-							<label htmlFor="region" className="floating-label">
-								Region
-							</label>
-						</div>
-
 						<div className="relative mt-4">
 							<input
 								className="floating-input mt-1 w-full text-black"
@@ -88,24 +74,53 @@ export default function AppointmentClientForm(){
 								id="email"
 								name="email"
 								placeholder=" "
-								required
                                 onChange={handleChange}
-                            />
+								required
+							/>
 							<label htmlFor="email" className="floating-label">
 								Email
 							</label>
 						</div>
 						<div className="relative mt-4">
-							<textarea
-								className="floating-input mt-1 w-full text-black h-[100px] resize-none"
-								id="message"
-								name="message"
+							<input
+								className="floating-input mt-1 w-full text-black"
+								type="text"
+								id="barangay"
+								name="barangay"
 								placeholder=" "
-								required
                                 onChange={handleChange}
-                            />
-							<label htmlFor="message" className="floating-label">
-								Message
+								required
+							/>
+							<label htmlFor="barangay" className="floating-label">
+								Barangay
+							</label>
+						</div>
+						<div className="relative mt-4">
+							<input
+								className="floating-input mt-1 w-full text-black"
+								type="password"
+								id="password"
+								name="password"
+								placeholder=" "
+                                onChange={handleChange}
+								required
+							/>
+							<label htmlFor="password" className="floating-label">
+								Password
+							</label>
+						</div>
+						<div className="relative mt-4">
+							<input
+								className="floating-input mt-1 w-full text-black"
+								type="password"
+								id="password"
+								name="confirm_password"
+								placeholder=" "
+                                onChange={handleChange}
+								required
+							/>
+							<label htmlFor="password" className="floating-label">
+								Confirm Password
 							</label>
 						</div>
 						<div className="mt-6 flex justify-center items-center">
@@ -113,9 +128,10 @@ export default function AppointmentClientForm(){
 								type="submit"
 								className="w-[300px] py-2 text-white bg-gray rounded-md hover:bg-black"
 							>
-								Submit
+								Sign Up
 							</button>
 						</div>
 					</form>
-      );
+        </div>
+    );
 }

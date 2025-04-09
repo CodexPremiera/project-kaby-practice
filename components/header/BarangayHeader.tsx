@@ -3,6 +3,7 @@
 import Logo from "../Logo";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "../ModeToggle";
+import { RiUser3Line } from "react-icons/ri";
 
 const BarangayHeader = () => {
 	return (
@@ -10,14 +11,14 @@ const BarangayHeader = () => {
 			<div className="flex">
 				<Logo />
 			</div>
-
 			<div className="flex gap-6 mx-8">
 				<div>
 					<Button variant="barangay">Barangay</Button>
 				</div>
-				<div>
-					<ModeToggle />
-				</div>
+				<ModeToggle />
+				<Button variant="outline" size="icon">
+					<RiUser3Line className="text-black" />
+				</Button>
 			</div>
 		</header>
 	);

@@ -13,6 +13,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import HeaderMobile from "./HeaderMobile";
+import Link from "next/link";
 
 export function ModeToggle() {
 	const { setTheme } = useTheme();
@@ -76,9 +77,12 @@ const Header = () => {
 						</ul>
 
 						{/* buttons */}
-						<Button variant="default" className="text-black">
-							Login
-						</Button>
+						<Link href="/login" passHref>
+							<Button asChild variant="default" className="text-black">
+								<span>Login</span>
+							</Button>
+						</Link>
+
 						<ModeToggle />
 					</nav>
 

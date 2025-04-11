@@ -23,6 +23,36 @@ const CitizenVerification = () => {
 			email: "alice@example.com",
 			status: "Pending",
 		},
+		{
+			name: "Alice Brown",
+			date: "2025-04-07",
+			email: "alice@example.com",
+			status: "Pending",
+		},
+		{
+			name: "Alice Brown",
+			date: "2025-04-07",
+			email: "alice@example.com",
+			status: "Pending",
+		},
+		{
+			name: "Alice Brown",
+			date: "2025-04-07",
+			email: "alice@example.com",
+			status: "Pending",
+		},
+		{
+			name: "Alice Brown",
+			date: "2025-04-07",
+			email: "alice@example.com",
+			status: "Pending",
+		},
+		{
+			name: "Alice Brown",
+			date: "2025-04-07",
+			email: "alice@example.com",
+			status: "Pending",
+		},
 	];
 
 	const [statuses, setStatuses] = useState(data.map((d) => d.status));
@@ -35,7 +65,7 @@ const CitizenVerification = () => {
 
 	return (
 		<div className="min-h-auto flex justify-center pt-4">
-			<div className="w-full max-w-5xl p-4 shadow-sm bg-white rounded-lg">
+			<div className="w-full p-4 shadow-sm bg-white rounded-lg mx-8">
 				<table className="min-w-full divide-y divide-gray-200 text-sm">
 					<thead className="bg-gray-100">
 						<tr>
@@ -43,7 +73,7 @@ const CitizenVerification = () => {
 								Name
 							</th>
 							<th className="px-4 py-2 text-left font-medium text-gray-700">
-								Date Requested
+								Date
 							</th>
 							<th className="px-4 py-2 text-left font-medium text-gray-700">
 								Email
@@ -56,7 +86,7 @@ const CitizenVerification = () => {
 							</th>
 						</tr>
 					</thead>
-					<tbody className="divide-y divide-gray-100">
+					<tbody className="divide-y divide-gray-100 overflow-y-auto">
 						{data.map((row, i) => (
 							<tr key={i}>
 								<td className="px-4 py-2">{row.name}</td>
@@ -66,10 +96,11 @@ const CitizenVerification = () => {
 									<select
 										value={statuses[i]}
 										onChange={(e) => handleStatusChange(i, e.target.value)}
-										className="w-28 px-2 py-2 bg-primary text-sm border-1 rounded-[10px]"
+										className="w-32 px-2 py-2 bg-primary text-sm border-1 rounded-[10px]"
 									>
-										<option value="Approve">Approve</option>
 										<option value="Pending">Pending</option>
+										<option value="Accept">Accept</option>
+										<option value="Reject">Reject</option>
 									</select>
 								</td>
 								<td className="px-4 py-2">

@@ -37,9 +37,6 @@
 }
 
 @layer utilities {
-	.main-sm-width {
-		width: calc(100% - 75px);
-	}
 	.bg-hero {
 		background-image: var(--backgroundImage);
 	}
@@ -90,6 +87,6 @@
 		color: #333;
 	}
 	.tab-style {
-		@apply text-[14px] px-4 py-2 cursor-pointer hover:text-secondary focus:outline-none;
+		@apply py-3 w-auto cursor-pointer hover:text-secondary focus:outline-none;
 	}
 }

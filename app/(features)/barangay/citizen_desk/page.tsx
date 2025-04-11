@@ -1,44 +1,53 @@
 "use client";
 
-import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
-import "react-tabs/style/react-tabs.css";
-import Dashboard from "./Dashboard";
-import CitizenVerification from "./CitizenVerification";
-import BadgeRequest from "./BadgeRequest";
-import ReportedUser from "./ReportedUser";
+import { useState } from "react";
+import BackTopSection from "@/components/BackTopSection";
+import Dashboard from "../citizen_desk/Dashboard";
+import CitizenVerification from "../citizen_desk/CitizenVerification";
+import BadgeRequest from "../citizen_desk/BadgeRequest";
+import ReportedUser from "../citizen_desk/ReportedUser";
+import TopSection from "@/components/TopSection";
 
-const CitizenDesk = () => {
+// Tab component map
+const TAB_COMPONENTS = {
+	Dashboard: <Dashboard />,
+	CitizenVerification: <CitizenVerification />,
+	BadgeRequest: <BadgeRequest />,
+	ReportedUser: <ReportedUser />,
+};
+
+const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
+	Dashboard: "Dashboard",
+	CitizenVerification: "Citizen Verification",
+	BadgeRequest: "Badge Request",
+	ReportedUser: "Reported User",
+};
+
+const Account = () => {
+	const [activeTab, setActiveTab] =
+		useState<keyof typeof TAB_COMPONENTS>("Dashboard");
+
 	return (
-		<div>
-			<div className="bg-gray-100 text-white p-4">
-				<h2 className="h4 font-normal mx-4 text-gray">Citizen Desk</h2>
-			</div>
+		<div className="flex-1 overflow-y-auto">
+			<nav className="flex gap-6 pl-3 border-b border-gray-200">
+				{Object.keys(TAB_COMPONENTS).map((tab) => (
+					<button
+						key={tab}
+						onClick={() => setActiveTab(tab as keyof typeof TAB_COMPONENTS)}
+						className={`text-sm px-4 py-3 border-b-2 transition-colors ${
+							activeTab === tab
+								? "border-secondary text-secondary"
+								: "border-transparent text-gray-600 hover:text-secondary"
+						}`}
+					>
+						{TAB_LABELS[tab as keyof typeof TAB_LABELS]}
+					</button>
+				))}
+			</nav>
 
-			<Tabs selectedTabClassName="border-b-2 border-secondary text-secondary">
-				<TabList className="flex space-x-6 mt-4 mx-4 border-b border-gray-200">
-					<Tab className="tab-style">Dashboard</Tab>
-					<Tab className="tab-style">Citizen Verification</Tab>
-					<Tab className="tab-style">Badge Request</Tab>
-					<Tab className="tab-style">Reported User</Tab>
-				</TabList>
-
-				<div className="max-h-[calc(100vh-100px)] overflow-y-auto p-4 space-y-4">
-					<TabPanel>
-						<Dashboard />
-					</TabPanel>
-					<TabPanel>
-						<CitizenVerification />
-					</TabPanel>
-					<TabPanel>
-						<BadgeRequest />
-					</TabPanel>
-					<TabPanel>
-						<ReportedUser />
-					</TabPanel>
-				</div>
-			</Tabs>
+			<div className="mt-4 mx-6">{TAB_COMPONENTS[activeTab]}</div>
 		</div>
 	);
 };
 
-export default CitizenDesk;
+export default Account;

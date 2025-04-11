@@ -46,7 +46,7 @@ const BadgeRequest = () => {
 
 	return (
 		<div className="min-h-auto flex justify-center pt-4">
-			<div className="w-full max-w-5xl p-4 shadow-sm bg-white rounded-lg">
+			<div className="w-full p-4 shadow-sm bg-white rounded-lg mx-8">
 				<table className="min-w-full divide-y divide-gray-200 text-sm">
 					<thead className="bg-gray-100">
 						<tr>

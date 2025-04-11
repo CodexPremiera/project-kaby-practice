@@ -44,7 +44,7 @@ const ViewService = () => {
 				{/* Description */}
 				<div>
 					<p className="mb-2 h6 ">Description:</p>
-					<div className="bg-gray/30 rounded-[10px] p-3 h-[150px] h6-light">
+					<div className="bg-gray/30 rounded-[10px] p-3 h-[100px] h6-light">
 						Some Description Here
 					</div>
 				</div>

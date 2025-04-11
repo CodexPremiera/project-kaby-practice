@@ -9,9 +9,11 @@ const BarangayLayout = ({ children }: { children: ReactNode }) => {
 			<BarangayMainbar />
 
 			{/* Main Content */}
-			<div className="flex flex-col flex-1 sm:ml-[75px] overflow-hidden">
+			<div className="flex flex-col flex-1 sm:ml-[75px] h-full">
 				<BarangayHeader />
-				<div className="mt-[65px] flex-1">{children}</div>
+				<div className="mt-[65px] flex-1 overflow-y-auto scrollbar-hide">
+					{children}
+				</div>
 			</div>
 		</div>
 	);

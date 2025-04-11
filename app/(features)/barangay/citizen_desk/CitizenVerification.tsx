@@ -67,7 +67,7 @@ const CitizenVerification = () => {
 		<div className="min-h-auto flex justify-center pt-4">
 			<div className="w-full p-4 shadow-sm bg-white rounded-lg mx-8">
 				<table className="min-w-full divide-y divide-gray-200 text-sm">
-					<thead className="bg-gray-100">
+					<thead className="bg-gray-100 ">
 						<tr>
 							<th className="px-4 py-2 text-left font-medium text-gray-700">
 								Name
@@ -86,7 +86,7 @@ const CitizenVerification = () => {
 							</th>
 						</tr>
 					</thead>
-					<tbody className="divide-y divide-gray-100 overflow-y-auto">
+					<tbody className="divide-y divide-gray-100 ">
 						{data.map((row, i) => (
 							<tr key={i}>
 								<td className="px-4 py-2">{row.name}</td>

@@ -1,14 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import BackTopSection from "@/components/BackTopSection";
-import Dashboard from "../citizen_desk/Dashboard";
-import CitizenVerification from "../citizen_desk/CitizenVerification";
-import BadgeRequest from "../citizen_desk/BadgeRequest";
-import ReportedUser from "../citizen_desk/ReportedUser";
-import TopSection from "@/components/TopSection";
+import Dashboard from "./Dashboard";
+import CitizenVerification from "./CitizenVerification";
+import BadgeRequest from "./BadgeRequest";
+import ReportedUser from "./ReportedUser";
 
-// Tab component map
 const TAB_COMPONENTS = {
 	Dashboard: <Dashboard />,
 	CitizenVerification: <CitizenVerification />,
@@ -23,13 +20,13 @@ const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
 	ReportedUser: "Reported User",
 };
 
-const Account = () => {
+const CitizenDesk = () => {
 	const [activeTab, setActiveTab] =
 		useState<keyof typeof TAB_COMPONENTS>("Dashboard");
 
 	return (
-		<div className="flex-1 overflow-y-auto">
-			<nav className="flex gap-6 pl-3 border-b border-gray-200">
+		<div className="h-full flex flex-col">
+			<nav className="top-0  bg-white flex gap-6 pl-3 border-b border-gray-200">
 				{Object.keys(TAB_COMPONENTS).map((tab) => (
 					<button
 						key={tab}
@@ -45,9 +42,9 @@ const Account = () => {
 				))}
 			</nav>
 
-			<div className="mt-4 mx-6">{TAB_COMPONENTS[activeTab]}</div>
+			<div className="flex-1 p-4">{TAB_COMPONENTS[activeTab]}</div>
 		</div>
 	);
 };
 
-export default Account;
+export default CitizenDesk;

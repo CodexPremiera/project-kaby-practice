@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import SearchModal from "@/components/mainbar/SearchModal";
+import SearchModal from "@/components/modal/SearchModal";
 import { useSearchParams } from "next/navigation";
 import { RiFilter3Line, RiSearch2Line } from "react-icons/ri";
 import Logo from "@/components/Logo";

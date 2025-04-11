@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
 import Logo from "../Logo";
-import SearchModal from "../mainbar/SearchModal";
+import SearchModal from "../modal/SearchModal";
 import SearchButton from "../SearchButton";
 
 const Hero = () => {

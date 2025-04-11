@@ -1,6 +1,6 @@
 "use client";
 import Logo from "@/components/Logo";
-import EmailModal from "@/components/mainbar/EmailModal";
+import EmailModal from "@/components/modal/EmailModal";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 const LoginForm = () => {

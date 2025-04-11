@@ -10,8 +10,8 @@ import ReportedUser from "./ReportedUser";
 const CitizenDesk = () => {
 	return (
 		<div>
-			<div className="bg-secondary text-white p-4">
-				<h2 className="h4 font-semibold mx-4">Citizen Desk</h2>
+			<div className="bg-gray-100 text-white p-4">
+				<h2 className="h4 font-normal mx-4 text-gray">Citizen Desk</h2>
 			</div>
 
 			<Tabs selectedTabClassName="border-b-2 border-secondary text-secondary">

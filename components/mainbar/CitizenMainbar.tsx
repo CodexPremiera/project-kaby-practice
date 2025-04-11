@@ -3,7 +3,6 @@
 import {
 	RiAlarmWarningLine,
 	RiCalendar2Line,
-	RiCommunityLine,
 	RiHome4Line,
 	RiServiceLine,
 	RiSettings4Line,
@@ -23,7 +22,7 @@ const CitizenMainbar = () => {
 	const pathname = usePathname();
 
 	return (
-		<div className="z-10 h-[75px] w-full p-4 fixed left-0 card-shadow-custom bottom-0 sm:w-[75px] sm:h-full sm:fixed sm:bottom-0 sm:left-0 sm:flex sm:flex-start flex flex-row justify-center items-center py-5 sm:flex-col">
+		<div className="z-10 fixed left-0 bottom-0 w-full h-[75px] sm:w-[75px] sm:h-full sm:flex-col flex flex-row justify-center items-center p-4 card-shadow-custom text-black">
 			{links.map((link, index) => {
 				const isActive = pathname === link.path;
 				const iconColor = isActive ? "text-secondary" : "text-black";

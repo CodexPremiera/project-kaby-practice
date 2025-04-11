@@ -8,7 +8,7 @@ import Link from "next/link";
 
 const BarangayHeader = () => {
 	return (
-		<header className="h-[65px] flex justify-between items-center border-b border-gray/20">
+		<header className="h-[65px] flex fixed w-full sm:w-[95%] bg-white justify-between items-center border-b border-gray/20">
 			<div className="flex">
 				<Logo />
 			</div>

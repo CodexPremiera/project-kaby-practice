@@ -1,12 +1,9 @@
-import SearchResults from "../../search/SearchResults";
+import "react-tabs/style/react-tabs.css";
+import ServiceView from "@/components/service/ManageServiceCard";
+import ManageServiceCard from "@/components/service/ManageServiceCard";
 
 const ServiceDesk = () => {
-	return (
-		<div>
-			<h2>Service Desk</h2>
-			<p>Manage your service request and Edit your service card here.</p>
-		</div>
-	);
+	return <ManageServiceCard />;
 };
 
 export default ServiceDesk;

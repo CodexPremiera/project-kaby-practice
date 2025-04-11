@@ -1,15 +1,15 @@
 "use client";
 
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
-import ProfileTab from "@/components/ProfileTab";
+import ProfileTab from "@/components/profile/ProfileTab";
 import SearchResults from "../search/SearchResults";
 
 const BarangayHome = () => {
 	return (
-		<div>
+		<div className="h-screen overflow-y-auto">
 			<ProfileTab />
 			<Tabs selectedTabClassName="border-b-2 border-secondary text-secondary">
-				<TabList className="flex space-x-6 mt-4 mx-4 border-b border-gray/20">
+				<TabList className="flex flex-wrap justify-center sm:justify-start space-x-6 mt-4 px-4 sm:px-13 border-b border-gray/20">
 					<Tab className="tab-style">Services</Tab>
 					<Tab className="tab-style">Announcements</Tab>
 				</TabList>

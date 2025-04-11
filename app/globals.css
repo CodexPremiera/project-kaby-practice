@@ -37,6 +37,9 @@
 }
 
 @layer utilities {
+	.main-sm-width {
+		width: calc(100% - 75px);
+	}
 	.bg-hero {
 		background-image: var(--backgroundImage);
 	}
@@ -58,6 +61,18 @@
 	.h4 {
 		@apply text-2xl font-bold;
 	}
+	.h5 {
+		@apply text-[16px] font-semibold;
+	}
+	.h6 {
+		@apply text-[14px]  text-black;
+	}
+	.h6-light {
+		@apply text-[14px]  text-black/50;
+	}
+	.text-small {
+		font-size: var(--font-size-small);
+	}
 
 	.floating-input {
 		@apply w-full px-2 pt-3 pb-3 text-sm text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black;
@@ -75,6 +90,6 @@
 		color: #333;
 	}
 	.tab-style {
-		@apply text-[16px] px-4 py-2 cursor-pointer hover:text-secondary focus:outline-none;
+		@apply text-[14px] px-4 py-2 cursor-pointer hover:text-secondary focus:outline-none;
 	}
 }

@@ -7,7 +7,7 @@ import { RiUser3Line } from "react-icons/ri";
 
 const CitizenHeader = () => {
 	return (
-		<header className="h-[65px] sm:w-[95%] flex justify-between items-center border-b border-gray/20">
+		<header className="h-[65px] flex justify-between items-center border-b border-gray/20">
 			<div className="flex">
 				<Logo />
 			</div>

@@ -1,3 +1,5 @@
+import SearchResults from "../../search/SearchResults";
+
 const ServiceDesk = () => {
 	return (
 		<div>

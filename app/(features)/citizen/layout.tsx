@@ -9,7 +9,7 @@ const CitizenLayout = ({ children }: { children: ReactNode }) => {
 			{/* Main Bar Area */}
 			<CitizenMainbar />
 			{/* Main Content Area */}
-			<div className="h-screen w-full mb-[75px] text-black fixed sm:h-full sm:ml-[75px] sm:flex-row">
+			<div className="h-screen w-full mb-[75px] text-black fixed sm:h-full sm:ml-[75px] sm:flex-row sm:w-[95%]">
 				<div>
 					<CitizenHeader />
 				</div>

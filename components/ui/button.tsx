@@ -23,6 +23,7 @@ const buttonVariants = cva(
 				barangay: "bg-black text-white shadow-xs rounded-[30px]",
 				citizen: "bg-black text-white shadow-xs",
 				table: "bg-primary text-black shadow-xs hover:bg-gray",
+				tag: "bg-primary border border-gray text-black shadow-xs hover:bg-black hover:text-white",
 			},
 			size: {
 				default: "h-9 px-4 py-2 has-[>svg]:px-3",

@@ -1,10 +1,14 @@
+"use client";
 import Logo from "@/components/Logo";
 import EmailModal from "@/components/mainbar/EmailModal";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 const LoginForm = () => {
+	const searchParams = useSearchParams();
+	const show = searchParams.get("show");
 	return (
 		<section>
-			<EmailModal />
+			{show && <EmailModal />}
 			<div className="flex flex-wrap xl:flex-nowrap">
 				{/* Side Image */}
 				<div className="relative w-full xl:w-1/2 h-[100vh] bg-hero bg-no-repeat bg-cover bg-center">

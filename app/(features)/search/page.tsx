@@ -2,9 +2,7 @@
 import React from "react";
 import SearchModal from "@/components/mainbar/SearchModal";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-import DefaultHeader from "@/components/header/DefaultHeader";
-import { RiFilter2Line, RiFilter3Line, RiSearch2Line } from "react-icons/ri";
+import { RiFilter3Line, RiSearch2Line } from "react-icons/ri";
 import Logo from "@/components/Logo";
 import SearchResults from "./SearchResults";
 

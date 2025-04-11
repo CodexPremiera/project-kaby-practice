@@ -12,8 +12,8 @@ const EmailModal = () => {
 						<RiCloseFill className="w-[25px] h-[25px]" />
 					</button>
 				</Link>
-				<div className="relative flex flex-col h-[300px] w-[400px] bg-white rounded-xl shadow-xl p-6">
-					<h2 className="text-xl font-semibold text-center  border-b border-gray/20 pb-1">
+				<div className="relative flex flex-col h-auto w-md card-shadow-custom bg-primary p-8">
+					<h2 className="text-xl font-semibold text-center  border-b border-gray/20 pb-1 h4">
 						Login (Barangay)
 					</h2>
 					<div className="text-[12px] text-secondary my-5">

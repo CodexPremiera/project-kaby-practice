@@ -86,7 +86,7 @@ const CitizenVerification = () => {
 							</th>
 						</tr>
 					</thead>
-					<tbody className="divide-y divide-gray-100 ">
+					<tbody className="divide-y divide-gray-100">
 						{data.map((row, i) => (
 							<tr key={i}>
 								<td className="px-4 py-2">{row.name}</td>

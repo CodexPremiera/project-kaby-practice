@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Post from "../post/page";
-import SearchResults from "../search/SearchResults";
+import Search from "../search/page";
 
 const TAB_COMPONENTS = {
-	Services: <SearchResults />,
+	Services: <Search />,
 	Announcements: <Post />,
 };
 
@@ -20,9 +20,7 @@ const Page = () => {
 
 	return (
 		<div className="flex flex-col w-full">
-			{/* Parent container with a height and relative positioning */}
 			<div className="relative flex flex-col w-full min-h-screen">
-				{/* Sticky Navbar */}
 				<nav className="sticky top-0 z-2 bg-white flex gap-6 pl-3 border-b border-gray-200">
 					{Object.keys(TAB_COMPONENTS).map((tab) => (
 						<button

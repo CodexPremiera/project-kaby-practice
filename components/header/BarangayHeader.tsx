@@ -5,19 +5,21 @@ import { Button } from "@/components/ui/button";
 import { ModeToggle } from "../ModeToggle";
 import { RiUser3Line } from "react-icons/ri";
 import Link from "next/link";
+import SearchBar from "../search/SearchBar";
 
 const BarangayHeader = () => {
 	return (
-		<header className="h-[65px] flex fixed w-full sm:w-[95%] bg-white justify-between items-center border-b border-gray/20">
+		<header className="h-[65px] flex justify-between items-center border-b border-gray/20 bg-white">
 			<div className="flex">
 				<Logo />
 			</div>
 			<div className="flex gap-6 mx-8">
+				
 				<div>
 					<Button variant="barangay">Barangay</Button>
 				</div>
 				<ModeToggle />
-				<Link href="/barangay/profile/edit">
+				<Link href="/profile">
 					<Button variant="outline" size="icon">
 						<RiUser3Line className="text-black" />
 					</Button>

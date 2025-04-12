@@ -1,5 +1,7 @@
 import BarangayHeader from "@/components/header/BarangayHeader";
+import CitizenHeader from "@/components/header/CitizenHeader";
 import BarangayMainbar from "@/components/mainbar/BarangayMainbar";
+import CitizenMainbar from "@/components/mainbar/CitizenMainbar";
 import { ReactNode } from "react";
 
 const BarangayLayout = ({ children }: { children: ReactNode }) => {
@@ -10,8 +12,13 @@ const BarangayLayout = ({ children }: { children: ReactNode }) => {
 
 			{/* Main Content - Call either Barangay or Citizen */}
 			<div className="flex flex-col flex-1 sm:ml-[75px] h-full">
-				<BarangayHeader />
-				<div className="mt-[65px] flex-1 overflow-y-auto ">{children}</div>
+				{/* Hide the header on phone */}
+				<div className="hidden sm:block">
+					<BarangayHeader />
+				</div>
+
+				{/* Remove the margin top on phone */}
+				<div className="mt-0 flex-1 overflow-y-auto">{children}</div>
 			</div>
 		</div>
 	);

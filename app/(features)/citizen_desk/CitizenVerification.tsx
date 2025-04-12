@@ -53,6 +53,41 @@ const CitizenVerification = () => {
 			email: "alice@example.com",
 			status: "Pending",
 		},
+
+		{
+			name: "Alice Brown",
+			date: "2025-04-07",
+			email: "alice@example.com",
+			status: "Pending",
+		},
+
+		{
+			name: "Alice Brown",
+			date: "2025-04-07",
+			email: "alice@example.com",
+			status: "Pending",
+		},
+
+		{
+			name: "Alice Brown",
+			date: "2025-04-07",
+			email: "alice@example.com",
+			status: "Pending",
+		},
+
+		{
+			name: "Alice Brown",
+			date: "2025-04-07",
+			email: "alice@example.com",
+			status: "Pending",
+		},
+
+		{
+			name: "Alice Brown",
+			date: "2025-04-07",
+			email: "alice@example.com",
+			status: "Pending",
+		},
 	];
 
 	const [statuses, setStatuses] = useState(data.map((d) => d.status));
@@ -64,26 +99,16 @@ const CitizenVerification = () => {
 	};
 
 	return (
-		<div className="min-h-auto flex justify-center pt-4">
-			<div className="w-full p-4 shadow-sm bg-white rounded-lg mx-8">
-				<table className="min-w-full divide-y divide-gray-200 text-sm">
-					<thead className="bg-gray-100 ">
+		<div className="min-h-auto flex justify-center pt-4 ">
+			<div className="w-full px-4 py-2 shadow-sm bg-white rounded-lg mx-8">
+				<table className="min-w-full divide-y divide-gray/20 h6">
+					<thead>
 						<tr>
-							<th className="px-4 py-2 text-left font-medium text-gray-700">
-								Name
-							</th>
-							<th className="px-4 py-2 text-left font-medium text-gray-700">
-								Date
-							</th>
-							<th className="px-4 py-2 text-left font-medium text-gray-700">
-								Email
-							</th>
-							<th className="px-4 py-2 text-left font-medium text-gray-700">
-								Status
-							</th>
-							<th className="px-4 py-2 text-left font-medium text-gray-700">
-								Action
-							</th>
+							<th className="px-4 py-2 text-left font-medium">Name</th>
+							<th className="px-4 py-2 text-left font-medium">Date</th>
+							<th className="px-4 py-2 text-left font-medium">Email</th>
+							<th className="px-4 py-2 text-left font-medium">Status</th>
+							<th className="px-4 py-2 text-left font-medium">Action</th>
 						</tr>
 					</thead>
 					<tbody className="divide-y divide-gray-100">

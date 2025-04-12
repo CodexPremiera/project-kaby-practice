@@ -48,9 +48,9 @@ const BadgeRequest = () => {
 		<div className="min-h-auto flex justify-center pt-4">
 			<div className="w-full p-4 shadow-sm bg-white rounded-lg mx-8">
 				<table className="min-w-full divide-y divide-gray-200 text-sm">
-					<thead className="bg-gray-100">
+					<thead className="">
 						<tr>
-							<th className="px-4 py-2 text-left font-medium text-gray-700">
+							<th className="px-4 py-2 text-left font-medium">
 								<input
 									type="checkbox"
 									onChange={() => {
@@ -62,18 +62,12 @@ const BadgeRequest = () => {
 									checked={selected.every((value) => value)}
 								/>
 							</th>
-							<th className="px-4 py-2 text-left font-medium text-gray-700">
-								Name
-							</th>
-							<th className="px-4 py-2 text-left font-medium text-gray-700">
+							<th className="px-4 py-2 text-left font-medium">Name</th>
+							<th className="px-4 py-2 text-left font-medium">
 								Service Attended
 							</th>
-							<th className="px-4 py-2 text-left font-medium text-gray-700">
-								Status
-							</th>
-							<th className="px-4 py-2 text-left font-medium text-gray-700">
-								Action
-							</th>
+							<th className="px-4 py-2 text-left font-medium ">Status</th>
+							<th className="px-4 py-2 text-left font-medium">Action</th>
 						</tr>
 					</thead>
 					<tbody className="divide-y divide-gray-100">

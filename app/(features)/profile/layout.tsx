@@ -2,7 +2,7 @@ import ProfileTab from "@/components/profile/ProfileTab";
 import TopSection from "@/components/TopSection";
 import { ReactNode } from "react";
 
-const HomeLayout = ({ children }: { children: ReactNode }) => {
+const ProfileLayout = ({ children }: { children: ReactNode }) => {
 	return (
 		<div className="flex flex-col w-full min-h-screen">
 			<ProfileTab />
@@ -11,4 +11,4 @@ const HomeLayout = ({ children }: { children: ReactNode }) => {
 	);
 };
 
-export default HomeLayout;
+export default ProfileLayout;

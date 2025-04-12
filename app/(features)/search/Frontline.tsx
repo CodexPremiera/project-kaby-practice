@@ -1,7 +1,7 @@
 import React from "react";
 
-const YourService = () => {
+const Frontline = () => {
 	return <div>YourService</div>;
 };
 
-export default YourService;
+export default Frontline;

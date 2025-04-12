@@ -3,15 +3,19 @@
 import { useState } from "react";
 import Post from "../post/page";
 import Search from "../search/page";
+import EmergencyList from "../profile/(barangay)/EmergencyList";
+import OfficialList from "../profile/(barangay)/OfficialList";
 
 const TAB_COMPONENTS = {
 	Services: <Search />,
-	Announcements: <Post />,
+	Posts: <Post />,
+	Emergency: <EmergencyList />,
 };
 
 const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
 	Services: "Services",
-	Announcements: "Announcements",
+	Posts: "Posts",
+	Emergency: "Emergency",
 };
 
 const Page = () => {
@@ -21,7 +25,7 @@ const Page = () => {
 	return (
 		<div className="flex flex-col w-full">
 			<div className="relative flex flex-col w-full min-h-screen">
-				<nav className="sticky top-0 z-2 bg-white flex gap-6 pl-3 border-b border-gray-200">
+				<nav className="sticky top-0 z-2 bg-white flex gap-6 pl-8 border-b border-gray-200">
 					{Object.keys(TAB_COMPONENTS).map((tab) => (
 						<button
 							key={tab}

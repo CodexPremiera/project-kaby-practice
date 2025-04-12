@@ -25,13 +25,13 @@ const CitizenDesk = () => {
 		useState<keyof typeof TAB_COMPONENTS>("Dashboard");
 
 	return (
-		<div className="h-full flex flex-col ">
-			<nav className="fixed flex  w-full bg-white gap-6 pl-3  border-b border-gray-200">
+		<div className="h-full flex flex-col">
+			<nav className="fixed flex w-full bg-white gap-6 pl-3 border-b border-gray-200">
 				{Object.keys(TAB_COMPONENTS).map((tab) => (
 					<button
 						key={tab}
 						onClick={() => setActiveTab(tab as keyof typeof TAB_COMPONENTS)}
-						className={`text-sm px-4 py-3 border-b-2 transition-colors ${
+						className={`text-sm px-6 py-3 border-b-2 transition-colors ${
 							activeTab === tab
 								? "border-secondary text-secondary"
 								: "border-transparent text-gray-600 hover:text-secondary"
@@ -42,7 +42,7 @@ const CitizenDesk = () => {
 				))}
 			</nav>
 
-			<div className="flex-1 p-4 my-12 overflow-y-auto justify-center items-center">
+			<div className="flex-1 py-10 overflow-y-auto justify-center items-center">
 				{TAB_COMPONENTS[activeTab]}
 			</div>
 		</div>

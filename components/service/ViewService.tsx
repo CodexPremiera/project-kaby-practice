@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 
 const ViewService = () => {
 	return (
-		<div className="flex flex-col-reverse md:flex-row gap-6">
+		<div className="flex flex-col-reverse md:flex-row gap-6 ">
 			{/* Image */}
 			<div className="w-full md:w-[400] md:h-[360] flex justify-center items-center bg-black/80 rounded-[10px]">
 				<Image
@@ -19,7 +19,7 @@ const ViewService = () => {
 			</div>
 
 			{/* Details */}
-			<div className="w-full flex-1 border border-gray-200 rounded-[10px] p-8 flex flex-col space-y-4">
+			<div className="w-full flex-1 border border-gray-200 rounded-[10px] p-8 flex flex-col space-y-4 bg-white">
 				<div className="flex justify-between border-b border-gray-200 ">
 					<div className="flex items-center gap-2 ">
 						<h2 className="h5">Bondy's Photography</h2>

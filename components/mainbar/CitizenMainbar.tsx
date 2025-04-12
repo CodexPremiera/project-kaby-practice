@@ -19,7 +19,7 @@ const links = [
 
 const mobileOnlyLinks = [{ name: "Profile", path: "/profile" }];
 
-const BarangayMainbar = () => {
+const CitizenMainbar = () => {
 	const pathname = usePathname();
 
 	const renderLink = (
@@ -74,4 +74,4 @@ const BarangayMainbar = () => {
 	);
 };
 
-export default BarangayMainbar;
+export default CitizenMainbar;

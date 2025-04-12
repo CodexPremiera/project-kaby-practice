@@ -14,7 +14,7 @@ const BarangayHeader = () => {
 				<Logo />
 			</div>
 			<div className="flex gap-6 mx-8">
-				
+				<SearchBar />
 				<div>
 					<Button variant="barangay">Barangay</Button>
 				</div>

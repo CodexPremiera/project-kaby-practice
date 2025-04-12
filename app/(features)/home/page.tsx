@@ -20,24 +20,29 @@ const Page = () => {
 
 	return (
 		<div className="flex flex-col w-full">
-			<nav className="sticky top-0 z-10 bg-white flex gap-6 pl-3 border-b border-gray-200">
-				{Object.keys(TAB_COMPONENTS).map((tab) => (
-					<button
-						key={tab}
-						onClick={() => setActiveTab(tab as keyof typeof TAB_COMPONENTS)}
-						className={`text-sm px-4 py-3 border-b-2 transition-colors ${
-							activeTab === tab
-								? "border-secondary text-secondary"
-								: "border-transparent text-gray-600 hover:text-secondary"
-						}`}
-					>
-						{TAB_LABELS[tab as keyof typeof TAB_LABELS]}
-					</button>
-				))}
-			</nav>
+			{/* Parent container with a height and relative positioning */}
+			<div className="relative flex flex-col w-full min-h-screen">
+				{/* Sticky Navbar */}
+				<nav className="sticky top-0 z-2 bg-white flex gap-6 pl-3 border-b border-gray-200">
+					{Object.keys(TAB_COMPONENTS).map((tab) => (
+						<button
+							key={tab}
+							onClick={() => setActiveTab(tab as keyof typeof TAB_COMPONENTS)}
+							className={`text-sm px-4 py-3 border-b-2 transition-colors ${
+								activeTab === tab
+									? "border-secondary text-secondary"
+									: "border-transparent text-gray-600 hover:text-secondary"
+							}`}
+						>
+							{TAB_LABELS[tab as keyof typeof TAB_LABELS]}
+						</button>
+					))}
+				</nav>
 
-			<div className="flex-1 justify-center overflow-y-auto items-center">
-				{TAB_COMPONENTS[activeTab]}
+				{/* Main content area */}
+				<div className="flex-1 justify-center overflow-y-auto items-center">
+					{TAB_COMPONENTS[activeTab]}
+				</div>
 			</div>
 		</div>
 	);

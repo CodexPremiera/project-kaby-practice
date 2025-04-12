@@ -5,15 +5,16 @@ import {
 	RiHome4Line,
 	RiServiceLine,
 	RiSettings4Line,
+	RiSearch2Line,
 } from "react-icons/ri";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-	{ name: "Home", path: "/barangay" },
-	{ name: "Citizens", path: "/barangay/citizen_desk" },
-	{ name: "Services", path: "/barangay/service_desk" },
-	{ name: "Settings", path: "/barangay/account" },
+	{ name: "Home", path: "/home" },
+	{ name: "Citizens", path: "/citizen_desk" },
+	{ name: "Services", path: "/service_desk" },
+	{ name: "Settings", path: "/account" },
 ];
 
 const BarangayMainbar = () => {

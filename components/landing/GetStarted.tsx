@@ -5,7 +5,7 @@ import { RiArrowRightUpLine, RiCheckboxCircleFill } from "react-icons/ri";
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
-import Pretitle from "../Pretitle";
+import Pretitle from "./Pretitle";
 import Stat from "./Stat";
 
 const userTypeData = [
@@ -40,13 +40,12 @@ const GetStarted = () => {
 						viewport={{ once: false, amount: 0.2 }}
 						className="flex-1 max-w-[484px] xl:pt-[54px] mb-12 xl:mb-0 ml-3"
 					>
-						<Pretitle text="Get Started"/>
+						<Pretitle text="Get Started" />
 						<p className="mb-4 max-w-[480px] mx-auto mt-12">
-							Kaby bridges the gap between barangays and citizens, making
-							public services more efficient, transparent, and accessible for
-							all.
+							Kaby bridges the gap between barangays and citizens, making public
+							services more efficient, transparent, and accessible for all.
 						</p>
-						<Stat/>
+						<Stat />
 					</motion.div>
 
 					{/* img */}

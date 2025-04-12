@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 //components
 
-import Pretitle from "@/components/Pretitle";
+import Pretitle from "@/components/landing/Pretitle";
 import Logo from "@/components/Logo";
 
 const About = () => {

@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
 import FaqItem from "./FaqItem";
-import Pretitle from "../Pretitle";
-
+import Pretitle from "./Pretitle";
 
 interface FaqItemData {
 	title: string;
@@ -50,8 +49,7 @@ const Faq = () => {
 					className="text-center max-w-[720px] mx-auto xl:mb-20"
 				>
 					<Pretitle text="Frequently Asked Questions" center />
-					<p className="mb-11 max-w-[400px] mx-auto">
-					</p>
+					<p className="mb-11 max-w-[400px] mx-auto"></p>
 				</motion.div>
 
 				{/* FAQ Items */}

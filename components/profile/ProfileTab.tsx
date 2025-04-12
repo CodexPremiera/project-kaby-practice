@@ -5,23 +5,26 @@ import BarangayKeyMetric from "./BarangayKeyMetric";
 
 const ProfileTab = () => {
 	return (
-		<div className="flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray/20 py-6 px-4 md:px-12 h-auto">
-			<div className="flex gap-4 items-center">
-				<Image
-					src="/assets/profile/bg-profile.png"
-					width={60}
-					height={60}
-					alt="Profile"
-				/>
-				<div>
-					<div className="flex items-center gap-2 flex-wrap">
-						<p className="h4">Labangon</p>
-						<RiHome3Fill />
+		<div className="w-full max-w-screen py-4 border-b border-gray-200 bg-white">
+			<div className="flex flex-col lg:flex-row items-center lg:items-start justify-between px-12 min-h-[100px]">
+				<div className="flex gap-4 items-center text-center lg:text-left my-4">
+					<Image
+						src="/assets/profile/bg-profile.png"
+						width={60}
+						height={60}
+						alt="Profile"
+						className="min-w-[60px] min-h-[60px]"
+					/>
+					<div className="flex flex-col">
+						<div className="flex items-center justify-center lg:justify-start gap-2 ">
+							<p className="text-lg font-semibold">Labangon</p>
+							<RiHome3Fill className="text-secondary" />
+						</div>
+						<p className="text-sm text-gray-600">South District Cebu City</p>
 					</div>
-					<p className="text-sm text-gray-600">South District Cebu City</p>
 				</div>
+				<BarangayKeyMetric />
 			</div>
-			<BarangayKeyMetric />
 		</div>
 	);
 };

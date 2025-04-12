@@ -1,31 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import Dashboard from "../citizen_desk/Dashboard";
-import CitizenVerification from "../citizen_desk/CitizenVerification";
-import BadgeRequest from "../citizen_desk/BadgeRequest";
-import ReportedUser from "../citizen_desk/ReportedUser";
+import Post from "../post/page";
+import SearchResults from "../search/SearchResults";
+
 const TAB_COMPONENTS = {
-	Dashboard: <Dashboard />,
-	CitizenVerification: <CitizenVerification />,
-	BadgeRequest: <BadgeRequest />,
-	ReportedUser: <ReportedUser />,
+	Services: <SearchResults />,
+	Announcements: <Post />,
 };
 
 const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
-	Dashboard: "Dashboard",
-	CitizenVerification: "Citizen Verification",
-	BadgeRequest: "Badge Request",
-	ReportedUser: "Reported User",
+	Services: "Services",
+	Announcements: "Announcements",
 };
 
 const Page = () => {
 	const [activeTab, setActiveTab] =
-		useState<keyof typeof TAB_COMPONENTS>("Dashboard");
+		useState<keyof typeof TAB_COMPONENTS>("Services");
 
 	return (
-		<div className="h-full flex flex-col ">
-			<nav className="fixed flex  w-full bg-white gap-6 pl-3  border-b border-gray-200">
+		<div className="flex flex-col w-full">
+			<nav className="sticky top-0 z-10 bg-white flex gap-6 pl-3 border-b border-gray-200">
 				{Object.keys(TAB_COMPONENTS).map((tab) => (
 					<button
 						key={tab}
@@ -41,7 +36,7 @@ const Page = () => {
 				))}
 			</nav>
 
-			<div className="flex-1 p-4 my-12 overflow-y-auto justify-center items-center">
+			<div className="flex-1 justify-center overflow-y-auto items-center">
 				{TAB_COMPONENTS[activeTab]}
 			</div>
 		</div>

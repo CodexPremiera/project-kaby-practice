@@ -4,9 +4,9 @@ import { ReactNode } from "react";
 
 const ProfileLayout = ({ children }: { children: ReactNode }) => {
 	return (
-		<div className="flex flex-col w-full h-full">
+		<div className="flex flex-col w-full min-h-screen">
 			<ProfileTab />
-			<div className="flex-1 overflow-y-auto  mt-[55px]">{children}</div>
+			<div className="flex-1 overflow-y-auto ">{children}</div>
 		</div>
 	);
 };

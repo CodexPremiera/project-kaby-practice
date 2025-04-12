@@ -35,7 +35,7 @@ const SearchResults = () => {
 					</div>
 					{show && <SearchModal />}
 				</div>
-				<div className="relative px-9 w-6xl ">
+				<div className="relative px-9 w-6xl overflow-y-auto">
 					<div className="flex gap-5 py-5">
 						<Button variant="tag">Your Service</Button>
 						<Button variant="tag">Around You</Button>

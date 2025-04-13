@@ -14,7 +14,7 @@ import {
 	SheetTrigger,
 } from "@/components/ui/sheet";
 import Logo from "../Logo";
-import Socials from "../Socials";
+import Socials from "../landing/Socials";
 
 const links = [
 	{ name: "about", path: "/about", scroll: false },

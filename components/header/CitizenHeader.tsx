@@ -14,12 +14,11 @@ const CitizenHeader = () => {
 				<Logo />
 			</div>
 			<div className="flex gap-6 mx-8">
-				<SearchBar />
 				<div>
 					<Button variant="citizen">Citizen</Button>
 				</div>
 				<ModeToggle />
-				<Link href="/profile">
+				<Link href="/citizen/profile">
 					<Button variant="outline" size="icon">
 						<RiUser3Line className="text-black" />
 					</Button>

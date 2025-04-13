@@ -21,7 +21,7 @@ const buttonVariants = cva(
 					"hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
 				link: "text-primary underline-offset-4 hover:underline",
 				barangay: "bg-black text-white shadow-xs rounded-[30px]",
-				citizen: "bg-black text-white shadow-xs",
+				citizen: "bg-secondary text-white shadow-xs",
 				table: "bg-primary text-black shadow-xs hover:bg-gray",
 				tag: "bg-primary border border-gray text-black shadow-xs hover:bg-black hover:text-white h6",
 			},

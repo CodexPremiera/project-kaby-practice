@@ -14,12 +14,11 @@ const BarangayHeader = () => {
 				<Logo />
 			</div>
 			<div className="flex gap-6 mx-8">
-				<SearchBar />
 				<div>
 					<Button variant="barangay">Barangay</Button>
 				</div>
 				<ModeToggle />
-				<Link href="/profile">
+				<Link href="/barangay/profile">
 					<Button variant="outline" size="icon">
 						<RiUser3Line className="text-black" />
 					</Button>

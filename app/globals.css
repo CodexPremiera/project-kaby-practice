@@ -23,6 +23,7 @@
 	body {
 		color: var(--color-black-100);
 		font-family: var(--font-work-sans);
+		background-color: var(--color-primary);
 	}
 
 	h1,
@@ -58,6 +59,18 @@
 	.h4 {
 		@apply text-2xl font-bold;
 	}
+	.h5 {
+		@apply text-[16px] font-semibold;
+	}
+	.h6 {
+		@apply text-[14px]  text-black;
+	}
+	.h6-light {
+		@apply text-[14px]  text-black/50;
+	}
+	.text-small {
+		font-size: var(--font-size-small);
+	}
 
 	.floating-input {
 		@apply w-full px-2 pt-3 pb-3 text-sm text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black;
@@ -73,5 +86,14 @@
 		left: 5px;
 		font-size: 0.75rem;
 		color: #333;
+	}
+	.tab-style {
+		@apply py-3 w-auto cursor-pointer hover:text-secondary focus:outline-none;
+	}
+	.btn-clicked {
+		@apply bg-gray/50 text-black;
+	}
+	.btn-default {
+		@apply bg-gray/20 text-black  hover:bg-gray/50 hover:text-black;
 	}
 }

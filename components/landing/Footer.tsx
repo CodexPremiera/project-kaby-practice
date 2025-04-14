@@ -10,7 +10,7 @@ import {
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
-import Socials from "../Socials";
+import Socials from "./Socials";
 import { Button } from "@/components/ui/button";
 
 const Footer = () => {

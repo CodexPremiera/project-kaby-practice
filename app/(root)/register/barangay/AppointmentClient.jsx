@@ -14,12 +14,10 @@ export default function AppointmentClientForm(){
         message: '',
       });
       const handleChange = (e) =>{
-        console.log(e.target.value);
         setForm({...form,[e.target.name]:e.target.value});
       }
       const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("submitted");
         const res = await fetch('/api/auth/register/barangay',{
             method : 'POST',
             headers: {'Content-Type': 'application/json'},

@@ -7,6 +7,7 @@ import GetStarted from "@/components/landing/GetStarted";
 import Faq from "@/components/landing/Faq";
 import Footer from "@/components/landing/Footer";
 import GuestHeader from "@/components/header/GuestHeader";
+import Link from "next/link";
 
 const Landing = () => {
 	const [headerActive, setHeaderActive] = useState(false);

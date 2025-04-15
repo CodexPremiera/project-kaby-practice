@@ -2,11 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { BadgePlus, LogOut } from "lucide-react";
+import {signOut} from "next-auth/react";
 
 const Navbar = async () => {
   // const session = await auth();
   const session = {
-    user: `Ashley Ken Comandao`
+    user: `Ashley Ken Comandao
+    `
   }
 
   return (

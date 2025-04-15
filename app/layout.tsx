@@ -2,6 +2,13 @@ import type { Metadata } from "next";
 import localFont from 'next/font/local';
 import "./globals.css";
 import 'easymde/dist/easymde.min.css';
+import {Inter} from 'next/font/google'
+
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
 
 
 const workSans = localFont({
@@ -56,8 +63,8 @@ const workSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "YC Directory",
-  description: "Pitch, Vote, and Grow",
+  title: "Kaby",
+  description: "Service with ease",
 };
 
 export default function RootLayout({
@@ -68,7 +75,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${workSans.variable} pattern`}
+        className={`font-inter`}
       >
         {children}
       </body>

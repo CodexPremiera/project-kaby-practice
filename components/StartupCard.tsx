@@ -54,7 +54,7 @@ function StartupCard({post}: {post: StartupTypeCard}) {
         <img src={image} alt="placeholder" className="startup-card_img"/>
       </Link>
 
-      {/* CTA Button */}
+      {/* CTA ButtonSecondary */}
       <div className="flex-between gap-3 mt-5">
         <Link href={`/?query=${category?.toLowerCase()}`}>
           <p className="text-16-medium">{category}</p>

@@ -3,7 +3,12 @@
 import Logo from "../Logo";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "../ModeToggle";
-import { RiAlarmWarningLine, RiUser3Line } from "react-icons/ri";
+import {
+	RiAlarmWarningLine,
+	RiMessage3Line,
+	RiMessageLine,
+	RiUser3Line,
+} from "react-icons/ri";
 import Link from "next/link";
 import SearchBar from "../search/SearchBar";
 
@@ -16,9 +21,9 @@ const BarangayHeader = () => {
 			<div className="flex gap-6 mx-8">
 				<ModeToggle />
 
-				<Link href="/barangay/emergency">
+				<Link href="/barangay/message">
 					<Button variant="outline" size="icon">
-						<RiAlarmWarningLine />
+						<RiMessage3Line />
 					</Button>
 				</Link>
 

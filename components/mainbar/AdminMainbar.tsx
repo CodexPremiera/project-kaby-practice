@@ -2,24 +2,24 @@
 
 import {
 	RiCommunityLine,
+	RiDashboard2Line,
+	RiDashboard3Line,
+	RiDashboardLine,
 	RiInboxLine,
-	RiMessage2Line,
-	RiMessage3Line,
 	RiSettings4Line,
+	RiTableLine,
 	RiUser3Line,
 } from "react-icons/ri";
-import { MdOutlineEmergencyShare } from "react-icons/md";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const CitizenMainbar = () => {
+const AdminMainbar = () => {
 	const pathname = usePathname();
 
 	const links = [
-		{ name: "Home", path: `/citizen` },
-		{ name: "Service Desk", path: `/citizen/service_desk` },
-		{ name: "Message", path: `/citizen/message` },
-		{ name: "Settings", path: `/citizen/account` },
+		{ name: "Dashboard", path: `/admin` },
+		{ name: "Barangay Desk", path: `/admin/barangay_desk` },
+		{ name: "Settings", path: `/admin/account` },
 	];
 
 	const mobileOnlyLinks = [{ name: "Profile", path: "/profile" }];
@@ -40,14 +40,11 @@ const CitizenMainbar = () => {
 						isMobileOnly ? "sm:hidden" : ""
 					}`}
 				>
-					{link.name === "Home" && (
+					{link.name === "Dashboard" && (
+						<RiDashboardLine className={`w-6 h-6 ${iconColor}`} />
+					)}
+					{link.name === "Barangay Desk" && (
 						<RiCommunityLine className={`w-6 h-6 ${iconColor}`} />
-					)}
-					{link.name === "Service Desk" && (
-						<RiInboxLine className={`w-6 h-6 ${iconColor}`} />
-					)}
-					{link.name === "Message" && (
-						<RiMessage3Line className={`w-6 h-6 ${iconColor}`} />
 					)}
 					{link.name === "Settings" && (
 						<RiSettings4Line className={`w-6 h-6 ${iconColor}`} />
@@ -77,4 +74,4 @@ const CitizenMainbar = () => {
 	);
 };
 
-export default CitizenMainbar;
+export default AdminMainbar;

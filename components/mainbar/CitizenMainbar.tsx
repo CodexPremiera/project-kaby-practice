@@ -3,6 +3,8 @@
 import {
 	RiCommunityLine,
 	RiInboxLine,
+	RiMessage2Line,
+	RiMessage3Line,
 	RiSettings4Line,
 	RiUser3Line,
 } from "react-icons/ri";
@@ -16,7 +18,7 @@ const CitizenMainbar = () => {
 	const links = [
 		{ name: "Home", path: `/citizen` },
 		{ name: "Service Desk", path: `/citizen/service_desk` },
-		{ name: "Tracker", path: `/citizen/tracker` },
+		{ name: "Message", path: `/citizen/message` },
 		{ name: "Settings", path: `/citizen/account` },
 	];
 
@@ -44,8 +46,8 @@ const CitizenMainbar = () => {
 					{link.name === "Service Desk" && (
 						<RiInboxLine className={`w-6 h-6 ${iconColor}`} />
 					)}
-					{link.name === "Tracker" && (
-						<MdOutlineEmergencyShare className={`w-6 h-6 ${iconColor}`} />
+					{link.name === "Message" && (
+						<RiMessage3Line className={`w-6 h-6 ${iconColor}`} />
 					)}
 					{link.name === "Settings" && (
 						<RiSettings4Line className={`w-6 h-6 ${iconColor}`} />

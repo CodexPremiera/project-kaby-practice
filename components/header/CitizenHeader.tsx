@@ -16,7 +16,7 @@ const CitizenHeader = () => {
 			<div className="flex gap-6 mx-8">
 				<ModeToggle />
 
-				<Link href="/citizen/emergency">
+				<Link href="/citizen/tracker">
 					<Button variant="outline" size="icon">
 						<RiAlarmWarningLine />
 					</Button>

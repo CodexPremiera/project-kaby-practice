@@ -1,46 +1,68 @@
 'use client'
 import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
 export default function PetitionForm(){
+
     const [form,setForm] = useState({
         first_name : '',
         last_name :'',
         email : '',
         barangay :'',
-        file_upload:null
+        file_upload: ''
     })
     const handleChange = (e) => {
-        const { name, value, type, files } = e.target;
-		console.log(name, value,type,files);
-        if (type === 'file') {
-            setForm({
-                ...form,
-                [name]: files[0] // Store the first file selected
-            });
-        } else {
-            setForm({
-                ...form,
-                [name]: value
-            });
-        }
+		console.log(e.target.value);
+		if(e.target.type === 'file'){
+			setForm({...form, [e.target.name]: e.target.files[0]});
+		}else{
+
+			setForm({...form,[e.target.name]:e.target.value});
+		}
+
     }
 
 
     const handleSubmit = async (e) =>{
         e.preventDefault();
-        const res = await fetch('/api/petition',{
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body:JSON.stringify(form),
-        })
-        const data = await res.json();
-        console.log(form);
-        console.log(data);
-        if(res.ok){
-            alert("yay");
-        }else{
-            alert("nay");
-        }
+		try{
+
+			// const {data, error} = await supabase.storage.from()
+			const {data, error} = await supabase.storage.from('petition-proof-residence').upload(`uploads/${form.file_upload.name}`,form.file_upload);
+			if(error){
+				console.error(error);
+			}
+			
+			
+			console.log(publicUrl.data[0]);
+			const sendForm = {
+				first_name: form.first_name,
+				last_name: form.last_name,
+				email: form.email,
+				barangay: form.barangay,
+				file_upload: `uploads/${form.file_upload.name}`
+			}
+			const res = await fetch('/api/petition',{
+				// method: 'GET',
+				method: 'POST',
+				headers: {'Content-Type': 'application/json'},
+				body:JSON.stringify(sendForm),
+			})
+			const a = await res.json();
+			console.log(form);
+			console.log(a);
+			if(res.ok){
+				alert("yay");
+			}else{
+				alert("nay");
+			}
+		}catch(err){
+			alert(err);
+		}
     };
     return (
         <div>

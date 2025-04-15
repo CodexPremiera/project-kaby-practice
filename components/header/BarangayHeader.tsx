@@ -25,7 +25,7 @@ const BarangayHeader = () => {
 				<div>
 					<Button variant="barangay">Barangay</Button>
 				</div>
-				<Link href="/citizen/profile">
+				<Link href="/barangay/profile">
 					<Button variant="outline" size="icon">
 						<RiUser3Line className="text-black" />
 					</Button>

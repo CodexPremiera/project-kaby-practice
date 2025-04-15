@@ -1,5 +1,6 @@
 import Logo from "@/components/Logo";
 import Link from "next/link";
+import PetitionForm from './PetitionForm';
 
 const Petition = () => {
 	return (
@@ -24,7 +25,8 @@ const Petition = () => {
 			<div className="w-full xl:w-1/2 flex justify-center items-center">
 				<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
 					<p className="h4 text-center">Make a Petition</p>
-					<form className="w-full mt-6">
+					<PetitionForm />
+					{/* <form className="w-full mt-6">
 						<div className="flex gap-3 justify-between">
 							<div className="relative w-full">
 								<input
@@ -99,7 +101,7 @@ const Petition = () => {
 								Submit
 							</button>
 						</div>
-					</form>
+					</form> */}
 					<div className="flex flex-col justify-between items-center mt-5">
 						<p className="text-[12px]">Already have an account? </p>
 						<Link href="/login" className="text-[12px] text-secondary mt-1">

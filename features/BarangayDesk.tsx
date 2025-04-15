@@ -1,10 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Dashboard from "@/components/citizen_desk/Dashboard";
-import CitizenVerification from "@/components/citizen_desk/CitizenVerification";
-import BadgeRequest from "@/components/citizen_desk/BadgeRequest";
-import ReportedUser from "@/components/citizen_desk/ReportedUser";
 import BarangayAppointment from "@/components/barangay_desk/BarangayAppointment";
 import ApproveAccount from "@/components/barangay_desk/ApproveAccount";
 

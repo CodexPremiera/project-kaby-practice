@@ -3,7 +3,7 @@
 import Logo from "../Logo";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "../ModeToggle";
-import { RiUser3Line } from "react-icons/ri";
+import { RiAlarmWarningLine, RiUser3Line } from "react-icons/ri";
 import Link from "next/link";
 import SearchBar from "../search/SearchBar";
 
@@ -14,10 +14,17 @@ const CitizenHeader = () => {
 				<Logo />
 			</div>
 			<div className="flex gap-6 mx-8">
+				<ModeToggle />
+
+				<Link href="/citizen/emergency">
+					<Button variant="outline" size="icon">
+						<RiAlarmWarningLine />
+					</Button>
+				</Link>
+
 				<div>
 					<Button variant="citizen">Citizen</Button>
 				</div>
-				<ModeToggle />
 				<Link href="/citizen/profile">
 					<Button variant="outline" size="icon">
 						<RiUser3Line className="text-black" />

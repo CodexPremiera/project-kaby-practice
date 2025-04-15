@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import { RiHome3Fill } from "react-icons/ri";
 import BarangayKeyMetric from "./BarangayKeyMetric";
+import CitizenKeyMetric from "./CitizenKeyMetric";
 
 const ProfileTab = () => {
 	return (

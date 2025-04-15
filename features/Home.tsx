@@ -9,13 +9,11 @@ import { useState } from "react";
 const TAB_COMPONENTS = {
 	Services: <Search />,
 	Posts: <Post />,
-	Emergency: <EmergencyList />,
 };
 
 const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
 	Services: "Services",
 	Posts: "Posts",
-	Emergency: "Emergency",
 };
 
 const Home = () => {

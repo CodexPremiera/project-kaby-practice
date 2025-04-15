@@ -36,15 +36,13 @@ export default function PetitionForm(){
 			if(error){
 				console.error(error);
 			}
-			
-			
-			console.log(publicUrl.data[0]);
+		
 			const sendForm = {
 				first_name: form.first_name,
 				last_name: form.last_name,
 				email: form.email,
 				barangay: form.barangay,
-				file_upload: `uploads/${form.file_upload.name}`
+				file_upload:  `uploads/${form.file_upload.name}`
 			}
 			const res = await fetch('/api/petition',{
 				// method: 'GET',

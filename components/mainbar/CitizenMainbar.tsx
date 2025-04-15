@@ -1,13 +1,12 @@
 "use client";
 
 import {
-	RiAlarmWarningLine,
 	RiCommunityLine,
 	RiInboxLine,
 	RiSettings4Line,
-	RiTableLine,
 	RiUser3Line,
 } from "react-icons/ri";
+import { MdOutlineEmergencyShare } from "react-icons/md";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -46,7 +45,7 @@ const CitizenMainbar = () => {
 						<RiInboxLine className={`w-6 h-6 ${iconColor}`} />
 					)}
 					{link.name === "Tracker" && (
-						<RiAlarmWarningLine className={`w-6 h-6 ${iconColor}`} />
+						<MdOutlineEmergencyShare className={`w-6 h-6 ${iconColor}`} />
 					)}
 					{link.name === "Settings" && (
 						<RiSettings4Line className={`w-6 h-6 ${iconColor}`} />

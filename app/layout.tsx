@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from 'next/font/local';
 import "./globals.css";
 import 'easymde/dist/easymde.min.css';
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 
 const workSans = localFont({
@@ -56,7 +57,7 @@ const workSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "YC Directory",
+  title: "Kaby",
   description: "Pitch, Vote, and Grow",
 };
 
@@ -66,12 +67,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${workSans.variable} pattern`}
-      >
-        {children}
-      </body>
-    </html>
-  );
+		<html lang="en">
+			<body className={`${workSans.variable} pattern`}>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					{children}
+				</ThemeProvider>
+			</body>
+		</html>
+	);
 }

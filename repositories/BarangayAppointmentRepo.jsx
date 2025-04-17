@@ -28,6 +28,13 @@ class BarangayAppointmentRepo{
         return data;
 
     }
+    async getById(appId){
+        const {data,error} = await supabase.from(this.tableName).select('*').eq("id",appId);
+        
+        // console.log(data);
+        return data;
+        
+    }
 
 }
 export default BarangayAppointmentRepo;

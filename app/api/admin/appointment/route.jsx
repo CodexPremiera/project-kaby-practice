@@ -1,9 +1,12 @@
-import BarangayAppointmentRepo from '../../../../repositories/BarangayAppointmentRepo';
 import { NextResponse } from 'next/server';
-const brgyAppointmentRepo = new BarangayAppointmentRepo();
-export async function GET() {
+import BarangayAppointmentService from '../../../../services/BarangayAppointmentService';
+
+const brgyAppService = new BarangayAppointmentService();
+export async function GET(request) {
+  const token = request.cookies.get('token');
+  console.log(token);
   try {
-    const data = await brgyAppointmentRepo.getAll();
+    const data = await brgyAppService.getAllAppointments();
     return NextResponse.json({ data: data });
   } catch (err) {
     console.log(err);

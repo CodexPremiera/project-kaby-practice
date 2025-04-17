@@ -1,26 +1,18 @@
-// import { createClient } from "@/utils/supabase/server";
-import { createClient } from '@supabase/supabase-js'; 
+import { NextResponse } from 'next/server';
+import BarangayAppointmentService from '../../../../services/BarangayAppointmentService';
 
-import { NextResponse } from "next/server";
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
-
-  export async function GET() {
-    const {data, error} = await supabase.from('BarangayAppointment').select('*')
-    // const {data1,error1} 
-    // const {data : BarangayAppointment} = await supabase.from('BarangayAppointment').select('*');
-    console.log(data);
-
-    if (error) {
-        return new Response(JSON.stringify({ error: error.message }),{ status: 500 });
-    }
-    
-    return new Response(JSON.stringify(data),{ status: 200 });
-    // return NextResponse.json({
-    //     Hello:"world"
-    // });
- 
+const brgyAppService = new BarangayAppointmentService();
+export async function GET(request) {
+  const token = request.cookies.get('token');
+  console.log(token);
+  try {
+    const data = await brgyAppService.getAllAppointments();
+    return NextResponse.json({ data: data });
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
 }
+
+
 

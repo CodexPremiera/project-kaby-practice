@@ -9,7 +9,7 @@ export default function BarangayAcceptPage(){
         fetch('/api/admin/appointment')
         .then((res) => res.json())
         .then((data)=>{
-            setData(data);
+            setData(data.data);
             setLoading(false);
 
         })

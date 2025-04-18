@@ -14,5 +14,9 @@ class BarangayAppointmentService {
         // console.log(app);
         return app;
     }
+    async createAppointment(appDetails){
+        const {data,error} = await this.repo.create(appDetails);
+        return {data,error};
+    }
 }
 export default BarangayAppointmentService;

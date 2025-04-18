@@ -14,8 +14,23 @@ class AuthenticationRepo{
         console.log("repo", data);
         return {data,error};
     }
+
+    async loginUser(userCredentials){
+        const {email,password} = userCredentials;
+        const {data,error} = await supabase.auth.signInWithPassword({email,password});
+        // console.log(data);
+        if(error){
+            console.log(error);
+        }
+        return {data,error};
+    }
     async getUserById(id){
 
+    }
+    async getLoggedInUserId(){
+        const{data,error} = await supabase.auth.getUser();
+        // console.log(data.user.id);
+        return data.user.id;
     }
 }
 export default AuthenticationRepo;

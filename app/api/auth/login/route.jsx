@@ -2,14 +2,15 @@
 // to sign in using username
 // https://stackoverflow.com/questions/78550922/how-do-i-authorise-users-with-username-in-supabase
 'use server'
-import { createClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextResponse } from 'next/server'
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+import AuthenticationService from "../../../../services/AuthenticationService";
+import UserService from "../../../../services/UserService";
+
+const authService = new AuthenticationService();
+const userService = new UserService();
+
 export async function POST(req){
     console.log("logging in");
     try{
@@ -17,11 +18,10 @@ export async function POST(req){
         // console.log(req);
         const body = await req.json();
         const {username,password} = body;
-        console.log("asdnausdaoidn");
-        console.log(body);
 
-        const {error} = await supabase.auth.signInWithPassword({email:username, password:password});
 
+        // const {error} = await supabase.auth.signInWithPassword({email:username, password:password});
+        const {data:data1,error:error1} = await authService.signInUser(body);
         // make login include username too uncomment babaw for email only
 
         // const {data} = await supabase.functions.invoke('sign-in',{
@@ -35,17 +35,19 @@ export async function POST(req){
         //     refresh_token: data.refresh_token
         // });
         // ===================;
-        if(error){
-            console.log(error);
+        if(error1){
+            console.log(error1);
         }
+        console.log("wenthere");
 
         // check role of cit
-        const {data:{user}} = await supabase.auth.getUser();
-        console.log(user.id);
-        const {data} = await supabase.from('userroles').select('role').eq('user_id',user.id);
 
-        console.log( data[0].role);
-        if(data[0].role ==="citizen"){
+        const user_id = await authService.loggedInUserId();
+         const role = await userService.getUserRole();
+
+        console.log(role);
+
+        if(role ==="citizen"){
             console.log("brr brr patapim");
             revalidatePath('/citizen');
             // redirect('/citizen');
@@ -54,8 +56,9 @@ export async function POST(req){
             revalidatePath('/barangay');
             return NextResponse.json({redirectTo: '/barangay'});
 
-            // return 
+           // return 
         }
+        // return NextResponse.json({hello:"word"});
 
     }catch(err){
         return new Response(JSON.stringify({error:'Internal server error'}), {status:500});

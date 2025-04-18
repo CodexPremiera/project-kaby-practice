@@ -15,5 +15,14 @@ class UserRepo{
         const {data,error} = await supabase.from(this.tableName).insert(userData).select().single();
         return {data,error};
     }
+    async getById(id){
+        const {data,error} = await supabase.from(this.tableName).select('*').eq('user_id',id).single();
+        if(error){
+            console.log(error);
+        }
+        console.log(data.id,"aaa");
+        return {data,error};
+
+    }
 }
 export default UserRepo;

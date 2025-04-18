@@ -13,5 +13,13 @@ class AuthenticationService{
         console.log("service", data);
         return {data,error};
     }
+    async signInUser(userCredentials){
+        console.log(userCredentials);
+        const {data,error} = await this.repo.loginUser(userCredentials);
+        return {data,error};
+    }
+    async loggedInUserId(){
+        return await this.repo.getLoggedInUserId();
+    }
 }
 export default AuthenticationService;

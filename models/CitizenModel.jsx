@@ -1,7 +1,7 @@
 import UserModel from "./UserModel";
 
-class CitzenModel extends UserModel{
-    constructor(email,role="citizen",firstName, lastName,middleName,birthdate, accumulatedBadge,currentBadge,barangay){
+class CitizenModel extends UserModel{
+    constructor(email,role="citizen",firstName, lastName,middleName="",birthdate=null, accumulatedBadge=0,currentBadge=0,barangay=""){
         super(email,role);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -13,4 +13,4 @@ class CitzenModel extends UserModel{
     }
 }
 
-export default CitzenModel;
+export default CitizenModel;

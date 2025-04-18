@@ -1,12 +1,13 @@
 'use server';
 
-import { createClient } from '@supabase/supabase-js';
+import AuthenticationService from '../../../../../services/AuthenticationService';
+import CitizenService from '../../../../../services/CitizenService';
+import { NextResponse } from 'next/server';
+import UserService from '../../../../../services/UserService';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
+const authService = new AuthenticationService();
+const citizenService = new CitizenService();
+const userService = new UserService();
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -18,70 +19,20 @@ export async function POST(request) {
       password,
       confirm_password
     } = body;
- 
-    if (password !== confirm_password) {
 
-      return new Response(JSON.stringify({ error: 'Passwords do not match' }), {
-        status: 400
-      });
+    const {data,error} =  await authService.registerUser({email,password,confirm_password});
+    if(error){
+      throw NextResponse.json(error.message);
     }
-    // Sign up user
-    const { data: userData, error: error1 } = await supabase.auth.signUp({
-      email,
-      password
-    });
-    if (error1) {
-      return new Response(JSON.stringify({ error: error1.message }), {
-        status: 500
-      });
-    }
-    // Save in usertable
-    const userId = userData.user.id;
-    if (!userId) {
-      return new Response(JSON.stringify({ error: 'No user ID returned' }), {
-        status: 500
-      });
-    }
+    var user_id =data.user.id;
 
-    // 2. Insert into userroles with user_id
-    const { data,error: error2 } = await supabase.from('userroles').insert([
-      {
-        user_id: userId,
-        role: 'citizen'
-      }
-    ]).select().single();
+    const{data:data2,error: error2} = await userService.createUser({user_id, role:"citizen"});
+    console.log("dataaa2", data2);
+    user_id =data2.id;
 
-    if (error2) {
-      return new Response(JSON.stringify({ error: error2.message }), {
-        status: 500
-      });
-    }
-    const userId2 = data.id;
-
-    // 3. Insert into CitizenProfile with user_id
-    const { error: error3 } = await supabase.from('CitizenProfile').insert([
-      {
-        user_id: userId2,
-        last_name:last_name,
-        first_name:first_name,
-        barangay:barangay
-      }
-    ]);
-
-    if (error3) {
-      return new Response(JSON.stringify({ error: error3.message }), {
-        status: 500
-      });
-    }
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        userId,
-        message: 'Citizen registered successfully'
-      }),
-      { status: 200 }
-    );
+    const {data:citData, error:citError} = await citizenService.createCitizenProfile({first_name,last_name,barangay,user_id}); 
+    console.log(citData,"citdata");
+    return NextResponse.json(citData);
   } catch (err) {
     console.error('Unexpected error:', err);
     return new Response(JSON.stringify({ error: 'Unexpected error' }), {

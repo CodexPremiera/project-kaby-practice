@@ -29,7 +29,7 @@ class AuthenticationRepo{
     }
     async getLoggedInUserId(){
         const{data,error} = await supabase.auth.getUser();
-        // console.log(data.user.id);
+        console.log(data.user.id);
         return data.user.id;
     }
 }

@@ -22,5 +22,10 @@ class UserService{
         }
         return data.role;
     }
+    async getRoleIdUsingAuth(id){
+        const user_id = await this.repo.getIdUsingAuth(id);
+        return user_id;
+    }
+
 }
 export default UserService;

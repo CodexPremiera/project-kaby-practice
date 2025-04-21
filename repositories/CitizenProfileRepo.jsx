@@ -1,23 +1,34 @@
 import { createClient } from "@supabase/supabase-js";
 import CitizenModel from "../models/CitizenModel";
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+import BaseRepo from "./BaseRepo";
 
-class CitizenProfileRepo{
+
+class CitizenProfileRepo extends BaseRepo{
     constructor(){
-        this.tableName = 'CitizenProfile';
+        super("CitizenProfile");
     }
     async create(citizenData){
         const citizen = new CitizenModel(citizenData);
-        console.log(citizenData,"repo");
-        const {data,error} = await supabase.from(this.tableName).insert([citizenData]).select();
+        // console.log(citizenData,"repo");
+        const {data,error} = await this.supabase.from(this.tableName).insert([citizenData]).select();
         if(error){
             console.log(error);
         }
         return {data,error};
-
     }
+    async getByAuthenticatedId(id){
+        const {data, error} = await this.supabase.from(this.tableName).select("*").eq("user_id",id);
+        if (error) console.log(error);
+        return data;
+    }
+    async getIdUsingRole(id){
+        console.log("id is",id);
+        const {data, error} = await this.supabase.from(this.tableName).select("id").eq("user_id",id).single();
+        if(error) console.log(error);
+        console.log("data taken", data);
+
+        return data;
+    }
+
 }
 export default CitizenProfileRepo;

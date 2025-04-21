@@ -19,7 +19,8 @@ class AuthenticationService{
         return {data,error};
     }
     async loggedInUserId(){
-        return await this.repo.getLoggedInUserId();
+        const data = await this.repo.getLoggedInUserId();
+        return data;
     }
 }
 export default AuthenticationService;

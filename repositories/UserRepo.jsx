@@ -22,7 +22,13 @@ class UserRepo{
         }
         console.log(data.id,"aaa");
         return {data,error};
-
+    }
+    async getIdUsingAuth(id){
+        console.log("id taken in user repo", id);
+        const {data,error} = await supabase.from(this.tableName).select("id").eq('user_id', id).single();
+        if(error) console.log(error);
+        console.log(data, "should be 54e");
+        return data;
     }
 }
 export default UserRepo;

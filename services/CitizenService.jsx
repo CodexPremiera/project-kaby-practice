@@ -13,5 +13,18 @@ class CitizenService{
 
         return {data,error};
     }
+    async getCitizenById(id){
+        const data= await this.repo.getById(id);
+        return data;
+    }
+    async getCitByAuthenticatedId(id){
+        const data = await this.repo.getByAuthenticatedId(id);
+        return data;
+    }
+    async getCitizenIdUsingRole(id){
+        const data = await this.repo.getIdUsingRole(id);
+        return data;
+    }
+    
 }
 export default CitizenService;

@@ -4,24 +4,20 @@ import AdminMainbar from "@/components/mainbar/AdminMainbar";
 import BarangayMainbar from "@/components/mainbar/BarangayMainbar";
 import { ReactNode } from "react";
 
-const AdminLayout = ({ children }: { children: ReactNode }) => {
+const BarangayLayout = ({ children }: { children: ReactNode }) => {
 	return (
-		<div className="flex flex-row w-screen h-screen overflow-hidden">
-			{/* Sidebar */}
-			<AdminMainbar />
+		<div className="flex flex-col w-screen h-screen overflow-hidden">
+			<AdminHeader />
 
 			{/* Main Content */}
-			<div className="flex flex-col flex-1 sm:ml-[75px] h-full">
-				{/* Hide the header on phone */}
-				<div className="hidden sm:block">
-					<AdminHeader />
+			<div className="flex flex-row flex-1 sm:ml-[75px] h-full">
+				<AdminMainbar />
+				<div className="flex-1 overflow-y-auto rounded-[20px] bg-primary sm:px-16 sm:py-8">
+					{children}
 				</div>
-
-				{/* Remove the margin top on phone */}
-				<div className="mt-0 flex-1 overflow-y-auto">{children}</div>
 			</div>
 		</div>
 	);
 };
 
-export default AdminLayout;
+export default BarangayLayout;

@@ -5,7 +5,7 @@ import { RiSearch2Line } from "react-icons/ri";
 const SearchBar = () => {
 	return (
 		<div>
-			<div className="flex items-center w-full px-4 border border-gray-300 bg-white rounded-md">
+			<div className="flex items-center w-[350px] px-4 border border-gray-300 bg-white rounded-md">
 				<RiSearch2Line className="text-gray-500 mr-2" />
 				<input
 					type="text"

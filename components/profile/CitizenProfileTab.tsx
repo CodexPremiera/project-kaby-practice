@@ -1,12 +1,10 @@
 import Image from "next/image";
 import React from "react";
 import { RiHome3Fill } from "react-icons/ri";
-import BarangayKeyMetric from "./BarangayKeyMetric";
-import CitizenKeyMetric from "./CitizenKeyMetric";
 
-const ProfileTab = () => {
+const BarangayProfileTab = () => {
 	return (
-		<div className="w-full max-w-screen py-4 border-b border-gray-200 bg-white">
+		<div className="w-full max-w-screen py-4  bg-white card-custom">
 			<div className="flex flex-col lg:flex-row items-center lg:items-start justify-between px-12 min-h-[100px]">
 				<div className="flex gap-4 items-center text-center lg:text-left my-4">
 					<Image
@@ -24,10 +22,19 @@ const ProfileTab = () => {
 						<p className="text-sm text-gray-600">South District Cebu City</p>
 					</div>
 				</div>
-				<BarangayKeyMetric />
+				<div className="gap-6 py-6 px-6 m-3 md:flex sm:gap-12 items-center sm:px-12 text-sm w-full md:w-auto">
+					<div>
+						<span className="h5 mr-3">10</span>
+						Current Badges
+					</div>
+					<div>
+						<span className="h5 mr-3">51</span>
+						Accumulated Badges
+					</div>
+				</div>
 			</div>
 		</div>
 	);
 };
 
-export default ProfileTab;
+export default BarangayProfileTab;

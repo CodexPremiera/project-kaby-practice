@@ -4,14 +4,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme static {
-	--color-primary: #fafafa;
+	--color-primary: #fffdf5;
 	--color-secondary: #fb7c1f;
 	--color-accent: #ffc029;
 	--color-black: #1a1a1a;
 	--color-gray: #cccccc;
-
 	--backgroundImage: url("/assets/img/hero/bg.png");
-	--boxShadow: 0px 4px 54px 10px rgb(18, 19, 21, 0.05);
 }
 
 @layer base {
@@ -23,7 +21,6 @@
 	body {
 		color: var(--color-black-100);
 		font-family: var(--font-work-sans);
-		background-color: var(--color-primary);
 	}
 
 	h1,
@@ -41,8 +38,11 @@
 	.bg-hero {
 		background-image: var(--backgroundImage);
 	}
-	.card-shadow-custom {
-		@apply shadow-md rounded-[20px] bg-primary;
+	.card-custom {
+		border-radius: 20px;
+		box-shadow:
+			0 0px 1px rgba(251, 124, 31, 0.2),
+			0 1px 2px rgba(251, 124, 31, 0.1);
 	}
 	.h1 {
 		@apply text-[40px] xl:text-[54px] uppercase font-black leading-[1.1];
@@ -91,9 +91,9 @@
 		@apply py-3 w-auto cursor-pointer hover:text-secondary focus:outline-none;
 	}
 	.btn-clicked {
-		@apply bg-gray/50 text-black;
+		@apply bg-secondary text-white;
 	}
 	.btn-default {
-		@apply bg-gray/20 text-black  hover:bg-gray/50 hover:text-black;
+		@apply bg-gray/20 text-black;
 	}
 }

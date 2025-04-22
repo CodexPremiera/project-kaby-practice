@@ -1,9 +1,9 @@
 import React from 'react'
 
-const EmergencyList = () => {
+const ContactList = () => {
   return (
     <div>EmergencyList</div>
   )
 }
 
-export default EmergencyList
+export default ContactList

@@ -1,7 +1,8 @@
 import ActiveServiceCard from "@/components/service_desk/ActiveCard";
 import React from "react";
+import InactiveCard from "./InactiveCard";
 
-const ActiveService = ({ count = 10 }: { count?: number }) => {
+const ClosedService = ({ count = 6 }: { count?: number }) => {
 	return (
 		<div
 			className="
@@ -18,10 +19,10 @@ const ActiveService = ({ count = 10 }: { count?: number }) => {
 				"
 		>
 			{Array.from({ length: count }).map((_, index) => (
-				<ActiveServiceCard key={index} />
+				<InactiveCard key={index} />
 			))}
 		</div>
 	);
 };
 
-export default ActiveService;
+export default ClosedService;

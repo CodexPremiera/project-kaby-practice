@@ -1,4 +1,4 @@
-import ProfileTab from "@/components/profile/ProfileTab";
+import ProfileTab from "@/components/profile/BarangayProfileTab";
 import TopSection from "@/components/top_section/TopSection";
 
 const Page = () => {

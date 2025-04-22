@@ -1,19 +1,25 @@
 "use client";
 
-import ProfileTab from "@/components/profile/ProfileTab";
-import EmergencyList from "@/features/EmergencyList";
-import Post from "@/features/Post";
-import Search from "@/features/Search";
+import ProfileTab from "@/components/profile/BarangayProfileTab";
+import EmergencyList from "@/components/home/contact_list/ContactList";
+import Post from "@/components/home/post/Post";
+import Search from "@/components/home/search/Search";
 import { useState } from "react";
+import OfficialsList from "../components/home/official_list/OfficialsList";
+import ContactList from "@/components/home/contact_list/ContactList";
 
 const TAB_COMPONENTS = {
 	Services: <Search />,
 	Posts: <Post />,
+	Officials: <OfficialsList />,
+	Contact: <ContactList />,
 };
 
 const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
 	Services: "Services",
 	Posts: "Posts",
+	Officials: "Officials",
+	Contact: "Contact",
 };
 
 const Home = () => {
@@ -22,9 +28,9 @@ const Home = () => {
 
 	return (
 		<div className="flex flex-col w-full">
-			<div className="relative flex flex-col w-full min-h-screen">
+			<div className="relative flex flex-col w-full min-h-screen gap-3">
 				<ProfileTab />
-				<nav className="sticky top-0 z-2 bg-white flex gap-6 pl-8 border-b border-gray-200">
+				<nav className="flex bg-white gap-6 pl-8 card-custom">
 					{Object.keys(TAB_COMPONENTS).map((tab) => (
 						<button
 							key={tab}

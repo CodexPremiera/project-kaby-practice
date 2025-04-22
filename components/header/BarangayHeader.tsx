@@ -3,38 +3,29 @@
 import Logo from "../Logo";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "../ModeToggle";
-import {
-	RiAlarmWarningLine,
-	RiMessage3Line,
-	RiMessageLine,
-	RiUser3Line,
-} from "react-icons/ri";
+import { RiUser3Line } from "react-icons/ri";
 import Link from "next/link";
-import SearchBar from "../search/SearchBar";
 
 const BarangayHeader = () => {
 	return (
-		<header className="h-[65px] flex justify-between items-center border-b border-gray/20 bg-white">
-			<div className="flex">
+		<header className="h-[65px] px-4 sm:px-6 flex items-center justify-between bg-white  z-20 py-8">
+			<div className="flex items-center gap-3">
 				<Logo />
-			</div>
-			<div className="flex gap-6 mx-8">
-				<ModeToggle />
-
-				<Link href="/barangay/message">
-					<Button variant="outline" size="icon">
-						<RiMessage3Line />
-					</Button>
-				</Link>
-
-				<div>
-					<Button variant="barangay">Barangay</Button>
+				<div className="flex items-center gap-2">
+					<span className="text-lg font-semibold text-secondary">Kaby</span>
+					<span className="italic text-sm">for Barangay</span>
 				</div>
-				<Link href="/barangay/profile">
+			</div>
+			<div className="flex items-center gap-4">
+				<Link href="/barangay/profile" className="flex items-center gap-2">
+					<span className="hidden sm:inline text-sm font-medium pr-2">
+						Barangay Labangon
+					</span>
 					<Button variant="outline" size="icon">
-						<RiUser3Line className="text-black" />
+						<RiUser3Line className="w-5 h-5 text-black" />
 					</Button>
 				</Link>
+				<ModeToggle />
 			</div>
 		</header>
 	);

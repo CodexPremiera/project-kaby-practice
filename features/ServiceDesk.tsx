@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import SearchBar from "@/components/home/search/SearchBar";
-import ActiveService from "@/components/service_desk/ActiveService";
-import ClosedService from "@/components/service_desk/ClosedService";
+import ActiveService from "@/components/services/your_services/ActiveService";
+import ClosedService from "@/components/services/your_services/ClosedService";
 import { Button } from "@/components/ui/button";
+import { RiSearch2Line } from "react-icons/ri";
 
 const TAB_COMPONENTS = {
 	active: <ActiveService />,
@@ -54,7 +54,14 @@ const ServiceDesk = () => {
 						<Button variant="default" className="w-full sm:w-auto">
 							+ Add New
 						</Button>
-						<SearchBar />
+						<div className="flex items-center w-[350px] px-4 border border-gray-300 bg-white rounded-md">
+							<RiSearch2Line className="text-gray-500 mr-2" />
+							<input
+								type="text"
+								placeholder="Search for services"
+								className="w-full focus:outline-none focus:ring-0 text-[14px] h-10"
+							/>
+						</div>
 					</div>
 				</div>
 

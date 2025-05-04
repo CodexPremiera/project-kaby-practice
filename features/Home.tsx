@@ -1,7 +1,6 @@
 "use client";
 
 import ProfileTab from "@/components/profile/BarangayProfileTab";
-import EmergencyList from "@/components/home/contact_list/ContactList";
 import Post from "@/components/home/post/Post";
 import Search from "@/components/home/search/Search";
 import { useState } from "react";

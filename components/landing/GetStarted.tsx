@@ -30,7 +30,7 @@ const userTypeData = [
 const GetStarted = () => {
 	return (
 		<section className="pt-16 xl:pt-38" id="get_started">
-			<div className="container mx-auto">
+			<div className="justify-center mx-auto px-8">
 				<div className="flex flex-col xl:flex-row relative">
 					{/* text */}
 					<motion.div
@@ -56,12 +56,12 @@ const GetStarted = () => {
 						viewport={{ once: false, amount: 0.2 }}
 						className="flex-1 flex flex-col xl:flex-row xl:justify-end"
 					>
-						<div className="relative xl:flex xl:w-[680px] xl:h-[580px] sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-2 mx-6 gap-2">
+						<div className="relative xl:flex xl:w-[680px] xl:h-[580px] sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-2 mx-6 gap-4">
 							{userTypeData.map((item, index) => {
 								return (
 									<div
 										key={index}
-										className="w-full h-[492px] flex-1 relative overflow-hidden group flex justify-center card-shadow-custom"
+										className="w-full h-[492px] flex-1 relative overflow-hidden group flex justify-center shadow-md rounded-[20px]"
 									>
 										<Image
 											src={item.img}

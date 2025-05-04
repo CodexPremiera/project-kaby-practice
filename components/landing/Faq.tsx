@@ -39,7 +39,7 @@ const faqItemVariants = {
 const Faq = () => {
 	return (
 		<section className="pt-16 xl:pt-32" id="faq">
-			<div className="container mx-auto w-full xl:h-auto card-custom p-4 xl:p-8 xl:px-[90px] xl:py-[36px]">
+			<div className="container mx-auto w-full xl:h-auto p-4 xl:p-8 xl:px-[90px] xl:py-[36px]">
 				{/* Text Section */}
 				<motion.div
 					variants={fadeIn("up", 0.2)}
@@ -53,7 +53,7 @@ const Faq = () => {
 				</motion.div>
 
 				{/* FAQ Items */}
-				<ul className="w-full flex flex-col gap-6">
+				<ul className="w-full flex flex-col gap-6 ">
 					{faqItemsData.map((item, index) => {
 						return (
 							<motion.li

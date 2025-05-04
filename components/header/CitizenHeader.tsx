@@ -21,9 +21,6 @@ const CitizenHeader = () => {
 					<span className="hidden sm:inline text-sm font-medium pr-2">
 						Bondy Might
 					</span>
-					<Button variant="outline" size="icon">
-						<RiUser3Line className="w-5 h-5 text-black" />
-					</Button>
 				</Link>
 				<ModeToggle />
 			</div>

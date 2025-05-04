@@ -1,34 +1,53 @@
+import { notFound } from "next/navigation";
 import Image from "next/image";
-import React from "react";
-import { RiHome3Fill } from "react-icons/ri";
+import { profiles } from "@/data/profiles";
 
-const BarangayProfileTab = () => {
+interface ProfilePageProps {
+	params: { id: string };
+}
+
+const getProfileById = async (id: string) => {
+	return profiles.find((profile) => profile.id === id) || null;
+};
+
+const CitizenProfileTab = async ({ params }: ProfilePageProps) => {
+	const { id } = await params;
+
+	const profile = await getProfileById(id);
+
+	if (!profile) {
+		notFound();
+	}
+
 	return (
-		<div className="w-full max-w-screen py-4  bg-white card-custom">
-			<div className="flex flex-col lg:flex-row items-center lg:items-start justify-between px-12 min-h-[100px]">
-				<div className="flex gap-4 items-center text-center lg:text-left my-4">
+		<div className="container mx-auto p-6">
+			{/* Profile Header and Image */}
+			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 card-custom p-6 shadow">
+				{/* Profile Details */}
+				<div className="flex gap-4 items-center text-center sm:text-left">
 					<Image
-						src="/assets/profile/bg-profile.png"
+						src={profile.image}
 						width={60}
 						height={60}
 						alt="Profile"
-						className="min-w-[60px] min-h-[60px]"
+						className="min-w-[60px] min-h-[60px] rounded-full"
 					/>
 					<div className="flex flex-col">
-						<div className="flex items-center justify-center lg:justify-start gap-2 ">
-							<p className="text-lg font-semibold">Labangon</p>
-							<RiHome3Fill className="text-secondary" />
+						<div className="flex items-center justify-start gap-2">
+							<p className="text-lg font-semibold">{profile.name}</p>
 						</div>
-						<p className="text-sm text-gray-600">South District Cebu City</p>
+						<p className="text-sm text-gray-600">{profile.address}</p>
 					</div>
 				</div>
-				<div className="gap-6 py-6 px-6 m-3 md:flex sm:gap-12 items-center sm:px-12 text-sm w-full md:w-auto">
-					<div>
-						<span className="h5 mr-3">10</span>
+
+				{/* Profile Badges */}
+				<div className="flex gap-6 py-6 px-6 sm:px-12 text-sm w-full sm:w-auto">
+					<div className="text-center sm:text-left">
+						<span className="h5 mr-3">{profile.current_badges}</span>
 						Current Badges
 					</div>
-					<div>
-						<span className="h5 mr-3">51</span>
+					<div className="text-center sm:text-left">
+						<span className="h5 mr-3">{profile.accumulated_badges}</span>
 						Accumulated Badges
 					</div>
 				</div>
@@ -37,4 +56,4 @@ const BarangayProfileTab = () => {
 	);
 };
 
-export default BarangayProfileTab;
+export default CitizenProfileTab;

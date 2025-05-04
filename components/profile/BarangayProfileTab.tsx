@@ -4,7 +4,7 @@ import { RiHome3Fill } from "react-icons/ri";
 
 const BarangayProfileTab = () => {
 	return (
-		<div className="w-full max-w-screen py-4  bg-white card-custom">
+		<div className="w-full max-w-screen py-4  bg-white rounded-t-[20px]">
 			<div className="flex flex-col lg:flex-row items-center lg:items-start justify-between px-12 min-h-[100px]">
 				<div className="flex gap-4 items-center text-center lg:text-left my-4">
 					<Image

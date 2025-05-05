@@ -12,7 +12,7 @@ const FaqItem: React.FC<FaqItemProps> = ({ title, description }) => {
 	return (
 		<div className="w-full shadow-md rounded-[20px]">
 			<div className="flex items-center justify-between py-6">
-				<h4 className="h4 max-w-[300px] sm:max-w-md md:max-w-max ml-6">
+				<h4 className="text-lg font-semibold max-w-[300px] sm:max-w-md md:max-w-max ml-6">
 					{title}
 				</h4>
 				<button

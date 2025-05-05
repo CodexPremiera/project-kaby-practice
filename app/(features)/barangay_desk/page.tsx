@@ -21,7 +21,7 @@ const BarangayDesk = () => {
 	return (
 		<div className="flex flex-col w-full">
 			<div className="relative flex flex-col w-full min-h-screen">
-				<nav className="sticky top-0 z-2 bg-white flex gap-6 pl-8 border-b border-gray-200">
+				<nav className="fixed top-16 sm:left-16 z-2 bg-white flex gap-6 pl-8 border-b border-gray-200 w-full">
 					{Object.keys(TAB_COMPONENTS).map((tab) => (
 						<button
 							key={tab}
@@ -38,7 +38,7 @@ const BarangayDesk = () => {
 				</nav>
 
 				{/* Main content area */}
-				<div className="flex-1 justify-center overflow-y-auto items-center">
+				<div className="flex-1 justify-center overflow-y-auto items-center mt-8">
 					{TAB_COMPONENTS[activeTab]}
 				</div>
 			</div>

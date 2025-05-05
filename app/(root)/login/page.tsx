@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import LoginClientForm from './LoginClient'
+import LoginClientForm from "./LoginClient";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Logo from "@/components/Logo";
@@ -69,8 +69,8 @@ const LoginForm = () => {
 
 				<div className="w-full xl:w-1/2 flex justify-center items-center">
 					<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
-						<p className="h4 text-center">Login</p>
-						<LoginClientForm/>
+						<p className="text-lg font-semibold text-center">Login</p>
+						<LoginClientForm />
 						{/* <form className="w-full mt-6">
 							<div className="relative mt-4">
 								<input

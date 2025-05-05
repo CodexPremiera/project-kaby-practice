@@ -77,7 +77,7 @@ const GetStarted = () => {
 										{/* Default Overlay */}
 										<div className="w-full h-[86px] absolute bottom-0 left-0 right-0 flex justify-between items-center text-black-100">
 											<div className="pl-8">
-												<h4 className="text-black font-primary font-semibold tracking-[1px] uppercase">
+												<h4 className="text-black font-primary tracking-[1px] uppercase font-semibold">
 													{item.name}
 												</h4>
 											</div>
@@ -86,7 +86,7 @@ const GetStarted = () => {
 										{/* Hover Effect */}
 										<div className="w-full h-[360px] bg-secondary absolute bottom-0 left-0 right-0 flex justify-between pt-[40px] group-hover:translate-y-0 translate-y-[100%] transition-all duration-500 ">
 											<div className="pl-8">
-												<h4 className="text-black h4 font-semibold uppercase mb-2">
+												<h4 className="text-black uppercase mb-2 font-semibold">
 													{item.name}
 												</h4>
 												{item.description.map((desc, idx) => (

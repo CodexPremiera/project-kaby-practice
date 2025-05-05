@@ -1,6 +1,6 @@
 import Logo from "@/components/Logo";
 import Link from "next/link";
-import PetitionForm from './PetitionForm';
+import PetitionForm from "./PetitionForm";
 
 const Petition = () => {
 	return (
@@ -24,7 +24,7 @@ const Petition = () => {
 			</div>
 			<div className="w-full xl:w-1/2 flex justify-center items-center">
 				<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
-					<p className="h4 text-center">Make a Petition</p>
+					<p className="text-lg font-semibold text-center">Make a Petition</p>
 					<PetitionForm />
 					{/* <form className="w-full mt-6">
 						<div className="flex gap-3 justify-between">

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { services } from "@/data/services";
-import ServiceCard from "@/components/services/ServiceCard";
+import ServiceCard from "@/components/services/view/ServiceCard";
 import { useRouter } from "next/navigation";
 
 const Frontline: React.FC = () => {
@@ -34,10 +34,10 @@ const Frontline: React.FC = () => {
 		>
 			{filteredServices.map((service) => (
 				<ServiceCard
-					key={service.id}
-					service={service}
-					onSelect={() => router.push(`/services/${service.id}`)}
-				/>
+										key={service.id}
+										service={service}
+										onSelect={() => router.push(`/services/${service.id}`)}
+									/>
 			))}
 		</div>
 	);

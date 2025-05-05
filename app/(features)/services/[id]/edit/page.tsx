@@ -20,18 +20,18 @@ const EditService = () => {
 	const [dateOption, setDateOption] = useState("Available Date");
 	return (
 		<div>
-			<div className="relative bg-white rounded-2xl w-full pb-20">
-				<div className="flex flex-col gap-4">
-					<div className="flex justify-between items-center py-3 pt-5 bg-secondary rounded-t-[20px]">
-						<div className="text-medium font-semibold text-white px-6">
+			<div className="relative rounded-2xl w-full pb-20 sm:px-22 px-0">
+				<div className="flex flex-col gap-4 bg-white  rounded-t-[20px] ">
+					<div className="flex justify-between items-center  py-3 pt-5 bg-gray-100 sm:rounded-t-[20px]">
+						<div className="text-medium font-semibold text-black px-10">
 							Edit Service
 						</div>
 					</div>
 
 					{/* Form content goes here */}
-					<div className="flex flex-col md:flex-row gap-6 py-2 px-6">
+					<div className="flex flex-col md:flex-row gap-10 py-2 px-10">
 						<div className="flex flex-col">
-							<div className="w-[360px] h-[255px] flex justify-center items-center bg-black/80 rounded-lg overflow-hidden text-white ">
+							<div className="w-[350px] h-[255px] flex justify-center items-center bg-black/80 rounded-lg overflow-hidden text-white ">
 								Upload
 							</div>
 						</div>

@@ -1,40 +1,64 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
 import { RiHome3Fill } from "react-icons/ri";
 
 const BarangayProfileTab = () => {
+	const stats = [
+		{
+			value: "48,324",
+			label: "Residents",
+		},
+		{
+			value: "121",
+			label: "Service Badges",
+		},
+		{
+			value: "12",
+			label: "Officials",
+		},
+	];
+
 	return (
-		<div className="w-full max-w-screen py-4  bg-white rounded-t-[20px]">
-			<div className="flex flex-col lg:flex-row items-center lg:items-start justify-between px-12 min-h-[100px]">
-				<div className="flex gap-4 items-center text-center lg:text-left my-4">
+		<div className="w-full max-w-screen py-4 bg-white sm:rounded-t-[20px]">
+			<div className="flex flex-col lg:flex-row items-center  justify-between px-6 lg:px-12 min-h-[100px]">
+				{/* Profile Section */}
+				<div className="flex gap-4 items-center text-left my-4 flex-shrink-0 w-[500px] px-8 lg:px-0">
 					<Image
 						src="/assets/profile/bg-profile.png"
 						width={60}
 						height={60}
 						alt="Profile"
-						className="min-w-[60px] min-h-[60px]"
+						className="min-w-[60px] min-h-[60px] rounded-full object-cover"
 					/>
-					<div className="flex flex-col">
-						<div className="flex items-center justify-center lg:justify-start gap-2 ">
-							<p className="text-lg font-semibold">Labangon</p>
-							<RiHome3Fill className="text-secondary" />
+					<div className="flex flex-col max-w-[220px]">
+						<div className="flex items-center gap-2 flex-wrap">
+							<p className="text-lg font-semibold truncate">Labangon</p>
+							<RiHome3Fill className="text-secondary" size={22} />
 						</div>
-						<p className="text-sm text-gray-600">South District Cebu City</p>
+						<p className="text-sm text-gray-600 truncate">
+							South District Cebu City
+						</p>
 					</div>
 				</div>
-				<div className="gap-6 py-6 px-6 m-3 md:flex sm:gap-12 items-center sm:px-12 text-sm w-full md:w-auto">
-					<div>
-						<span className="h5 mr-3">48,324</span>
-						residents
-					</div>
-					<div>
-						<span className="h5 mr-3">121</span>
-						citizen services with barangay badges
-					</div>
-					<div>
-						<span className="h5 mr-3">12</span>
-						barangay officials
-					</div>
+
+				{/* Stats Section */}
+				<div className="flex flex-wrap gap-6 sm:gap-8 items-center justify-between w-full py-4 sm:px-8 px-4  rounded-[20px] ">
+					{stats.map((stat, index) => (
+						<div
+							key={index}
+							className="flex items-center gap-2 flex-row text-center"
+						>
+							<div className="flex items-center gap-2 sm:gap-1">
+								<span className="text-sm font-semibold">{stat.value}</span>
+							</div>
+
+							<div className="flex items-center gap-2 sm:gap-1 ">
+								<span className=" text-sm">{stat.label}</span>
+							</div>
+						</div>
+					))}
 				</div>
 			</div>
 		</div>

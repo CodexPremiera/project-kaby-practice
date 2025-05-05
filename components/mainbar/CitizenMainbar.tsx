@@ -1,14 +1,14 @@
 import {
 	RiAlarmWarningLine,
 	RiCommunityLine,
-	RiInboxLine,
+	RiServiceLine,
 	RiSettings4Line,
 } from "react-icons/ri";
 import Link from "next/link";
 
 const NAVIGATION_ITEMS = [
 	{ name: "Home", path: `/home`, icon: RiCommunityLine },
-	{ name: "Your Services", path: `/services`, icon: RiInboxLine },
+	{ name: "Your Services", path: `/services`, icon: RiServiceLine },
 	{ name: "Tracker", path: `/tracker`, icon: RiAlarmWarningLine },
 	{ name: "Settings", path: `/account`, icon: RiSettings4Line },
 ];

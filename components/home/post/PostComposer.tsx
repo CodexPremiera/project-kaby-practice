@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const PostComposer = () => {
 	return (
-		<div className="flex items-start gap-4 px-4 py-3 bg-white card-custom">
+		<div className="flex items-start gap-4 px-4 py-3 bg-white rounded-[10px]">
 			<div className="w-10 h-10 shrink-0">
 				<Image
 					src="/assets/img/profile/bg-profile.png"
@@ -17,7 +17,7 @@ const PostComposer = () => {
 			<div className="flex flex-col flex-1">
 				<textarea
 					rows={2}
-					className="w-full bg-transparent text-black placeholder:text-gray-400 resize-none outline-none pt-2"
+					className="w-full bg-transparent text-black placeholder:text-gray-400 resize-none outline-none pt-2 text-sm"
 					placeholder="What's happening?"
 				/>
 

@@ -35,7 +35,7 @@ const RequestSidebar: React.FC<RequestSidebarProps> = ({
 								onClick={() => onSelectTab(item.key)}
 								className={`${
 									isActive ? "bg-secondary " : "hover:bg-secondary/10"
-								} transition duration-200 flex sm:justify-start items-center justify-center rounded-xl py-2 px-3 h6 w-full sm:w-auto`}
+								} transition duration-200 flex sm:justify-start items-center justify-center rounded-xl py-2 px-3 h6 w-full sm:w-auto text-sm`}
 							>
 								<span className={isActive ? "text-white" : "text-black"}>
 									{item.title}

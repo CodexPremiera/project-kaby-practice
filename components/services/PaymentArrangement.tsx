@@ -41,7 +41,7 @@ const PaymentArrangement = () => {
 		<div>
 			<div className="space-y-4 pb-4">
 				<div>
-					<div className="bg-gray-200 py-2">
+					<div className="border-t border-gray-300 py-2">
 						<p className="font-semibold text-sm px-6">Payment Arrangement</p>
 					</div>
 

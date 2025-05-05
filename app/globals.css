@@ -51,6 +51,6 @@
 		@apply bg-secondary text-white text-sm;
 	}
 	.btn-default {
-		@apply bg-gray/20 text-black text-sm;
+		@apply bg-gray-100 text-black text-sm;
 	}
 }

@@ -1,5 +1,4 @@
 "use client";
-import ProfileTab from "@/components/profile/BarangayProfileTab";
 import Post from "@/components/home/post/Post";
 import Search from "@/components/home/search/Search";
 import { useState } from "react";
@@ -27,9 +26,9 @@ const Home = () => {
 
 	return (
 		<div className="flex flex-col w-full">
-			<div className="relative flex flex-col w-full min-h-screen">
+			<div className="relative flex flex-col w-full min-h-screen ">
 				<BarangayProfileTab />
-				<nav className="flex bg-white gap-6 pl-8 rounded-b-[20px] mb-4">
+				<nav className="flex bg-white gap-4 pl-8  mb-4 border-b border-gray-100 sm:rounded-b-[20px]">
 					{Object.keys(TAB_COMPONENTS).map((tab) => (
 						<button
 							key={tab}
@@ -46,7 +45,7 @@ const Home = () => {
 				</nav>
 
 				{/* Main content area */}
-				<div className="flex-1 justify-center overflow-y-auto items-center">
+				<div className="flex-1 justify-center overflow-y-auto items-center ">
 					{TAB_COMPONENTS[activeTab]}
 				</div>
 			</div>

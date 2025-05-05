@@ -1,10 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 import AroundYou from "@/components/home/search/AroundYou";
 import GeneralPublic from "@/components/home/search/GeneralPublic";
 import ViewServiceSidebar from "@/components/services/view/ViewServiceSidebar";
-import { ReactNode, use } from "react";
 
 interface LayoutProps {
 	children: ReactNode;
@@ -12,7 +11,8 @@ interface LayoutProps {
 }
 
 const ViewServiceLayout = ({ children, params }: LayoutProps) => {
-	const { id } = use(params);
+	// Use React.use to unwrap the params Promise
+	const { id } = React.use(params);
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -25,9 +25,9 @@ const ViewServiceLayout = ({ children, params }: LayoutProps) => {
 			</div>
 
 			<div className="bg-white w-full rounded-[10px] py-8 px-6">
-				<p className="text-large font-semibold">Services Around You</p>
+				<p className="text-lg font-semibold">Services Around You</p>
 				<AroundYou />
-				<p className="text-large font-semibold pt-6">
+				<p className="text-lg font-semibold pt-6">
 					Services From General Public
 				</p>
 				<GeneralPublic />

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
 import Image from "next/image";
 import {
 	RiStarFill,
@@ -13,14 +13,17 @@ import { services } from "@/data/services";
 import { Button } from "@/components/ui/button";
 
 interface PageProps {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 }
 
 const ViewService: React.FC<PageProps> = ({ params }) => {
 	const router = useRouter();
 	const currentUser = "Bondy Might"; // Replace with your auth later
 
-	const service = services.find((s) => s.id === params.id);
+	// Unwrap the `params` Promise using React.use()
+	const { id } = use(params);
+
+	const service = services.find((s) => s.id === id);
 
 	if (!service) {
 		return (
@@ -43,9 +46,9 @@ const ViewService: React.FC<PageProps> = ({ params }) => {
 			service.displayBadge === "Yes");
 
 	return (
-		<div className="flex flex-col md:flex-row  max-w-7xl mx-auto sm:h-[550px] h-full py-2">
+		<div className="flex flex-col md:flex-row max-w-7xl mx-auto sm:h-[550px] h-full py-2">
 			<div className="w-full rounded-[10px] bg-white">
-				<div className="flex flex-row justify-between items-center  border-b p-4 mb-4 border-gray-200 text-lg font-semibold px-6">
+				<div className="flex flex-row justify-between items-center border-b p-4 mb-4 border-gray-200 text-md font-semibold px-6">
 					<div>{service.title}</div>
 					<div className="flex items-center gap-4">
 						<div className="flex items-center gap-1">
@@ -79,7 +82,7 @@ const ViewService: React.FC<PageProps> = ({ params }) => {
 					</div>
 				</div>
 
-				<div className="flex flex-col md:flex-row gap-6 mb-6 px-6 pt-8 ">
+				<div className="flex flex-col md:flex-row gap-6 mb-6 px-6 pt-8">
 					<div className="w-full md:w-[460px] flex justify-center items-center bg-black/80 rounded-lg overflow-hidden p-4">
 						<Image
 							src={service.image}
@@ -133,25 +136,23 @@ const ViewService: React.FC<PageProps> = ({ params }) => {
 						</div>
 					</div>
 				) : (
-					<>
-						<div className="flex justify-between items-center gap-3 py-4 px-5">
-							<div className="sm:col-span-1 italic text-gray-500 text-xs">
-								Note: Adding this service to your tracker will allow you to chat
-								with the owner.
-							</div>
-							<div className="flex items-center gap-4">
-								<Button variant="outline">Add to Tracker</Button>
-								<Button
-									variant="secondary"
-									onClick={() =>
-										router.push(`/services/${service.id}/requirements`)
-									}
-								>
-									Avail Service
-								</Button>
-							</div>
+					<div className="flex justify-between items-center gap-3 py-4 px-5">
+						<div className="sm:col-span-1 italic text-gray-500 text-xs">
+							Note: Adding this service to your tracker will allow you to chat
+							with the owner.
 						</div>
-					</>
+						<div className="flex items-center gap-4">
+							<Button variant="outline">Add to Tracker</Button>
+							<Button
+								variant="secondary"
+								onClick={() =>
+									router.push(`/services/${service.id}/requirements`)
+								}
+							>
+								Avail Service
+							</Button>
+						</div>
+					</div>
 				)}
 			</div>
 		</div>

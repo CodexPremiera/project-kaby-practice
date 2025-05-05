@@ -1,23 +1,33 @@
 "use client";
+
 import React from "react";
 import Image from "next/image";
-import type { Service } from "@/data/services";
 import { RiVipCrown2Fill } from "react-icons/ri";
+
+interface Service {
+	id: string;
+	title: string;
+	owner: string;
+	type: string;
+	image: string;
+	displayBadge?: string;
+	status?: string;
+}
 
 interface ServiceCardProps {
 	service: Service;
-	onSelect: () => void;
+	onSelect: (id: string) => void;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect }) => {
 	return (
 		<div
-			onClick={onSelect}
-			className={`flex flex-col border border-gray-200  w-full max-w-xs cursor-pointer transition-opacity duration-300 rounded-[10px] bg-white ${
+			onClick={() => onSelect(service.id)}
+			className={`flex flex-col border border-gray-200 w-full max-w-xs cursor-pointer transition-opacity duration-300 rounded-[10px] bg-white ${
 				service.status === "closed" ? "opacity-50" : ""
 			}`}
 		>
-			<div className="relative w-full h-[140px]  overflow-hidden rounded-t-[10px]">
+			<div className="relative w-full h-[140px] overflow-hidden rounded-t-[10px]">
 				<Image
 					src={service.image}
 					alt="service image"
@@ -29,8 +39,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect }) => {
 				)}
 			</div>
 
-			<div className="px-4 py-4 ">
-				<p className="h6 font-medium">{service.title}</p>
+			<div className="px-4 py-4">
+				<p className="text-sm font-medium">{service.title}</p>
 				<div className="flex gap-2 flex-wrap text-sm text-gray-600">
 					<p>by: {service.owner}</p>
 					<p>• {service.type}</p>

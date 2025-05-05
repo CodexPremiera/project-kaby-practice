@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { services } from "@/data/services";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import {
 import { RiMoreFill } from "react-icons/ri";
 
 interface PageProps {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 }
 
 interface UploadedFile {
@@ -27,7 +27,8 @@ const Requirements: React.FC<PageProps> = ({ params }) => {
 	const router = useRouter();
 	const currentUser = "Bondy Might";
 
-	const service = services.find((s) => s.id === params.id);
+	const { id } = use(params);
+	const service = services.find((s) => s.id === id);
 
 	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 	const [selectedDate, setSelectedDate] = useState<Date | undefined>();

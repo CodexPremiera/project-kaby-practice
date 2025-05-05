@@ -26,10 +26,10 @@ const ServiceDesk = () => {
 		<div className="flex flex-col w-full min-h-screen gap-3">
 			<div className="flex flex-col w-full">
 				<div className="relative flex flex-col w-full min-h-screen ">
-					<div className="bg-white px-4 sm:px-8 py-8 rounded-[20px]">
+					<div className="bg-white px-4 sm:px-8 py-8 rounded-t-[20px]">
 						{/* Heading */}
 						<div className="flex flex-col mb-4 gap-2">
-							<div className="h5">Service Desk</div>
+							<div className="text-lg font-semibold">Service Desk</div>
 							<div className="text-sm">
 								Manage your services and provide the best experience to your
 								clients.
@@ -77,7 +77,7 @@ const ServiceDesk = () => {
 					</div>
 
 					{/* Content */}
-					<div className="flex-1 overflow-y-auto py-2 px-4 sm:px-8">
+					<div className="flex-1 overflow-y-auto py-2 px-4 sm:px-8 bg-white">
 						{TAB_COMPONENTS[activeTab]}
 					</div>
 				</div>

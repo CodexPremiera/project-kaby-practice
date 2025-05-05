@@ -30,8 +30,8 @@ const CreateService: React.FC<CreateServiceProps> = ({ onClose }) => {
 		<div className="fixed inset-0 z-50 bg-black/70 flex justify-center items-center p-6">
 			<div className="relative bg-white rounded-2xl shadow-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
 				<div className="flex flex-col gap-6">
-					<div className="flex justify-between items-center py-3 pt-5 bg-secondary">
-						<div className="text-medium font-semibold text-white px-6">
+					<div className="flex justify-between items-center py-3 pt-5 bg-gray-100">
+						<div className="text-medium font-semibold text-black px-6">
 							Create Service
 						</div>
 						<div className="absolute top-4 right-4 cursor-pointer">

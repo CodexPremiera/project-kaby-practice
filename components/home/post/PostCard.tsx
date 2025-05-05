@@ -38,7 +38,7 @@ const PostCard = ({
 	views,
 }: PostCardProps) => {
 	return (
-		<div className="relative flex px-4 py-3 space-x-4 bg-white transition">
+		<div className="relative flex px-4 py-3 space-x-4 bg-white transition rounded-[10px]">
 			{/* Avatar */}
 			<div>
 				<div className="w-10 h-10 shrink-0">
@@ -53,11 +53,11 @@ const PostCard = ({
 			</div>
 
 			{/* Content */}
-			<div className="flex flex-col flex-1">
+			<div className="flex flex-col flex-1 text-sm ">
 				{/* Header */}
 				<div className="flex justify-between items-center">
 					<div className="flex items-center text-gray space-x-1">
-						<span className="font-bold text-black">{username}</span>
+						<span className="font-semibold text-black ">{username}</span>
 						<span>@{handle}</span>
 						<BsDot />
 						<span>{timeAgo}</span>

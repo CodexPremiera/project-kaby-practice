@@ -1,8 +1,6 @@
-"use client";
-
 import React from "react";
 import { services } from "@/data/services";
-import ServiceCard from "@/components/services/ServiceCard";
+import ServiceCard from "@/components/services/view/ServiceCard";
 import { useRouter } from "next/navigation";
 
 const ClosedService: React.FC = () => {

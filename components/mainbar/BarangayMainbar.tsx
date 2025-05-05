@@ -1,6 +1,6 @@
 import {
 	RiCommunityLine,
-	RiInboxLine,
+	RiServiceLine,
 	RiSettings4Line,
 	RiTableLine,
 } from "react-icons/ri";
@@ -9,7 +9,7 @@ import Link from "next/link";
 const NAVIGATION_ITEMS = [
 	{ name: "Home", path: `/home`, icon: RiCommunityLine },
 	{ name: "Citizen Desk", path: `/citizen_desk`, icon: RiTableLine },
-	{ name: "Your Services", path: `/services`, icon: RiInboxLine },
+	{ name: "Your Services", path: `/services`, icon: RiServiceLine },
 	{ name: "Settings", path: `/account`, icon: RiSettings4Line },
 ];
 

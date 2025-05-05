@@ -1,28 +1,21 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
-import {
-	RiStarFill,
-	RiAlarmLine,
-	RiUser2Fill,
-	RiVipCrown2Fill,
-} from "react-icons/ri";
+import React, { use } from "react";
 import { useRouter } from "next/navigation";
 import { services } from "@/data/services";
 import { Button } from "@/components/ui/button";
-import ProfileCard from "@/components/profile/ProfileCard";
 import { Input } from "@/components/ui/input";
 
 interface PageProps {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 }
 
 const Payment: React.FC<PageProps> = ({ params }) => {
 	const router = useRouter();
 	const currentUser = "Bondy Might"; // Replace with your auth later
 
-	const service = services.find((s) => s.id === params.id);
+	const { id } = use(params);
+	const service = services.find((s) => s.id === id);
 
 	if (!service) {
 		return (

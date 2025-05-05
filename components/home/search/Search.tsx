@@ -1,16 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { RiFilter3Line, RiSearch2Line } from "react-icons/ri";
+import { RiSearch2Line } from "react-icons/ri";
 import Frontline from "@/components/home/search/Frontline";
 import AroundYou from "@/components/home/search/AroundYou";
 import GeneralPublic from "@/components/home/search/GeneralPublic";
-import { services } from "@/data/services";
 
 const TAB_COMPONENTS = {
-	frontline: <Frontline services={services} />,
-	"around-you": <AroundYou services={services} />,
-	"general-public": <GeneralPublic services={services} />,
+	frontline: <Frontline />,
+	"around-you": <AroundYou />,
+	"general-public": <GeneralPublic />,
 };
 
 const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
@@ -25,8 +24,8 @@ const Search = () => {
 
 	return (
 		<div className="flex flex-col w-full">
-			<div className="relative flex flex-col w-full min-h-screen ">
-				<div className="flex flex-col-reverse gap-4 px-4 sm:px-8  lg:flex-row lg:justify-between lg:items-center ">
+			<div className="relative flex flex-col w-full min-h-screen bg-white sm:rounded-[20px]">
+				<div className="flex flex-col-reverse gap-6 px-4 sm:px-8 pt-4 pb-2  lg:flex-row lg:justify-between lg:items-center ">
 					{/* Tabs */}
 					<nav className="flex flex-wrap gap-2 sm:gap-4">
 						{Object.keys(TAB_COMPONENTS).map((tab) => (
@@ -44,7 +43,7 @@ const Search = () => {
 
 					{/* Search */}
 					<div className="flex sm:items-center">
-						<div className="flex items-center w-[350px] px-4 border border-gray-300 bg-white rounded-md">
+						<div className="flex items-center w-full sm:w-[350px] px-4 border border-gray-300 bg-white rounded-md">
 							<RiSearch2Line className="text-gray-500 mr-2" />
 							<input
 								type="text"

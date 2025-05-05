@@ -1,5 +1,4 @@
 import { useState } from "react";
-import ProfileCard from "@/components/profile/ProfileCard";
 import Remarks from "./Remarks";
 import Chat from "./Chat";
 import { Button } from "@/components/ui/button";

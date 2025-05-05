@@ -28,7 +28,6 @@ import { format } from "date-fns";
 import ProfileCard from "@/components/profile/ProfileCard";
 import { profiles } from "@/data/profiles";
 import RequestSheet from "./RequestSheet";
-import ServiceTab from "../ServiceTab";
 
 type Profile = {
 	id: string;

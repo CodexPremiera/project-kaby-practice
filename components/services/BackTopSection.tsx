@@ -11,7 +11,7 @@ const BackTopSection: React.FC<BackTopSectionProps> = ({
 	serviceId,
 }) => (
 	<div className="w-full sm:w-[95%] md:bg-transparent md:pl-0 pl-4 bg-white flex justify-between items-center pt-2">
-		<div className="flex items-center gap-2 pb-4 text-sm text-muted-foreground">
+		<div className="fixed top-16 sm:left-18 right-0 flex z-20 items-center gap-2 pb-4 text-sm text-muted-foreground bg-white w-full py-2 sm:px-12 px-4">
 			<Link href="/services" className="flex items-center gap-1">
 				<RiArrowLeftLine className="text-lg" />
 				<span className="hover:text-secondary">Services</span>

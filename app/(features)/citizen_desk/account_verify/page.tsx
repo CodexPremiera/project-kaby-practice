@@ -17,7 +17,6 @@ import {
 	TableHead,
 	TableCell,
 } from "@/components/ui/table";
-import ProfileCard from "@/components/profile/ProfileCard";
 import { profiles } from "@/data/profiles";
 import { format } from "date-fns";
 

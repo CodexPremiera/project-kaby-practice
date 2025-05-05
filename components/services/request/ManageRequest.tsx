@@ -25,9 +25,9 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { format } from "date-fns";
-import ProfileCard from "@/components/profile/ProfileCard";
 import { profiles } from "@/data/profiles";
 import RequestSheet from "./RequestSheet";
+import ProfileTag from "@/components/profile/ProfileTag";
 
 type Profile = {
 	id: string;
@@ -179,7 +179,7 @@ const ManageRequests: React.FC<ManageRequestsProps> = ({ statusFilter }) => {
 									/>
 								</TableCell>
 								<TableCell className="w-[300px] cursor-pointer">
-									<ProfileCard
+									<ProfileTag
 										id={profile.id}
 										name={profile.name}
 										address={profile.address}

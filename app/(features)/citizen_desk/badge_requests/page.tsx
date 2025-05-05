@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/table";
 
 import { format } from "date-fns";
-import ProfileCard from "@/components/profile/ProfileCard";
 import { profiles } from "@/data/profiles";
+import ProfileTag from "@/components/profile/ProfileTag";
 
 type Profile = {
 	id: string;
@@ -133,7 +133,7 @@ const BadgeRequests = () => {
 									/>
 								</TableCell>
 								<TableCell className="w-[300px] cursor-pointer">
-									<ProfileCard
+									<ProfileTag
 										id={profile.id}
 										name={profile.name}
 										address={profile.address}

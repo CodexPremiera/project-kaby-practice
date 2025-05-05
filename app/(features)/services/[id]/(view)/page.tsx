@@ -142,7 +142,9 @@ const ViewService: React.FC<PageProps> = ({ params }) => {
 							with the owner.
 						</div>
 						<div className="flex items-center gap-4">
-							<Button variant="outline">Add to Tracker</Button>
+							<Button variant="outline" onClick={() => router.push(`/tracker`)}>
+								Add to Tracker
+							</Button>
 							<Button
 								variant="secondary"
 								onClick={() =>

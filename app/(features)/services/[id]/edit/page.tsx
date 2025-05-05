@@ -9,7 +9,6 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import Link from "next/link";
 import React, { useState } from "react";
 
 const serviceTypes = ["Barangay", "Personal", "Event"];
@@ -20,7 +19,7 @@ const EditService = () => {
 	const [dateOption, setDateOption] = useState("Available Date");
 	return (
 		<div>
-			<div className="relative rounded-2xl w-full pb-20 sm:px-22 px-0">
+			<div className="relative rounded-2xl w-full pb-20 sm:px-22 px-0 mt-8">
 				<div className="flex flex-col gap-4 bg-white  rounded-t-[20px] ">
 					<div className="flex justify-between items-center  py-3 pt-5 bg-gray-100 sm:rounded-t-[20px]">
 						<div className="text-medium font-semibold text-black px-10">

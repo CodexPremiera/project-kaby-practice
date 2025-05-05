@@ -2,14 +2,14 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-interface ProfileCardProps {
+interface ProfileTagProps {
 	id: string;
 	name: string;
 	address: string;
 	image: string;
 }
 
-const ProfileCard = ({ id, name, address, image }: ProfileCardProps) => {
+const ProfileTag = ({ id, name, address, image }: ProfileTagProps) => {
 	const router = useRouter();
 
 	return (
@@ -30,4 +30,4 @@ const ProfileCard = ({ id, name, address, image }: ProfileCardProps) => {
 	);
 };
 
-export default ProfileCard;
+export default ProfileTag;

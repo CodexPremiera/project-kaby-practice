@@ -32,4 +32,13 @@ export const profiles: Profile[] = [
 		current_badges: 11,
 		accumulated_badges: 67,
 	},
+
+	{
+		id: "4",
+		name: "Labangon",
+		address: "Labangon City",
+		image: "/assets/profile/bg-profile.png",
+		current_badges: 11,
+		accumulated_badges: 67,
+	},
 ];

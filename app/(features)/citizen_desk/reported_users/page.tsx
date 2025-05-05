@@ -24,10 +24,10 @@ import {
 	TableHead,
 	TableCell,
 } from "@/components/ui/table";
-import ProfileCard from "@/components/profile/ProfileCard";
 import { profiles } from "@/data/profiles";
 import { services } from "@/data/services";
 import ReportSheet from "@/components/citizen_desk/ReportSheet";
+import ProfileTag from "@/components/profile/ProfileTag";
 
 type Profile = {
 	id: string;
@@ -162,7 +162,7 @@ const ReportedUsers: React.FC = () => {
 									/>
 								</TableCell>
 								<TableCell>
-									<ProfileCard
+									<ProfileTag
 										id={profile.id}
 										name={profile.name}
 										address={profile.address}

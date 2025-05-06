@@ -21,8 +21,6 @@ const RequestSidebar: React.FC<RequestSidebarProps> = ({
 }) => {
 	return (
 		<div className="flex flex-col sm:fixed bg-white p-4 sm:rounded-[10px] rounded-[0px] sm:w-[216px] sm:h-screen w-full">
-			<ServiceTab service={services[0]} />
-
 			{/* Navigation */}
 			<nav className="flex flex-wrap sm:flex-col gap-2 sm:gap-4 mt-4 w-full">
 				<div className="flex flex-row sm:flex-col w-full sm:w-auto gap-2 sm:gap-4">

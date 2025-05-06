@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { RiVipCrown2Fill } from "react-icons/ri";
+import { useRouter } from "next/navigation";
 
 interface Service {
 	id: string;
@@ -20,9 +21,20 @@ interface ServiceCardProps {
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect }) => {
+	const router = useRouter();
+	const currentUser = "Bondy Might"; // Replace with your auth later
+	const isOwner = currentUser === service.owner;
+
+	const handleClick = () => {
+		if (isOwner) {
+			router.push(`/services/${service.id}/request`);
+		} else {
+			onSelect(service.id);
+		}
+	};
 	return (
 		<div
-			onClick={() => onSelect(service.id)}
+			onClick={handleClick}
 			className={`flex flex-col border border-gray-200 w-full max-w-xs cursor-pointer transition-opacity duration-300 rounded-[10px] bg-white ${
 				service.status === "closed" ? "opacity-50" : ""
 			}`}

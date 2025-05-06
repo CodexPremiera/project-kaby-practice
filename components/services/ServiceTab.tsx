@@ -11,8 +11,8 @@ interface ServiceTabProps {
 
 const ServiceTab: React.FC<ServiceTabProps> = ({ service }) => {
 	return (
-		<div className="w-full max-w-screen border-b border-gray-200 sm:pb-4 pb-0">
-			<div className="flex sm:flex-col flex-row items-center justify-between  bg-white rounded-lg">
+		<div className="w-full max-w-screen  sm:pb-4 pb-0">
+			<div className="flex flex-row items-center justify-between  bg-white rounded-lg px-6">
 				{/* Service Title */}
 				<div className="flex flex-col text-left my-4">
 					<p className="text-sm font-medium">{service.title}</p>

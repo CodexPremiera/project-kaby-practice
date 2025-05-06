@@ -6,6 +6,8 @@ import RequestSidebar from "@/components/services/request/RequestSidebar";
 import ManageRequests from "@/components/services/request/ManageRequest";
 import Link from "next/link";
 import { RiArrowLeftLine } from "react-icons/ri";
+import ServiceTab from "@/components/services/ServiceTab";
+import { services } from "@/data/services";
 
 const RequestPage = () => {
 	const [activeTab, setActiveTab] = useState("Pending");
@@ -31,6 +33,7 @@ const RequestPage = () => {
 
 				{/* Content area */}
 				<div className="flex-4 w-full">
+					<ServiceTab service={services[0]} />
 					{/* Switch content dynamically based on the activeTab */}
 					{activeTab === "Pending" && <ManageRequests statusFilter="Pending" />}
 					{activeTab === "Ongoing" && <ManageRequests statusFilter="Ongoing" />}

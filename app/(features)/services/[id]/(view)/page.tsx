@@ -19,6 +19,7 @@ interface PageProps {
 const ViewService: React.FC<PageProps> = ({ params }) => {
 	const router = useRouter();
 	const currentUser = "Bondy Might"; // Replace with your auth later
+	
 
 	// Unwrap the `params` Promise using React.use()
 	const { id } = use(params);
@@ -37,8 +38,9 @@ const ViewService: React.FC<PageProps> = ({ params }) => {
 			</div>
 		);
 	}
-
 	const isOwner = currentUser === service.owner;
+
+	
 
 	const shouldShowBadge =
 		(service.type === "Barangay" && service.eligibleForBadges === "Yes") ||
@@ -125,37 +127,25 @@ const ViewService: React.FC<PageProps> = ({ params }) => {
 					</div>
 				</div>
 
-				{isOwner ? (
-					<div className="flex items-end justify-end px-5 w-full">
-						<div>
-							<Button
-								onClick={() => router.push(`/services/${service.id}/request`)}
-							>
-								Manage Request
-							</Button>
-						</div>
+				<div className="flex justify-between items-center gap-3 py-4 px-5">
+					<div className="sm:col-span-1 italic text-gray-500 text-xs">
+						Note: Adding this service to your tracker will allow you to chat
+						with the owner.
 					</div>
-				) : (
-					<div className="flex justify-between items-center gap-3 py-4 px-5">
-						<div className="sm:col-span-1 italic text-gray-500 text-xs">
-							Note: Adding this service to your tracker will allow you to chat
-							with the owner.
-						</div>
-						<div className="flex items-center gap-4">
-							<Button variant="outline" onClick={() => router.push(`/tracker`)}>
-								Add to Tracker
-							</Button>
-							<Button
-								variant="secondary"
-								onClick={() =>
-									router.push(`/services/${service.id}/requirements`)
-								}
-							>
-								Avail Service
-							</Button>
-						</div>
+					<div className="flex items-center gap-4">
+						<Button variant="outline" onClick={() => router.push(`/tracker`)}>
+							Add to Tracker
+						</Button>
+						<Button
+							variant="secondary"
+							onClick={() =>
+								router.push(`/services/${service.id}/requirements`)
+							}
+						>
+							Avail Service
+						</Button>
 					</div>
-				)}
+				</div>
 			</div>
 		</div>
 	);

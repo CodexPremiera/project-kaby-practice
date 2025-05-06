@@ -1,72 +1,202 @@
 "use client";
 
 import { useState } from "react";
+import { RiMessage2Line, RiSearch2Line } from "react-icons/ri";
 import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+	Table,
+	TableHeader,
+	TableBody,
+	TableRow,
+	TableHead,
+	TableCell,
+} from "@/components/ui/table";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { profiles } from "@/data/profiles";
 
 const BarangayAppointment = () => {
-	const data = [
-		{
-			barangay: "Labangon",
-			city: "Cebu City",
-			region: "Region 7",
-			date: "2025-04-09",
-			email: "john@example.com",
-			message: "message",
-			status: "Pending",
-		},
-	];
+	const [statuses, setStatuses] = useState<string[]>(
+		profiles.map(() => "Pending")
+	);
+	const [dates, setDates] = useState<Date[]>(profiles.map(() => new Date()));
+	const [searchTerm, setSearchTerm] = useState("");
+	const [selectedItems, setSelectedItems] = useState<number[]>([]);
+	const [messages, setMessages] = useState<string[]>(profiles.map(() => ""));
 
-	const [statuses, setStatuses] = useState(data.map((d) => d.status));
+	const filteredClients = profiles
+		.map((profile, index) => ({
+			...profile,
+			status: statuses[index],
+			date: dates[index],
+			index,
+		}))
+		.filter((profile) =>
+			profile.name.toLowerCase().includes(searchTerm.toLowerCase())
+		);
 
 	const handleStatusChange = (index: number, newStatus: string) => {
-		const updated = [...statuses];
-		updated[index] = newStatus;
-		setStatuses(updated);
+		const updatedStatuses = [...statuses];
+		updatedStatuses[index] = newStatus;
+		setStatuses(updatedStatuses);
+	};
+
+	const handleMessageChange = (index: number, value: string) => {
+		const updatedMessages = [...messages];
+		updatedMessages[index] = value;
+		setMessages(updatedMessages);
+	};
+
+	const toggleSelection = (index: number) => {
+		setSelectedItems((prev) =>
+			prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+		);
 	};
 
 	return (
-		<div className="min-h-auto flex justify-center pt-4">
-			<div className="w-full p-4 shadow-sm bg-white rounded-lg mx-8">
-				<table className="min-w-full divide-y divide-gray-200 text-sm">
-					<thead className="">
-						<tr>
-							<th className="px-4 py-2 text-left font-medium">Barangay</th>
-							<th className="px-4 py-2 text-left font-medium">City</th>
-							<th className="px-4 py-2 text-left font-medium">Region</th>
-							<th className="px-4 py-2 text-left font-medium">Date</th>
-							<th className="px-4 py-2 text-left font-medium">Email</th>
-							<th className="px-4 py-2 text-left font-medium">Message</th>
-							<th className="px-4 py-2 text-left font-medium ">Status</th>
-							<th className="px-4 py-2 text-left font-medium">Action</th>
-						</tr>
-					</thead>
-					<tbody className="divide-y divide-gray-100">
-						{data.map((row, i) => (
-							<tr key={i}>
-								<td className="px-4 py-2">{row.barangay}</td>
-								<td className="px-4 py-2">{row.city}</td>
-								<td className="px-4 py-2">{row.region}</td>
-								<td className="px-4 py-2">{row.date}</td>
-								<td className="px-4 py-2">{row.email}</td>
-								<td className="px-4 py-2">{row.message}</td>
-								<td className="px-4 py-2">
+		<div className="flex flex-col gap-6 p-6 bg-white rounded-[10px] mt-4">
+			{/* Header */}
+			<div className="flex flex-wrap items-center justify-between gap-4">
+				<div className="flex items-center w-full sm:w-[350px] px-4 border border-gray-300 bg-white rounded-lg">
+					<RiSearch2Line className="text-gray-500 mr-2" />
+					<input
+						type="text"
+						placeholder="Search a client by name"
+						className="w-full focus:outline-none text-sm h-10"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+					/>
+				</div>
+
+				<div className="flex flex-wrap items-center gap-3">
+					<span className="text-sm">Selected: {selectedItems.length}</span>
+
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant="default" size="sm">
+								Batch Status
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent className="z-10 bg-white">
+							{["Pending", "Approved", "Rejected"].map((status) => (
+								<DropdownMenuItem
+									key={status}
+									onClick={() => {
+										const updatedStatuses = [...statuses];
+										selectedItems.forEach((index) => {
+											updatedStatuses[index] = status;
+										});
+										setStatuses(updatedStatuses);
+									}}
+								>
+									{status}
+								</DropdownMenuItem>
+							))}
+						</DropdownMenuContent>
+					</DropdownMenu>
+
+					<Button variant="default" size="sm">
+						Submit
+					</Button>
+				</div>
+			</div>
+
+			{/* Table */}
+			<div className="overflow-x-auto rounded-lg border border-gray-200">
+				<Table className="table-fixed w-full">
+					<TableHeader>
+						<TableRow className=" bg-gray/30 border-none">
+							<TableHead className="w-[40px] px-4">
+								<input
+									type="checkbox"
+									checked={
+										selectedItems.length === filteredClients.length &&
+										filteredClients.length > 0
+									}
+									onChange={() =>
+										selectedItems.length === filteredClients.length
+											? setSelectedItems([])
+											: setSelectedItems(filteredClients.map((c) => c.index))
+									}
+								/>
+							</TableHead>
+							<TableHead className="w-[100px]">Barangay</TableHead>
+							<TableHead className="w-[100px]">City</TableHead>
+							<TableHead className="w-[100px]">Region</TableHead>
+							<TableHead className="w-[50px]">Message</TableHead>
+							<TableHead className="w-[50px]">Status</TableHead>
+							<TableHead className="w-[50px]">Action</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{filteredClients.map((profile) => (
+							<TableRow
+								key={profile.index}
+								className="hover:bg-gray-50 border-gray-200"
+							>
+								<TableCell className="w-[40px] px-4">
+									<input
+										type="checkbox"
+										checked={selectedItems.includes(profile.index)}
+										onChange={() => toggleSelection(profile.index)}
+										className="outline-none"
+									/>
+								</TableCell>
+								<TableCell className="w-[100px]">Labangon</TableCell>
+								<TableCell className="w-[100px]">Cebu City</TableCell>
+								<TableCell className="w-[100px]">Region VII</TableCell>
+								<TableCell className="w-[50px]">
+									<Popover>
+										<PopoverTrigger asChild>
+											<Button
+												variant="gray"
+												size="icon"
+												className="rounded-full"
+											>
+												<RiMessage2Line className="text-gray-600" />
+											</Button>
+										</PopoverTrigger>
+										<PopoverContent className="w-64 p-4 bg-white shadow-md rounded-lg">
+											<p className="text-sm text-gray-700 mb-2">
+												Message from {profile.name}
+											</p>
+											<div className="border border-gray-300 rounded-md p-2 text-sm text-gray-800 bg-gray-50">
+												{messages[profile.index] || "No message received."}
+											</div>
+										</PopoverContent>
+									</Popover>
+								</TableCell>
+								<TableCell className="w-[50px]">
 									<select
-										value={statuses[i]}
-										onChange={(e) => handleStatusChange(i, e.target.value)}
-										className="w-32 px-2 py-2 bg-primary text-sm border-1 rounded-[10px]"
+										value={statuses[profile.index]}
+										onChange={(e) =>
+											handleStatusChange(profile.index, e.target.value)
+										}
+										className="w-full px-1 py-1 text-sm border border-gray-300 rounded-md bg-white"
 									>
 										<option value="Pending">Pending</option>
-										<option value="Accept">Accept</option>
-										<option value="Reject">Reject</option>
+										<option value="Approved">Approved</option>
+										<option value="Rejected">Rejected</option>
 									</select>
-								</td>
-								<td className="px-4 py-2">
-									<Button variant="table">Submit</Button>
-								</td>
-							</tr>
+								</TableCell>
+								<TableCell className="w-[50px] flex gap-2 py-12">
+									<Button variant="default" size="sm">
+										Submit
+									</Button>
+								</TableCell>
+							</TableRow>
 						))}
-					</tbody>
-				</table>
+					</TableBody>
+				</Table>
 			</div>
 		</div>
 	);

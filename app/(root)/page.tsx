@@ -25,11 +25,7 @@ const Landing = () => {
 	return (
 		<div className="overflow-hidden">
 			{/* animated header */}
-			<div
-				className={`w-full transition-transform duration-500 fixed top-0 left-0 z-50 ${
-					headerActive ? "translate-y-0" : "-translate-y-full"
-				}`}
-			>
+			<div className={`w-full transition-transform duration-500 fixed top-0 left-0 z-50`}>
 				<GuestHeader />
 			</div>
 			<Hero />

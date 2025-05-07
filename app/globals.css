@@ -10,6 +10,8 @@
 	--color-black: #1a1a1a;
 	--color-gray: #cccccc;
 	--backgroundImage: url("/assets/img/hero/bg.png");
+	--glowImage: url("/assets/hero_glow.svg");
+	--heroImage: url("/assets/hero_light.svg");
 }
 
 @layer base {
@@ -22,11 +24,24 @@
 		color: var(--color-black-100);
 		font-family: var(--font-work-sans);
 	}
+
+	h1 {
+		color: var(--color-black-100);
+		font-family: var(--font-work-sans);
+		@apply text-4xl lg:text-5xl xl:text-6xl font-bold;
+	}
 }
 
 @layer utilities {
 	.bg-hero {
 		background-image: var(--backgroundImage);
+	}
+
+	.bg-hero-gradient::before {
+		@apply bg-left bg-no-repeat bg-bottom md:bg-center bg-size-[auto_100%] -translate-y-1/12 h-[160%] w-[125%] absolute left-0 md:bottom-0;
+		background-image: var(--glowImage);
+		background-repeat: no-repeat;
+		content: "";
 	}
 
 	.floating-input {

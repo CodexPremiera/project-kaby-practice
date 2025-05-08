@@ -29,8 +29,8 @@ const ManagerRow: React.FC<CustomRowProps> = ({
   const addedRelative = getRelativeTime(added);
 
   return (
-    <div className="flex w-full items-center justify-between h-9 gap-2">
-      <div className="flex gap-3 w-[240px]">
+    <div className="flex w-full items-center justify-between h-fit gap-2">
+      <div className="flex gap-2 w-[240px]">
         <Link href={`#`}>
           <Image
             src={photo}
@@ -41,16 +41,16 @@ const ManagerRow: React.FC<CustomRowProps> = ({
           />
         </Link>
         <div className="user_name flex flex-col justify-center items-start gap-2 p-1 h-9">
-          <div className="text-[#111] font-['Inter'] font-medium leading-[12px]">{name}</div>
-          <div className="text-[#767676] font-['Inter'] text-sm leading-[12px]">{position}</div>
+          <div className="font-medium leading-[12px]">{name}</div>
+          <div className="text-secondary text-sm leading-[12px]">{position}</div>
         </div>
       </div>
       <div
-        className="flex w-[180px] items-center gap-2.5 self-stretch text-[#111] font-['Inter'] font-medium leading-[12px]">
+        className="flex w-[180px] items-center gap-2.5 self-stretch font-medium leading-[12px]">
         {role}
       </div>
       <div
-        className="flex w-[120px] items-center gap-2.5 self-stretch text-[#111] font-['Inter'] font-medium leading-[12px]">
+        className="flex w-[120px] items-center gap-2.5 self-stretch font-medium leading-[12px]">
         {addedRelative}
       </div>
 

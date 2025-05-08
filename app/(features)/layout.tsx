@@ -14,7 +14,7 @@ const GeneralLayout = ({ children }: { children: ReactNode }) => {
 			{/* Main Content */}
 			<div className="flex flex-row flex-1 sm:ml-[75px] h-full">
 				<BarangayMainbar />
-				<div className="flex-1 overflow-y-auto rounded-[20px] bg-primary sm:px-12 sm:py-4 sm:pb-0 pb-[75px]">
+				<div className="flex-1 overflow-y-auto rounded-tl-[20px] sm:px-7 sm:pb-0 pb-[75px] border-light">
 					{children}
 				</div>
 			</div>

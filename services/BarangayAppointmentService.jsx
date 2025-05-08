@@ -18,5 +18,16 @@ class BarangayAppointmentService {
         const {data,error} = await this.repo.create(appDetails);
         return {data,error};
     }
+    async updateAppointment(body) {
+        console.log("this is boday",body)
+        const {id, ...fieldsUpdate} = body;
+        if(!id || Object.keys(fieldsUpdate).length == 0){
+            throw new Error('Id and atleast one field required to update')
+        }
+        console.log(id, "fields updata");
+        const data = await this.repo.update(body.id, fieldsUpdate);
+        console.log(data, " data of service");
+        return data;
+    }
 }
 export default BarangayAppointmentService;

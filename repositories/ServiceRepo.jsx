@@ -13,4 +13,5 @@ export default class ServiceRepo extends BaseRepo{
         if(error) console.log(error);
         return data;
     }
+    
 }

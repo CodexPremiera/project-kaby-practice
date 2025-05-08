@@ -15,6 +15,7 @@ class BaseRepo{
         return data;
     }
     async create(details){
+        
         const {data,error} = await this.supabase.from(this.tableName).insert(details).select();
         if(error){
             console.log(error);

@@ -1,12 +1,19 @@
-class ServiceCardModel{
-    constructor(title,description,availableDate,price,dateClosed,location,status){
+class ServiceModel{
+    constructor(title,owner,type,image,status,description,requirements,feerange,agreementfee,conveniencefee,displaybadge,eligibleforbadges,rating,availed){
         this.title = title;
-        this.description = description;
-        this.availableDate = availableDate;
-        this.price = price;
-        this.dateClosed = dateClosed;
-        this.location = location;
+        this.owner = owner;
+        this.type = type;
+        this.image = image;
         this.status = status;
+        this.description = description;
+        this.requirements = requirements;
+        this.feerange = feerange;
+        this.agreementfee = agreementfee;
+        this.conveniencefee = conveniencefee;
+        this.displaybadge = displaybadge;
+        this.eligibleforbadges = eligibleforbadges;
+        this.rating = rating;
+        this.availed = availed;
     }
 }
-export default ServiceCardModel;
+export default ServiceModel;

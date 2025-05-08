@@ -1,18 +1,20 @@
-import ServiceCardModel from "../models/ServiceModel";
+import ServiceModel from "../models/ServiceModel";
 import { createClient } from "@supabase/supabase-js";
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+import BaseRepo from "./BaseRepo";
 
-class ServiceCardRepo{
+
+class ServiceCardRepo extends BaseRepo{ 
     constructor(){
-        this.tableName = "ServiceCard";
+        super("services");
     }
 
-    async create(serviceData){
-        console.log(serviceData);
-        const {data,error} = await supabase.from(this.tableName).insert(serviceData);
+    // async create(serviceData){
+    //     console.log(serviceData);
+    //     const {data,error} = await supabase.from(this.tableName).insert(serviceData);
+    //     return {data,error};
+    // }
+    async getByName(service_name){
+        const {data,error} = await supabase.from(this.tableName).select('*').eq('service_name',service_name).single();
         return {data,error};
     }
 }

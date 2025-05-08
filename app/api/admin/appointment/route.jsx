@@ -14,5 +14,16 @@ export async function GET(request) {
   }
 }
 
-
+export async function PUT(request){
+  console.log("this is req",request);
+  try{
+    const body = await request.json();
+    console.log("this is body: ", body);
+    const data = await brgyAppService.updateAppointment(body);
+    console.log("data of put", data);
+    return NextResponse.json({data})
+  }catch(err) {
+    return NextResponse.json({error: err.message}, {status : 500});
+  }
+}
 

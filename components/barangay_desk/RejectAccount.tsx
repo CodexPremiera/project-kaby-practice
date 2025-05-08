@@ -1,3 +1,10 @@
+// import React from "react";
+
+// const ApproveAccount = () => {
+// 	return <div>ApproveAccount</div>;
+// };
+
+// export default ApproveAccount;
 "use client";
 
 import { useState } from "react";
@@ -22,6 +29,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import App from "next/app";
 // import { profiles } from "@/data/profiles";
 type Appointment = {
 	id: number;
@@ -37,26 +45,34 @@ type Props = {
 };
 
 
-const BarangayAppointment = ({appointments }:Props) => {
-	console.log("this is apps:",appointments[0])
+const RejectAccount = ({appointments }:Props) => {
+	const approvedApps = appointments.filter((appointment) => appointment.status === "Rejected")
+	console.log("these are the appointments: ", approvedApps);
+	
+
+	// console.log("this is apps:",appointments[0])
 	const [statuses, setStatuses] = useState<string[]>(
-		appointments.map((appointment) => appointment.status ||"Pending")
+		approvedApps.map((appointment) => appointment.status ||"Pending")
+		// appointments.map((appointment) => appointment.status ||"Pending")
 	);
 
-	const [dates, setDates] = useState<Date[]>(appointments.map(() => new Date()));
+	const [dates, setDates] = useState<Date[]>(approvedApps.map(() => new Date()));
+	// const [dates, setDates] = useState<Date[]>(appointments.map(() => new Date()));
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
-	const [messages, setMessages] = useState<string[]>(appointments.map(() => ""));
+	// const [messages, setMessages] = useState<string[]>(appointments.map(() => ""));
+	const [messages, setMessages] = useState<string[]>(approvedApps.map(() => ""));
 
-	const filteredClients = appointments
-		.map((appointments, index) => ({
-			...appointments,
+	// const filteredClients = appointments
+	const filteredClients = approvedApps
+		.map((approvedApps, index) => ({
+			...approvedApps,
 			status: statuses[index],
 			date: dates[index],
 			index,
 		}))
-		.filter((appointments) =>
-			appointments.barangay_name.toLowerCase().includes(searchTerm.toLowerCase())
+		.filter((approvedApps) =>
+			approvedApps.barangay_name.toLowerCase().includes(searchTerm.toLowerCase())
 		);
 
 	const handleStatusChange = (index: number, newStatus: string) => {
@@ -71,22 +87,22 @@ const BarangayAppointment = ({appointments }:Props) => {
 		// };
 		// setStatuses(updatedAppointments),
 	};
-	const handleSubmit = async (index: number) =>{
-		const appointmentId = appointments[index].id;
-		const updatedStatus = statuses[index]
+	// const handleSubmit = async (index: number) =>{
+	// 	const appointmentId = appointments[index].id;
+	// 	const updatedStatus = statuses[index]
 
-		console.log("Appointment id: ", appointmentId ," and new status: ", updatedStatus)
+	// 	console.log("Appointment id: ", appointmentId ," and new status: ", updatedStatus)
 
-		try{
-			const res = await fetch("/api/admin/appointment",{
-				method: 'PUT',
-				headers: {"Content-Type": "application/json"},
-				body: JSON.stringify({id:appointmentId, status:updatedStatus})
-			});
-		} catch (err) {
-			console.error("error ", err);
-		}
-	}
+	// 	try{
+	// 		const res = await fetch("/api/admin/appointment",{
+	// 			method: 'PUT',
+	// 			headers: {"Content-Type": "application/json"},
+	// 			body: JSON.stringify({id:appointmentId, status:updatedStatus})
+	// 		});
+	// 	} catch (err) {
+	// 		console.error("error ", err);
+	// 	}
+	// }
 	const handleMessageChange = (index: number, value: string) => {
 		const updatedMessages = [...messages];
 		updatedMessages[index] = value;
@@ -171,7 +187,7 @@ const BarangayAppointment = ({appointments }:Props) => {
 							<TableHead className="w-[100px]">Region</TableHead>
 							<TableHead className="w-[50px]">Message</TableHead>
 							<TableHead className="w-[50px]">Status</TableHead>
-							<TableHead className="w-[50px]">Action</TableHead>
+							{/* <TableHead className="w-[50px]">Action</TableHead> */}
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -214,8 +230,8 @@ const BarangayAppointment = ({appointments }:Props) => {
 										</PopoverContent>
 									</Popover>
 								</TableCell>
-								<TableCell className="w-[50px]">
-									<select
+								{/* <TableCell className="w-[50px]"> */}
+									{/* <select
 										value={appointments.status}
 										onChange={(e) =>
 											handleStatusChange(appointments.index, e.target.value)
@@ -225,13 +241,16 @@ const BarangayAppointment = ({appointments }:Props) => {
 										<option value="Pending">Pending</option>
 										<option value="Approved">Approved</option>
 										<option value="Rejected">Rejected</option>
-									</select>
-								</TableCell>
-								<TableCell className="w-[50px] flex gap-2 py-12">
+									</select> */}
+
+								{/* </TableCell> */}
+								<TableCell className="w-[100px]">{appointments.status}</TableCell>
+
+								{/* <TableCell className="w-[50px] flex gap-2 py-12">
 									<Button variant="default" size="sm" onClick={() => handleSubmit(appointments.index)}>
 										Submit
 									</Button>
-								</TableCell>
+								</TableCell> */}
 							</TableRow>
 						))}
 					</TableBody>
@@ -241,4 +260,5 @@ const BarangayAppointment = ({appointments }:Props) => {
 	);
 };
 
-export default BarangayAppointment;
+export default RejectAccount;
+

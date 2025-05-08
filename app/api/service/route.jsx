@@ -22,13 +22,8 @@ export async function POST(request){
             background
         } = body;
 
-        // const loggedInUserId = await authService.loggedInUserId();
-        // const getProfileId  = await roleService.getRoleIdUsingAuth(loggedInUserId);
-        // console.log(getProfileId.user_id, "profileid");
-        // const getCitizenId = await citizenService.getCitizenIdUsingRole(getProfileId.id);
-        // console.log(getCitizenId, "citizendi");
+
         const {data,error} = await servService.makeService({title,description,price,available_date,closed_at,status,location});
-        // const {data,error} = await servService.makeService({title,description,price,available_date,closed_at,status,location,owner_id :getCitizenId.id});
         if(error){
             console.log(error);
         }

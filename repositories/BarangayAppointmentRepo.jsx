@@ -35,6 +35,18 @@ class BarangayAppointmentRepo{
         return data;
         
     }
+    async update(id,fields){
+        console.log(id,"this is id");
+        console.log(fields,"this is fields");
+
+        const {data,error} = await supabase.from(this.tableName).update(fields).eq('id',id).select();
+        console.log(data, "data or repo");
+        if (error) {
+            console.log(error);
+            throw error;
+        }
+        return data;
+    }
 
 }
 export default BarangayAppointmentRepo;

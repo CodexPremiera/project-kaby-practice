@@ -67,7 +67,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`${workSans.variable} pattern`}>
+			<body className={`${workSans.variable} pattern background-1 text-primary`}>
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"

@@ -1,4 +1,4 @@
-"use client";
+	"use client";
 
 import Logo from "../Logo";
 import { Button } from "@/components/ui/button";
@@ -8,12 +8,11 @@ import Link from "next/link";
 
 const BarangayHeader = () => {
 	return (
-		<header className="h-[65px] px-4 sm:px-6 flex items-center justify-between bg-white  z-20 py-8">
-			<div className="flex items-center gap-3">
+		<header className="h-[65px] px-4 sm:px-6 flex items-center justify-between z-20 py-8">
+			<div className="flex items-center gap-1 select-none cursor-pointer">
 				<Logo />
 				<div className="flex items-center gap-2">
-					<span className="text-lg font-semibold text-secondary">Kaby</span>
-					<span className="italic text-sm">for Barangay</span>
+					<span className="italic">for Barangays</span>
 				</div>
 			</div>
 			<div className="flex items-center gap-4">

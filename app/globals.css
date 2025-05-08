@@ -9,31 +9,53 @@
 	--color-accent: #ffc029;
 	--color-black: #1a1a1a;
 	--color-gray: #cccccc;
-
 	--backgroundImage: url("/assets/img/hero/bg.png");
-	--boxShadow: 0px 4px 54px 10px rgb(18, 19, 21, 0.05);
+	--glowImage: url("/assets/hero_glow.svg");
+	--heroImage: url("/assets/hero_light.svg");
+
+	/* 60% primary colors - background */
+	--color-primary-1: #FFFFFF;
+	--color-primary-2: #CDCDCD;
+	--color-primary-3: #E9E9E9;
+	--color-primary-1-dark: #1F1F1F;
+	--color-primary-2-dark: #363636;
+	--color-primary-3-dark: #363636;
+
+	/* 30% secondary colors - texts */
+	--color-secondary-1: #111111;
+	--color-secondary-2: #767676;
+	--color-secondary-1-dark: #CDCDCD;
+	--color-secondary-2-dark: #A1A1A1;
+
+	/* 10% accent colors - buttons, gradients */
+	--color-accent-1: #FFA52F;
+	--color-accent-2: #FF9229;
+	--color-accent-1-dark: #FFA52F;
+	--color-accent-2-dark: #FF9229;
+
+	/* secondary colors with a hint of accent - gradients */
+	--color-tint-2: #FFFBF0;
+	--color-tint-3: #FFFDF5;
+	--color-tint-2-dark: #1C1B17;
+	--color-tint-3-dark: #191815;
 }
 
 @layer base {
 	* {
 		border-color: var(--color-border);
 		outline-color: rgba(0, 0, 0, 0.5);
+		@apply text-secondary-1 dark:text-secondary-1-dark;
 	}
 
 	body {
-		color: var(--color-black-100);
 		font-family: var(--font-work-sans);
-		background-color: var(--color-primary);
+		@apply bg-primary-1 dark:bg-primary-1-dark;
 	}
 
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6 {
+	h1 {
 		color: var(--color-black-100);
 		font-family: var(--font-work-sans);
+		@apply text-4xl lg:text-5xl xl:text-6xl font-bold;
 	}
 }
 
@@ -41,35 +63,12 @@
 	.bg-hero {
 		background-image: var(--backgroundImage);
 	}
-	.card-shadow-custom {
-		@apply shadow-md rounded-[20px] bg-primary;
-	}
-	.h1 {
-		@apply text-[40px] xl:text-[54px] uppercase font-black leading-[1.1];
-	}
 
-	.h2 {
-		@apply text-[36px] leading-[1.3] xl:text-[46px] xl:leading-[56px] capitalize font-semibold;
-	}
-
-	.h3 {
-		@apply text-3xl font-bold;
-	}
-
-	.h4 {
-		@apply text-2xl font-bold;
-	}
-	.h5 {
-		@apply text-[16px] font-semibold;
-	}
-	.h6 {
-		@apply text-[14px]  text-black;
-	}
-	.h6-light {
-		@apply text-[14px]  text-black/50;
-	}
-	.text-small {
-		font-size: var(--font-size-small);
+	.bg-hero-gradient::before {
+		@apply bg-left bg-no-repeat bg-bottom md:bg-center bg-size-[auto_100%] -translate-y-1/12 h-[160%] w-[125%] absolute left-0 md:bottom-0;
+		background-image: var(--glowImage);
+		background-repeat: no-repeat;
+		content: "";
 	}
 
 	.floating-input {
@@ -91,9 +90,59 @@
 		@apply py-3 w-auto cursor-pointer hover:text-secondary focus:outline-none;
 	}
 	.btn-clicked {
-		@apply bg-gray/50 text-black;
+		@apply bg-secondary text-white text-sm;
 	}
 	.btn-default {
-		@apply bg-gray/20 text-black  hover:bg-gray/50 hover:text-black;
+		@apply bg-gray-100 text-black text-sm;
+	}
+
+	.background-1 {
+		@apply bg-primary-1 dark:bg-primary-1-dark;
+	}
+
+	.background-2 {
+		@apply bg-primary-2 dark:bg-primary-2-dark;
+	}
+
+	.background-3 {
+		@apply bg-primary-3 dark:bg-primary-3-dark;
+	}
+
+	.bg-accent {
+		@apply bg-accent-1 dark:bg-accent-1-dark;
+	}
+
+	.button-primary {
+		@apply bg-accent-1 dark:bg-accent-1-dark;
+		@apply hover:bg-accent-2 dark:hover:bg-accent-2-dark;
+		@apply active:bg-accent-1 dark:active:bg-accent-1-dark;
+		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-semibold shrink-0 flex;
+	}
+
+	.button-secondary {
+		@apply bg-primary-3 dark:bg-primary-3-dark;
+		@apply hover:bg-primary-2 dark:hover:bg-primary-2-dark;
+		@apply active:bg-primary-3 dark:active:bg-primary-3-dark;
+		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-semibold shrink-0 flex;
+	}
+
+	.text-primary {
+		@apply text-secondary-1 dark:text-secondary-1-dark;
+	}
+
+	.text-secondary {
+		@apply text-secondary-2 dark:text-secondary-2-dark;
+	}
+
+	.text-accent {
+		@apply text-accent-1 dark:text-accent-1-dark;
+	}
+
+	.border-light {
+		@apply border border-primary-3 dark:border-primary-3-dark;
+	}
+
+	.border-primary {
+		@apply border-primary-3 dark:border-primary-3-dark;
 	}
 }

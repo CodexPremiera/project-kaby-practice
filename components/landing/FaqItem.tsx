@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { RiSubtractFill, RiAddFill } from "react-icons/ri";
 
-
 interface FaqItemProps {
 	title: string;
 	description: string;
@@ -11,9 +10,11 @@ const FaqItem: React.FC<FaqItemProps> = ({ title, description }) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 
 	return (
-		<div className="w-full card-shadow-custom">
+		<div className="w-full shadow-md rounded-[20px]">
 			<div className="flex items-center justify-between py-6">
-				<h4 className="h4 max-w-[300px] sm:max-w-md md:max-w-max ml-6">{title}</h4>
+				<h4 className="text-lg font-semibold max-w-[300px] sm:max-w-md md:max-w-max ml-6">
+					{title}
+				</h4>
 				<button
 					className="w-[44px] h-[44px] bg-secondary flex items-center justify-center rounded-[10px] mr-6"
 					onClick={() => setIsOpen(!isOpen)}

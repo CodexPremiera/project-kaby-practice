@@ -1,6 +1,6 @@
 import Logo from "@/components/Logo";
 import Link from "next/link";
-import AppointmentClientForm from './AppointmentClient';
+import AppointmentClientForm from "./AppointmentClient";
 const AppointmentForm = () => {
 	return (
 		<section className="flex flex-wrap xl:flex-nowrap">
@@ -13,8 +13,10 @@ const AppointmentForm = () => {
 			</div>
 			<div className="w-full xl:w-1/2 flex justify-center items-center">
 				<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
-					<p className="h4 text-center">Book an Appointment</p>
-					<AppointmentClientForm/>
+					<p className="text-lg font-semibold text-center">
+						Book an Appointment
+					</p>
+					<AppointmentClientForm />
 					{/* <form className="w-full mt-6">
 						<div className="flex gap-3 justify-between">
 							<div className="relative w-full">

@@ -2,7 +2,7 @@ import React from "react";
 
 interface PretitleProps {
 	text: string;
-	center?: boolean; 
+	center?: boolean;
 }
 
 const Pretitle = ({ text, center }: PretitleProps) => {
@@ -13,7 +13,7 @@ const Pretitle = ({ text, center }: PretitleProps) => {
 			}`}
 		>
 			<div className="w-3 h-3 bg-secondary rotate-45"></div>
-			<h2 className="h2 pl-1">{text}</h2>
+			<h2 className="pl-1 text-4xl font-bold ">{text}</h2>
 			<div className="w-3 h-3 bg-secondary rotate-45"></div>
 		</div>
 	);

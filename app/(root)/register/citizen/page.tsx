@@ -1,6 +1,6 @@
 import Logo from "@/components/Logo";
 import Link from "next/link";
-import CitizenRegisterForm from './CitizenRegisterClient'
+import CitizenRegisterForm from "./CitizenRegisterClient";
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
@@ -28,7 +28,7 @@ const RegisterForm = () => {
 			</div>
 			<div className="w-full xl:w-1/2 flex justify-center items-center">
 				<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
-					<p className="h4 text-center">Sign Up (Citizen)</p>
+					<p className="text-lg font-semibold text-center">Sign Up (Citizen)</p>
 					<CitizenRegisterForm />
 					{/* <form className="w-full mt-6">
 						<div className="flex gap-3 justify-between">

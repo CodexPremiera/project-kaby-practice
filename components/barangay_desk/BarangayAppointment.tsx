@@ -22,7 +22,8 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-// import { profiles } from "@/data/profiles";
+import CreateAccount from "./CreateAccount";
+
 type Appointment = {
 	id: number;
 	barangay_name: string;
@@ -31,62 +32,72 @@ type Appointment = {
 	region: string;
 	status: string;
 	message?: string;
-}
+};
+
 type Props = {
 	appointments: Appointment[];
 };
 
+const BarangayAppointment = ({ appointments }: Props) => {
+	const [showCreateAccount, setShowCreateAccount] = useState(false);
 
-const BarangayAppointment = ({appointments }:Props) => {
-	console.log("this is apps:",appointments[0])
 	const [statuses, setStatuses] = useState<string[]>(
-		appointments.map((appointment) => appointment.status ||"Pending")
+		appointments.map((appointment) => appointment.status || "Pending")
 	);
-
-	const [dates, setDates] = useState<Date[]>(appointments.map(() => new Date()));
+	const [dates, setDates] = useState<Date[]>(
+		appointments.map(() => new Date())
+	);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
-	const [messages, setMessages] = useState<string[]>(appointments.map(() => ""));
+	const [messages, setMessages] = useState<string[]>(
+		appointments.map(() => "")
+	);
 
 	const filteredClients = appointments
-		.map((appointments, index) => ({
-			...appointments,
+		.map((appointment, index) => ({
+			...appointment,
 			status: statuses[index],
 			date: dates[index],
 			index,
 		}))
-		.filter((appointments) =>
-			appointments.barangay_name.toLowerCase().includes(searchTerm.toLowerCase())
+		.filter((appointment) =>
+			appointment.barangay_name.toLowerCase().includes(searchTerm.toLowerCase())
 		);
 
 	const handleStatusChange = (index: number, newStatus: string) => {
 		const updatedStatuses = [...statuses];
 		updatedStatuses[index] = newStatus;
 		setStatuses(updatedStatuses);
-
-		// const updatedAppointments = [...appointments];
-		// updatedAppointments[index] = {
-		// 	...updatedAppointments[index],
-		// 	status: newStatus,  // Update the status field
-		// };
-		// setStatuses(updatedAppointments),
 	};
-	const handleSubmit = async (index: number) =>{
+
+	const handleSubmit = async (index: number) => {
 		const appointmentId = appointments[index].id;
-		const updatedStatus = statuses[index]
+		const updatedStatus = statuses[index];
 
-		console.log("Appointment id: ", appointmentId ," and new status: ", updatedStatus)
+		console.log(
+			"Appointment id: ",
+			appointmentId,
+			" and new status: ",
+			updatedStatus
+		);
 
-		try{
-			const res = await fetch("/api/admin/appointment",{
-				method: 'PUT',
-				headers: {"Content-Type": "application/json"},
-				body: JSON.stringify({id:appointmentId, status:updatedStatus})
+		try {
+			await fetch("/api/admin/appointment", {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ id: appointmentId, status: updatedStatus }),
 			});
+
+			if (updatedStatus === "Approved") {
+				setShowCreateAccount(true);
+			} else {
+				setShowCreateAccount(false);
+			}
 		} catch (err) {
 			console.error("error ", err);
 		}
-	}
+	};
+
 	const handleMessageChange = (index: number, value: string) => {
 		const updatedMessages = [...messages];
 		updatedMessages[index] = value;
@@ -144,6 +155,13 @@ const BarangayAppointment = ({appointments }:Props) => {
 					<Button variant="default" size="sm">
 						Submit
 					</Button>
+					<Button
+						variant="outline"
+						className="w-full sm:w-auto border border-gray-200"
+						onClick={() => setShowCreateAccount(true)}
+					>
+						+ Create Account
+					</Button>
 				</div>
 			</div>
 
@@ -151,7 +169,7 @@ const BarangayAppointment = ({appointments }:Props) => {
 			<div className="overflow-x-auto rounded-lg border border-gray-200">
 				<Table className="table-fixed w-full">
 					<TableHeader>
-						<TableRow className=" bg-gray/30 border-none">
+						<TableRow className="bg-gray/30 border-none">
 							<TableHead className="w-[40px] px-4">
 								<input
 									type="checkbox"
@@ -175,22 +193,26 @@ const BarangayAppointment = ({appointments }:Props) => {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{filteredClients.map((appointments) => (
+						{filteredClients.map((appointment) => (
 							<TableRow
-								key={appointments.index}
+								key={appointment.index}
 								className="hover:bg-gray-50 border-gray-200"
 							>
 								<TableCell className="w-[40px] px-4">
 									<input
 										type="checkbox"
-										checked={selectedItems.includes(appointments.index)}
-										onChange={() => toggleSelection(appointments.index)}
+										checked={selectedItems.includes(appointment.index)}
+										onChange={() => toggleSelection(appointment.index)}
 										className="outline-none"
 									/>
 								</TableCell>
-								<TableCell className="w-[100px]">{appointments.barangay_name}</TableCell>
-								<TableCell className="w-[100px]">{appointments.city}</TableCell>
-								<TableCell className="w-[100px]">{appointments.region}</TableCell>
+								<TableCell className="w-[100px]">
+									{appointment.barangay_name}
+								</TableCell>
+								<TableCell className="w-[100px]">{appointment.city}</TableCell>
+								<TableCell className="w-[100px]">
+									{appointment.region}
+								</TableCell>
 								<TableCell className="w-[50px]">
 									<Popover>
 										<PopoverTrigger asChild>
@@ -204,21 +226,19 @@ const BarangayAppointment = ({appointments }:Props) => {
 										</PopoverTrigger>
 										<PopoverContent className="w-64 p-4 bg-white shadow-md rounded-lg">
 											<p className="text-sm text-gray-700 mb-2">
-												Message from {appointments.barangay_name}
+												Message from {appointment.barangay_name}
 											</p>
 											<div className="border border-gray-300 rounded-md p-2 text-sm text-gray-800 bg-gray-50">
-												{/* {messages[appointments.index] || "No message received."} */}
-												{appointments.message || "No message received."}
-
+												{appointment.message || "No message received."}
 											</div>
 										</PopoverContent>
 									</Popover>
 								</TableCell>
 								<TableCell className="w-[50px]">
 									<select
-										value={appointments.status}
+										value={appointment.status}
 										onChange={(e) =>
-											handleStatusChange(appointments.index, e.target.value)
+											handleStatusChange(appointment.index, e.target.value)
 										}
 										className="w-full px-1 py-1 text-sm border border-gray-300 rounded-md bg-white"
 									>
@@ -228,7 +248,11 @@ const BarangayAppointment = ({appointments }:Props) => {
 									</select>
 								</TableCell>
 								<TableCell className="w-[50px] flex gap-2 py-12">
-									<Button variant="default" size="sm" onClick={() => handleSubmit(appointments.index)}>
+									<Button
+										variant="default"
+										size="sm"
+										onClick={() => handleSubmit(appointment.index)}
+									>
 										Submit
 									</Button>
 								</TableCell>
@@ -237,6 +261,11 @@ const BarangayAppointment = ({appointments }:Props) => {
 					</TableBody>
 				</Table>
 			</div>
+
+			{/* Modal */}
+			{showCreateAccount && (
+				<CreateAccount onClose={() => setShowCreateAccount(false)} />
+			)}
 		</div>
 	);
 };

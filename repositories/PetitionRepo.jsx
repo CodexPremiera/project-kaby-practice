@@ -1,8 +1,9 @@
 import BaseRepo from "./BaseRepo";
 
 class PetitionRepo extends BaseRepo {
-    constructor(){
-        super("Petition");
+    constructor(supabase){
+        super("Petition",supabase);
+        this.supabase = supabase;
     }
 }
 export default PetitionRepo;

@@ -27,6 +27,7 @@ type Appointment = {
 	id: number;
 	barangay_name: string;
 	barangay: string;
+	email: string;
 	city: string;
 	region: string;
 	status: string;
@@ -38,24 +39,27 @@ type Props = {
 
 
 const BarangayAppointment = ({appointments }:Props) => {
+	const pendingApps = appointments.filter((appointment) => appointment.status === "Pending");
+	console.log("these are the appointments: ", pendingApps);
+
 	const [statuses, setStatuses] = useState<string[]>(
-		appointments.map((appointment) => appointment.status ||"Pending")
+		pendingApps.map((appointment) => appointment.status ||"Pending")
 	);
 
-	const [dates, setDates] = useState<Date[]>(appointments.map(() => new Date()));
+	const [dates, setDates] = useState<Date[]>(pendingApps.map(() => new Date()));
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
-	const [messages, setMessages] = useState<string[]>(appointments.map(() => ""));
+	const [messages, setMessages] = useState<string[]>(pendingApps.map(() => ""));
 
-	const filteredClients = appointments
-		.map((appointments, index) => ({
-			...appointments,
+	const filteredClients = pendingApps
+		.map((pendingApps, index) => ({
+			...pendingApps,
 			status: statuses[index],
 			date: dates[index],
 			index,
 		}))
-		.filter((appointments) =>
-			appointments.barangay_name.toLowerCase().includes(searchTerm.toLowerCase())
+		.filter((pendingApps) =>
+			pendingApps.barangay_name.toLowerCase().includes(searchTerm.toLowerCase())
 		);
 
 	const handleStatusChange = (index: number, newStatus: string) => {
@@ -74,6 +78,8 @@ const BarangayAppointment = ({appointments }:Props) => {
 		const appointmentId = appointments[index].id;
 		const updatedStatus = statuses[index]
 
+		const email = appointments[index].email;
+		console.log("Emailzzz: ", email)
 		console.log("Appointment id: ", appointmentId ," and new status: ", updatedStatus)
 
 		try{
@@ -82,6 +88,20 @@ const BarangayAppointment = ({appointments }:Props) => {
 				headers: {"Content-Type": "application/json"},
 				body: JSON.stringify({id:appointmentId, status:updatedStatus})
 			});
+			if(!res.ok){
+				throw new Error("Failed to update appointment status")
+			}
+			if(updatedStatus === "Approved"){
+				
+				const registerBrgy = await fetch("/api/admin/appointment",{
+					method: 'POST',
+					headers: {"Content-Type": "application/json"},
+					body: JSON.stringify({
+						email:email, 
+						password:email
+					})
+				});
+			}
 		} catch (err) {
 			console.error("error ", err);
 		}

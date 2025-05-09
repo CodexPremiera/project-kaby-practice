@@ -1,8 +1,9 @@
 import BaseRepo from "./BaseRepo";
 
 export default class ServiceRepo extends BaseRepo{
-    constructor(){
-        super("ServiceCard");
+    constructor(supabase){
+        super("ServiceCard",supabase);
+        this.supabase = supabase;
     }
     async getAllServices(){
         

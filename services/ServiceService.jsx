@@ -1,9 +1,7 @@
 import ServiceCardRepo from "../repositories/ServiceCardRepo";
-import UserService from "./UserService";
-import AuthenticationService from "./AuthenticationService";
 class ServiceService{
-    constructor(){
-        this.repo = new ServiceCardRepo();
+    constructor(supabase){
+        this.repo = new ServiceCardRepo(supabase);
     }
     async getAllServices(){
         const services = await this.repo.getAll();

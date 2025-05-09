@@ -1,8 +1,3 @@
-// import { createClient } from "@supabase/supabase-js";
-// import supabase  from "@/lib/supabaseClient"; // or however you import this
-// // import { createClient } from '../utils/supabase/server'
-// import { createClient } from '@/utils/supabase/server'
-// const supabase = await createClient();
 class AuthenticationRepo{
     constructor(supabase){
         this.supabase = supabase;

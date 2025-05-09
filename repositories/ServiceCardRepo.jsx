@@ -4,8 +4,9 @@ import BaseRepo from "./BaseRepo";
 
 
 class ServiceCardRepo extends BaseRepo{ 
-    constructor(){
-        super("services");
+    constructor(supabase){
+        super("services",supabase);
+        this
     }
 
     // async create(serviceData){
@@ -14,7 +15,7 @@ class ServiceCardRepo extends BaseRepo{
     //     return {data,error};
     // }
     async getByName(service_name){
-        const {data,error} = await supabase.from(this.tableName).select('*').eq('service_name',service_name).single();
+        const {data,error} = await this.supabase.from(this.tableName).select('*').eq('service_name',service_name).single();
         return {data,error};
     }
 }

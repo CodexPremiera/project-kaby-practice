@@ -1,17 +1,8 @@
+import AuthenticationService from "@/services/AuthenticationService";
 import { NextResponse } from "next/server";
-// import supabase  from "@/lib/supabaseClient"; // or however you import this
-// import  {authService}  from "./services/AuthService"; // nioajsnfipasf
-// import  {userService}  from "./services/UserService"; //asnfoapmaps
-// import { createClient } from '../utils/supabase/server'
-
-import AuthenticationService from "../../../../services/AuthenticationService";
-import UserService from "../../../../services/UserService";
-
 
 import { createClient } from '@/utils/supabase/server'
-const userService = new UserService();
 
-// const supabase = createClient();
 export async function POST(req) {
 	console.log("logging in");
 	try {
@@ -23,8 +14,8 @@ export async function POST(req) {
 		const email = username;
 
 		// const { data, error } = await supabase.signInUser({ email, password });
-        const { data, error } = await authService.signInUser({ email, password });
         // const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await authService.signInUser({ email, password });
 
 		if (error) {
 			console.log(error);

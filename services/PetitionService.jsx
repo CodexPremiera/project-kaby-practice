@@ -1,8 +1,8 @@
 import PetitionRepo from "../repositories/PetitionRepo";
 
 class PetitionService {
-    constructor(){
-        this.repo = new PetitionRepo();
+    constructor(supabase){
+        this.repo = new PetitionRepo(supabase);
     }    
     async getAllPetitions(){
         const data = this.repo.getAll();

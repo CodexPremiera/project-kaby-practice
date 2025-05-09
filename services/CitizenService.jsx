@@ -1,8 +1,8 @@
 import CitizenProfileRepo from "../repositories/CitizenProfileRepo";
 
 class CitizenService{
-    constructor(){
-        this.repo = new CitizenProfileRepo();
+    constructor(supabase){
+        this.repo = new CitizenProfileRepo(supaabase);
     }
     
     async createCitizenProfile(citizenDetails){

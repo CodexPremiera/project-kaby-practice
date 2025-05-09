@@ -1,11 +1,10 @@
-import { createClient } from "@supabase/supabase-js";
 import CitizenModel from "../models/CitizenModel";
 import BaseRepo from "./BaseRepo";
 
 
 class CitizenProfileRepo extends BaseRepo{
-    constructor(){
-        super("CitizenProfile");
+    constructor(supabase){
+        super("CitizenProfile",supabase);
     }
     async create(citizenData){
         const citizen = new CitizenModel(citizenData);

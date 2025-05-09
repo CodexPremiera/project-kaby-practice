@@ -1,27 +1,24 @@
-import { createClient } from "@supabase/supabase-js";
-import BarangayAppointmentModel from "../models/BarangayAppointment.Model";
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
 
+import BarangayAppointmentModel from "../models/BarangayAppointment.Model";
 class BarangayAppointmentRepo{
-    constructor(){
+    constructor(supabase){
         this.tableName = 'BarangayAppointment';
+        this.supabase = supabase;
     }
 
     async getAll(){
-        const {data, error} = await supabase.from(this.tableName).select('*');
+        const {data, error} = await this.supabase.from(this.tableName).select('*');
         if(error) throw new Error(error.message);
         return data;
     }
 
     async create(appointmentData){
         const {barangay_name, city, region,email, message} = appointmentData;
-        const appointment = new BarangayAppointmentModel(barangay_name,email,city,message,"pending",region);
+        const appointment = new BarangayAppointmentModel(barangay_name,email,city,message,"Pending",region);
 
-        const {data,error} = await supabase.from(this.tableName).insert([appointment]).select();
+        const {data,error} = await this.supabase.from(this.tableName).insert([appointment]).select();
         if(error){
+            console.log(error);
             return error;
         }
         console.log("data",data);
@@ -29,7 +26,7 @@ class BarangayAppointmentRepo{
 
     }
     async getById(appId){
-        const {data,error} = await supabase.from(this.tableName).select('*').eq("id",appId);
+        const {data,error} = await this.supabase.from(this.tableName).select('*').eq("id",appId);
         
         // console.log(data);
         return data;
@@ -39,7 +36,7 @@ class BarangayAppointmentRepo{
         console.log(id,"this is id");
         console.log(fields,"this is fields");
 
-        const {data,error} = await supabase.from(this.tableName).update(fields).eq('id',id).select();
+        const {data,error} = await this.supabase.from(this.tableName).update(fields).eq('id',id).select();
         console.log(data, "data or repo");
         if (error) {
             console.log(error);

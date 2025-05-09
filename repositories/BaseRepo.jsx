@@ -1,6 +1,5 @@
-import supabase from "../lib/supabaseClient";
 class BaseRepo{
-    constructor(tableName){
+    constructor(tableName, supabase){
         this.tableName = tableName;
         this.supabase = supabase;
     }

@@ -39,21 +39,37 @@ export async function updateSession(request: NextRequest) {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	console.log(user, "this is user");
+	// console.log(user, "this is user");
 
-	if (
-		!user &&
-		!request.nextUrl.pathname.startsWith("/login") &&
-		!request.nextUrl.pathname.startsWith("/api") &&
-		!request.nextUrl.pathname.startsWith("/") &&
-		!request.nextUrl.pathname.startsWith("/auth")
-	) {
-		// no user, potentially respond by redirecting  user to the login page
-		console.log("User not found, redirecting to login page");
+	// if (
+	// 	!user &&
+	// 	!request.nextUrl.pathname.startsWith("/login") &&
+	// 	!request.nextUrl.pathname.startsWith("/api") &&
+	// 	!request.nextUrl.pathname.startsWith("/") &&
+	// 	!request.nextUrl.pathname.startsWith("/auth")
+	// ) {
+	// 	// no user, potentially respond by redirecting  user to the login page
+	// 	console.log("User not found, redirecting to login page");
+	// 	const url = request.nextUrl.clone();
+	// 	url.pathname = "/login";
+	// 	return NextResponse.redirect(url);
+
+	// }
+
+	const publicPaths = [
+		"/",              // root
+		"/login",         // login page
+	];
+	const isPublicPath = publicPaths.includes(request.nextUrl.pathname) ||
+	 	request.nextUrl.pathname.startsWith("/api") ||
+		request.nextUrl.pathname.startsWith("/auth")||
+		request.nextUrl.pathname.startsWith("/register");
+
+	if (!user && !isPublicPath) {
+		console.log("Unauthenticated access blocked: redirecting to login.");
 		const url = request.nextUrl.clone();
 		url.pathname = "/login";
 		return NextResponse.redirect(url);
-
 	}
 
 	// IMPORTANT: You *must* return the supabaseResponse object as it is.

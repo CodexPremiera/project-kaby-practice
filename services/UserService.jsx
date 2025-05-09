@@ -1,21 +1,23 @@
-import CitizenProfileRepo from "../repositories/CitizenProfileRepo";
 import UserRepo from "../repositories/UserRepo";
-// import AuthenticationRepo from "../repositories/AuthenticationRepo";
 import AuthenticationService from "./AuthenticationService";
 
 class UserService{
-    constructor(){
-        this.repo = new UserRepo();
+    constructor(supabase){
+        this.repo = new UserRepo(supabase);
     }
     
     async createUser(userDetails){
         const {data,error} = await this.repo.create(userDetails);
         console.log(data,"data2");
+        if(error){
+            console.log(error);
+        }   
         return {data,error};
     }
-    async getUserRole(){
-        const authService = new AuthenticationService();
-        const user_id = await authService.loggedInUserId();
+    async getUserRole(user_id){
+        // const authService = new AuthenticationService();
+        // const user_id = await authService.loggedInUserId();
+        console.log(user_id, "the user id in service");
         const {data,error} = await this.repo.getById(user_id);
         console.log(data);
         if(error){

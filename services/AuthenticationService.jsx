@@ -1,8 +1,8 @@
 import AuthenticationRepo from "../repositories/AuthenticationRepo";
 
 class AuthenticationService{
-    constructor(){
-        this.repo = new AuthenticationRepo();
+    constructor(supabase){
+        this.repo = new AuthenticationRepo(supabase);
     }
     async registerUser(userDetails){
         const {email, password, confirmPass} = userDetails;
@@ -14,8 +14,10 @@ class AuthenticationService{
         return {data,error};
     }
     async signInUser(userCredentials){
-        console.log(userCredentials);
+        // console.log(userCredentials);
+        console.log("signing in user", userCredentials);
         const {data,error} = await this.repo.loginUser(userCredentials);
+
         return {data,error};
     }
     async loggedInUserId(){

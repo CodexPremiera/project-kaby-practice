@@ -38,7 +38,6 @@ type Props = {
 
 
 const BarangayAppointment = ({appointments }:Props) => {
-	console.log("this is apps:",appointments[0])
 	const [statuses, setStatuses] = useState<string[]>(
 		appointments.map((appointment) => appointment.status ||"Pending")
 	);

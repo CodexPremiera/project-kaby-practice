@@ -39,19 +39,21 @@ export async function updateSession(request: NextRequest) {
 		data: { user },
 	} = await supabase.auth.getUser();
 
+	console.log(user, "this is user");
+
 	if (
 		!user &&
 		!request.nextUrl.pathname.startsWith("/login") &&
+		!request.nextUrl.pathname.startsWith("/api") &&
+		!request.nextUrl.pathname.startsWith("/") &&
 		!request.nextUrl.pathname.startsWith("/auth")
 	) {
 		// no user, potentially respond by redirecting  user to the login page
+		console.log("User not found, redirecting to login page");
 		const url = request.nextUrl.clone();
 		url.pathname = "/login";
-		// url.pathname = '/'
-		console.log(user);
-		// console.log(url);
-		// return NextResponse.redirect(url)
-		return supabaseResponse;
+		return NextResponse.redirect(url);
+
 	}
 
 	// IMPORTANT: You *must* return the supabaseResponse object as it is.
@@ -69,3 +71,53 @@ export async function updateSession(request: NextRequest) {
 
 	return supabaseResponse;
 }
+
+// import { createServerClient } from "@supabase/ssr";
+// import { NextResponse, type NextRequest } from "next/server";
+
+// export async function updateSession(request: NextRequest) {
+// 	let supabaseResponse = NextResponse.next({
+// 		request,
+// 	});
+
+// 	const supabase = createServerClient(
+// 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+// 		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,	
+// 		{
+// 			cookies: {
+// 				getAll() {
+// 					console.log(request.cookies.getAll(), "this is cookies");
+// 					return request.cookies.getAll(); // ✅ correct
+// 				},
+// 				setAll(cookiesToSet) {
+// 					// ✅ ONLY set cookies on the response
+// 					cookiesToSet.forEach(({ name, value, options }) =>
+// 						supabaseResponse.cookies.set(name, value, options)
+// 					);
+// 				},
+// 			},
+// 		}
+// 	);
+
+// 	// This line must stay here for auth session to persist
+// 	const {
+// 		data: { user },
+// 	} = await supabase.auth.getUser();
+// 	console.log(user, "this is user");
+
+// 	if (
+// 		!user &&
+// 		!request.nextUrl.pathname.startsWith("/login") &&
+// 		!request.nextUrl.pathname.startsWith("/auth") &&
+// 		!request.nextUrl.pathname.startsWith("/api")
+
+// 	) {
+// 		console.log("User not found, redirecting to login page");
+// 		const url = request.nextUrl.clone();
+// 		url.pathname = "/login";
+// 		return NextResponse.redirect(url);
+// 	}
+// 	console.log('Request Path:', request.nextUrl.pathname);
+//     console.log('Cookies:', request.cookies.getAll());
+// 	return supabaseResponse; // ✅ always return this
+// }

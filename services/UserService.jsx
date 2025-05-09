@@ -2,6 +2,7 @@ import CitizenProfileRepo from "../repositories/CitizenProfileRepo";
 import UserRepo from "../repositories/UserRepo";
 // import AuthenticationRepo from "../repositories/AuthenticationRepo";
 import AuthenticationService from "./AuthenticationService";
+
 class UserService{
     constructor(){
         this.repo = new UserRepo();
@@ -25,6 +26,21 @@ class UserService{
     async getRoleIdUsingAuth(id){
         const user_id = await this.repo.getIdUsingAuth(id);
         return user_id;
+    }
+    
+    async getUserById(id){
+        const {data,error} = await this.repo.getById(id);
+        if(error){
+            console.log(error);
+        }
+        return data;
+    }
+    async getAllUsers(){
+        const {data,error} = await this.repo.getAllUsers();
+        if(error){
+            console.log(error);
+        }
+        return data;
     }
 
 }

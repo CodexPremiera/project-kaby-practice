@@ -1,10 +1,12 @@
-import { createClient } from "@supabase/supabase-js";
+// import { createClient } from "@supabase/supabase-js";
 import UserModel from "../models/UserModel";
+import supabase  from "@/lib/supabaseClient"; // or however you import this
 
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+// const supabase = createClient(
+//     process.env.NEXT_PUBLIC_SUPABASE_URL,
+//     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+//   );
 
 class UserRepo{
     constructor(){
@@ -29,6 +31,13 @@ class UserRepo{
         if(error) console.log(error);
         console.log(data, "should be 54e");
         return data;
+    }
+    async getAllUsers(){
+        const {data,error} = await supabase.from(this.tableName).select('*');
+        if(error){
+            console.log(error);
+        }
+        return {data,error};
     }
 }
 export default UserRepo;

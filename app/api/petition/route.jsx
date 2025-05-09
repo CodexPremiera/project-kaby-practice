@@ -25,5 +25,5 @@ export async function POST(request){
 
 }
 export async function GET(){
-    return NextResponse({hello:"world"});
+    return NextResponse.json({hello:"world"});
 }

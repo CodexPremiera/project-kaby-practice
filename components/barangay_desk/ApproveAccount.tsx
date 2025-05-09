@@ -80,12 +80,6 @@ const ApproveAccount = ({appointments }:Props) => {
 		updatedStatuses[index] = newStatus;
 		setStatuses(updatedStatuses);
 
-		// const updatedAppointments = [...appointments];
-		// updatedAppointments[index] = {
-		// 	...updatedAppointments[index],
-		// 	status: newStatus,  // Update the status field
-		// };
-		// setStatuses(updatedAppointments),
 	};
 	// const handleSubmit = async (index: number) =>{
 	// 	const appointmentId = appointments[index].id;

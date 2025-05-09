@@ -1,69 +1,81 @@
-// https://blog.mansueli.com/building-user-authentication-with-username-and-password-using-supabase#heading-tweaking-the-sign-in-route
-// to sign in using username
-// https://stackoverflow.com/questions/78550922/how-do-i-authorise-users-with-username-in-supabase
-'use server'
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { NextResponse } from 'next/server'
+import { NextResponse } from "next/server";
+// import supabase  from "@/lib/supabaseClient"; // or however you import this
+// import  {authService}  from "./services/AuthService"; // nioajsnfipasf
+// import  {userService}  from "./services/UserService"; //asnfoapmaps
+// import { createClient } from '../utils/supabase/server'
+
 import AuthenticationService from "../../../../services/AuthenticationService";
 import UserService from "../../../../services/UserService";
 
-const authService = new AuthenticationService();
+
+import { createClient } from '@/utils/supabase/server'
 const userService = new UserService();
 
-export async function POST(req){
-    console.log("logging in");
-    try{
+// const supabase = createClient();
+export async function POST(req) {
+	console.log("logging in");
+	try {
+		const body = await req.json();
+		const supabase = await createClient();
+		
+		const authService = new AuthenticationService(supabase);
+		const { username, password } = body;
+		const email = username;
 
-        // console.log(req);
-        const body = await req.json();
-        const {username,password} = body;
+		// const { data, error } = await supabase.signInUser({ email, password });
+        const { data, error } = await authService.signInUser({ email, password });
+        // const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
+		if (error) {
+			console.log(error);
+			return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+		}
 
-        // const {error} = await supabase.auth.signInWithPassword({email:username, password:password});
-        const {data:data1,error:error1} = await authService.signInUser(body);
-        // make login include username too uncomment babaw for email only
+		// console.log(data, "login success");
 
-        // const {data} = await supabase.functions.invoke('sign-in',{
-        //     body:{
-        //         email,
-        //         password,
-        //     }
-        // });
-        // const {error} = await supabase.auth.setSession({
-        //     access_token: data.access_token,
-        //     refresh_token: data.refresh_token
-        // });
-        // ===================;
-        if(error1){
-            console.log(error1);
-        }
-        console.log("wenthere");
+		// 🟡 Wait for session to be available (max ~1 second)
+		// let session = null;
+		// for (let i = 0; i < 10; i++) {
+        //     console.log("Waiting for session...");
+		// 	const { data: sessionData } = await supabase.auth.getSession();
+		// 	if (sessionData?.session) {
+		// 		session = sessionData.session;
+		// 		break;
+		// 	}
+		// 	console.log(`Waiting for session... (${i})`);
+		// 	await new Promise((r) => setTimeout(r, 100));
+		// }
 
-        // check role of cit
+		// if (!session) {
+		// 	console.error("Session did not become available in time");
+		// 	return NextResponse.json({ error: "Session setup failed" }, { status: 500 });
+		// }
 
-        const user_id = await authService.loggedInUserId();
-         const role = await userService.getUserRole();
+		// ✅ Now safe to get user role
+		// const user_id = await authService.loggedInUserId();
+        // const user_id = await supabase.auth.getUser();
+        // // console.log("user id", user_id);
+		// const role = await userService.getUserRole();
 
-        console.log(role);
+		// console.log("User role:", role);
+        // console.log("dtfaygubisdhonosadjasndol");
 
-        if(role ==="citizen"){
-            console.log("brr brr patapim");
-            revalidatePath('/citizen');
-            // redirect('/citizen');
-            return NextResponse.json({redirectTo: '/citizen'});
-        }else{
-            revalidatePath('/barangay');
-            return NextResponse.json({redirectTo: '/barangay'});
+		// if (role === "citizen") {
+            
+		// 	revalidatePath("/citizen");
+		// 	return NextResponse.json({ redirectTo: "/home" });
+		// } else {
+		// 	revalidatePath("/barangay");
+		// 	return NextResponse.json({ redirectTo: "/barangay" });
+		// }
+		return NextResponse.json({ redirectTo: "/home" });
 
-           // return 
-        }
-        // return NextResponse.json({hello:"word"});
-
-    }catch(err){
-        return new Response(JSON.stringify({error:'Internal server error'}), {status:500});
-    }
+	} catch (err) {
+		console.error("Login handler error:", err);
+		return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });
+	}
 }
-export async function GET(req){
-    return new Response({hello: "hello"});
+
+export async function GET(req) {
+	return NextResponse.json({ hello: "hello" });
 }

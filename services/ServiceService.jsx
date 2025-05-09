@@ -5,7 +5,10 @@ class ServiceService{
     constructor(){
         this.repo = new ServiceCardRepo();
     }
-
+    async getAllServices(){
+        const services = await this.repo.getAll();
+        return services;
+    }
     // async makeService(serviceData){
     //     // TODO: add logic
     //     const id = await new AuthenticationService().loggedInUserId();

@@ -9,8 +9,13 @@ import { createClient } from '@/utils/supabase/server'
 export async function GET(request) {
   const supabase = await createClient();
   const brgyAppService = new BarangayAppointmentService(supabase);
+
   const token = request.cookies.get('token');
   console.log(token);
+
+
+
+  
   try {
     const data = await brgyAppService.getAllAppointments();
     return NextResponse.json({ data: data });

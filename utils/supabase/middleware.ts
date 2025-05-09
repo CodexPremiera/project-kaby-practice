@@ -41,20 +41,6 @@ export async function updateSession(request: NextRequest) {
 
 	// console.log(user, "this is user");
 
-	// if (
-	// 	!user &&
-	// 	!request.nextUrl.pathname.startsWith("/login") &&
-	// 	!request.nextUrl.pathname.startsWith("/api") &&
-	// 	!request.nextUrl.pathname.startsWith("/") &&
-	// 	!request.nextUrl.pathname.startsWith("/auth")
-	// ) {
-	// 	// no user, potentially respond by redirecting  user to the login page
-	// 	console.log("User not found, redirecting to login page");
-	// 	const url = request.nextUrl.clone();
-	// 	url.pathname = "/login";
-	// 	return NextResponse.redirect(url);
-
-	// }
 
 	const publicPaths = [
 		"/",              // root
@@ -64,12 +50,26 @@ export async function updateSession(request: NextRequest) {
 	 	request.nextUrl.pathname.startsWith("/api") ||
 		request.nextUrl.pathname.startsWith("/auth")||
 		request.nextUrl.pathname.startsWith("/register");
-
+	
 	if (!user && !isPublicPath) {
 		console.log("Unauthenticated access blocked: redirecting to login.");
 		const url = request.nextUrl.clone();
 		url.pathname = "/login";
 		return NextResponse.redirect(url);
+	}
+	if (user && request.nextUrl.pathname === "/barangay_desk") {
+		const { data: profile, error } = await supabase
+			.from("userroles") 
+			.select("role")
+			.eq("user_id", user.id)
+			.single();
+
+		if (error || profile?.role !== "admin") {
+			console.log("Non-admin user blocked from /barangay_desk");
+			const url = request.nextUrl.clone();
+			url.pathname = "/home";
+			return NextResponse.redirect(url);
+		}
 	}
 
 	// IMPORTANT: You *must* return the supabaseResponse object as it is.

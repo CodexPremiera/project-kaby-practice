@@ -71,6 +71,20 @@ export async function updateSession(request: NextRequest) {
 			return NextResponse.redirect(url);
 		}
 	}
+	if (user && request.nextUrl.pathname === "/citizen_desk") {
+		const { data: profile, error } = await supabase
+			.from("userroles") 
+			.select("role")
+			.eq("user_id", user.id)
+			.single();
+
+		if (error || profile?.role !== "barangay") {
+			console.log("Non-admin user blocked from /citizen_desk");
+			const url = request.nextUrl.clone();
+			url.pathname = "/home";
+			return NextResponse.redirect(url);
+		}
+	}
 
 	// IMPORTANT: You *must* return the supabaseResponse object as it is.
 	// If you're creating a new response object with NextResponse.next() make sure to:

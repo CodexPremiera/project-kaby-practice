@@ -24,7 +24,7 @@ export default function LoginClientForm(){
             body:JSON.stringify(form),
         })
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
         if(res.ok){
             router.push(`${data.redirectTo}`);
             // console.log(`${data.redirectTo}`);

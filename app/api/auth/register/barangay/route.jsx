@@ -14,7 +14,7 @@ export async function POST(req) {
 
     const body = await req.json();
     const data = await brgyAppService.createAppointment(body);
-    console.log("this is data",data);
+    // console.log("this is data",data);
     
     return NextResponse.json(data);
 

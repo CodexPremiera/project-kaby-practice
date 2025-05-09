@@ -13,7 +13,7 @@ export default function BarangayPage({ params }) {
         const res = await fetch(`/api/admin/appointment/${appointmentId}`);
         const data = await res.json();
         setAppointment(data);
-        console.log(appointment);
+        // console.log(appointment);
       } catch (error) {
         console.error("Failed to fetch appointment:", error);
       }
@@ -26,7 +26,7 @@ export default function BarangayPage({ params }) {
   }, [appointmentId]);
   // Log the state when it updates
   useEffect(() => {
-    console.log('Current appointment:', appointment);
+    // console.log('Current appointment:', appointment);
   }, [appointment]); // Logs when appointment state is updated
 
   if (!appointment) {

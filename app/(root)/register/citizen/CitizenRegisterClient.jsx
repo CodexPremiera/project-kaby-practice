@@ -13,19 +13,19 @@ export default function AppointmentClientForm(){
         confirm_password:''
     });
     const handleChange = (e) =>{
-        console.log(e.target.value);
+        // console.log(e.target.value);
         setForm({...form,[e.target.name]:e.target.value});
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("submitted");
+        // console.log("submitted");
         const res = await fetch('/api/auth/register/citizen',{
             method : 'POST',
             headers: {'Content-Type': 'application/json'},
             body:JSON.stringify(form),
         })
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
         if(res.ok){
             alert('Request submitted');
             router.push('/');

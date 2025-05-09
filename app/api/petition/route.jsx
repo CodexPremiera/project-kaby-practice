@@ -1,9 +1,12 @@
 'use server'
 import { NextResponse } from "next/server";
 import PetitionService from "../../../services/PetitionService";
+import { createClient } from '@/utils/supabase/server'
 
-const petitionService = new PetitionService();
 export async function POST(request){
+    const supabase = await createClient();
+        // const petitionRepo = new PetitionRepo(supabase);
+    const petitionService = new PetitionService(supabase);
     
 
         const body = await request.json();

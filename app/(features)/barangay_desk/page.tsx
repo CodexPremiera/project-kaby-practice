@@ -13,8 +13,8 @@ if (!res.ok) {
 
 const appointmentData = data;
 
-console.log("hello world")
-console.log(appointmentData);
+// console.log("hello world")
+// console.log(appointmentData);
 const BarangayDesk = ()  => {
 	return <BarangayDeskClient appointments={appointmentData.data} />;
 

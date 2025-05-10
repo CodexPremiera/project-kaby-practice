@@ -39,10 +39,10 @@ type Props = {
 	appointments: Appointment[];
 };
 
-const BarangayAppointment = ({ appointments }: Props) => {
-	const [showCreateAccount, setShowCreateAccount] = useState(false);
-
+// const BarangayAppointment = ({ appointments }: Props) => {
+	
 const BarangayAppointment = ({appointments }:Props) => {
+	const [showCreateAccount, setShowCreateAccount] = useState(false);
 	const pendingApps = appointments.filter((appointment) => appointment.status === "Pending");
 	console.log("these are the appointments: ", pendingApps);
 
@@ -73,15 +73,15 @@ const BarangayAppointment = ({appointments }:Props) => {
 	};
 
 	const handleSubmit = async (index: number) => {
-		const appointmentId = appointments[index].id;
+		const appointmentId = pendingApps[index].id;
 		const updatedStatus = statuses[index];
 
-		const email = appointments[index].email;
+		const email = pendingApps[index].email;
 		console.log("Emailzzz: ", email)
 		console.log("Appointment id: ", appointmentId ," and new status: ", updatedStatus)
 
 		try {
-			await fetch("/api/admin/appointment", {
+			const res = await fetch("/api/admin/appointment", {
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ id: appointmentId, status: updatedStatus }),
@@ -91,14 +91,14 @@ const BarangayAppointment = ({appointments }:Props) => {
 			}
 			if(updatedStatus === "Approved"){
 				
-				const registerBrgy = await fetch("/api/admin/appointment",{
-					method: 'POST',
-					headers: {"Content-Type": "application/json"},
-					body: JSON.stringify({
-						email:email, 
-						password:email
-					})
-				});
+				// const registerBrgy = await fetch("/api/admin/appointment",{
+				// 	method: 'POST',
+				// 	headers: {"Content-Type": "application/json"},
+				// 	body: JSON.stringify({
+				// 		email:email, 
+				// 		password:email
+				// 	})
+				// });
 			}
 
 			if (updatedStatus === "Approved") {

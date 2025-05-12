@@ -1,6 +1,5 @@
 import { RiDashboardLine, RiSettings4Line } from "react-icons/ri";
 import Link from "next/link";
-
 const NAVIGATION_ITEMS = [
 	{ name: "Barangay Desk", path: `/barangay_desk`, icon: RiDashboardLine },
 	{ name: "Settings", path: `/account`, icon: RiSettings4Line },
@@ -17,7 +16,7 @@ const AdminMainbar = () => {
 							href={link.path}
 							className="flex flex-col items-center justify-center px-3 py-3 mt-2 cursor-pointer group hover:bg-gray-100 rounded-[10px] transition-all duration-300"
 						>
-							<Icon className="w-6 h-6 text-black" />
+							<Icon className={`w-6 h-6  "text-black"}`} />
 							<p className="sm:hidden text-[11px] mt-1 whitespace-nowrap">
 								{link.name}
 							</p>

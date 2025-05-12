@@ -2,9 +2,6 @@ import Logo from "@/components/Logo";
 import Link from "next/link";
 import CitizenRegisterForm from "./CitizenRegisterClient";
 
-import { motion } from "framer-motion";
-import { fadeIn } from "@/variants";
-
 const RegisterForm = () => {
 	return (
 		<section className="flex flex-wrap xl:flex-nowrap">

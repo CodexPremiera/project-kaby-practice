@@ -1,24 +1,28 @@
-'use client'
+"use client";
 
-import BarangayDeskClient from './BarangayDeskClient';
+import { useEffect, useState } from "react";
+import BarangayDeskClient from "./BarangayDeskClient";
 
+const BarangayDesk = () => {
+	const [appointments, setAppointments] = useState([]);
 
-const res = await fetch(`/api/admin/appointment`);
+	useEffect(() => {
+		const fetchAppointments = async () => {
+			const res = await fetch(`/api/admin/appointment`);
+			const data = await res.json();
 
-const data = await res.json();
+			if (!res.ok) {
+				console.error(data.message);
+				return;
+			}
 
-if (!res.ok) {
-  throw new Error(data.message);
-}
+			setAppointments(data.data);
+		};
 
-const appointmentData = data;
+		fetchAppointments();
+	}, []);
 
-// console.log("hello world")
-// console.log(appointmentData);
-const BarangayDesk = ()  => {
-	return <BarangayDeskClient appointments={appointmentData.data} />;
-
-
+	return <BarangayDeskClient appointments={appointments} />;
 };
 
 export default BarangayDesk;

@@ -1,25 +1,29 @@
 import AuthenticationService from "@/services/AuthenticationService";
 import { NextResponse } from "next/server";
 
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from "@/utils/supabase/server";
 
 export async function POST(req) {
 	console.log("logging in");
+	console.log(req, "hello world");
 	try {
 		const body = await req.json();
 		const supabase = await createClient();
-		
+
 		const authService = new AuthenticationService(supabase);
 		const { username, password } = body;
 		const email = username;
 
 		// const { data, error } = await supabase.signInUser({ email, password });
-        // const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        const { data, error } = await authService.signInUser({ email, password });
+		// const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+		const { data, error } = await authService.signInUser({ email, password });
 
 		if (error) {
 			// console.log(error);
-			return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+			return NextResponse.json(
+				{ error: "Invalid credentials" },
+				{ status: 401 }
+			);
 		}
 
 		// console.log(data, "login success");
@@ -27,7 +31,7 @@ export async function POST(req) {
 		// 🟡 Wait for session to be available (max ~1 second)
 		// let session = null;
 		// for (let i = 0; i < 10; i++) {
-        //     console.log("Waiting for session...");
+		//     console.log("Waiting for session...");
 		// 	const { data: sessionData } = await supabase.auth.getSession();
 		// 	if (sessionData?.session) {
 		// 		session = sessionData.session;
@@ -44,15 +48,15 @@ export async function POST(req) {
 
 		// ✅ Now safe to get user role
 		// const user_id = await authService.loggedInUserId();
-        // const user_id = await supabase.auth.getUser();
-        // // console.log("user id", user_id);
+		// const user_id = await supabase.auth.getUser();
+		// // console.log("user id", user_id);
 		// const role = await userService.getUserRole();
 
 		// console.log("User role:", role);
-        // console.log("dtfaygubisdhonosadjasndol");
+		// console.log("dtfaygubisdhonosadjasndol");
 
 		// if (role === "citizen") {
-            
+
 		// 	revalidatePath("/citizen");
 		// 	return NextResponse.json({ redirectTo: "/home" });
 		// } else {
@@ -60,10 +64,11 @@ export async function POST(req) {
 		// 	return NextResponse.json({ redirectTo: "/barangay" });
 		// }
 		return NextResponse.json({ redirectTo: "/home" });
-
 	} catch (err) {
 		console.error("Login handler error:", err);
-		return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });
+		return new Response(JSON.stringify({ error: "Internal server error" }), {
+			status: 500,
+		});
 	}
 }
 

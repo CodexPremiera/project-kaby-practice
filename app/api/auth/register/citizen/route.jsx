@@ -1,14 +1,16 @@
 "use server";
 
+import { createClient } from "@/utils/supabase/server";
 import AuthenticationService from "../../../../../services/AuthenticationService";
 import CitizenService from "../../../../../services/CitizenService";
 import { NextResponse } from "next/server";
 import UserService from "../../../../../services/UserService";
 
-const authService = new AuthenticationService();
-const citizenService = new CitizenService();
-const userService = new UserService();
 export async function POST(request) {
+	const supabase = await createClient();
+	const authService = new AuthenticationService(supabase);
+	const citizenService = new CitizenService(supabase);
+	const userService = new UserService(supabase);
 	try {
 		const body = await request.json();
 		const {

@@ -6,7 +6,7 @@ import SliderBtn from "./SliderBtn";
 
 const Testimonial = () => {
 	return (
-		<Swiper className="card-shadow-custom w-full max-w-[630px] h-[200px] rounded-[20px]">
+		<Swiper className="w-full max-w-[630px] h-[200px] rounded-[20px]">
 			{/* slider 1 */}
 			<SwiperSlide>
 				<div className="px-12 md:pl-[60px]  flex items-center gap-9 h-full">

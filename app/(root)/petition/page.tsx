@@ -12,7 +12,7 @@ const Petition = () => {
 					<Logo />
 				</div>
 				<div className="absolute z-10 container h-full flex items-end justify-end pb-20">
-					<div className="card-shadow-custom bg-primary py-3 px-3 w-full mx-8">
+					<div className="rounded-[20px] bg-primary py-3 px-3 w-full mx-8">
 						<p className="text-secondary mx-3 font-semibold">
 							Your petition matters.
 						</p>{" "}
@@ -23,7 +23,7 @@ const Petition = () => {
 				</div>
 			</div>
 			<div className="w-full xl:w-1/2 flex justify-center items-center">
-				<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
+				<div className="h-auto w-[420px] py-8 px-8 bg-primary rounded-[20px]">
 					<p className="text-lg font-semibold text-center">Make a Petition</p>
 					<PetitionForm />
 					{/* <form className="w-full mt-6">

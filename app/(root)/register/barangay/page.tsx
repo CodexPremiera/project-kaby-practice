@@ -12,7 +12,7 @@ const AppointmentForm = () => {
 				</div>
 			</div>
 			<div className="w-full xl:w-1/2 flex justify-center items-center">
-				<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
+				<div className="h-auto w-[420px] py-8 px-8 bg-primary rounded-[20px]">
 					<p className="text-lg font-semibold text-center">
 						Book an Appointment
 					</p>

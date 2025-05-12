@@ -11,14 +11,6 @@ class CitizenService {
 		// TODO: verify barangay exist
 		const { email, first_name, last_name, barangay, user_id } = citizenDetails;
 
-		// Step 1: Verify if the barangay exists
-		const { data: barangayData, error: barangayError } =
-			await this.barangayRepo.getByName(barangay);
-		if (barangayError || !barangayData) {
-			return { error: "Barangay not found" };
-		}
-
-		// Step 2: Proceed with creating the citizen profile
 		const { data, error } = await this.repo.create(citizenDetails);
 		if (error) {
 			console.log(error);

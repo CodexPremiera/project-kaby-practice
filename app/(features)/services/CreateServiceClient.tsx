@@ -11,6 +11,8 @@ import {
 import { RiCloseLine } from "react-icons/ri";
 import { useEffect, useState } from "react";
 import DatePicker from "@/components/services/DatePicker";
+import SuccessModal from "@/components/modal/SuccessModal";
+import ErrorModal from "@/components/modal/ErrorModal";
 
 interface CreateServiceProps {
 	onClose: () => void;
@@ -23,11 +25,16 @@ const paymentTypes = ["Fixed Rate", "Quote"];
 
 const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 	const [serviceTitle, setServiceTitle] = useState("");
-	const [serviceType, setServiceType] = useState("Barangay");
+	const [serviceType, setServiceType] = useState<string>("Select Type");
 	const [dateOption, setDateOption] = useState("Available Date");
 	const [description, setDescription] = useState("");
 	const [attachRequirements, setAttachRequirements] = useState("No");
+	const [displayBadge, setDisplayBadge] = useState("No");
+	const [eligibleForBadges, setEligibleForBadges] = useState("No");
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
+	const [modalType, setModalType] = useState<"success" | "error" | null>(null);
+	const [userRole, setUserRole] = useState<string | null>(null);
+
 	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
@@ -37,12 +44,10 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 	};
 	const today = new Date().toISOString().split("T")[0];
 
-	// Payment Arrangement State
 	const [serviceCost, setServiceCost] = useState<number | undefined>(undefined);
 	const [paymentType, setPaymentType] = useState("Fixed Rate");
 	const [agreementFeePercent, setAgreementFeePercent] = useState<number>(100);
 
-	// Calculated Values
 	const agreementFeeValue =
 		serviceCost !== undefined
 			? paymentType === "Fixed Rate"
@@ -56,12 +61,33 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 	const convenienceFee = agreementFeeValue * 0.03;
 	const totalPrice = agreementFeeValue + convenienceFee;
 
-	// Effect to reset Agreement Fee % when payment type is "Fixed Rate"
 	useEffect(() => {
 		if (paymentType === "Fixed Rate") {
 			setAgreementFeePercent(100);
 		}
 	}, [paymentType]);
+
+	useEffect(() => {
+		const fetchUserRole = async () => {
+			try {
+				const res = await fetch("/api/auth/login");
+				const data = await res.json();
+				setUserRole(data.role);
+			} catch (err) {
+				console.error("Error fetching user role:", err);
+			}
+		};
+
+		fetchUserRole();
+	}, []);
+
+	useEffect(() => {
+		if (userRole === "barangay") {
+			setServiceType("Barangay");
+		} else if (userRole === "citizen") {
+			setServiceType("Personal");
+		}
+	}, [userRole]);
 
 	const handleCreateService = async () => {
 		const serviceData = {
@@ -77,29 +103,50 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 			agreement_fee: agreementFeeValue,
 			convenience_fee: convenienceFee,
 			total_price: totalPrice,
+			eligible_for_badges: eligibleForBadges,
+			display_badge: displayBadge,
 		};
 
-		const res = await fetch("/api/services", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(serviceData),
-		});
+		try {
+			const res = await fetch("/api/services", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(serviceData),
+			});
 
-		const user_role = await fetch("/api/login", {
-			method: "GET",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(serviceData),
-		});
-
-		const data = await res.json();
-		console.log("created service", data);
+			if (res.ok) {
+				setModalType("success");
+				const data = await res.json();
+				console.log("created service", data);
+			} else {
+				setModalType("error");
+				console.error("Failed to create service");
+			}
+		} catch (err) {
+			setModalType("error");
+			console.error("Error creating service", err);
+		}
 	};
 
 	return (
 		<div className="fixed inset-0 z-50 bg-black/70 flex justify-center items-center p-6">
+			{modalType === "success" && (
+				<SuccessModal
+					title="Success"
+					content="Service has been created successfully!"
+					onClose={() => setModalType(null)}
+				/>
+			)}
+			{modalType === "error" && (
+				<ErrorModal
+					title="Error"
+					content="Failed to create service. Please try again."
+					onClose={() => setModalType(null)}
+				/>
+			)}
+
 			<div className="relative bg-white rounded-2xl shadow-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
 				<div className="flex flex-col gap-6">
-					{/* Header */}
 					<div className="flex justify-between items-center py-3 pt-5 bg-gray-100">
 						<div className="text-medium font-semibold text-black px-6">
 							Create Service
@@ -112,45 +159,44 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 						</div>
 					</div>
 
-					{/* Service Details */}
-					<div className="flex flex-col md:flex-row gap-6 py-2 px-6">
-						<div className="w-full md:w-[360px] h-[255px] flex flex-col justify-center items-center bg-black/80 rounded-lg overflow-hidden text-white relative">
-							{selectedImage ? (
-								<img
-									src={selectedImage}
-									alt="Selected"
-									className="object-cover w-full h-full"
-								/>
-							) : (
-								<label
-									htmlFor="service-image-upload"
-									className="flex flex-col items-center justify-center cursor-pointer text-center"
-								>
-									<p className="text-sm text-white">Click to upload image</p>
-									<p className="text-xs text-gray mt-1">PNG, JPG, or JPEG</p>
-								</label>
-							)}
+					<div className="flex flex-row px-7 items-center">
+						<label className="text-sm w-32">Service Title:</label>
+						<Input
+							placeholder="Enter title"
+							value={serviceTitle}
+							onChange={(e) => setServiceTitle(e.target.value)}
+						/>
+					</div>
+					<div className="flex flex-col md:flex-row gap-6 px-6">
+						<div className="flex flex-col gap-4">
+							<div className="w-full md:w-[360px] h-[360px] flex flex-col justify-center items-center bg-black/80 rounded-lg overflow-hidden text-white relative">
+								{selectedImage ? (
+									<img
+										src={selectedImage}
+										alt="Selected"
+										className="object-cover w-full h-full"
+									/>
+								) : (
+									<label
+										htmlFor="service-image-upload"
+										className="flex flex-col items-center justify-center cursor-pointer text-center"
+									>
+										<p className="text-sm text-white">Click to upload image</p>
+										<p className="text-xs text-gray mt-1">PNG, JPG, or JPEG</p>
+									</label>
+								)}
 
-							<input
-								type="file"
-								id="service-image-upload"
-								accept="image/*"
-								onChange={handleImageChange}
-								className="hidden"
-							/>
+								<input
+									type="file"
+									id="service-image-upload"
+									accept="image/*"
+									onChange={handleImageChange}
+									className="hidden"
+								/>
+							</div>
 						</div>
 
 						<div className="flex flex-col w-full gap-4">
-							<div className="flex flex-col flex-1">
-								<p className="text-sm">Service Title:</p>
-								<Input
-									placeholder="Enter title"
-									value={serviceTitle}
-									onChange={(e) => setServiceTitle(e.target.value)}
-								/>
-							</div>
-
-							{/* Service Type */}
 							<div className="flex flex-col md:flex-row gap-6">
 								<div className="flex-1">
 									<p className="text-sm">Service Type:</p>
@@ -161,19 +207,27 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent className="bg-white">
-											{serviceTypes.map((type) => (
-												<DropdownMenuItem
-													key={type}
-													onClick={() => setServiceType(type)}
-												>
-													{type}
-												</DropdownMenuItem>
-											))}
+											{serviceTypes
+												.filter(
+													(type) =>
+														userRole === "barangay"
+															? type === "Barangay"
+															: userRole === "citizen"
+																? type === "Personal" || type === "Event"
+																: true // fallback in case role not loaded yet
+												)
+												.map((type) => (
+													<DropdownMenuItem
+														key={type}
+														onClick={() => setServiceType(type)}
+													>
+														{type}
+													</DropdownMenuItem>
+												))}
 										</DropdownMenuContent>
 									</DropdownMenu>
 								</div>
 
-								{/* Date option */}
 								<div className="flex-1">
 									<p className="text-sm">Schedule Option:</p>
 									<DropdownMenu>
@@ -201,10 +255,8 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 									</div>
 								)}
 							</div>
-
-							{/* Description */}
 							<div className="flex flex-col flex-1">
-								<p className="text-sm">Description:</p>
+								<label className="text-sm">Description:</label>
 								<textarea
 									placeholder="Enter service description"
 									value={description}
@@ -213,40 +265,83 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 								/>
 							</div>
 
-							{/* Attach requirements */}
-							<div className="flex flex-1 items-center gap-2">
-								<p className="text-sm">Attach requirements?</p>
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button variant="gray" className="w-24 justify-between">
-											{attachRequirements}
-										</Button>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent className="bg-white">
-										{yesNoOptions.map((opt) => (
-											<DropdownMenuItem
-												key={opt}
-												onClick={() => setAttachRequirements(opt)}
-											>
-												{opt}
-											</DropdownMenuItem>
-										))}
-									</DropdownMenuContent>
-								</DropdownMenu>
+							<div className="flex flex-1 items-center gap-6">
+								<div className="flex items-center gap-2">
+									<p className="text-sm">Attach requirements?</p>
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Button variant="gray" className="w-24 justify-between">
+												{attachRequirements}
+											</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent className="bg-white">
+											{yesNoOptions.map((opt) => (
+												<DropdownMenuItem
+													key={opt}
+													onClick={() => setAttachRequirements(opt)}
+												>
+													{opt}
+												</DropdownMenuItem>
+											))}
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</div>
+								{userRole === "barangay" ? (
+									<div className="flex items-center gap-2">
+										<p className="text-sm">Eligible for badges?</p>
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button variant="gray" className="w-24 justify-between">
+													{eligibleForBadges}
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent className="bg-white">
+												{yesNoOptions.map((opt) => (
+													<DropdownMenuItem
+														key={opt}
+														onClick={() => setEligibleForBadges(opt)}
+													>
+														{opt}
+													</DropdownMenuItem>
+												))}
+											</DropdownMenuContent>
+										</DropdownMenu>
+									</div>
+								) : userRole === "citizen" ? (
+									<div className="flex items-center gap-2">
+										<p className="text-sm">Display Badge</p>
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button variant="gray" className="w-24 justify-between">
+													{displayBadge}
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent className="bg-white">
+												{yesNoOptions.map((opt) => (
+													<DropdownMenuItem
+														key={opt}
+														onClick={() => setDisplayBadge(opt)}
+													>
+														{opt}
+													</DropdownMenuItem>
+												))}
+											</DropdownMenuContent>
+										</DropdownMenu>
+									</div>
+								) : null}
 							</div>
 						</div>
 					</div>
 
-					{/* Payment Arrangement */}
 					<div className="space-y-4 pb-4">
 						<div>
-							<div className="border-t border-gray-300 py-2">
-								<p className="font-semibold text-sm px-6">
+							<div className="flex justify-between items-center py-3 pt-5 bg-gray-100">
+								<div className="text-medium font-semibold text-black px-6">
 									Payment Arrangement
-								</p>
+								</div>
 							</div>
 
-							<p className="text-sm px-6 sm:py-2 py-5">
+							<p className="text-sm px-6 sm:py-4 py-4">
 								Select whether you charge a fixed rate or provide a quote upon a
 								request.
 							</p>

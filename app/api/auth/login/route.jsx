@@ -1,6 +1,6 @@
 import AuthenticationService from "@/services/AuthenticationService";
+import UserService from "@/services/UserService";
 import { NextResponse } from "next/server";
-
 import { createClient } from "@/utils/supabase/server";
 
 export async function POST(req) {
@@ -72,19 +72,17 @@ export async function POST(req) {
 	}
 }
 
-export async function GET(req) {
-	//TO DO: return log in ID using authentication service
+export async function GET() {
+	//TO DO: return the user role of the login ID
 	try {
 		const supabase = await createClient();
 		const authService = new AuthenticationService(supabase);
+		const userService = new UserService(supabase);
 
-		const userId = await authService.loggedInUserId();
+		const user_id = await authService.loggedInUserId();
+		const role = await userService.getUserRole(user_id);
 
-		if (!userId) {
-			return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-		}
-
-		return NextResponse.json({ userId });
+		return NextResponse.json({ role });
 	} catch (err) {
 		console.error("Failed to fetch logged-in user ID:", err);
 		return NextResponse.json(

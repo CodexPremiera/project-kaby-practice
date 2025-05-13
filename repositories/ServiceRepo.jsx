@@ -41,9 +41,10 @@ export default class ServiceRepo extends BaseRepo {
 				serviceData.total_price,
 				serviceData.start_date,
 				serviceData.end_date,
-				false, // display_badge
-				false, // eligible_for_badges
-				serviceData.allow_attach_file
+				serviceData.display_badge,
+				serviceData.eligible_for_badges,
+				serviceData.allow_attach_file,
+				serviceData.status
 			);
 
 			const { data, error } = await this.supabase

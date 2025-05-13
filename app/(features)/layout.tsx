@@ -18,7 +18,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	const user_id = await authService.loggedInUserId();
 	console.log("Logged in user id: ", user_id);
 	const role = await userService.getUserRole(user_id);
-
+    
 	console.log("User role: ", role);
 
 	let Header = null

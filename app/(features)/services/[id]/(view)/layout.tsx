@@ -23,15 +23,6 @@ const ViewServiceLayout = ({ children, params }: LayoutProps) => {
 
 				<div className="flex-4 rounded-[10px] bg-white w-full">{children}</div>
 			</div>
-
-			<div className="bg-white w-full rounded-[10px] py-8 px-6">
-				<p className="text-lg font-semibold">Services Around You</p>
-				<AroundYou />
-				<p className="text-lg font-semibold pt-6">
-					Services From General Public
-				</p>
-				<GeneralPublic />
-			</div>
 		</div>
 	);
 };

@@ -1,3 +1,4 @@
+// "use server";
 "use client";
 
 import { useState } from "react";
@@ -5,7 +6,7 @@ import ActiveService from "@/components/services/your_services/ActiveService";
 import ClosedService from "@/components/services/your_services/ClosedService";
 import { Button } from "@/components/ui/button";
 import { RiSearch2Line } from "react-icons/ri";
-import CreateService from "@/components/services/CreateService";
+import CreateServiceClient from "./CreateServiceClient";
 
 const TAB_COMPONENTS = {
 	active: <ActiveService />,
@@ -85,7 +86,7 @@ const ServiceDesk = () => {
 
 			{/* Create Service Modal */}
 			{showCreateService && (
-				<CreateService onClose={() => setShowCreateService(false)} />
+				<CreateServiceClient onClose={() => setShowCreateService(false)} />
 			)}
 		</div>
 	);

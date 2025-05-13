@@ -45,7 +45,7 @@ export default function LoginClientForm() {
 						required
 					/>
 					<label htmlFor="region" className="floating-label">
-						Username
+						Email
 					</label>
 				</div>
 

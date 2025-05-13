@@ -1,0 +1,38 @@
+"use server";
+
+import { NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
+import ServiceService from "../../../services/ServiceService";
+import AuthenticationService from "@/services/AuthenticationService";
+
+export async function POST(request) {
+	const supabase = await createClient();
+	const serviceService = new ServiceService(supabase);
+	const authService = new AuthenticationService(supabase);
+
+	try {
+		const body = await request.json();
+		// Destructure 'owner' out and keep the rest
+		const { owner, ...dataWithoutOwner } = body;
+
+		// Get logged-in user ID
+		const id = await authService.loggedInUserId();
+
+		// Reconstruct body with the logged-in user as owner
+		const newServiceData = {
+			...dataWithoutOwner,
+			owner: id,
+		};
+		console.log(newServiceData, "hello worlldddd");
+
+		const serviceData = await serviceService.createService(newServiceData);
+		console.log(serviceData, "servicedata");
+
+		return NextResponse.json(serviceData);
+	} catch (err) {
+		console.error("Unexpected error:", err);
+		return new Response(JSON.stringify({ error: "Unexpected error" }), {
+			status: 500,
+		});
+	}
+}

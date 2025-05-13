@@ -73,5 +73,23 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
-	return NextResponse.json({ hello: "hello" });
+	//TO DO: return log in ID using authentication service
+	try {
+		const supabase = await createClient();
+		const authService = new AuthenticationService(supabase);
+
+		const userId = await authService.loggedInUserId();
+
+		if (!userId) {
+			return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+		}
+
+		return NextResponse.json({ userId });
+	} catch (err) {
+		console.error("Failed to fetch logged-in user ID:", err);
+		return NextResponse.json(
+			{ error: "Internal server error" },
+			{ status: 500 }
+		);
+	}
 }

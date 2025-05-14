@@ -10,17 +10,17 @@ type ActiveServiceProps = {
 };
 
 const ActiveService: React.FC<ActiveServiceProps> = ({ userId, userRole }) => {
-	const [services, setServices] = useState<any[]>([]); // State to store all services
-	const [loading, setLoading] = useState<boolean>(true); // Loading state
+	const [services, setServices] = useState<any[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
 	const router = useRouter();
 
 	// Fetch all services from the API
 	const fetchServices = async () => {
 		try {
-			const res = await fetch("/api/services"); // This gets all services (no filtering)
+			const res = await fetch("/api/services");
 			const data = await res.json();
-			setServices(data); // Store fetched services
-			setLoading(false); // Set loading to false
+			setServices(data);
+			setLoading(false);
 		} catch (err) {
 			console.error("Error fetching services:", err);
 			setLoading(false);
@@ -29,14 +29,14 @@ const ActiveService: React.FC<ActiveServiceProps> = ({ userId, userRole }) => {
 
 	useEffect(() => {
 		fetchServices();
-	}, []); // Empty dependency array to fetch services only once when the component mounts
+	}, []);
 
-	// Handle service card selection
-	const handleServiceSelect = (id: string) => {
-		router.push(`/services/${id}`);
+	// Handle service card selection — always redirect to /services/request
+	const handleServiceSelect = (service: any) => {
+		router.push(`/services/${service.id}/request`);
 	};
 
-	// Filter the services to show only the active services owned by the current user
+	// Filter active services owned by the current user
 	const activeServices = services.filter(
 		(service) => service.owner === userId && service.status === "Active"
 	);
@@ -47,7 +47,6 @@ const ActiveService: React.FC<ActiveServiceProps> = ({ userId, userRole }) => {
 		);
 	}
 
-	// If no active services found
 	if (activeServices.length === 0) {
 		return (
 			<div className="text-center py-10 text-gray-500">

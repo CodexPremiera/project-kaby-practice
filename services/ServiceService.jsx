@@ -8,6 +8,21 @@ class ServiceService {
 		const services = await this.repo.getAll();
 		return services;
 	}
+
+	async getById(serviceId) {
+		const { data, error } = await this.supabase
+			.from("services")
+			.select("*")
+			.eq("id", serviceId)
+			.single();
+
+		if (error) {
+			console.error("Error fetching service:", error);
+			return null;
+		}
+
+		return data; // Return the service data if found
+	}
 	// async makeService(serviceData){
 	//     // TODO: add logic
 	//     const id = await new AuthenticationService().loggedInUserId();
@@ -24,5 +39,7 @@ class ServiceService {
 		const data = await this.repo.create(serviceData);
 		return data;
 	}
+
+	async getServicesByUser() {}
 }
 export default ServiceService;

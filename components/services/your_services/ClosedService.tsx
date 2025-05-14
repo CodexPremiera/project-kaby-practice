@@ -4,14 +4,14 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ServiceCard from "../view/ServiceCard";
 
-type ActiveServiceProps = {
+type ClosedServiceProps = {
 	userId: string;
 	userRole: string;
 };
 
-const ActiveService: React.FC<ActiveServiceProps> = ({ userId, userRole }) => {
-	const [services, setServices] = useState<any[]>([]); // State to store all services
-	const [loading, setLoading] = useState<boolean>(true); // Loading state
+const ClosedService: React.FC<ClosedServiceProps> = ({ userId, userRole }) => {
+	const [services, setServices] = useState<any[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
 	const router = useRouter();
 
 	// Fetch all services from the API
@@ -31,12 +31,12 @@ const ActiveService: React.FC<ActiveServiceProps> = ({ userId, userRole }) => {
 		fetchServices();
 	}, []);
 
-	// Handle service card selection
-	const handleServiceSelect = (id: string) => {
-		router.push(`/services/${id}`);
+	// Handle service card selection — always redirect to /services/request
+	const handleServiceSelect = () => {
+		router.push(`/services/request`);
 	};
 
-	// Filter the services to show only the closed services owned by the current user
+	// Filter active services owned by the current user
 	const closedServices = services.filter(
 		(service) => service.owner === userId && service.status === "Closed"
 	);
@@ -47,7 +47,6 @@ const ActiveService: React.FC<ActiveServiceProps> = ({ userId, userRole }) => {
 		);
 	}
 
-	// If no active services found
 	if (closedServices.length === 0) {
 		return (
 			<div className="text-center py-10 text-gray-500">
@@ -69,4 +68,4 @@ const ActiveService: React.FC<ActiveServiceProps> = ({ userId, userRole }) => {
 	);
 };
 
-export default ActiveService;
+export default ClosedService;

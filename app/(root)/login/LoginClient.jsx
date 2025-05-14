@@ -2,37 +2,71 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ErrorModal from "@/components/modal/ErrorModal";
+import LoadingModal from "@/components/modal/LoadingModal"; // create this component!
 
 export default function LoginClientForm() {
-	// console.log()
 	const router = useRouter();
+
 	const [form, setForm] = useState({
 		username: "",
 		password: "",
 	});
 
+	const [modalType, setModalType] = useState(null);
+
 	const handleChange = (e) => {
 		setForm({ ...form, [e.target.name]: e.target.value });
 	};
+
+	const handleCloseModal = () => {
+		setModalType(null);
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const res = await fetch("/api/auth/login", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(form),
-		});
-		const data = await res.json();
-		// console.log(data);
-		if (res.ok) {
-			router.push(`${data.redirectTo}`);
-			console.log(data.redirectTo);
-		} else {
-			alert(`Error ${data.error}`);
+
+		try {
+			const res = await fetch("/api/auth/login", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(form),
+			});
+
+			if (res.ok) {
+				const data = await res.json();
+				setModalType("loading");
+
+				// Redirect after short delay while showing loading state
+				setTimeout(() => {
+					router.push(data.redirectTo);
+				}, 1500);
+			} else {
+				setModalType("error");
+			}
+		} catch (err) {
+			setModalType("error");
+			console.error("Error logging in:", err);
 		}
 	};
 
 	return (
 		<div>
+			{/* Loading Modal */}
+			{modalType === "loading" && (
+				<LoadingModal title="Success" content="Logging you in..." />
+			)}
+
+			{/* Error Modal */}
+			{modalType === "error" && (
+				<ErrorModal
+					title="Error"
+					content="Login failed. Please check your credentials."
+					onClose={handleCloseModal}
+				/>
+			)}
+
+			{/* Login Form */}
 			<form className="w-full mt-6" onSubmit={handleSubmit}>
 				<div className="relative mt-4">
 					<input
@@ -44,7 +78,7 @@ export default function LoginClientForm() {
 						onChange={handleChange}
 						required
 					/>
-					<label htmlFor="region" className="floating-label">
+					<label htmlFor="username" className="floating-label">
 						Email
 					</label>
 				</div>
@@ -63,11 +97,7 @@ export default function LoginClientForm() {
 						Password
 					</label>
 				</div>
-				<div className="flex flex-col justify-between items-end">
-					{/* <Link href="" className="text-[12px] text-secondary mt-1">
-                                    Forgot Password
-                                </Link> */}
-				</div>
+
 				<div className="mt-6 flex justify-center items-center">
 					<button
 						type="submit"

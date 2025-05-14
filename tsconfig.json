@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/admin/appointment/[appointmentId]/route.jsx", "app/api/admin/appointment/[appointmentId]/route.jsx", "app/(root)/admin/barangay/page.jsx", "app/(features)/barangay_desk/page1.jsx", "app/utils/supabase/middleware.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/admin/appointment/[appointmentId]/route.jsx", "app/api/admin/appointment/[appointmentId]/route.jsx", "app/(root)/admin/barangay/page.jsx", "app/(features)/barangay_desk/page1.jsx", "app/utils/supabase/middleware.js", "repositories/RequestRepo.jsx", "services/RequestService.jsx", "models/RequestModel.jsx"],
   "exclude": ["node_modules"]
 }

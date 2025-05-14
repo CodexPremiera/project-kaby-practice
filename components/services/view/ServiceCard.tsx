@@ -3,40 +3,23 @@
 import React from "react";
 import Image from "next/image";
 import { RiVipCrown2Fill } from "react-icons/ri";
-import { useRouter } from "next/navigation";
-
-type Service = {
-	id: string;
-	title: string;
-	owner: string;
-	type: string;
-	image: string;
-	displayBadge?: string;
-	status: string;
-};
 
 interface ServiceCardProps {
-	service: Service;
-	onSelect: (id: string) => void;
+	service: any;
+	onSelect: (service: any) => void;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect }) => {
-	const router = useRouter();
-
-	const handleClick = () => {
-		onSelect(service.id);
-	};
-
 	return (
 		<div
-			onClick={handleClick}
-			className={`flex flex-col border border-gray-200 w-full max-w-xs cursor-pointer transition-opacity duration-300 rounded-[10px] bg-white ${
+			className={`flex flex-col border border-gray-200 shadow hover:shadow-lg  w-full max-w-xs cursor-pointer transition-opacity duration-300 rounded-[10px] bg-white ${
 				service.status === "closed" ? "opacity-50" : ""
 			}`}
+			onClick={() => onSelect(service)}
 		>
 			<div className="relative w-full h-[140px] overflow-hidden rounded-t-[10px]">
 				<Image
-					src={service.image || "/assets/img/service-img.png"} // your fallback image path
+					src={service.image}
 					alt="service image"
 					fill
 					className="object-cover"

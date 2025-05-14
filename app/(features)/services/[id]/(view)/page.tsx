@@ -19,7 +19,6 @@ interface PageProps {
 const ViewService: React.FC<PageProps> = ({ params }) => {
 	const router = useRouter();
 	const currentUser = "Bondy Might"; // Replace with your auth later
-	
 
 	// Unwrap the `params` Promise using React.use()
 	const { id } = use(params);
@@ -39,8 +38,6 @@ const ViewService: React.FC<PageProps> = ({ params }) => {
 		);
 	}
 	const isOwner = currentUser === service.owner;
-
-	
 
 	const shouldShowBadge =
 		(service.type === "Barangay" && service.eligibleForBadges === "Yes") ||

@@ -15,8 +15,8 @@ const NAVIGATION_ITEMS = [
 
 const BarangayMainbar = () => {
 	return (
-		<div className="z-10 fixed left-0 bottom-0 w-full sm:top-16 sm:bottom-0 sm:left-0 sm:w-[75px] sm:h-full flex sm:flex-col flex-row justify-center items-center px-2 sm:px-0">
-			<div className="flex flex-1 w-full sm:flex-col flex-row sm:justify-start justify-around items-center sm:space-y-4 sm:pt-4 sm:pb-8 px-4 sm:px-0">
+		<div className="z-10 fixed left-0 bottom-0 w-full sm:top-16 sm:bottom-0 sm:left-0 sm:w-[75px] sm:h-full flex sm:flex-col flex-row justify-center items-center px-2 sm:px-0 bg-white">
+			<div className="flex flex-1 w-full sm:flex-col flex-row sm:justify-start justify-around items-center sm:space-y-4 sm:pt-4 sm:pb-8 px-4 sm:px-0 ">
 				{NAVIGATION_ITEMS.map((link) => {
 					const Icon = link.icon;
 					return (

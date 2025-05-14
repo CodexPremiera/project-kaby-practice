@@ -16,6 +16,7 @@ import ErrorModal from "@/components/modal/ErrorModal";
 
 interface CreateServiceProps {
 	onClose: () => void;
+	userRole: string | null;
 }
 
 const serviceTypes = ["Barangay", "Personal", "Event"];
@@ -23,7 +24,10 @@ const yesNoOptions = ["Yes", "No"];
 const dateOptions = ["Available Date", "Not Applicable"];
 const paymentTypes = ["Fixed Rate", "Quote"];
 
-const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
+const CreateServiceClient: React.FC<CreateServiceProps> = ({
+	onClose,
+	userRole,
+}) => {
 	const [serviceTitle, setServiceTitle] = useState("");
 	const [serviceType, setServiceType] = useState<string>("Select Type");
 	const [dateOption, setDateOption] = useState("Available Date");
@@ -33,15 +37,12 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 	const [eligibleForBadges, setEligibleForBadges] = useState("No");
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 	const [modalType, setModalType] = useState<"success" | "error" | null>(null);
-	const [userRole, setUserRole] = useState<string | null>(null);
+	const [errorMessages, setErrorMessages] = useState<{ [key: string]: string }>(
+		{}
+	);
 
-	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
-		if (file) {
-			const imageUrl = URL.createObjectURL(file);
-			setSelectedImage(imageUrl);
-		}
-	};
+	const [startDate, setStartDate] = useState<Date | null>(null);
+	const [endDate, setEndDate] = useState<Date | null>(null);
 	const today = new Date().toISOString().split("T")[0];
 
 	const [serviceCost, setServiceCost] = useState<number | undefined>(undefined);
@@ -68,20 +69,6 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 	}, [paymentType]);
 
 	useEffect(() => {
-		const fetchUserRole = async () => {
-			try {
-				const res = await fetch("/api/auth/login");
-				const data = await res.json();
-				setUserRole(data.role);
-			} catch (err) {
-				console.error("Error fetching user role:", err);
-			}
-		};
-
-		fetchUserRole();
-	}, []);
-
-	useEffect(() => {
 		if (userRole === "barangay") {
 			setServiceType("Barangay");
 		} else if (userRole === "citizen") {
@@ -89,14 +76,65 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 		}
 	}, [userRole]);
 
+	const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				setSelectedImage(reader.result as string);
+			};
+			reader.readAsDataURL(file);
+		}
+	};
+
 	const handleCreateService = async () => {
+		// Reset error messages
+		setErrorMessages({});
+
+		const errors: { [key: string]: string } = {};
+		if (!selectedImage) errors.image = "Image is required";
+		if (serviceType === "Select Type")
+			errors.serviceType = "Service Type is required";
+		if (!description.trim()) errors.description = "Description is required";
+		if (!attachRequirements)
+			errors.attachRequirements = "Attach requirements is required";
+		if (!eligibleForBadges)
+			errors.eligibleForBadges = "Eligible for badges is required";
+		if (serviceCost === undefined)
+			errors.serviceCost = "Service cost is required";
+		if (!paymentType) errors.paymentType = "Payment type is required";
+
+		if (Object.keys(errors).length > 0) {
+			setErrorMessages(errors);
+			return; // Prevent the API call if there are errors
+		}
+
+		let finalStartDate = null;
+		let finalEndDate = null;
+
+		if (dateOption === "Available Date") {
+			if (!startDate || !endDate) {
+				setErrorMessages((prev) => ({
+					...prev,
+					date: "Please select both start and end dates.",
+				}));
+				return;
+			}
+
+			finalStartDate = startDate;
+			finalEndDate = endDate;
+		} else if (dateOption === "Not Applicable") {
+			finalStartDate = today;
+			finalEndDate = null;
+		}
+
 		const serviceData = {
 			title: serviceTitle,
 			type: serviceType,
 			description: description,
 			allow_attach_file: attachRequirements,
-			start_date: dateOption === "Available Date" ? today : null,
-			end_date: dateOption === "Available Date" ? today : null,
+			start_date: finalStartDate,
+			end_date: finalEndDate,
 			image: selectedImage,
 			owner: null, // replace with logged-in user ID if needed
 			service_cost: serviceCost ?? 0,
@@ -120,7 +158,9 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 				console.log("created service", data);
 			} else {
 				setModalType("error");
-				console.error("Failed to create service");
+				console.error(
+					"Failed to create service. Please fill in all required fields."
+				);
 			}
 		} catch (err) {
 			setModalType("error");
@@ -140,11 +180,10 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 			{modalType === "error" && (
 				<ErrorModal
 					title="Error"
-					content="Failed to create service. Please try again."
+					content="Failed to create the service. Try again."
 					onClose={() => setModalType(null)}
 				/>
 			)}
-
 			<div className="relative bg-white rounded-2xl shadow-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
 				<div className="flex flex-col gap-6">
 					<div className="flex justify-between items-center py-3 pt-5 bg-gray-100">
@@ -166,6 +205,9 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 							value={serviceTitle}
 							onChange={(e) => setServiceTitle(e.target.value)}
 						/>
+						{errorMessages.title && (
+							<p className="text-red-500 text-sm">{errorMessages.title}</p>
+						)}
 					</div>
 					<div className="flex flex-col md:flex-row gap-6 px-6">
 						<div className="flex flex-col gap-4">
@@ -193,6 +235,9 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 									onChange={handleImageChange}
 									className="hidden"
 								/>
+								{errorMessages.image && (
+									<p className="text-red-500 text-sm">{errorMessages.image}</p>
+								)}
 							</div>
 						</div>
 
@@ -226,6 +271,9 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 												))}
 										</DropdownMenuContent>
 									</DropdownMenu>
+									{errorMessages.type && (
+										<p className="text-red-500 text-sm">{errorMessages.type}</p>
+									)}
 								</div>
 
 								<div className="flex-1">
@@ -251,7 +299,12 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({ onClose }) => {
 
 								{dateOption === "Available Date" && (
 									<div className="flex-1 flex flex-col gap-4">
-										<DatePicker />
+										<DatePicker
+											selectedStartDate={startDate}
+											selectedEndDate={endDate}
+											onStartDateChange={(date) => setStartDate(date)}
+											onEndDateChange={(date) => setEndDate(date)}
+										/>
 									</div>
 								)}
 							</div>

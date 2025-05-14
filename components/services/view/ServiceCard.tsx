@@ -5,15 +5,15 @@ import Image from "next/image";
 import { RiVipCrown2Fill } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 
-interface Service {
+type Service = {
 	id: string;
 	title: string;
 	owner: string;
 	type: string;
 	image: string;
 	displayBadge?: string;
-	status?: string;
-}
+	status: string;
+};
 
 interface ServiceCardProps {
 	service: Service;
@@ -22,16 +22,11 @@ interface ServiceCardProps {
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect }) => {
 	const router = useRouter();
-	const currentUser = "Bondy Might"; // Replace with your auth later
-	const isOwner = currentUser === service.owner;
 
 	const handleClick = () => {
-		if (isOwner) {
-			router.push(`/services/${service.id}/request`);
-		} else {
-			onSelect(service.id);
-		}
+		onSelect(service.id);
 	};
+
 	return (
 		<div
 			onClick={handleClick}
@@ -41,7 +36,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect }) => {
 		>
 			<div className="relative w-full h-[140px] overflow-hidden rounded-t-[10px]">
 				<Image
-					src={service.image}
+					src={service.image || "/assets/img/service-img.png"} // your fallback image path
 					alt="service image"
 					fill
 					className="object-cover"

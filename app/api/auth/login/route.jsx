@@ -82,7 +82,7 @@ export async function GET() {
 		const user_id = await authService.loggedInUserId();
 		const role = await userService.getUserRole(user_id);
 
-		return NextResponse.json({ role });
+		return NextResponse.json({ role, user_id });
 	} catch (err) {
 		console.error("Failed to fetch logged-in user ID:", err);
 		return NextResponse.json(

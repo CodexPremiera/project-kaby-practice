@@ -36,3 +36,18 @@ export async function POST(request) {
 		});
 	}
 }
+
+export async function GET() {
+	const supabase = await createClient();
+	const serviceService = new ServiceService(supabase);
+
+	try {
+		const services = await serviceService.getAllServices();
+		return NextResponse.json(services);
+	} catch (err) {
+		console.error("Error fetching services:", err);
+		return new Response(JSON.stringify({ error: "Failed to fetch services" }), {
+			status: 500,
+		});
+	}
+}

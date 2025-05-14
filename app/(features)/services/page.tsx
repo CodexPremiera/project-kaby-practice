@@ -1,16 +1,26 @@
-// "use server";
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ActiveService from "@/components/services/your_services/ActiveService";
 import ClosedService from "@/components/services/your_services/ClosedService";
 import { Button } from "@/components/ui/button";
 import { RiSearch2Line } from "react-icons/ri";
 import CreateServiceClient from "./CreateServiceClient";
 
+// Props type for components that need userId and userRole
+type ServiceComponentProps = {
+	userId: string;
+	userRole: string;
+};
+
+// Tab components mapping
 const TAB_COMPONENTS = {
-	active: <ActiveService />,
-	closed: <ClosedService />,
+	active: ({ userId, userRole }: ServiceComponentProps) => (
+		<ActiveService userId={userId} userRole={userRole} />
+	),
+	closed: ({ userId, userRole }: ServiceComponentProps) => (
+		<ClosedService userId={userId} userRole={userRole} />
+	),
 };
 
 const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
@@ -19,14 +29,31 @@ const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
 };
 
 const ServiceDesk = () => {
+	const [userId, setUserId] = useState<string | null>(null);
+	const [userRole, setUserRole] = useState<string | null>(null);
 	const [activeTab, setActiveTab] =
 		useState<keyof typeof TAB_COMPONENTS>("active");
 	const [showCreateService, setShowCreateService] = useState(false);
 
+	useEffect(() => {
+		const fetchUserDetails = async () => {
+			try {
+				const res = await fetch("/api/auth/login");
+				const data = await res.json();
+				setUserId(data.user_id);
+				setUserRole(data.role);
+			} catch (err) {
+				console.error("Error fetching user details:", err);
+			}
+		};
+
+		fetchUserDetails();
+	}, []);
+
 	return (
 		<div className="flex flex-col w-full min-h-screen gap-3">
 			<div className="flex flex-col w-full">
-				<div className="relative flex flex-col w-full min-h-screen ">
+				<div className="relative flex flex-col w-full min-h-screen">
 					<div className="bg-white px-4 sm:px-8 py-8 rounded-t-[20px]">
 						{/* Heading */}
 						<div className="flex flex-col mb-4 gap-2">
@@ -57,14 +84,7 @@ const ServiceDesk = () => {
 							</nav>
 
 							{/* Actions */}
-							<div className="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-end">
-								<Button
-									variant="default"
-									className="w-full sm:w-auto"
-									onClick={() => setShowCreateService(true)}
-								>
-									+ Add New
-								</Button>
+							<div className="flex flex-row gap-2 items-center sm:justify-end">
 								<div className="flex items-center w-[350px] px-4 border border-gray-300 bg-white rounded-md">
 									<RiSearch2Line className="text-gray-500 mr-2" />
 									<input
@@ -73,20 +93,38 @@ const ServiceDesk = () => {
 										className="w-full focus:outline-none focus:ring-0 text-[14px] h-10"
 									/>
 								</div>
+								<div>
+									<Button
+										variant="default"
+										className="w-full sm:w-auto"
+										onClick={() => setShowCreateService(true)}
+									>
+										+ Add New
+									</Button>
+								</div>
 							</div>
 						</div>
 					</div>
 
 					{/* Content */}
 					<div className="flex-1 overflow-y-auto py-2 px-4 sm:px-8 bg-white">
-						{TAB_COMPONENTS[activeTab]}
+						{userId && userRole ? (
+							TAB_COMPONENTS[activeTab]({ userId, userRole })
+						) : (
+							<div className="text-center py-10 text-gray-500">
+								Loading services...
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
 
 			{/* Create Service Modal */}
 			{showCreateService && (
-				<CreateServiceClient onClose={() => setShowCreateService(false)} />
+				<CreateServiceClient
+					onClose={() => setShowCreateService(false)}
+					userRole={userRole}
+				/>
 			)}
 		</div>
 	);

@@ -78,13 +78,13 @@ const BadgeRequests = () => {
 				</div>
 			</div>
 
-			{/* Search + Actions */}
+			{/* Services + Actions */}
 			<div className="flex flex-wrap items-center justify-between gap-4">
 				<div className="flex items-center w-full sm:w-[350px] px-4 border border-gray-300 bg-white rounded-lg">
 					<RiSearch2Line className="text-gray-500 mr-2" />
 					<input
 						type="text"
-						placeholder="Search a client by name"
+						placeholder="Services a client by name"
 						className="w-full focus:outline-none text-sm h-10"
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}

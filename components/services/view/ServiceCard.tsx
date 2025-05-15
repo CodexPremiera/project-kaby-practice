@@ -2,22 +2,45 @@
 
 import React from "react";
 import Image from "next/image";
-import { RiVipCrown2Fill } from "react-icons/ri";
+import { RiVipCrown2Fill as Badge } from "react-icons/ri";
+import { useRouter } from "next/navigation";
+import {Crown as BadgeIcon} from "lucide-react";
+
+interface Service {
+	id: string;
+	title: string;
+	owner: string;
+	type: string;
+	image: string;
+	displayBadge?: string;
+	status?: string;
+}
 
 interface ServiceCardProps {
-	service: any;
-	onSelect: (service: any) => void;
+	service: Service;
+	onSelect: (id: string) => void;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect }) => {
+	const router = useRouter();
+	const currentUser = "Bondy Might"; // Replace with your auth later
+	const isOwner = currentUser === service.owner;
+
+	const handleClick = () => {
+		if (isOwner) {
+			router.push(`/services/${service.id}/request`);
+		} else {
+			onSelect(service.id);
+		}
+	};
 	return (
 		<div
-			className={`flex flex-col border border-gray-200 shadow hover:shadow-lg  w-full max-w-xs cursor-pointer transition-opacity duration-300 rounded-[10px] bg-white ${
+			onClick={handleClick}
+			className={`flex flex-col border border-light-color w-full cursor-pointer transition-opacity duration-300 rounded-xl background-1 ${
 				service.status === "closed" ? "opacity-50" : ""
 			}`}
-			onClick={() => onSelect(service)}
 		>
-			<div className="relative w-full h-[140px] overflow-hidden rounded-t-[10px]">
+			<div className="relative w-full h-[140px] sm:h-[180px] md:h-[160px] lg:h-[144px] xl:h-[180px] overflow-hidden rounded-t-[10px]">
 				<Image
 					src={service.image}
 					alt="service image"
@@ -25,16 +48,19 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect }) => {
 					className="object-cover"
 				/>
 				{service.displayBadge === "Yes" && (
-					<RiVipCrown2Fill className="absolute top-2 right-2 text-xl text-secondary" />
+					<span className="absolute top-2 right-2 bg-accent rounded-full p-1.5">
+						<BadgeIcon size={16} color="white" fill="white"/>
+					</span>
 				)}
 			</div>
 
-			<div className="px-4 py-4">
-				<p className="text-sm font-medium">{service.title}</p>
-				<div className="flex gap-2 flex-wrap text-sm text-gray-600">
-					<p>by: {service.owner}</p>
-					<p>• {service.type}</p>
-				</div>
+			<div className="px-6 pt-3 pb-5">
+				<p className="font-semibold">{service.title}</p>
+				<p className="flex gap-1">
+					<span className="text-secondary">{service.owner}</span>
+					<span className="text-secondary">•</span>
+					<span className="text-secondary">{service.type}</span>
+				</p>
 			</div>
 		</div>
 	);

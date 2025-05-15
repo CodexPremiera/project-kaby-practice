@@ -9,11 +9,11 @@ interface CustomButtonProps {
 }
 
 const ButtonSecondary: React.FC<CustomButtonProps> = ({
-                                               onClick,
-                                               disabled = false,
-                                               children,
-                                               className = "",
-                                             }) => {
+                                                        onClick,
+                                                        disabled = false,
+                                                        children,
+                                                        className = "",
+                                                      }) => {
   return (
     <button
       type="button"

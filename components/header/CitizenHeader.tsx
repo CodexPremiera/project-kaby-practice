@@ -6,12 +6,11 @@ import Link from "next/link";
 
 const CitizenHeader = () => {
 	return (
-		<header className="h-[65px] px-4 sm:px-6 flex items-center justify-between bg-white  z-20 py-8">
-			<div className="flex items-center gap-3">
-				<Logo />
+		<header className="h-[65px] px-4 sm:px-6 flex items-center justify-between z-20 py-8">
+			<div className="flex items-center gap-1 select-none cursor-pointer">
+				<Logo/>
 				<div className="flex items-center gap-2">
-					<span className="text-lg font-semibold text-secondary">Kaby</span>
-					<span className="italic text-sm">for Citizen</span>
+					<span className="italic">for Citizens</span>
 				</div>
 			</div>
 			<div className="flex items-center gap-4">
@@ -20,7 +19,7 @@ const CitizenHeader = () => {
 						Bondy Might
 					</span>
 				</Link>
-				<ModeToggle />
+				<ModeToggle/>
 			</div>
 		</header>
 	);

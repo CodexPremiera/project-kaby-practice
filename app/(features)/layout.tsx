@@ -35,14 +35,17 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	}
 
 	return (
-		<div className="flex flex-col w-screen h-screen overflow-hidden">
+
+		<div className="flex flex-col w-screen min-h-screen overflow-hidden relative">
 			{/* Example static header for now */}
 			{Header}
+
 			{/* Example static sidebar for now */}
 			<div className="flex flex-row flex-1 sm:ml-[75px] h-full">
 				{/* Example static sidebar */}
 				{Mainbar}
-				<div className="flex-1 overflow-y-auto rounded-tl-[20px] sm:px-7 sm:pb-0 pb-[75px] border-light">
+				<div
+					className="flex-1 h-[calc(100vh-65px)] overflow-y-auto rounded-tl-[20px] sm:px-7 py-6 border border-light-color bg-gradient overflow-y-auto">
 					{children}
 				</div>
 			</div>

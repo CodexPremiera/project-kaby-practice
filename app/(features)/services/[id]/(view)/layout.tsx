@@ -1,8 +1,8 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import AroundYou from "@/components/home/search/AroundYou";
-import GeneralPublic from "@/components/home/search/GeneralPublic";
+import AroundYou from "@/components/home/services/AroundYou";
+import GeneralPublic from "@/components/home/services/GeneralPublic";
 import ViewServiceSidebar from "@/components/services/view/ViewServiceSidebar";
 
 interface LayoutProps {

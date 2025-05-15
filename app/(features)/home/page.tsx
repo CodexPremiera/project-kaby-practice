@@ -1,13 +1,15 @@
 "use client";
 import Post from "@/components/home/post/Post";
-import Search from "@/components/home/search/Search";
-import { useState } from "react";
+import Services from "@/components/home/services/Services";
+import {useEffect, useState} from "react";
 import ContactList from "@/components/home/contact_list/ContactList";
 import OfficialsList from "@/components/home/official_list/OfficialsList";
 import BarangayProfileTab from "@/components/profile/BarangayProfileTab";
+import {useRouter, useSearchParams} from "next/navigation";
+import SwitchTab from "@/components/ui/buttons/SwitchTab";
 
 const TAB_COMPONENTS = {
-	Services: <Search />,
+	Services: <Services />,
 	Posts: <Post />,
 	Officials: <OfficialsList />,
 	Contact: <ContactList />,
@@ -21,34 +23,44 @@ const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
 };
 
 const Home = () => {
-	const [activeTab, setActiveTab] =
-		useState<keyof typeof TAB_COMPONENTS>("Services");
+	const searchParams = useSearchParams();
+	const router = useRouter();
+	const tabParam = searchParams.get("tab") as keyof typeof TAB_COMPONENTS;
+	const defaultTab: keyof typeof TAB_COMPONENTS = tabParam && TAB_COMPONENTS[tabParam] ? tabParam : "Services";
+
+	const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>(defaultTab);
+
+	const changeTab = (tab: keyof typeof TAB_COMPONENTS) => {
+		setActiveTab(tab);
+		router.push(`?tab=${tab}`);
+	};
+
+	useEffect(() => {
+		if (tabParam && tabParam !== activeTab) {
+			setActiveTab(tabParam);
+		}
+	}, [tabParam]);
+
 
 	return (
-		<div className="flex flex-col w-full">
-			<div className="relative flex flex-col w-full min-h-screen ">
-				<BarangayProfileTab />
-				<nav className="flex bg-white gap-4 pl-8  mb-4 border-b border-gray-100 sm:rounded-b-[20px]">
-					{Object.keys(TAB_COMPONENTS).map((tab) => (
-						<button
+		<div className="flex flex-col w-full max-w-[1280px] mx-auto gap-8 swiper-coverflow">
+			<div className="flex flex-col w-full gap-8 px-4">
+				<BarangayProfileTab/>
+				<nav
+					className="flex w-full rounded-3xl px-6 md:px-6 max-sm:justify-between gap-2 sm:gap-4 lg:gap-8 items-center background-1 border-light-color border">
+					{(Object.keys(TAB_COMPONENTS) as Array<keyof typeof TAB_COMPONENTS>).map((tab) => (
+						<SwitchTab
 							key={tab}
-							onClick={() => setActiveTab(tab as keyof typeof TAB_COMPONENTS)}
-							className={`text-sm px-4 py-3 border-b-2 transition-colors ${
-								activeTab === tab
-									? "border-secondary text-secondary"
-									: "border-transparent text-gray-600 hover:text-secondary"
-							}`}
+							onClick={() => changeTab(tab)}
+							active={activeTab === tab}
+							className="px-2 pt-3 lg:pt-4 pb-2 lg:pb-3"
 						>
-							{TAB_LABELS[tab as keyof typeof TAB_LABELS]}
-						</button>
+							{TAB_LABELS[tab]}
+						</SwitchTab>
 					))}
 				</nav>
-
-				{/* Main content area */}
-				<div className="flex-1 justify-center overflow-y-auto items-center ">
-					{TAB_COMPONENTS[activeTab]}
-				</div>
 			</div>
+			{TAB_COMPONENTS[activeTab]}
 		</div>
 	);
 };

@@ -89,7 +89,7 @@ const ServiceDesk = () => {
 									<RiSearch2Line className="text-gray-500 mr-2" />
 									<input
 										type="text"
-										placeholder="Search for services"
+										placeholder="Services for services"
 										className="w-full focus:outline-none focus:ring-0 text-[14px] h-10"
 									/>
 								</div>

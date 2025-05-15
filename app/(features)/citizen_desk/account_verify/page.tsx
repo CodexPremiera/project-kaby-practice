@@ -64,7 +64,7 @@ const AccountVerify = () => {
 	// 				<RiSearch2Line className="text-gray-500 mr-2" />
 	// 				<input
 	// 					type="text"
-	// 					placeholder="Search a client by name"
+	// 					placeholder="Services a client by name"
 	// 					className="w-full focus:outline-none text-sm h-10"
 	// 					value={searchTerm}
 	// 					onChange={(e) => setSearchTerm(e.target.value)}

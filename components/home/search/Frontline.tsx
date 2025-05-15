@@ -34,10 +34,10 @@ const Frontline: React.FC = () => {
 		>
 			{filteredServices.map((service) => (
 				<ServiceCard
-										key={service.id}
-										service={service}
-										onSelect={() => router.push(`/services/${service.id}`)}
-									/>
+					key={service.id}
+					service={service}
+					onSelect={() => router.push(`/services/${service.id}`)}
+				/>
 			))}
 		</div>
 	);

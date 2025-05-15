@@ -15,10 +15,12 @@ class BarangayService {
 		const data = await this.repo.getAll();
 		return data;
 	}
-	// async getCitizenById(id){
-	//     const data= await this.repo.getById(id);
-	//     return data;
-	// }
+	async getBarangayById(id) {
+		const data = await this.repo.getById(id);
+		return data;
+	}
+
+	
 	// async getCitByAuthenticatedId(id){
 	//     const data = await this.repo.getByAuthenticatedId(id);
 	//     return data;

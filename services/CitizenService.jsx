@@ -33,5 +33,6 @@ class CitizenService {
 		const data = await this.repo.getIdUsingRole(id);
 		return data;
 	}
+	
 }
 export default CitizenService;

@@ -41,6 +41,84 @@ export default class ServiceRepo extends BaseRepo {
 		return data;
 	}
 
+	async getFrontlineServices(user_id) {
+		// Check if user is a citizen
+		const { data: citizenProfile, error: citizenError } = await this.supabase
+			.from("CitizenProfile")
+			.select("barangay")
+			.eq("user_id", user_id)
+			.single();
+
+		if (citizenError && citizenError.code !== "PGRST116") {
+			console.error("Error fetching citizen profile:", citizenError);
+			throw citizenError;
+		}
+
+	
+
+		if (citizenProfile) {
+			// If citizen, get their barangay and related services
+			const barangayName = citizenProfile.barangay;
+
+			const { data: barangayProfiles, error: barangayProfilesError } =
+				await this.supabase
+					.from("BarangayProfile")
+					.select("user_id")
+					.eq("barangayName", barangayName);
+
+			if (barangayProfilesError) {
+				console.error(
+					"Error fetching barangay profiles:",
+					barangayProfilesError
+				);
+				throw barangayProfilesError;
+			}
+
+			const userIds = barangayProfiles.map((profile) => profile.user_id);
+
+			if (userIds.length === 0) return [];
+
+			const { data: services, error: servicesError } = await this.supabase
+				.from("Services")
+				.select("*")
+				.in("owner", userIds);
+
+			if (servicesError) {
+				console.error("Error fetching services for citizen:", servicesError);
+				throw servicesError;
+			}
+
+			return services;
+		} else {
+			// Otherwise check if user is a barangay profile
+			const { data: barangayProfile, error: barangayProfileError } =
+				await this.supabase
+					.from("BarangayProfile")
+					.select("id")
+					.eq("user_id", user_id)
+					.single();
+
+			if (barangayProfileError) {
+				console.error("Error fetching barangay profile:", barangayProfileError);
+				throw barangayProfileError;
+			}
+
+			const { data: services, error: servicesError } = await this.supabase
+				.from("Services")
+				.select("*")
+				.eq("owner", user_id);
+
+			if (servicesError) {
+				console.error("Error fetching services for barangay:", servicesError);
+				throw servicesError;
+			}
+
+			return services;
+		}
+	}
+
+	async getAroundYouServices(user_id) {}
+
 	async create(serviceData) {
 		try {
 			const newService = new ServiceModel(

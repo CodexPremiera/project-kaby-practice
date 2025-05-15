@@ -14,7 +14,7 @@ const BarangayHeader = () => {
 				</div>
 			</div>
 			<div className="flex items-center gap-4">
-				<Link href="/barangay/profile" className="flex items-center gap-2">
+				<Link href="/profile" className="flex items-center gap-2">
 					<span className="hidden sm:inline text-sm font-medium pr-2">
 						Barangay Labangon
 					</span>

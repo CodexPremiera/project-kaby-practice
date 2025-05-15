@@ -8,18 +8,18 @@ const CitizenHeader = () => {
 	return (
 		<header className="h-[65px] px-4 sm:px-6 flex items-center justify-between z-20 py-8">
 			<div className="flex items-center gap-1 select-none cursor-pointer">
-				<Logo/>
+				<Logo />
 				<div className="flex items-center gap-2">
 					<span className="italic">for Citizens</span>
 				</div>
 			</div>
 			<div className="flex items-center gap-4">
-				<Link href="/barangay/profile" className="flex items-center gap-2">
+				<Link href="/profile" className="flex items-center gap-2">
 					<span className="hidden sm:inline text-sm font-medium pr-2">
 						Bondy Might
 					</span>
 				</Link>
-				<ModeToggle/>
+				<ModeToggle />
 			</div>
 		</header>
 	);

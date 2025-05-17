@@ -1,11 +1,11 @@
 
 "use client";
+// 'use server'
+import BarangayProfileClient from "./BarangayProfileClient";
+// import BarangayService from "@/services/BarangayService"
+// import { createClient } from "@/utils/supabase/server";
 
-import Image from "next/image";
-import React from "react";
-import { RiHome3Fill } from "react-icons/ri";
-
-const BarangayProfileTab = () => {
+const BarangayProfileTab = async () => {
 	const stats = [
 		{
 			value: "48,324",
@@ -20,6 +20,10 @@ const BarangayProfileTab = () => {
 			label: "Officials",
 		},
 	];
+	// const supabase = await createClient();
+	// const barangayService = new BarangayService(supabase);
+
+
 
 	return (
 		<div className="flex flex-col lg:flex-row w-full rounded-3xl px-6 pt-8 pb-6 lg:py-4 gap-6 items-center justify-between background-1 border-light-color border">

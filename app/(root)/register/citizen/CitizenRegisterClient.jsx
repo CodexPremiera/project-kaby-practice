@@ -139,7 +139,7 @@ export default function CitizenRegisterClientForm() {
 						))}
 					</select>
 				</div>
-				<div className="relative mt-4">
+				{/* <div className="relative mt-4">
 					<input
 						className="floating-input mt-1 w-full text-black"
 						type="password"
@@ -152,8 +152,8 @@ export default function CitizenRegisterClientForm() {
 					<label htmlFor="password" className="floating-label">
 						Password
 					</label>
-				</div>
-				<div className="relative mt-4">
+				</div> */}
+				{/* <div className="relative mt-4">
 					<input
 						className="floating-input mt-1 w-full text-black"
 						type="password"
@@ -166,7 +166,7 @@ export default function CitizenRegisterClientForm() {
 					<label htmlFor="confirm-password" className="floating-label">
 						Confirm Password
 					</label>
-				</div>
+				</div> */}
 				<div className="mt-6 flex justify-center items-center">
 					<button
 						type="submit"

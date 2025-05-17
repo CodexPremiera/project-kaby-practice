@@ -17,10 +17,10 @@ import {
 	TableHead,
 	TableCell,
 } from "@/components/ui/table";
-import { profiles } from "@/data/profiles";
+// import { profiles } from "@/data/profiles";
 import { format } from "date-fns";
 
-export default function AccVerifyClient(){
+export default function AccVerifyClient({profiles}: { profiles: any[] }) {
     // ==============
 
     const [statuses, setStatuses] = useState<string[]>(

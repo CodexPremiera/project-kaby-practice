@@ -5,12 +5,14 @@ import AuthenticationService from "../../../../../services/AuthenticationService
 import CitizenService from "../../../../../services/CitizenService";
 import { NextResponse } from "next/server";
 import UserService from "../../../../../services/UserService";
+import TemporaryAccountService from "@/services/TemporaryAccountService";
 
 export async function POST(request) {
 	const supabase = await createClient();
-	const authService = new AuthenticationService(supabase);
-	const citizenService = new CitizenService(supabase);
-	const userService = new UserService(supabase);
+	const temporaryAccountService = new TemporaryAccountService(supabase);
+	// const authService = new AuthenticationService(supabase);
+	// const citizenService = new CitizenService(supabase);
+	// const userService = new UserService(supabase);
 
 	try {
 		const body = await request.json();
@@ -19,49 +21,58 @@ export async function POST(request) {
 			last_name,
 			email,
 			barangay,
-			password,
-			confirm_password,
+			// password,
+			// confirm_password,
 		} = body;
 
-		const { data, error } = await authService.registerUser({
+		const data = await temporaryAccountService.createTemporaryAccount({
+			first_name,
+			last_name,
 			email,
-			password,
-			confirm_password,
+			barangay,
 		});
 
-		if (error) {
-			return NextResponse.json({ error: error.message }, { status: 400 });
-		}
+		// const { data, error } = await authService.registerUser({
+		// 	email,
+		// 	password,
+		// 	confirm_password,
+		// });
 
-		let user_id = data.user.id;
+		// if (error) {
+		// 	return NextResponse.json({ error: error.message }, { status: 400 });
+		// }
 
-		const { data: userData, error: userError } = await userService.createUser({
-			user_id,
-			role: "citizen",
-		});
+		// let user_id = data.user.id;
 
-		if (userError) {
-			return NextResponse.json({ error: userError.message }, { status: 400 });
-		}
+		// const { data: userData, error: userError } = await userService.createUser({
+		// 	user_id,
+		// 	role: "citizen",
+		// });
 
-		console.log("dataaa2", userData);
-		user_id = userData.id;
+		// if (userError) {
+		// 	return NextResponse.json({ error: userError.message }, { status: 400 });
+		// }
 
-		const { data: citData, error: citError } =
-			await citizenService.createCitizenProfile({
-				first_name,
-				last_name,
-				barangay,
-				user_id,
-			});
+		// console.log("dataaa2", userData);
+		// user_id = userData.id;
 
-		if (citError) {
-			return NextResponse.json({ error: citError.message }, { status: 400 });
-		}
+		// const { data: citData, error: citError } =
+		// 	await citizenService.createCitizenProfile({
+		// 		first_name,
+		// 		last_name,
+		// 		barangay,
+		// 		user_id,
+		// 	});
 
-		console.log(citData, "citdata");
+		// if (citError) {
+		// 	return NextResponse.json({ error: citError.message }, { status: 400 });
+		// }
 
-		return NextResponse.json(citData);
+		// console.log(citData, "citdata");
+
+		return NextResponse.json(data);
+
+
 	} catch (err) {
 		console.error("Unexpected error:", err);
 		return NextResponse.json(

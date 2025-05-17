@@ -7,26 +7,38 @@ import CitizenMainbar from "@/components/mainbar/CitizenMainbar";
 import { ReactNode } from "react";
 import AuthenticationService from "@/services/AuthenticationService";
 import UserService from "@/services/UserService";
+import BarangayService from "@/services/BarangayService";
 import { createClient } from "@/utils/supabase/server";
-
+import { UserContext } from "@/app/context/UserContext"; 
 const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	const supabase = await createClient();
 	const authService = new AuthenticationService(supabase);
 	const userService = new UserService(supabase);
-
+	
 	const user_id = await authService.loggedInUserId();
 	console.log("Logged in user id: ", user_id);
 	const role = await userService.getUserRole(user_id);
 
-	console.log("User role: ", role);
 
+
+	console.log("User role: ", role);
+	
 	let Header = null;
 	let Mainbar = null;
-
+	let contextValue = {
+		userId: user_id,
+		role: role,
+		barangayName: null,
+		adminData: null,
+		citizenData: null,
+	};	
+	
 	if (role === "admin") {
 		Header = <AdminHeader />;
 		Mainbar = <AdminMainbar />;
 	} else if (role === "barangay") {
+		const barangayService = new BarangayService(supabase);
+		const barangay = await barangayService.getBarangayNameById(user_id);
 		Header = <BarangayHeader />;
 		Mainbar = <BarangayMainbar />;
 	} else if (role === "citizen") {

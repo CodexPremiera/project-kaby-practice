@@ -1,5 +1,5 @@
 // "use client";
-
+"use server";
 import AccVerifyClient from "./AccVerifyClient";
 // import { useState } from "react";
 // import { RiSearch2Line } from "react-icons/ri";
@@ -18,12 +18,17 @@ import AccVerifyClient from "./AccVerifyClient";
 // 	TableHead,
 // 	TableCell,
 // } from "@/components/ui/table";
-// import { profiles } from "@/data/profiles";
+import { profiles } from "@/data/profiles";
 // import { format } from "date-fns";
+import TemporaryAccountService from "@/services/TemporaryAccountService";
+import { createClient } from "@/utils/supabase/server";
 
-
-const AccountVerify = () => {
-	return <AccVerifyClient/>;
+export default async function AccountVerify() {
+// const AccountVerify = () => {
+	const supabase = createClient();
+	const temporaryAccountService = new TemporaryAccountService(supabase);
+	// const data = await temporaryAccountService.getAllByBarangay(barangay)
+	return <AccVerifyClient profiles = {profiles}/>;
 	// const [statuses, setStatuses] = useState<string[]>(
 	// 	profiles.map(() => "Pending")
 	// );
@@ -178,4 +183,3 @@ const AccountVerify = () => {
 	// );
 };
 
-export default AccountVerify;

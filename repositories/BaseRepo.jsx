@@ -10,10 +10,14 @@ class BaseRepo {
 		if (error) throw error;
 		return data;
 	}
-	async getById(id) {
+	async getById(id,selectFields = "*") {
+		const fields = Array.isArray(selectFields)
+			? selectFields.join(", ")
+			: selectFields;
+
 		const { data, error } = await this.supabase
 			.from(this.tableName)
-			.select("*")
+			.select(fields)
 			.eq("id", id)
 			.single();
 		if (error) throw error;

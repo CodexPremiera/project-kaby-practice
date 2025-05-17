@@ -18,5 +18,18 @@ class BarangayProfileRepo extends BaseRepo {
 			throw new Error("Failed to fetch barangays");
 		}
 	}
+	async create(brgyDetails) {
+		const { data, error } = await this.supabase
+			.from("BarangayProfile")
+			.insert([brgyDetails])
+			.select();
+
+		if (error) {
+			console.log(error);
+			return null;
+		}
+
+		return data;
+	}
 }
 export default BarangayProfileRepo;

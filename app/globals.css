@@ -14,29 +14,29 @@
 	--heroImage: url("/assets/hero_light.svg");
 
 	/* 60% primary colors - background */
-	--color-primary-1: #FFFFFF;
-	--color-primary-2: #CDCDCD;
-	--color-primary-3: #E9E9E9;
-	--color-primary-1-dark: #1F1F1F;
+	--color-primary-1: #ffffff;
+	--color-primary-2: #cdcdcd;
+	--color-primary-3: #e9e9e9;
+	--color-primary-1-dark: #1f1f1f;
 	--color-primary-2-dark: #363636;
 	--color-primary-3-dark: #363636;
 
 	/* 30% secondary colors - texts */
 	--color-secondary-1: #111111;
 	--color-secondary-2: #767676;
-	--color-secondary-1-dark: #CDCDCD;
-	--color-secondary-2-dark: #A1A1A1;
+	--color-secondary-1-dark: #cdcdcd;
+	--color-secondary-2-dark: #a1a1a1;
 
 	/* 10% accent colors - buttons, gradients */
-	--color-accent-1: #FFA52F;
-	--color-accent-2: #FF9229;
+	--color-accent-1: #ffa52f;
+	--color-accent-2: #ff9229;
 	--color-accent-1-dark: #e68027;
 	--color-accent-2-dark: #e68225;
 
 	/* secondary colors with a hint of accent - gradients */
-	--color-tint-2: #FFFBF0;
-	--color-tint-3: #FFFDF5;
-	--color-tint-2-dark: #1C1B17;
+	--color-tint-2: #fffbf0;
+	--color-tint-3: #fffdf5;
+	--color-tint-2-dark: #1c1b17;
 	--color-tint-3-dark: #191815;
 }
 
@@ -228,9 +228,27 @@
 
 .no-scrollbar {
 	scrollbar-width: none; /* Firefox */
-	-ms-overflow-style: none;  /* IE and Edge */
+	-ms-overflow-style: none; /* IE and Edge */
 }
 
 .no-scrollbar::-webkit-scrollbar {
 	display: none; /* Chrome, Safari, Opera */
+}
+.loader {
+	border: 4px solid #f3f3f3;
+	border-top: 4px solid #333;
+	border-radius: 50%;
+	width: 36px;
+	height: 36px;
+	animation: spin 1s linear infinite;
+	margin: 0 auto;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }

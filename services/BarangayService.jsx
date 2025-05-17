@@ -5,8 +5,18 @@ class BarangayService {
 		this.repo = new BarangayProfileRepo(supabase);
 	}
 
-	async createBarangayProfile(brgyDetails) {
-		// TODO: verify barangay exist
+	async createBarangayProfile({ address, badge_stock, barangayName, user_id }) {
+		if (!address || !badge_stock || !barangayName || !user_id) {
+			throw new Error("Missing required fields for BarangayProfile.");
+		}
+
+		const brgyDetails = {
+			address: address,
+			badge_stock: badge_stock,
+			barangayName: barangayName,
+			user_id: user_id,
+		};
+
 		const data = await this.repo.create(brgyDetails);
 		return data;
 	}
@@ -20,7 +30,6 @@ class BarangayService {
 		return data;
 	}
 
-	
 	// async getCitByAuthenticatedId(id){
 	//     const data = await this.repo.getByAuthenticatedId(id);
 	//     return data;

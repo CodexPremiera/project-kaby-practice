@@ -72,7 +72,6 @@ function CitizenSettings(props) {
           />
         )}
 
-
         <div className="flex w-full pt-6 lg:pt-20 max-xl:justify-center">
           <div className="flex flex-col gap-6 w-full max-w-[780px] mx-6 xl:ml-30 2xl:ml-40 background-1 rounded-2xl sm:rounded-3xl border border-light-color p-6 md:p-12 rounded-xl ">
             {TAB_COMPONENTS[activeTab]}

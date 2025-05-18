@@ -25,6 +25,10 @@ class CitizenService {
 		const data = await this.repo.getById(id);
 		return data;
 	}
+	async getCitBarangayId(id) {
+		const data = await this.repo.getFieldByFKId(id,["barangay_id"]);
+		return data;
+	}
 	async getCitByAuthenticatedId(id) {
 		const data = await this.repo.getByAuthenticatedId(id);
 		return data;

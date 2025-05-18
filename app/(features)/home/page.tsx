@@ -8,6 +8,8 @@ import BarangayProfileTab from "@/components/profile/BarangayProfileTab";
 import {useRouter, useSearchParams} from "next/navigation";
 import SwitchTab from "@/components/ui/buttons/SwitchTab";
 
+import { useUser } from "@/app/context/UserContext";
+
 const TAB_COMPONENTS = {
 	Services: <Services />,
 	Posts: <Post />,
@@ -41,11 +43,15 @@ const Home = () => {
 		}
 	}, [tabParam]);
 
+	const {role}= useUser();
+	console.log("User role: ", role);
 
 	return (
 		<div className="flex flex-col w-full max-w-[1280px] mx-auto gap-8 swiper-coverflow">
 			<div className="flex flex-col w-full gap-8 px-4">
-				<BarangayProfileTab/>
+				{(role === "barangay" || role === "citizen") && <BarangayProfileTab />}
+
+				{/* <BarangayProfileTab/> */}
 				<nav
 					className="flex w-full rounded-3xl px-6 md:px-6 max-sm:justify-between gap-2 sm:gap-4 lg:gap-8 items-center background-1 border-light-color border">
 					{(Object.keys(TAB_COMPONENTS) as Array<keyof typeof TAB_COMPONENTS>).map((tab) => (

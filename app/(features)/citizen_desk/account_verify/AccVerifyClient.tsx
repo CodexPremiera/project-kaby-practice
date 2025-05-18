@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 
 import { format } from "date-fns";
-import { useUser } from "@/app/context/UserContext";
+import { useBarangayContext } from "@/app/context/BarangayContext";
 import { createClient } from "@/utils/supabase/client";
 import TemporaryAccountService from "@/services/TemporaryAccountService";
 
@@ -37,7 +37,7 @@ interface Profile {
 export default function AccVerifyClient(){
     
     // ==============
-    const {barangayName} = useUser();
+    const {barangayName,barangayAddress} = useBarangayContext();
     console.log("this is brf=gy name:" , barangayName);
      const [profiles, setProfiles] = useState<Profile[]>([]);
       useEffect(() => {

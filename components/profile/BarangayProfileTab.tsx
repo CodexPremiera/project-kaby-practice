@@ -3,7 +3,8 @@
 import Image from "next/image";
 import React from "react";
 import { RiHome3Fill } from "react-icons/ri";
-
+import Profile from "@/app/(features)/profile/[id]/page";
+import BarangayProfileClient from "@/components/profile/BarangayProfileClient";
 const BarangayProfileTab = () => {
 	const stats = [
 		{
@@ -24,7 +25,8 @@ const BarangayProfileTab = () => {
 		<div className="w-full max-w-screen py-4 bg-white sm:rounded-t-[20px]">
 			<div className="flex flex-col lg:flex-row items-center  justify-between px-6 lg:px-12 min-h-[100px]">
 				{/* Profile Section */}
-				<div className="flex gap-4 items-center text-left my-4 flex-shrink-0 w-[500px] px-8 lg:px-0">
+				<BarangayProfileClient />
+				{/* <div className="flex gap-4 items-center text-left my-4 flex-shrink-0 w-[500px] px-8 lg:px-0">
 					<Image
 						src="/assets/profile/bg-profile.png"
 						width={60}
@@ -41,7 +43,8 @@ const BarangayProfileTab = () => {
 							South District Cebu City
 						</p>
 					</div>
-				</div>
+				</div> */}
+				
 
 				{/* Stats Section */}
 				<div className="flex flex-wrap gap-6 sm:gap-8 items-center justify-between w-full py-4 sm:px-8 px-4  rounded-[20px] ">

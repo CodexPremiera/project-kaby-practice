@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import ServicesList from "@/components/home/services/ServicesList";
-import ButtonTab from "@/components/ui/buttons/ButtonTab";
+import ButtonTab from "@/components/ui/tabs/ButtonTab";
 import {useRouter, useSearchParams} from "next/navigation";
 import ServiceSearchBar from "@/components/home/services/ServiceSearchBar";
 

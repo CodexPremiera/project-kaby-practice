@@ -1,4 +1,4 @@
-// settings/page.tsx
+// settingss/page.tsx
 import { redirect } from "next/navigation";
 
 export default function SettingsRedirectPage() {

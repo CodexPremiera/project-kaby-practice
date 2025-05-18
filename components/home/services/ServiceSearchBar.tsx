@@ -37,7 +37,7 @@ export default function ServiceSearchBar() {
       placeholder="Services a service" // Placeholder text
       onChange={(e) => setQuery(e.target.value)}
       onKeyDown={handleKeyDown}
-      className="rounded-full border-2 text-primary"
+      className="rounded-full border text-primary"
     />
   );
 }

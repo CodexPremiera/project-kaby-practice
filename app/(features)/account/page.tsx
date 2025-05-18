@@ -1,9 +1,11 @@
-const Page = () => {
+import React from 'react';
+import CitizenSettings from "@/components/settings/citizen_settings";
+
+
+function Page() {
 	return (
-		<div className="flex flex-col w-full min-h-screen">
-			lol
-		</div>
-	);
-};
+		<CitizenSettings />
+	)
+}
 
 export default Page;

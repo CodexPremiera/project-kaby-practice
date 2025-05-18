@@ -1,4 +1,4 @@
-//import ManagerRowHead from "@/components/settings/access_control/manager_row_head";
+//import ManagerRowHead from "@/components/settingss/access_control/manager_row_head";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import { ManagerProvider } from "@/components/settings/access_control/manager_context";
 import ManagerList from "@/components/settings/access_control/manager_list";

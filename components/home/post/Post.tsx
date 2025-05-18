@@ -1,7 +1,7 @@
 import React from "react";
 import PostComposer from "./PostComposer";
 import PostCard from "./PostCard";
-import SwitchTab from "@/components/ui/buttons/SwitchTab";
+import SwitchTab from "@/components/ui/tabs/SwitchTab";
 
 const postsData = [
 	{

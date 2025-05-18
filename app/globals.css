@@ -55,7 +55,7 @@
 	h1 {
 		color: var(--color-black-100);
 		font-family: var(--font-work-sans);
-		@apply text-4xl lg:text-5xl xl:text-6xl font-bold;
+		@apply text-xl lg:text-5xl xl:text-6xl font-bold;
 	}
 }
 

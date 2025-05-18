@@ -31,39 +31,37 @@ function NameAndIdentity() {
     setIsDisabled(!hasChanged);
   }, [formData]);
 
-  // Reset handler
+  // handlers
   const handleReset = () => setFormData({ ...originalData });
-
-  // Save handler
   const handleSave = () => setOriginalData({ ...formData });
 
   return (
     <>
       {/* Header */}
-        <div className="flex flex-col items-start gap-4 w-full">
-          <h1 className="text-[1.75rem] font-semibold leading-[12px]">Edit Profile</h1>
-          <p className="text-sm text-muted-foreground">
-            Keep confidential details private. Information you add here is visible to anyone who can view your profile.
-          </p>
-        </div>
+      <div className="flex flex-col items-start gap-2 lg:gap-4 w-full">
+        <h1 className="text-[1.75rem] font-semibold hidden lg:block">Name and identity</h1>
+        <p className="text-sm text-muted-foreground">
+          Keep confidential details private. Information you add here is visible to anyone who can view your profile.
+        </p>
+      </div>
 
       {/* Form Fields */}
-        <div className="flex flex-col gap-8 w-full mt-6">
-          <div className="flex max-md:flex-col gap-4 w-full">
-            <TextField
-              field_name="Firstname"
-              placeholder="Enter your firstname"
-              value={formData.firstName}
-              onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-              hasChanged={formData.firstName !== originalData.firstName}
-            />
-            <TextField
-              field_name="Lastname"
-              placeholder="Enter your lastname"
-              value={formData.lastName}
-              onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-              hasChanged={formData.lastName !== originalData.lastName}
-            />
+      <div className="flex flex-col gap-8 w-full mt-6">
+        <div className="flex max-md:flex-col gap-4 w-full">
+          <TextField
+            field_name="Firstname"
+            placeholder="Enter your firstname"
+            value={formData.firstName}
+            onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+            hasChanged={formData.firstName !== originalData.firstName}
+          />
+          <TextField
+            field_name="Lastname"
+            placeholder="Enter your lastname"
+            value={formData.lastName}
+            onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+            hasChanged={formData.lastName !== originalData.lastName}
+          />
           </div>
 
           <div className="flex max-md:flex-col gap-4 w-full">

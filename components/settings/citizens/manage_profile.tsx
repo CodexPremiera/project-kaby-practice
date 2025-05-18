@@ -7,10 +7,7 @@ function ManageProfile() {
     <>
       {/* Header */}
       <div className="flex flex-col items-start gap-2 w-full">
-        <h1
-          className="flex flex-col justify-center h-[2.625rem] text-[1.75rem] font-semibold leading-[12px]">
-          Manage profile
-        </h1>
+        <h1 className="text-[1.75rem] font-semibold hidden lg:block">Manage profile</h1>
         <div className=" leading-[120%]">
           Make changes to your account information and controls.
         </div>

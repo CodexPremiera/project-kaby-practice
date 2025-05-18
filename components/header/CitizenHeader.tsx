@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const CitizenHeader = () => {
 	return (
-		<header className="h-[65px] px-4 sm:px-6 flex items-center justify-between z-20 py-8">
+		<header className="h-[65px] fixed background-1 top-0 w-screen px-4 sm:px-6 flex items-center justify-between z-20 py-8">
 			<div className="flex items-center gap-1 select-none cursor-pointer">
 				<Logo />
 				<div className="flex items-center gap-2">

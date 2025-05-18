@@ -37,8 +37,8 @@ function Demographics() {
   return (
     <>
       {/* Header */}
-      <div className="flex flex-col items-start gap-4 w-full">
-        <h1 className="text-[1.75rem] font-semibold leading-[12px]">Demographics</h1>
+      <div className="flex flex-col items-start gap-2 lg:gap-4 w-full">
+        <h1 className="text-[1.75rem] font-semibold hidden lg:block">Demographics</h1>
         <p className="text-sm text-muted-foreground">
           Update your demographics and keep your profile up to date.
         </p>
@@ -80,7 +80,7 @@ function Demographics() {
             hasChanged={formData.barangay !== originalData.barangay}
           />
         </div>
-        
+
         <div className="flex max-md:flex-col gap-4 w-full">
           <TextField
             field_name="Sitio"

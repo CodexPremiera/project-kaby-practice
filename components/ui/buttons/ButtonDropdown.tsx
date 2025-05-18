@@ -41,16 +41,16 @@ const ButtonDropdown: React.FC<CustomButtonProps> = ({
   return (
     <div
       className={clsx(
-        "relative flex items-center justify-center",
+        "relative flex items-center",
         disabled && "opacity-50"
       )}
       ref={wrapperRef}
     >
       <button
         type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
-        className="flex text-[#767676] stroke-2 w-fit cursor-pointer"
+        className="flex text-secondary stroke-2 w-fit cursor-pointer"
       >
         {icon}
       </button>

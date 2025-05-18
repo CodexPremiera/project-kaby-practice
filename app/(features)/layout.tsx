@@ -41,11 +41,11 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 			{Header}
 
 			{/* Example static sidebar for now */}
-			<div className="flex flex-row flex-1 sm:ml-[75px] h-full">
+			<div className="flex flex-row flex-1 sm:ml-[75px] h-full mt-16 mb-18">
 				{/* Example static sidebar */}
 				{Mainbar}
 				<div
-					className="flex-1 h-[calc(100vh-65px)] overflow-y-auto rounded-tl-[20px] sm:px-7 py-6 border border-light-color bg-gradient overflow-y-auto">
+					className="flex-1 sm:rounded-tl-[20px] sm:px-7 py-6 border border-light-color bg-gradient">
 					{children}
 				</div>
 			</div>

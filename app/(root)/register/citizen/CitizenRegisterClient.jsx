@@ -12,8 +12,9 @@ export default function CitizenRegisterClientForm() {
 		last_name: "",
 		email: "",
 		barangay: "",
-		password: "",
-		confirm_password: "",
+		// password: "",
+		// confirm_password: "",
+		barangay_id: "",
 	});
 
 	const [barangays, setBarangays] = useState([]);
@@ -31,17 +32,35 @@ export default function CitizenRegisterClientForm() {
 	}, []);
 
 	const handleChange = (e) => {
-		setForm({ ...form, [e.target.name]: e.target.value });
+		// setForm({ ...form, [e.target.name]: e.target.value });
+		const { name, value } = e.target;
+
+		if (name === "barangay") {
+			const selectedBarangay = barangays.find(
+				(b) => b.barangayName === value
+			);
+
+			setForm({
+				...form,
+				barangay: value,
+				barangay_id: selectedBarangay?.id || "", 
+			});
+		} else {
+			setForm({
+				...form,
+				[name]: value,
+			});
+		}
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		// Password mismatch check
-		if (form.password !== form.confirm_password) {
-			alert("Passwords do not match!");
-			return;
-		}
+		// if (form.password !== form.confirm_password) {
+		// 	alert("Passwords do not match!");
+		// 	return;
+		// }
 		setModalType("loading");
 
 		const res = await fetch("/api/auth/register/citizen", {
@@ -57,7 +76,7 @@ export default function CitizenRegisterClientForm() {
 			setModalType("error");
 		}
 	};
-
+	console.log(barangays, "these is barangay")
 	return (
 		<div>
 			{/* Error Modal */}

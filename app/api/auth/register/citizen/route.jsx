@@ -16,6 +16,7 @@ export async function POST(request) {
 
 	try {
 		const body = await request.json();
+		console.log("body", body);
 		const {
 			first_name,
 			last_name,
@@ -23,6 +24,7 @@ export async function POST(request) {
 			barangay,
 			// password,
 			// confirm_password,
+			barangay_id
 		} = body;
 
 		const data = await temporaryAccountService.createTemporaryAccount({
@@ -30,6 +32,7 @@ export async function POST(request) {
 			last_name,
 			email,
 			barangay,
+			barangay_id
 		});
 
 		// const { data, error } = await authService.registerUser({

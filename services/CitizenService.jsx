@@ -9,9 +9,9 @@ class CitizenService {
 
 	async createCitizenProfile(citizenDetails) {
 		// TODO: verify barangay exist
-		const { first_name, last_name, barangay, user_id } = citizenDetails;
+		const { first_name, last_name, barangay, user_id,barangay_id } = citizenDetails;
 
-		const { data, error } = await this.repo.create({first_name,last_name,barangay,user_id});
+		const { data, error } = await this.repo.create({first_name,last_name,barangay,user_id,barangay_id});
 		if (error) {
 			console.log(error);
 			return { error: "Failed to create citizen profile" };

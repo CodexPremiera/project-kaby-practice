@@ -15,7 +15,7 @@ export async function PUT(request) {
     const tempAcc = await tempAccountService.updateTempAccount(body.id, { status: body.status });
     if(body.status === "Rejected"){
             return NextResponse.json({
-            message: "Rejected or Pening",
+            message: "Rejected or Pending",
             citizenDesk: body,
         });
     }
@@ -23,6 +23,7 @@ export async function PUT(request) {
     // console.log("this is data: ", tempAcc);
 
     const details = await tempAccountService.getById(body.id);
+    console.log("this is details: ", details);
     // console.log("this is details: ", details);
     const accountDetails = {
         email: details.email,

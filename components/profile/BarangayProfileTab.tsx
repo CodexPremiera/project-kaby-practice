@@ -1,11 +1,10 @@
-
 "use client";
-// 'use server'
-import BarangayProfileClient from "./BarangayProfileClient";
-// import BarangayService from "@/services/BarangayService"
-// import { createClient } from "@/utils/supabase/server";
 
-const BarangayProfileTab = async () => {
+import Image from "next/image";
+import React from "react";
+import { RiHome3Fill } from "react-icons/ri";
+
+const BarangayProfileTab = () => {
 	const stats = [
 		{
 			value: "48,324",
@@ -20,91 +19,47 @@ const BarangayProfileTab = async () => {
 			label: "Officials",
 		},
 	];
-	// const supabase = await createClient();
-	// const barangayService = new BarangayService(supabase);
-
-
 
 	return (
-		<div className="flex flex-col lg:flex-row w-full rounded-3xl px-6 pt-8 pb-6 lg:py-4 gap-6 items-center justify-between background-1 border-light-color border">
-			<div className="flex gap-4 lg:gap-6 items-center">
-				<Image
-					src="/assets/img/profile/bg-profile.png"
-					width={60}
-					height={60}
-					alt="Profile"
-					className="w-12 h-12 lg:w-15 lg:h-15 rounded-full object-cover"
-				/>
-				<div className="flex-col gap-2">
-					<div className="flex gap-3 items-center">
-						<h1 className="text-2xl md:text-3xl lg:text-4xl overflow-hidden">Labangon</h1>
-						<div className="w-7 h-7">
-							<Image
-								src="/assets/home_badge.svg"
-								width={28}
-								height={28}
-								alt="Profil"
-								className="w-5 h-5 lg:w-7 lg:h-7 rounded-full object-cover my-auto"
-							/>
+		<div className="w-full max-w-screen py-4 bg-white sm:rounded-t-[20px]">
+			<div className="flex flex-col lg:flex-row items-center  justify-between px-6 lg:px-12 min-h-[100px]">
+				{/* Profile Section */}
+				<div className="flex gap-4 items-center text-left my-4 flex-shrink-0 w-[500px] px-8 lg:px-0">
+					<Image
+						src="/assets/profile/bg-profile.png"
+						width={60}
+						height={60}
+						alt="Profile"
+						className="min-w-[60px] min-h-[60px] rounded-full object-cover"
+					/>
+					<div className="flex flex-col max-w-[220px]">
+						<div className="flex items-center gap-2 flex-wrap">
+							<p className="text-lg font-semibold truncate">Labangon</p>
+							<RiHome3Fill className="text-secondary" size={22} />
 						</div>
+						<p className="text-sm text-gray-600 truncate">
+							South District Cebu City
+						</p>
 					</div>
-					<span className="text-secondary truncate max-lg:text-sm">
-						South District, Cebu City, Cebu
-					</span>
-				</div>
-			</div>
-
-			{/* Stats section */}
-			<div
-				className="flex flex-wrap gap-4 sm:gap-8 items-center justify-between w-full max-w-[380px] sm:max-w-[420px] md:max-w-[480px] lg:max-w-[540px] py-4 sm:px-8 px-2">
-				<div className="flex flex-col">
-					<h1 className="text-xl md:text-2xl lg:text-3xl font-semibold overflow-hidden">48,234</h1>
-					<span className="mx-auto text-secondary max-lg:text-sm">residents</span>
 				</div>
 
-				<div className="flex flex-col">
-					<div className="flex align-center justify-center gap-1.5">
-						<h1 className="text-xl md:text-2xl lg:text-3xl font-semibold overflow-hidden">121</h1>
-						<Image
-							src="/assets/home_badge.svg"
-							width={22}
-							height={22}
-							alt="Profile"
-						/>
-					</div>
-					<span className="text-secondary mx-auto max-lg:text-sm">badges</span>
-				</div>
+				{/* Stats Section */}
+				<div className="flex flex-wrap gap-6 sm:gap-8 items-center justify-between w-full py-4 sm:px-8 px-4  rounded-[20px] ">
+					{stats.map((stat, index) => (
+						<div
+							key={index}
+							className="flex items-center gap-2 flex-row text-center"
+						>
+							<div className="flex items-center gap-2 sm:gap-1">
+								<span className="text-sm font-semibold">{stat.value}</span>
+							</div>
 
-				<div className="flex flex-col">
-					<div className="flex align-center justify-center gap-1.5">
-						<h1 className="text-xl md:text-2xl lg:text-3xl font-semibold overflow-hidden">12</h1>
-						<div className="flex my-auto">
-							<Image
-								src="/assets/img/profile/bg-profile.png"
-								width={20}
-								height={20}
-								alt="Profile"
-								className="mr-[-4px] w-[20px] h-[20px] object-cover rounded-full shadow-xs"
-							/>
-							<Image
-								src="/assets/img/profile/bg-profile.png"
-								width={20}
-								height={20}
-								alt="Profile"
-								className="mr-[-4px] w-[20px] h-[20px] object-cover rounded-full shadow-xs"
-							/>
-							<Image
-								src="/assets/img/profile/bg-profile.png"
-								width={20}
-								height={20}
-								alt="Profile"
-								className="mr-[-4px] w-[20px] h-[20px] object-cover rounded-full shadow-xs"
-							/>
+							<div className="flex items-center gap-2 sm:gap-1 ">
+								<span className=" text-sm">{stat.label}</span>
+							</div>
 						</div>
-					</div>
-					<span className="mx-auto text-secondary max-lg:text-sm">officials</span>
+					))}
 				</div>
-
 			</div>
 		</div>
 	);

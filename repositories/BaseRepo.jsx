@@ -33,5 +33,19 @@ class BaseRepo {
 		}
 		return data;
 	}
+	async update(id, fields = {}) {
+		console.log("this is fields", fields);
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.update(fields)
+			.eq("id", id)
+			.select();
+		if (error){
+			console.log(error);
+			throw error;
+		}
+		console.log("this is data", data);
+		return data;
+	}
 }
 export default BaseRepo;

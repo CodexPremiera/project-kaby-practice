@@ -26,7 +26,7 @@ class BarangayService {
 		return data;
 	}
 	async getBarangayNameById(id) {
-		const data = await this.repo.getById(id,["barangayName"]);
+		const data = await this.repo.getFieldByFKId(id,["barangayName"]);
 		console.log("Barangay by ID", data);
 		return data;
 	}

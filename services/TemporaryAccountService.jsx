@@ -16,16 +16,9 @@ import TemporaryAccountRepo from "../repositories/TemporaryAccountRepo";
     }
 
     async getById(temporaryAccountId) {
-        const { data, error } = await this.supabase
-            .from("temporary_account")
-            .select("*")
-            .eq("id", temporaryAccountId)
-            .single();
-
-        if (error) {
-            console.error("Error fetching temporary account:", error);
-            return null;
-        }
+        console.log("this is temp acc", temporaryAccountId)
+        const  data= await this.repo.getById(temporaryAccountId);
+        console.log("this is data", data)
 
         return data; // Return the temporary account data if found
     }
@@ -33,6 +26,12 @@ import TemporaryAccountRepo from "../repositories/TemporaryAccountRepo";
         const data= await this.repo.getByBarangay(barangay);
         return data;
     }
+    	async updateTempAccount(id,selectedFields = {}) {
+		// console.log("this is selected fields", selectedFields, "this is id", id);
+		const data = await this.repo.update(id, selectedFields);
+		
+		return data;
+	}
 }
 
 export default TemporaryAccountService;

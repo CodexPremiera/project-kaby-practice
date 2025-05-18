@@ -9,9 +9,9 @@ class CitizenService {
 
 	async createCitizenProfile(citizenDetails) {
 		// TODO: verify barangay exist
-		const { email, first_name, last_name, barangay, user_id } = citizenDetails;
+		const { first_name, last_name, barangay, user_id } = citizenDetails;
 
-		const { data, error } = await this.repo.create(citizenDetails);
+		const { data, error } = await this.repo.create({first_name,last_name,barangay,user_id});
 		if (error) {
 			console.log(error);
 			return { error: "Failed to create citizen profile" };
@@ -31,6 +31,12 @@ class CitizenService {
 	}
 	async getCitizenIdUsingRole(id) {
 		const data = await this.repo.getIdUsingRole(id);
+		return data;
+	}
+	async updateCitizenProfile(id,selectedFields = {}) {
+		// console.log("this is selected fields", selectedFields, "this is id", id);
+		const data = await this.repo.update(id, selectedFields);
+		
 		return data;
 	}
 	

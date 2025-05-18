@@ -23,6 +23,10 @@ class UserService {
 		if (error) {
 			console.log(error);
 		}
+		if (!data) {
+			console.log("No role data found for user:", user_id);
+			return null;
+		}
 		return data.role;
 	}
 	async getRoleIdUsingAuth(id) {
@@ -44,6 +48,5 @@ class UserService {
 		}
 		return data;
 	}
-	
 }
 export default UserService;

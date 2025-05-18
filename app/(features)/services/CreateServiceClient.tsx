@@ -13,6 +13,9 @@ import { useEffect, useState } from "react";
 import DatePicker from "@/components/services/DatePicker";
 import SuccessModal from "@/components/modal/SuccessModal";
 import ErrorModal from "@/components/modal/ErrorModal";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { BsExclamationTriangle } from "react-icons/bs";
+import ErrorPopup from "@/components/modal/ErrorPopup";
 
 interface CreateServiceProps {
 	onClose: () => void;
@@ -28,34 +31,35 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 	onClose,
 	userRole,
 }) => {
-	const [serviceTitle, setServiceTitle] = useState("");
-	const [serviceType, setServiceType] = useState<string>("Select Type");
-	const [dateOption, setDateOption] = useState("Available Date");
-	const [description, setDescription] = useState("");
-	const [attachRequirements, setAttachRequirements] = useState("No");
-	const [displayBadge, setDisplayBadge] = useState("No");
-	const [eligibleForBadges, setEligibleForBadges] = useState("No");
-	const [selectedImage, setSelectedImage] = useState<string | null>(null);
+	const [form, setForm] = useState({
+		serviceTitle: "",
+		serviceType: "Select Type",
+		dateOption: "Available Date",
+		description: "",
+		attachRequirements: "No",
+		displayBadge: "No",
+		eligibleForBadges: "No",
+		selectedImage: null as string | null,
+		startDate: null as Date | null,
+		endDate: null as Date | null,
+		serviceCost: undefined as number | undefined,
+		paymentType: "Fixed Rate",
+		agreementFeePercent: 100,
+	});
 	const [modalType, setModalType] = useState<"success" | "error" | null>(null);
 	const [errorMessages, setErrorMessages] = useState<{ [key: string]: string }>(
 		{}
 	);
 
-	const [startDate, setStartDate] = useState<Date | null>(null);
-	const [endDate, setEndDate] = useState<Date | null>(null);
 	const today = new Date().toISOString().split("T")[0];
 
-	const [serviceCost, setServiceCost] = useState<number | undefined>(undefined);
-	const [paymentType, setPaymentType] = useState("Fixed Rate");
-	const [agreementFeePercent, setAgreementFeePercent] = useState<number>(100);
-
 	const agreementFeeValue =
-		serviceCost !== undefined
-			? paymentType === "Fixed Rate"
-				? serviceCost
+		form.serviceCost !== undefined
+			? form.paymentType === "Fixed Rate"
+				? form.serviceCost
 				: Math.max(
-						serviceCost * (agreementFeePercent / 100),
-						serviceCost * 0.05
+						form.serviceCost * (form.agreementFeePercent / 100),
+						form.serviceCost * 0.05
 					)
 			: 0;
 
@@ -63,86 +67,81 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 	const totalPrice = agreementFeeValue + convenienceFee;
 
 	useEffect(() => {
-		if (paymentType === "Fixed Rate") {
-			setAgreementFeePercent(100);
+		if (form.paymentType === "Fixed Rate") {
+			setForm((prev) => ({ ...prev, agreementFeePercent: 100 }));
 		}
-	}, [paymentType]);
+	}, [form.paymentType]);
 
 	useEffect(() => {
 		if (userRole === "barangay") {
-			setServiceType("Barangay");
+			setForm((prev) => ({ ...prev, serviceType: "Barangay" }));
 		} else if (userRole === "citizen") {
-			setServiceType("Personal");
+			setForm((prev) => ({ ...prev, serviceType: "Personal" }));
 		}
 	}, [userRole]);
 
-	const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
 			const reader = new FileReader();
 			reader.onloadend = () => {
-				setSelectedImage(reader.result as string);
+				setForm((prev) => ({
+					...prev,
+					selectedImage: reader.result as string,
+				}));
 			};
 			reader.readAsDataURL(file);
 		}
 	};
 
 	const handleCreateService = async () => {
-		// Reset error messages
 		setErrorMessages({});
-
 		const errors: { [key: string]: string } = {};
-		if (!selectedImage) errors.image = "Image is required";
-		if (serviceType === "Select Type")
+
+		if (!form.selectedImage) errors.image = "Image is required";
+		if (form.serviceType === "Select Type")
 			errors.serviceType = "Service Type is required";
-		if (!description.trim()) errors.description = "Description is required";
-		if (!attachRequirements)
+		if (!form.description.trim())
+			errors.description = "Description is required";
+		if (!form.attachRequirements)
 			errors.attachRequirements = "Attach requirements is required";
-		if (!eligibleForBadges)
+		if (!form.eligibleForBadges)
 			errors.eligibleForBadges = "Eligible for badges is required";
-		if (serviceCost === undefined)
+		if (form.serviceCost === undefined)
 			errors.serviceCost = "Service cost is required";
-		if (!paymentType) errors.paymentType = "Payment type is required";
+		if (!form.paymentType) errors.paymentType = "Payment type is required";
+
+		if (form.dateOption === "Available Date") {
+			if (!form.startDate || !form.endDate) {
+				errors.date = "Please select both start and end dates.";
+			}
+		}
 
 		if (Object.keys(errors).length > 0) {
 			setErrorMessages(errors);
-			return; // Prevent the API call if there are errors
+			return;
 		}
 
-		let finalStartDate = null;
-		let finalEndDate = null;
-
-		if (dateOption === "Available Date") {
-			if (!startDate || !endDate) {
-				setErrorMessages((prev) => ({
-					...prev,
-					date: "Please select both start and end dates.",
-				}));
-				return;
-			}
-
-			finalStartDate = startDate;
-			finalEndDate = endDate;
-		} else if (dateOption === "Not Applicable") {
-			finalStartDate = today;
-			finalEndDate = null;
-		}
+		const finalStartDate =
+			form.dateOption === "Available Date" ? form.startDate : today;
+		const finalEndDate =
+			form.dateOption === "Available Date" ? form.endDate : null;
 
 		const serviceData = {
-			title: serviceTitle,
-			type: serviceType,
-			description: description,
-			allow_attach_file: attachRequirements,
+			title: form.serviceTitle,
+			type: form.serviceType,
+			description: form.description,
+			allow_attach_file: form.attachRequirements,
 			start_date: finalStartDate,
 			end_date: finalEndDate,
-			image: selectedImage,
-			owner: null, // replace with logged-in user ID if needed
-			service_cost: serviceCost ?? 0,
+			image: form.selectedImage,
+			owner: null,
+			service_cost: form.serviceCost ?? 0,
 			agreement_fee: agreementFeeValue,
 			convenience_fee: convenienceFee,
 			total_price: totalPrice,
-			eligible_for_badges: eligibleForBadges,
-			display_badge: displayBadge,
+			eligible_for_badges: form.eligibleForBadges,
+			display_badge: form.displayBadge,
 		};
 
 		try {
@@ -151,16 +150,10 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(serviceData),
 			});
-
 			if (res.ok) {
 				setModalType("success");
-				const data = await res.json();
-				console.log("created service", data);
 			} else {
 				setModalType("error");
-				console.error(
-					"Failed to create service. Please fill in all required fields."
-				);
 			}
 		} catch (err) {
 			setModalType("error");
@@ -170,6 +163,11 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 
 	return (
 		<div className="fixed inset-0 z-50 bg-black/70 flex justify-center items-center p-6">
+			{/* Error Popup Alert */}
+			<ErrorPopup
+				errorMessages={errorMessages}
+				onClose={() => setErrorMessages({})}
+			/>
 			{modalType === "success" && (
 				<SuccessModal
 					title="Success"
@@ -184,7 +182,7 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 					onClose={() => setModalType(null)}
 				/>
 			)}
-			<div className="relative bg-white rounded-2xl shadow-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+			<div className="relative bg-white rounded-2xl shadow-xl max-w-6xl w-full max-h-[95vh] overflow-y-auto">
 				<div className="flex flex-col gap-6">
 					<div className="flex justify-between items-center py-3 pt-5 bg-gray-100">
 						<div className="text-medium font-semibold text-black px-6">
@@ -202,19 +200,18 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 						<label className="text-sm w-32">Service Title:</label>
 						<Input
 							placeholder="Enter title"
-							value={serviceTitle}
-							onChange={(e) => setServiceTitle(e.target.value)}
+							value={form.serviceTitle}
+							onChange={(e) =>
+								setForm((prev) => ({ ...prev, serviceTitle: e.target.value }))
+							}
 						/>
-						{errorMessages.title && (
-							<p className="text-red-500 text-sm">{errorMessages.title}</p>
-						)}
 					</div>
 					<div className="flex flex-col md:flex-row gap-6 px-6">
 						<div className="flex flex-col gap-4">
 							<div className="w-full md:w-[360px] h-[360px] flex flex-col justify-center items-center bg-black/80 rounded-lg overflow-hidden text-white relative">
-								{selectedImage ? (
+								{form.selectedImage ? (
 									<img
-										src={selectedImage}
+										src={form.selectedImage}
 										alt="Selected"
 										className="object-cover w-full h-full"
 									/>
@@ -235,9 +232,6 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 									onChange={handleImageChange}
 									className="hidden"
 								/>
-								{errorMessages.image && (
-									<p className="text-red-500 text-sm">{errorMessages.image}</p>
-								)}
 							</div>
 						</div>
 
@@ -248,7 +242,7 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
 											<Button variant="gray" className="w-full justify-between">
-												{serviceType}
+												{form.serviceType}
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent className="bg-white">
@@ -264,16 +258,18 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 												.map((type) => (
 													<DropdownMenuItem
 														key={type}
-														onClick={() => setServiceType(type)}
+														onClick={() =>
+															setForm((prev) => ({
+																...prev,
+																serviceType: type,
+															}))
+														}
 													>
 														{type}
 													</DropdownMenuItem>
 												))}
 										</DropdownMenuContent>
 									</DropdownMenu>
-									{errorMessages.type && (
-										<p className="text-red-500 text-sm">{errorMessages.type}</p>
-									)}
 								</div>
 
 								<div className="flex-1">
@@ -281,14 +277,19 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
 											<Button variant="gray" className="w-full justify-between">
-												{dateOption}
+												{form.dateOption}
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent className="bg-white">
 											{dateOptions.map((opt) => (
 												<DropdownMenuItem
 													key={opt}
-													onClick={() => setDateOption(opt)}
+													onClick={() =>
+														setForm((prev) => ({
+															...prev,
+															dateOption: opt,
+														}))
+													}
 												>
 													{opt}
 												</DropdownMenuItem>
@@ -297,13 +298,17 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 									</DropdownMenu>
 								</div>
 
-								{dateOption === "Available Date" && (
+								{form.dateOption === "Available Date" && (
 									<div className="flex-1 flex flex-col gap-4">
 										<DatePicker
-											selectedStartDate={startDate}
-											selectedEndDate={endDate}
-											onStartDateChange={(date) => setStartDate(date)}
-											onEndDateChange={(date) => setEndDate(date)}
+											selectedStartDate={form.startDate}
+											selectedEndDate={form.endDate}
+											onStartDateChange={(date) =>
+												setForm((prev) => ({ ...prev, startDate: date }))
+											}
+											onEndDateChange={(date) =>
+												setForm((prev) => ({ ...prev, endDate: date }))
+											}
 										/>
 									</div>
 								)}
@@ -312,26 +317,36 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 								<label className="text-sm">Description:</label>
 								<textarea
 									placeholder="Enter service description"
-									value={description}
-									onChange={(e) => setDescription(e.target.value)}
+									value={form.description}
+									onChange={(e) =>
+										setForm((prev) => ({
+											...prev,
+											description: e.target.value,
+										}))
+									}
 									className="border border-gray-300 rounded-md px-3 py-2 text-sm h-41 resize-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/30 focus-visible:border-ring w-full overflow-y-auto"
 								/>
 							</div>
 
-							<div className="flex flex-1 items-center gap-6">
+							<div className="flex flex-1 sm:flex-row flex-col sm:items-center items-start gap-6">
 								<div className="flex items-center gap-2">
 									<p className="text-sm">Attach requirements?</p>
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
 											<Button variant="gray" className="w-24 justify-between">
-												{attachRequirements}
+												{form.attachRequirements}
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent className="bg-white">
 											{yesNoOptions.map((opt) => (
 												<DropdownMenuItem
 													key={opt}
-													onClick={() => setAttachRequirements(opt)}
+													onClick={() =>
+														setForm((prev) => ({
+															...prev,
+															attachRequirements: opt,
+														}))
+													}
 												>
 													{opt}
 												</DropdownMenuItem>
@@ -345,14 +360,19 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
 												<Button variant="gray" className="w-24 justify-between">
-													{eligibleForBadges}
+													{form.eligibleForBadges}
 												</Button>
 											</DropdownMenuTrigger>
 											<DropdownMenuContent className="bg-white">
 												{yesNoOptions.map((opt) => (
 													<DropdownMenuItem
 														key={opt}
-														onClick={() => setEligibleForBadges(opt)}
+														onClick={() =>
+															setForm((prev) => ({
+																...prev,
+																eligibleForBadges: opt,
+															}))
+														}
 													>
 														{opt}
 													</DropdownMenuItem>
@@ -366,14 +386,19 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
 												<Button variant="gray" className="w-24 justify-between">
-													{displayBadge}
+													{form.displayBadge}
 												</Button>
 											</DropdownMenuTrigger>
 											<DropdownMenuContent className="bg-white">
 												{yesNoOptions.map((opt) => (
 													<DropdownMenuItem
 														key={opt}
-														onClick={() => setDisplayBadge(opt)}
+														onClick={() =>
+															setForm((prev) => ({
+																...prev,
+																displayBadge: opt,
+															}))
+														}
 													>
 														{opt}
 													</DropdownMenuItem>
@@ -400,31 +425,42 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 							</p>
 						</div>
 
-						<div className="flex flex-col sm:px-10 px-6">
+						<div className="flex flex-col sm:px-10 px-6 gap-4">
 							<div className="flex justify-between sm:gap-6 gap-4 pb-2">
 								<div className="flex-1">
 									<p className="text-sm">Service Cost (₱):</p>
 									<Input
 										type="number"
 										placeholder="e.g. 3500"
-										value={serviceCost ?? ""}
-										onChange={(e) => setServiceCost(Number(e.target.value))}
+										value={form.serviceCost ?? ""}
+										onChange={(e) =>
+											setForm((prev) => ({
+												...prev,
+												serviceCost: Number(e.target.value),
+											}))
+										}
 									/>
 								</div>
-
+							</div>
+							<div className="flex justify-between sm:gap-6 gap-4 pb-2">
 								<div className="flex-1">
 									<p className="text-sm">Payment Type:</p>
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
 											<Button variant="gray" className="w-full justify-between">
-												{paymentType}
+												{form.paymentType}
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent className="bg-white">
 											{paymentTypes.map((type) => (
 												<DropdownMenuItem
 													key={type}
-													onClick={() => setPaymentType(type)}
+													onClick={() =>
+														setForm((prev) => ({
+															...prev,
+															paymentType: type,
+														}))
+													}
 												>
 													{type}
 												</DropdownMenuItem>
@@ -432,24 +468,27 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 										</DropdownMenuContent>
 									</DropdownMenu>
 								</div>
-							</div>
-
-							<div className="flex justify-between sm:gap-6 gap-4 py-2 pb-4">
 								<div className="flex-1">
-									<p className="text-sm">Agreement Fee (%)</p>
+									<p className="text-sm">Percentage (%)</p>
 									<Input
 										type="number"
-										disabled={paymentType === "Fixed Rate"}
-										value={agreementFeePercent}
+										disabled={form.paymentType === "Fixed Rate"}
+										value={form.agreementFeePercent}
 										min={5}
 										onChange={(e) =>
-											setAgreementFeePercent(
-												Math.max(5, Number(e.target.value))
-											)
+											setForm((prev) => ({
+												...prev,
+												agreementFeePercent: Math.max(
+													5,
+													Number(e.target.value)
+												),
+											}))
 										}
 									/>
 								</div>
+							</div>
 
+							<div className="flex justify-between sm:gap-6 gap-4 py-2 pb-4">
 								<div className="flex-1">
 									<p className="text-sm">Agreement Fee Value (₱)</p>
 									<Input

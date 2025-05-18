@@ -41,7 +41,8 @@ type Props = {
 
 // const BarangayAppointment = ({ appointments }: Props) => {
 	
-const BarangayAppointment = ({appointments }:Props) => {
+const BarangayAppointment = ({ appointments }: Props) => {
+	
 	const [showCreateAccount, setShowCreateAccount] = useState(false);
 	const pendingApps = appointments.filter((appointment) => appointment.status === "Pending");
 	console.log("these are the appointments: ", pendingApps);

@@ -39,7 +39,10 @@ class ServiceService {
 		const data = await this.repo.create(serviceData);
 		return data;
 	}
-	async getServicesByUser() {}
+	async getFrontlineServices(barangayUserId) {
+		const data = await this.repo.getFrontlineServices(barangayUserId);
+		return data;
+	}
 
 	async getServicesByOwners(ownerIds) {
 		const { data, error } = await this.supabase
@@ -49,19 +52,6 @@ class ServiceService {
 
 		if (error) {
 			console.error("Error fetching services:", error);
-			return [];
-		}
-		return data;
-	}
-	async getServicesByBarangay(barangayName) {
-		// Assuming 'barangay' is a text field in services
-		const { data, error } = await this.supabase
-			.from("services")
-			.select("*")
-			.eq("barangay", barangayName);
-
-		if (error) {
-			console.error("Error fetching services by barangay:", error);
 			return [];
 		}
 		return data;

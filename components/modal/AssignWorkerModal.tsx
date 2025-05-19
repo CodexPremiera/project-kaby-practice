@@ -32,48 +32,48 @@ const AssignWorkerModal = ({ onClose, citizens }: AssignWorkerModalProps) => {
         .includes(searchTerm.toLowerCase())
     );
 
-const handleAssign = async (citizenId: string) => {
-    const position = positions[citizenId];
-    // const barangay_id = citizens[citizenId];
-    const citizen = citizens?.find((c) => c.id === citizenId);
-    
-    if (!citizen) {
-        alert("Citizen not found.");
-        return;
-    }
-    console.log("this is le citizen", citizen.id);
+    const handleAssign = async (citizenId: string) => {
+        const position = positions[citizenId];
+        // const barangay_id = citizens[citizenId];
+        const citizen = citizens?.find((c) => c.id === citizenId);
+        
+        if (!citizen) {
+            alert("Citizen not found.");
+            return;
+        }
+        console.log("this is le citizen", citizen.id);
 
-    const barangay_id = citizen.barangay_id;
+        const barangay_id = citizen.barangay_id;
 
-    if (!position) {
-        alert("Please enter a position before submitting.");
-        return;
-    }
-
-    try {
-        const res = await fetch("/api/barangay_settings/barangay_worker", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                citizen_id: citizen.id,
-                position,
-                barangay_id,
-            }),
-        });
-
-        if (!res.ok) {
-        throw new Error(`Failed to assign: ${res.status}`);
+        if (!position) {
+            alert("Please enter a position before submitting.");
+            return;
         }
 
-        const data = await res.json();
-        console.log("Successfully assigned:", data);
-        alert(`Successfully assigned ${citizenId} as ${position}`);
-    } catch (error) {
-        console.error("Error assigning citizen:", error);
-        alert("Failed to assign worker. Check the console for details.");
-    }
+        try {
+            const res = await fetch("/api/barangay_settings/barangay_worker", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    citizen_id: citizen.id,
+                    position,
+                    barangay_id,
+                }),
+            });
+
+            if (!res.ok) {
+            throw new Error(`Failed to assign: ${res.status}`);
+            }
+
+            const data = await res.json();
+            console.log("Successfully assigned:", data);
+            alert(`Successfully assigned ${citizenId} as ${position}`);
+        } catch (error) {
+            console.error("Error assigning citizen:", error);
+            alert("Failed to assign worker. Check the console for details.");
+        }
     };
 
 

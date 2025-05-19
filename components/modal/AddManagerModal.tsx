@@ -29,6 +29,49 @@ const AddManagerModal = ({ onClose, citizens }: AddManagerModalProps) => {
 			.toLowerCase()
 			.includes(searchTerm.toLowerCase())
     );
+	    const handleAssign = async (citizenId: string) => {
+        const position = positions[citizenId];
+        // const barangay_id = citizens[citizenId];
+        const citizen = citizens?.find((c) => c.id === citizenId);
+        
+        if (!citizen) {
+            alert("Citizen not found.");
+            return;
+        }
+        console.log("this is le citizen", citizen.id);
+
+        const barangay_id = citizen.barangay_id;
+
+        if (!position) {
+            alert("Please enter a position before submitting.");
+            return;
+        }
+
+        try {
+            const res = await fetch("/api/barangay_settings/barangay_worker", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    citizen_id: citizen.id,
+                    position,
+                    barangay_id,
+                }),
+            });
+
+            if (!res.ok) {
+            throw new Error(`Failed to assign: ${res.status}`);
+            }
+
+            const data = await res.json();
+            console.log("Successfully assigned:", data);
+            alert(`Successfully assigned ${citizenId} as ${position}`);
+        } catch (error) {
+            console.error("Error assigning citizen:", error);
+            alert("Failed to assign worker. Check the console for details.");
+        }
+    };
 
 	console.log("filteredCitizens", filteredCitizens);
 
@@ -89,11 +132,8 @@ const AddManagerModal = ({ onClose, citizens }: AddManagerModalProps) => {
 
 				<button
 					className="ml-4 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-					onClick={() =>
-					console.log(
-						`Assigning ${selectedRoles[citizen.id] || "No role"} with position "${positions[citizen.id] || "N/A"}" to citizen ID: ${citizen.id}`
-					)
-					}
+					onClick={() => handleAssign(citizen.id)}
+					
 
 				>
 					Submit

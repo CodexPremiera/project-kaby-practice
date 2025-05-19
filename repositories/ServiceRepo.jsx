@@ -61,6 +61,20 @@ export default class ServiceRepo extends BaseRepo {
 		return services;
 	}
 
+	async getAroundYouServices(citizensUserId) {
+		if (!Array.isArray(citizensUserId) || citizensUserId.length === 0)
+			return [];
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select()
+			.in("owner", citizensUserId);
+		if (error) {
+			console.error(error);
+			throw error;
+		}
+		return data;
+	}
+
 	async create(serviceData) {
 		try {
 			const newService = new ServiceModel(

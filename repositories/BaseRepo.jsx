@@ -10,10 +10,14 @@ class BaseRepo {
 		if (error) throw error;
 		return data;
 	}
-	async getById(id) {
+	async getById(id,selectFields = "*") {
+		const fields = Array.isArray(selectFields)
+			? selectFields.join(", ")
+			: selectFields;
+
 		const { data, error } = await this.supabase
 			.from(this.tableName)
-			.select("*")
+			.select(fields)
 			.eq("id", id)
 			.single();
 		if (error) throw error;
@@ -27,6 +31,20 @@ class BaseRepo {
 		if (error) {
 			console.log(error);
 		}
+		return data;
+	}
+	async update(id, fields = {}) {
+		console.log("this is fields", fields);
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.update(fields)
+			.eq("id", id)
+			.select();
+		if (error){
+			console.log(error);
+			throw error;
+		}
+		console.log("this is data", data);
 		return data;
 	}
 }

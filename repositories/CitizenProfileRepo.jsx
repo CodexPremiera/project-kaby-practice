@@ -37,5 +37,27 @@ class CitizenProfileRepo extends BaseRepo {
 
 		return data;
 	}
+	async getFieldByFKId(user_id, selectFields = "*") {
+		const fields = Array.isArray(selectFields)
+			? selectFields.join(", ")
+			: selectFields;
+
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select(fields)
+			.eq("user_id", user_id)
+			.single();
+		if (error) throw error;
+		console.log("data name is:  ", data);
+		return data;
+	}
+	async getAllCitizenProfiles(barangay_id) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select("user_id")
+			.eq("barangay_id", barangay_id);
+		if (error) console.log(error);
+		return data;
+	}
 }
 export default CitizenProfileRepo;

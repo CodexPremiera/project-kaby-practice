@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LoadingModal from "../modal/LoadingModal";
 import ErrorModal from "../modal/ErrorModal";
+import SuccessModal from "../modal/SuccessModal";
 
 interface Props {
 	onClose: () => void;
@@ -44,12 +45,8 @@ const CreateAccount: React.FC<Props> = ({ onClose }) => {
 		});
 
 		const data = await res.json();
-
 		if (res.ok) {
-			setModalType("loading");
-			setTimeout(() => {
-				router.push(`/barangay_desk`);
-			}, 1000);
+			setModalType("success");
 		} else {
 			setModalType("error");
 		}
@@ -146,16 +143,19 @@ const CreateAccount: React.FC<Props> = ({ onClose }) => {
 				</div>
 			</div>
 
-			{/* Loading Modal */}
-			{modalType === "loading" && (
-				<LoadingModal title="Success" content="Creating the account..." />
+			{/* Success Modal */}
+			{modalType === "success" && (
+				<SuccessModal
+					title="Success"
+					content="Barangay Account has been successfully created!"
+					onClose={handleCloseModal}
+				/>
 			)}
-
 			{/* Error Modal */}
 			{modalType === "error" && (
 				<ErrorModal
 					title="Error"
-					content="Account Creation Failed. Try Again."
+					content="Failed to create Barangay Account. Kindly check your details and retry."
 					onClose={handleCloseModal}
 				/>
 			)}

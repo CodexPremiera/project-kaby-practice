@@ -1,34 +1,34 @@
-//export async function GET() {
-//	const supabase = await createClient();
-//	const authService = new AuthenticationService(supabase);
-//	const serviceService = new ServiceService(supabase);
-//	const userService = new UserService(supabase);
-//	const citizenService = new CitizenService(supabase);
+import ServiceService from "@/services/ServiceService";
+import UserService from "@/services/UserService";
+import AuthenticationService from "@/services/AuthenticationService";
+import CitizenService from "@/services/CitizenService";
+import BarangayService from "@/services/BarangayService";
+import { createClient } from "@/utils/supabase/server";
+import { NextResponse } from "next/server";
 
-// Get current logged-in user ID
-//	const user_id = await authService.loggedInUserId();
-//	console.log("Logged in user id: ", user_id);
-// Get user role
-//	const role = await userService.getUserRole(user_id);
-//	console.log("User role:", role);
+export async function GET() {
+	const supabase = await createClient();
 
-//Getting the barangayUserID
-//	if (role === "citizen") {
-//		const id = userroles.getId(user_id)
-//		const barangay = citizenService.getBarangay(id) //getBarangay will return the BarangayName (text)
+	const authService = new AuthenticationService(supabase);
+	const userService = new UserService(supabase);
+	const serviceService = new ServiceService(supabase);
+	const citizenService = new CitizenService(supabase);
+	const barangayService = new BarangayService(supabase);
 
-//Using the text get the barangay user_id
+	const user_id = await authService.loggedInUserId();
+	const role = await userService.getUserRole(user_id);
 
-//	} else if (role === "barangay") {
+	if (role === "citizen") {
+		const barangayID = await citizenService.getCitBarangayIdOnly(user_id);
+		const getbarangayUserID =
+			await barangayService.getUserIDsByBarangayId(barangayID);
 
-//	}
-
-//	const services = await serviceService.getFrontlineServices(barangayUserId);
-
-//}
-
-//match the user_id to CitizenProfile user_id -> get the barangay(text)
-//match barangay(text) == BarangayProfile.barangayName (text)
-//BarangayProfile.user_id == userroles.id -> userroles.user_id  == Services.owner
-
-//BarangayProfile.user_id == userroles.id -> userroles.user_id  == Services.owner
+		// Extract only user_id strings
+		const barangayUserID = getbarangayUserID.map((user) => user.user_id);
+		const services = await serviceService.getFrontlineServices(barangayUserID);
+		return NextResponse.json(services);
+	} else if (role === "barangay") {
+		const services = await serviceService.getFrontlineServices(user_id);
+		return NextResponse.json(services);
+	}
+}

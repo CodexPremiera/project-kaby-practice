@@ -26,15 +26,24 @@ class BarangayService {
 		return data;
 	}
 	async getBarangayFieldsByFKId(id) {
-		const data = await this.repo.getFieldByFKId(id,["barangayName","address"]);
+		const data = await this.repo.getFieldByFKId(id, [
+			"barangayName",
+			"address",
+		]);
 		console.log("Barangay by ID", data);
 		return data;
 	}
 	async getBarangayFieldsById(id) {
-		const data = await this.repo.getById(id,["barangayName","address"]);
+		const data = await this.repo.getById(id, ["barangayName", "address"]);
 		console.log("Barangay by ID", data);
 		return data;
 	}
+	async getUserIDsByBarangayId(id) {
+		const data = await this.repo.getUserIDsByBarangayId(id);
+		console.log("Barangay User ID: ", data);
+		return data;
+	}
+
 	// async getCitizenById(id){
 	//     const data= await this.repo.getById(id);
 	//     return data;

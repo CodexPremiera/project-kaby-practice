@@ -1,9 +1,18 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { services } from "@/data/services";
+import React, { useEffect, useMemo, useState } from "react";
 import ServiceCard from "@/components/services/view/ServiceCard";
 import { useRouter, useSearchParams } from "next/navigation";
+
+interface Service {
+	id: string;
+	status: string;
+	owner: string;
+	type: string;
+	title: string;
+	image: string;
+	description: string;
+}
 
 interface SearchServiceProps {
 	type?: string[];
@@ -15,8 +24,33 @@ const ServicesList: React.FC<SearchServiceProps> = ({ type = [] }) => {
 	const searchParams = useSearchParams();
 	const query = searchParams.get("q") || "";
 
+	const [services, setServices] = useState<Service[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		async function fetchServices() {
+			try {
+				let url = "/api/services";
+				if (type.includes("Barangay")) {
+					url = "/api/services/frontline";
+				}
+
+				const res = await fetch(url);
+				if (!res.ok) throw new Error("Failed to fetch services");
+				const data = await res.json();
+				setServices(data);
+			} catch (err: any) {
+				setError(err.message);
+			} finally {
+				setLoading(false);
+			}
+		}
+
+		fetchServices();
+	}, [type]);
+
 	const filteredAndSearchedServices = useMemo(() => {
-		// Step 1: Filter by status, owner, and type
 		let filtered = services.filter(
 			(service) =>
 				service.status !== "closed" &&
@@ -24,7 +58,6 @@ const ServicesList: React.FC<SearchServiceProps> = ({ type = [] }) => {
 				(type.length === 0 || type.includes(service.type))
 		);
 
-		// Step 2: If query exists, filter by title/owner/description
 		if (query.trim() !== "") {
 			const normalizedQuery = query.toLowerCase().trim();
 			filtered = filtered.filter(
@@ -36,7 +69,10 @@ const ServicesList: React.FC<SearchServiceProps> = ({ type = [] }) => {
 		}
 
 		return filtered;
-	}, [query, type]);
+	}, [services, query, type]);
+
+	if (loading) return <div>Loading services...</div>;
+	if (error) return <div>Error loading services: {error}</div>;
 
 	return (
 		<>

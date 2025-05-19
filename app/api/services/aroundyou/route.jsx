@@ -1,21 +1,37 @@
-"use server";
-
-import { NextResponse } from "next/server";
+import ServiceService from "@/services/ServiceService";
+import UserService from "@/services/UserService";
+import AuthenticationService from "@/services/AuthenticationService";
+import CitizenService from "@/services/CitizenService";
+import BarangayService from "@/services/BarangayService";
 import { createClient } from "@/utils/supabase/server";
-import ServiceService from "../../../services/ServiceService";
+import { NextResponse } from "next/server";
 
 export async function GET() {
-	// Getting all the services with the same Barangay of the current user
+	//If user is citizen = All Citizen Services under same barangay
+	//If user is barangay = using the userID of the BarangayProfile, match it to barangayID of CitizenProfile, get the CitizenProfile user_ids and match it with the owner
+	
 	const supabase = await createClient();
+
+	const authService = new AuthenticationService(supabase);
+	const userService = new UserService(supabase);
 	const serviceService = new ServiceService(supabase);
-    
-	try {
-		const services = await serviceService.getAllServices();
+	const citizenService = new CitizenService(supabase);
+	const barangayService = new BarangayService(supabase);
+
+	const user_id = await authService.loggedInUserId();
+	const role = await userService.getUserRole(user_id);
+
+	if (role === "citizen") {
+		const barangayID = await citizenService.getCitBarangayIdOnly(user_id);
+		const getbarangayUserID =
+			await barangayService.getUserIDsByBarangayId(barangayID);
+
+		// Extract only user_id strings
+		const barangayUserID = getbarangayUserID.map((user) => user.user_id);
+		const services = await serviceService.getFrontlineServices(barangayUserID);
 		return NextResponse.json(services);
-	} catch (err) {
-		console.error("Error fetching services:", err);
-		return new Response(JSON.stringify({ error: "Failed to fetch services" }), {
-			status: 500,
-		});
+	} else if (role === "barangay") {
+		const services = await serviceService.getFrontlineServices(user_id);
+		return NextResponse.json(services);
 	}
 }

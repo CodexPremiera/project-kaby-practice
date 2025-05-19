@@ -63,26 +63,26 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		Mainbar = <CitizenMainbar />;
 	}
 	const LayoutWrapper = ({ children }: { children: React.ReactNode }) => (
-    <div className="flex flex-col w-screen min-h-screen overflow-hidden relative">
-      {Header}
-      <div className="flex flex-row flex-1 sm:ml-[75px] h-full">
-        {Mainbar}
-        <div className="flex-1 sm:rounded-tl-[20px] sm:px-7 py-6 border-light-color bg-gradient mt-16 pb-18">
-          {children}
-        </div>
-      </div>
-    </div>
+		<div className="flex flex-col w-screen min-h-screen overflow-hidden relative">
+			{Header}
+			<div className="flex flex-row flex-1 sm:ml-[75px] h-full">
+				{Mainbar}
+				<div className="flex-1 sm:rounded-tl-[20px] sm:px-7 py-6 border-light-color bg-gradient mt-16 pb-18">
+					{children}
+				</div>
+			</div>
+		</div>
 	);
 	return (
-		<UserProvider value={{ userId: user_id, role }}>
+		<UserProvider value={{userId: user_id, role}}>
 			{role === "barangay" ? (
-			<BarangayProvider value={barangayData}>
-				<LayoutWrapper>{children}</LayoutWrapper>
-			</BarangayProvider>
-			)
-			: role === "citizen" ? (
-			<BarangayProvider value={barangayData}>
-				<LayoutWrapper>{children}</LayoutWrapper>
+					<BarangayProvider value={barangayData}>
+						<LayoutWrapper>{children}</LayoutWrapper>
+					</BarangayProvider>
+				)
+				: role === "citizen" ? (
+						<BarangayProvider value={barangayData}>
+							<LayoutWrapper>{children}</LayoutWrapper>
 			</BarangayProvider>
 			)
 			 : (

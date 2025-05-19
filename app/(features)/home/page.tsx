@@ -6,9 +6,9 @@ import ContactList from "@/components/home/contact_list/ContactList";
 import OfficialsList from "@/components/home/official_list/OfficialsList";
 import BarangayProfileTab from "@/components/profile/BarangayProfileTab";
 import {useRouter, useSearchParams} from "next/navigation";
-import SwitchTab from "@/components/ui/buttons/SwitchTab";
 
 import { useUser } from "@/app/context/UserContext";
+import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
 
 const TAB_COMPONENTS = {
 	Services: <Services />,
@@ -25,32 +25,13 @@ const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
 };
 
 const Home = () => {
-	const searchParams = useSearchParams();
-	const router = useRouter();
-	const tabParam = searchParams.get("tab") as keyof typeof TAB_COMPONENTS;
-	const defaultTab: keyof typeof TAB_COMPONENTS = tabParam && TAB_COMPONENTS[tabParam] ? tabParam : "Services";
-
-	const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>(defaultTab);
-
-	const changeTab = (tab: keyof typeof TAB_COMPONENTS) => {
-		setActiveTab(tab);
-		router.push(`?tab=${tab}`);
-	};
-
-	useEffect(() => {
-		if (tabParam && tabParam !== activeTab) {
-			setActiveTab(tabParam);
-		}
-	}, [tabParam]);
-
-  const {role}= useUser();
+	const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>("Services");
 
 	return (
 		<div className="flex flex-col w-full max-w-[1280px] mx-auto gap-8 swiper-coverflow">
 			<div className="flex flex-col w-full gap-8 px-4">
-        {(role === "barangay" || role === "citizen") && <BarangayProfileTab />}
-
-        <TabSwitcher tabComponents={TAB_COMPONENTS}
+				<BarangayProfileTab/>
+				<TabSwitcher tabComponents={TAB_COMPONENTS}
 										 tabLabels={TAB_LABELS}
 										 defaultTab={"Services"}
 										 className="flex w-full rounded-3xl px-8 md:px-10 pt-4 lg:pt-4 max-sm:justify-between gap-2 sm:gap-6 lg:gap-10 items-center background-1 border-light-color border"

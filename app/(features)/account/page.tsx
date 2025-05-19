@@ -3,11 +3,11 @@
 import React from 'react';
 import CitizenSettings from "@/components/settings/citizen_settings";
 import BarangaySettings from "@/components/settings/barangay_settings";
-import {useUserRole} from "@/context/UserRoleContext";
+import {useUser} from "@/app/context/UserContext";
 
 
 function Page() {
-	const role = useUserRole();
+	const { role } = useUser();
 	console.log(role)
 
 	return (

@@ -38,7 +38,9 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	} else if (role === "barangay") {
 		const barangayService = new BarangayService(supabase);
 		const barangay = await barangayService.getBarangayFieldsByFKId(user_id);
+		console.log("Barangayzz: ", barangay);
 		barangayData = {
+			barangayId: barangay.id,
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
 		}
@@ -52,6 +54,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		const brgyId = await citizenService.getCitBarangayId(user_id);
 		const barangay = await barangayService.getBarangayFieldsById(brgyId.barangay_id);
 		barangayData = {
+			barangayId: barangay.id,
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
 			// barangayName: "test",

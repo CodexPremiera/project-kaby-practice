@@ -7,8 +7,23 @@ import TextField from "@/components/ui/form/TextField";
 import EmailField from "@/components/ui/form/EmailField";
 import {ManagerProvider} from "@/components/settings/access_control/manager_context";
 import ManagerList from "@/components/settings/access_control/manager_list";
+import AddManagerModal from "@/components/modal/AddManagerModal";
 
-function AccessControl() {
+type AccessControlProps = {
+  citizens: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    middle_name?: string;
+  }[];
+};
+
+const AccessControl: React.FC<AccessControlProps> = ({citizens} ) => {
+  console.log("citizens", citizens);
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
   return (
     <ManagerProvider>
       <div className="flex flex-row justify-between items-center gap-2 w-full ">
@@ -16,7 +31,7 @@ function AccessControl() {
           className="flex flex-col justify-center text-3xl font-semibold leading-[12px] hidden lg:block">
           Access Control
         </h1>
-        <ButtonSecondary>Add a manager</ButtonSecondary>
+        <ButtonSecondary onClick={handleOpenModal}>Add a manager</ButtonSecondary>
       </div>
 
       <div className="flex flex-col gap-6 w-full">
@@ -38,6 +53,7 @@ function AccessControl() {
 
         <ManagerList/>
       </div>
+       {showModal && <AddManagerModal citizens= {citizens} onClose={handleCloseModal} />}
     </ManagerProvider>
   );
 }

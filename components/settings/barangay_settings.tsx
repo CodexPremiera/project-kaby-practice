@@ -12,20 +12,32 @@ import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import EditProfile from "@/components/settings/barangay/edit_profile";
 import AccessControl from "@/components/settings/barangay/access_control";
 
-
-const TAB_COMPONENTS = {
-  Profile: <EditProfile />,
-  Security: <PasswordAndSecurity />,
-  Access: <AccessControl />,
+type BarangaySettingsProps = {
+  citizens: {
+    id: string;
+    firstname: string;
+    lastname: string;
+    middlename?: string;
+    // add more fields as needed
+  }[];
 };
 
-const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
-  Profile: "Edit profile",
-  Security: "Password and security",
-  Access: "Access control",
-};
 
-function BarangaySettings(props) {
+
+
+
+function BarangaySettings({citizens}: BarangaySettingsProps) {
+  
+  const TAB_COMPONENTS = {
+    Profile: <EditProfile />,
+    Security: <PasswordAndSecurity />,
+    Access: <AccessControl citizens={citizens} />,
+  };
+  const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
+    Profile: "Edit profile",
+    Security: "Password and security",
+    Access: "Access control",
+  };
   const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>("Profile");
   const [showMobileSwitcher, setShowMobileSwitcher] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");

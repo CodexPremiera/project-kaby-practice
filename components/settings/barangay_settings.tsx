@@ -14,11 +14,12 @@ import AccessControl from "@/components/settings/barangay/access_control";
 
 type BarangaySettingsProps = {
   citizens: {
-    id: string;
-    firstname: string;
-    lastname: string;
-    middlename?: string;
-    // add more fields as needed
+      id: string;
+      first_name: string;
+      last_name: string;
+      middle_name?: string;
+      barangay_id: string;
+      is_worker: boolean;
   }[];
 };
 

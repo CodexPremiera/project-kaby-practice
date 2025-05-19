@@ -8,6 +8,7 @@ import EmailField from "@/components/ui/form/EmailField";
 import {ManagerProvider} from "@/components/settings/access_control/manager_context";
 import ManagerList from "@/components/settings/access_control/manager_list";
 import AddManagerModal from "@/components/modal/AddManagerModal";
+import AssignWorkerModal from "@/components/modal/AssignWorkerModal";
 
 type AccessControlProps = {
   citizens: {
@@ -15,15 +16,21 @@ type AccessControlProps = {
     first_name: string;
     last_name: string;
     middle_name?: string;
+    barangay_id: string;
+    is_worker: boolean;
+
   }[];
 };
 
 const AccessControl: React.FC<AccessControlProps> = ({citizens} ) => {
   console.log("citizens", citizens);
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showWorker, setWorkerModal] = useState<boolean>(false);
+  const [showManager, setManagerModal] = useState<boolean>(false);
 
-  const handleOpenModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const handleOpenModal1 = () => setWorkerModal(true);
+  const handleCloseModal1 = () => setWorkerModal(false);
+  const handleOpenModal2 = () => setManagerModal(true);
+  const handleCloseModal2 = () => setManagerModal(false);
   return (
     <ManagerProvider>
       <div className="flex flex-row justify-between items-center gap-2 w-full ">
@@ -31,7 +38,8 @@ const AccessControl: React.FC<AccessControlProps> = ({citizens} ) => {
           className="flex flex-col justify-center text-3xl font-semibold leading-[12px] hidden lg:block">
           Access Control
         </h1>
-        <ButtonSecondary onClick={handleOpenModal}>Add a manager</ButtonSecondary>
+        <ButtonSecondary onClick={handleOpenModal1}>Assign Workers</ButtonSecondary>
+        <ButtonSecondary onClick={handleOpenModal2}>Add a manager</ButtonSecondary>
       </div>
 
       <div className="flex flex-col gap-6 w-full">
@@ -53,7 +61,8 @@ const AccessControl: React.FC<AccessControlProps> = ({citizens} ) => {
 
         <ManagerList/>
       </div>
-       {showModal && <AddManagerModal citizens= {citizens} onClose={handleCloseModal} />}
+       {showWorker && <AssignWorkerModal citizens= {citizens} onClose={handleCloseModal1} />}
+       {showManager && <AddManagerModal citizens= {citizens} onClose={handleCloseModal2} />}
     </ManagerProvider>
   );
 }

@@ -5,29 +5,38 @@ interface AddManagerModalProps {
   citizens: Citizen[] | null;
 }
 interface Citizen {
-  id: string;
-  first_name: string;
-  last_name: string;
-  middle_name?: string;
+	id: string;
+	first_name: string;
+	last_name: string;
+	middle_name?: string;
+    barangay_id: string;
+    is_worker: boolean;
+
+
 }
 
 const AddManagerModal = ({ onClose, citizens }: AddManagerModalProps) => {
 	console.log("citizens", citizens);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedRoles, setSelectedRoles] = useState<Record<string, string>>({});
+	const [positions, setPositions] = useState<Record<string, string>>({});
 
-	const filteredCitizens = citizens?.filter((citizen) =>
-		`${citizen.first_name} ${citizen.last_name} ${citizen.middle_name || ""}`
-		.toLowerCase()
-		.includes(searchTerm.toLowerCase())
-	);
+
+    const filteredCitizens = citizens
+		?.filter((citizen) => citizen.is_worker) // exclude workers
+		.filter((citizen) =>
+			`${citizen.first_name} ${citizen.last_name} ${citizen.middle_name || ""}`
+			.toLowerCase()
+			.includes(searchTerm.toLowerCase())
+    );
+
 	console.log("filteredCitizens", filteredCitizens);
 
 	return (
-		<div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-		<div className="relative flex flex-col h-auto w-md rounded-[20px] bg-primary p-8 gap-4">
+		<div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 ">
+		<div className="relative flex flex-col h-auto w-full max-w-[600] rounded-[20px] bg-primary p-8 gap-4">
 			<h2 className="text-xl font-semibold text-center border-b border-gray/20 pb-1 h4">
-			Citizen List
+			Worker List
 			</h2>
 
 			<input
@@ -37,8 +46,9 @@ const AddManagerModal = ({ onClose, citizens }: AddManagerModalProps) => {
 			onChange={(e) => setSearchTerm(e.target.value)}
 			className="px-3 py-2 border rounded w-full"
 			/>
-
+			
 			<div className="flex flex-col gap-3 max-h-[400px] overflow-y-auto">
+				
 			{filteredCitizens?.map((citizen) => (
 				<div
 				key={citizen.id}
@@ -63,14 +73,28 @@ const AddManagerModal = ({ onClose, citizens }: AddManagerModalProps) => {
 					<option value="Document Admin">Document Admin</option>
 					<option value="Account Manager">Account Manager</option>
 				</select>
+				{/* <input
+					type="text"
+					placeholder="Position"
+					value={positions[citizen.id] || ""}
+					onChange={(e) =>
+						setPositions((prev) => ({
+						...prev,
+						[citizen.id]: e.target.value,
+						}))
+					}
+					className="px-3 py-2 border rounded w-[200px]"
+				/> */}
+				
 
 				<button
 					className="ml-4 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
 					onClick={() =>
 					console.log(
-						`Assigning ${selectedRoles[citizen.id] || "No role"} to ${citizen.id}`
+						`Assigning ${selectedRoles[citizen.id] || "No role"} with position "${positions[citizen.id] || "N/A"}" to citizen ID: ${citizen.id}`
 					)
 					}
+
 				>
 					Submit
 				</button>

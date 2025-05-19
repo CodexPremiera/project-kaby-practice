@@ -18,7 +18,7 @@ export default function SettingsRouter() {
     const fetchBarangay = async () => {
       if (role === "barangay" && barangayId) {
         try {
-          const res = await fetch(`/api/access_control/barangay_settings/${barangayId}`, {
+          const res = await fetch(`/api/barangay_settings/access_control/${barangayId}`, {
             method: "GET",
             cache: "no-store",
           });
@@ -27,8 +27,18 @@ export default function SettingsRouter() {
           }
           
           const data = await res.json();
-          console.log("Response from fetch:", data);
-          setCitizenProfiles(data.data);
+            const transformed = data.data.map((citizen) => ({
+              id: citizen.id,
+              first_name: citizen.first_name,
+              last_name: citizen.last_name,
+              middle_name: citizen.middle_name,
+              barangay_id: barangayId,
+              is_worker: citizen.is_worker
+          }));
+
+          console.log("Transformed citizens:", transformed);
+          setCitizenProfiles(transformed);
+        
         } catch (err) {
           console.error("Failed to fetch barangay profile:", err);
         } finally {

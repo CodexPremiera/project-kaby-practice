@@ -31,10 +31,22 @@ export default class RequestRepo extends BaseRepo{
         async getRequestsByService(service_id){
                 console.log(service_id, "the service")
                 const { data: data1, error: error1} = await this.supabase
-                        .from("Service")
+                        .from("Services")
                         .select("id")
                         .eq("id", service_id)
                         .single()
                 console.log("data1", data)
+                return data
+        }
+
+        async create(requestServiceData){
+                try{
+                        const newRequestServiceData = new RequestCardModel
+
+                        
+                }catch(error){
+                        console.error("Error in adding the service to tracker")
+                        return { error: error.message }
+                }
         }
 }

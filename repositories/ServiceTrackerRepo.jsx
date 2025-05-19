@@ -15,13 +15,6 @@ export default class ServiceTrackerRepo extends BaseRepo{
                 console.log(service_id, "tracked service id");
 
         }
-        async create(trackerData){
-                try{
-                        const newTrackedService = new ServiceTracker
-                        
-                }catch(error){
-                        console.error("Error in adding the service to tracker")
-                        return { error: error.message }
-                }
-        }
+
+        
 }

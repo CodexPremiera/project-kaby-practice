@@ -19,7 +19,7 @@ const ButtonSecondary: React.FC<CustomButtonProps> = ({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={clsx("button-secondary", disabled && "background-3 text-secondary opacity-80", className)}
+      className={clsx("button-clear", className)}
     >
       {children}
     </button>

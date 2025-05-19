@@ -12,7 +12,7 @@ interface TextFieldProps {
   className?: string,
 }
 
-function TextField({
+function SearchBar({
                      field_name = "",
                      placeholder = "Enter text",
                      type = "text",
@@ -26,7 +26,7 @@ function TextField({
     <div className="flex flex-col w-full gap-1">
       {field_name && <span className="text-sm">{field_name}</span>}
       <div
-        className={`flex items-center gap-2.5 py-3 px-4 rounded-full border border-secondary w-full transition duration-200 text-primary ${className}`}
+        className={`flex items-center gap-2.5 py-2 px-4 rounded-full border border-secondary w-full transition duration-200 text-primary ${className}`}
       >
         <input
           type={type}
@@ -36,10 +36,10 @@ function TextField({
           onChange={onChange}
           onKeyDown={onKeyDown}
         />
-        <Search className="text-secondary" />
+        <Search className="text-secondary h-full" />
       </div>
     </div>
   );
 }
 
-export default TextField;
+export default SearchBar;

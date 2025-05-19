@@ -64,7 +64,7 @@ class BarangayProfileRepo extends BaseRepo {
 
 		if (error) throw error;
 
-		return data;
+		return data.id;
 	}
 }
 export default BarangayProfileRepo;

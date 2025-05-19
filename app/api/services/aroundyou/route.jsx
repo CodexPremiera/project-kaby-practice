@@ -17,9 +17,7 @@ export async function GET() {
 	const userId = await authService.loggedInUserId();
 	const role = await userService.getUserRole(userId);
 
-	// Determine which barangay ID to use based on user role
 	let barangayId = null;
-
 	if (role === "citizen") {
 		barangayId = await citizenService.getCitBarangayIdOnly(userId);
 	} else if (role === "barangay") {
@@ -29,6 +27,5 @@ export async function GET() {
 	const citizenUserIds = await citizenService.getAllCitizenProfiles(barangayId);
 	// Get services owned by those citizen user IDs
 	const services = await serviceService.getAroundYouServices(citizenUserIds);
-
 	return NextResponse.json(services);
 }

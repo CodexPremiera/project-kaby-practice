@@ -10,7 +10,7 @@ const nav_items = [
 	{ name: "Home", path: "/home", icon: RiCommunityLine },
 	{ name: "Citizen Desk", path: "/citizen_desk", icon: RiTableLine },
 	{ name: "Your Services", path: "/services", icon: RiServiceLine },
-	{ name: "Settings", path: "/settingss", icon: RiSettings4Line },
+	{ name: "Settings", path: "/account", icon: RiSettings4Line },
 ];
 
 const BarangayMainbar = () => (

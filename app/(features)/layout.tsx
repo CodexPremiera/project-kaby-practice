@@ -8,6 +8,7 @@ import { ReactNode } from "react";
 import AuthenticationService from "@/services/AuthenticationService";
 import UserService from "@/services/UserService";
 import { createClient } from "@/utils/supabase/server";
+import {RoleProvider} from "@/context/UserRoleContext";
 
 const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	const supabase = await createClient();
@@ -35,21 +36,17 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	}
 
 	return (
-
-		<div className="flex flex-col w-screen min-h-screen overflow-hidden relative">
-			{/* Example static header for now */}
-			{Header}
-
-			{/* Example static sidebar for now */}
-			<div className="flex flex-row flex-1 sm:ml-[75px] h-full">
-				{/* Example static sidebar */}
-				{Mainbar}
-				<div
-					className="flex-1 sm:rounded-tl-[20px] sm:px-7 py-6 border-light-color bg-gradient mt-16 pb-18">
-					{children}
+		<RoleProvider value={role}>
+			<div className="flex flex-col w-screen min-h-screen overflow-hidden relative">
+				{Header}
+				<div className="flex flex-row flex-1 sm:ml-[75px] h-full">
+					{Mainbar}
+					<div className="flex-1 sm:rounded-tl-[20px] sm:px-7 py-6 border-light-color bg-gradient mt-16 pb-18">
+						{children}
+					</div>
 				</div>
 			</div>
-		</div>
+		</RoleProvider>
 	);
 };
 

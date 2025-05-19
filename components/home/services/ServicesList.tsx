@@ -15,10 +15,10 @@ interface Service {
 }
 
 interface SearchServiceProps {
-	type?: string[];
+	tab: "all" | "frontline" | "around-you";
 }
 
-const ServicesList: React.FC<SearchServiceProps> = ({ type = [] }) => {
+const ServicesList: React.FC<SearchServiceProps> = ({ tab }) => {
 	const router = useRouter();
 	const currentUser = "Bondy Might"; // Replace with auth logic later
 	const searchParams = useSearchParams();
@@ -32,8 +32,10 @@ const ServicesList: React.FC<SearchServiceProps> = ({ type = [] }) => {
 		async function fetchServices() {
 			try {
 				let url = "/api/services";
-				if (type.includes("Barangay")) {
+				if (tab === "frontline") {
 					url = "/api/services/frontline";
+				} else if (tab === "around-you") {
+					url = "/api/services/aroundyou";
 				}
 
 				const res = await fetch(url);
@@ -48,14 +50,11 @@ const ServicesList: React.FC<SearchServiceProps> = ({ type = [] }) => {
 		}
 
 		fetchServices();
-	}, [type]);
+	}, [tab]);
 
 	const filteredAndSearchedServices = useMemo(() => {
 		let filtered = services.filter(
-			(service) =>
-				service.status !== "closed" &&
-				service.owner !== currentUser &&
-				(type.length === 0 || type.includes(service.type))
+			(service) => service.status !== "closed" && service.owner !== currentUser
 		);
 
 		if (query.trim() !== "") {
@@ -69,7 +68,7 @@ const ServicesList: React.FC<SearchServiceProps> = ({ type = [] }) => {
 		}
 
 		return filtered;
-	}, [services, query, type]);
+	}, [services, query]);
 
 	if (loading) return <div>Loading services...</div>;
 	if (error) return <div>Error loading services: {error}</div>;

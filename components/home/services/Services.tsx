@@ -71,7 +71,7 @@ const Services = () => {
 
 				{/* Results Content */}
 				<div className="w-full grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto justify-items-center py-4">
-					<ServicesList type={TAB_COMPONENTS[activeTab]} />
+					<ServicesList tab={activeTab} />
 				</div>
 			</div>
 		</div>

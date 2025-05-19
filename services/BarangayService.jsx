@@ -43,6 +43,11 @@ class BarangayService {
 		console.log("Barangay User ID: ", data);
 		return data;
 	}
+	async getIDByUserID(user_id) {
+		const data = await this.repo.getIDByUserID(user_id);
+		console.log("Barangay ID: ", data);
+		return data;
+	}
 
 	// async getCitizenById(id){
 	//     const data= await this.repo.getById(id);

@@ -54,5 +54,9 @@ class CitizenService {
 
 		return data;
 	}
+	async getAllCitizenProfiles(id) {
+		const data = await this.repo.getAllCitizenProfiles(id);
+		return data;
+	}
 }
 export default CitizenService;

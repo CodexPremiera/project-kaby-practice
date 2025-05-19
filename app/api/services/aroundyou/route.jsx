@@ -7,9 +7,6 @@ import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-	//If user is citizen = All Citizen Services under same barangay
-	//If user is barangay = using the userID of the BarangayProfile, match it to barangayID of CitizenProfile, get the CitizenProfile user_ids and match it with the owner
-	
 	const supabase = await createClient();
 
 	const authService = new AuthenticationService(supabase);
@@ -17,21 +14,21 @@ export async function GET() {
 	const serviceService = new ServiceService(supabase);
 	const citizenService = new CitizenService(supabase);
 	const barangayService = new BarangayService(supabase);
+	const userId = await authService.loggedInUserId();
+	const role = await userService.getUserRole(userId);
 
-	const user_id = await authService.loggedInUserId();
-	const role = await userService.getUserRole(user_id);
+	// Determine which barangay ID to use based on user role
+	let barangayId = null;
 
 	if (role === "citizen") {
-		const barangayID = await citizenService.getCitBarangayIdOnly(user_id);
-		const getbarangayUserID =
-			await barangayService.getUserIDsByBarangayId(barangayID);
-
-		// Extract only user_id strings
-		const barangayUserID = getbarangayUserID.map((user) => user.user_id);
-		const services = await serviceService.getFrontlineServices(barangayUserID);
-		return NextResponse.json(services);
+		barangayId = await citizenService.getCitBarangayIdOnly(userId);
 	} else if (role === "barangay") {
-		const services = await serviceService.getFrontlineServices(user_id);
-		return NextResponse.json(services);
+		barangayId = await barangayService.getIDByUserID(userId);
 	}
+	// Get citizen user IDs under the barangay
+	const citizenUserIds = await citizenService.getAllCitizenProfiles(barangayId);
+	// Get services owned by those citizen user IDs
+	const services = await serviceService.getAroundYouServices(citizenUserIds);
+
+	return NextResponse.json(services);
 }

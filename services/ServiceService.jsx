@@ -44,6 +44,11 @@ class ServiceService {
 		return data;
 	}
 
+	async getAroundYouServices(citizensUserIds) {
+		const userIds = citizensUserIds.map((c) => c.user_id);
+		return await this.repo.getAroundYouServices(userIds);
+	}
+
 	async getServicesByOwners(ownerIds) {
 		const { data, error } = await this.supabase
 			.from("Services")

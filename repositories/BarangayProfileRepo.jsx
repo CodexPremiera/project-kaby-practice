@@ -55,5 +55,16 @@ class BarangayProfileRepo extends BaseRepo {
 
 		return data;
 	}
+	async getIDByUserID(user_id) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select("id")
+			.eq("user_id", user_id)
+			.single();
+
+		if (error) throw error;
+
+		return data;
+	}
 }
 export default BarangayProfileRepo;

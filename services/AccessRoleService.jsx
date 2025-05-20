@@ -5,13 +5,14 @@ class AccessRoleService {
         this.repo = new AccessRoleRepo(supabase);
     }
 
-    async createWorker(workerDetails){
-        const data = await this.repo.create(workerDetails);
+    async createAccessRole(details){
+        const data = await this.repo.create(details);
         return data;
     }
-    async getWorkersUsingBrgyId(brgy_id){
+    async getAccessRpleUsingBrgyId(brgy_id){
         const data = await this.repo.getAllByBrgyFK(brgy_id);
         return data;
     }
+    async
 }
 export default AccessRoleService;

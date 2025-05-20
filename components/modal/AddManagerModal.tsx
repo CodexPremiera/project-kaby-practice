@@ -2,79 +2,56 @@ import React, { useState } from "react";
 
 interface AddManagerModalProps {
   onClose: () => void;
-  citizens: Citizen[] | null;
+  non_managers: Citizen[] | null;
 }
 interface Citizen {
-	id: string;
+	citizen_id: string;
 	first_name: string;
 	last_name: string;
 	middle_name?: string;
-    barangay_id: string;
-    is_worker: boolean;
+	position: string;
+	barangay_id : string;
+	barangay_address:string;
+	worker_id : string;
+}[];
 
-
-}
-
-const AddManagerModal = ({ onClose, citizens }: AddManagerModalProps) => {
-	console.log("citizens", citizens);
+const AddManagerModal = ({ onClose, non_managers }: AddManagerModalProps) => {
+	console.log("citizens", non_managers);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedRoles, setSelectedRoles] = useState<Record<string, string>>({});
-	const [positions, setPositions] = useState<Record<string, string>>({});
 
-
-    const filteredCitizens = citizens
-		?.filter((citizen) => citizen.is_worker) // exclude workers
-		.filter((citizen) =>
-			`${citizen.first_name} ${citizen.last_name} ${citizen.middle_name || ""}`
-			.toLowerCase()
-			.includes(searchTerm.toLowerCase())
-    );
-	    const handleAssign = async (citizenId: string) => {
-        const position = positions[citizenId];
-        // const barangay_id = citizens[citizenId];
-        const citizen = citizens?.find((c) => c.id === citizenId);
-        
-        if (!citizen) {
-            alert("Citizen not found.");
-            return;
-        }
-        console.log("this is le citizen", citizen.id);
-
-        const barangay_id = citizen.barangay_id;
-
-        if (!position) {
-            alert("Please enter a position before submitting.");
-            return;
-        }
-
-        try {
-            const res = await fetch("/api/barangay_settings/barangay_worker", {
-                method: "POST",
-                headers: {
+	
+	console.log(non_managers, "these are non managers");
+	const handleAssign = async (citizenId: string) => {
+		const selectedRole = selectedRoles[citizenId]
+		console.log(selectedRole, "thius");
+		if(!non_managers) return null;
+		if(!selectedRole){
+			alert("Please select a role");
+			return;
+		}
+		
+		try{
+			const res = await fetch("/api/barangay_settings/access_role",{
+				method : "POST",
+				headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    citizen_id: citizen.id,
-                    position,
-                    barangay_id,
+                    worker_id: non_managers[0].worker_id ,
+					access_role: selectedRole,
                 }),
-            });
-
-            if (!res.ok) {
-            throw new Error(`Failed to assign: ${res.status}`);
-            }
-
-            const data = await res.json();
+			})
+			const data = await res.json();
             console.log("Successfully assigned:", data);
-            alert(`Successfully assigned ${citizenId} as ${position}`);
-        } catch (error) {
-            console.error("Error assigning citizen:", error);
-            alert("Failed to assign worker. Check the console for details.");
-        }
-    };
+			alert("Assigned Successfully");
+		}catch(error){
+			console.log(error);
+			alert("failed");
+		}
 
-	console.log("filteredCitizens", filteredCitizens);
-
+	}
+    
 	return (
 		<div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 ">
 		<div className="relative flex flex-col h-auto w-full max-w-[600] rounded-[20px] bg-primary p-8 gap-4">
@@ -92,21 +69,24 @@ const AddManagerModal = ({ onClose, citizens }: AddManagerModalProps) => {
 			
 			<div className="flex flex-col gap-3 max-h-[400px] overflow-y-auto">
 				
-			{filteredCitizens?.map((citizen) => (
+			{non_managers?.map((citizen) => (
 				<div
-				key={citizen.id}
+				key={citizen.citizen_id}
 				className="flex items-center justify-between py-2 border-b border-gray-200"
 				>
 				<div className="w-[40%]">
 					{citizen.last_name}, {citizen.first_name} {citizen.middle_name || ""}
 				</div>
+				<div className="w-[40%]">
+					{citizen.position}
+				</div>
 
 				<select
-					value={selectedRoles[citizen.id] || ""}
+					value={selectedRoles[citizen.citizen_id] || ""}
 					onChange={(e) =>
 					setSelectedRoles((prev) => ({
 						...prev,
-						[citizen.id]: e.target.value,
+						[citizen.citizen_id]: e.target.value,
 					}))
 					}
 					className="border border-gray-300 px-2 py-1 rounded"
@@ -132,7 +112,7 @@ const AddManagerModal = ({ onClose, citizens }: AddManagerModalProps) => {
 
 				<button
 					className="ml-4 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-					onClick={() => handleAssign(citizen.id)}
+					onClick={() => handleAssign(citizen.citizen_id)}
 					
 
 				>

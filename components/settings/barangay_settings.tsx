@@ -44,6 +44,17 @@ type BarangaySettingsProps = {
     date_added :string;
     date_ended:string;
   }[];
+  non_managers:{
+    citizen_id: string;
+    first_name: string;
+    last_name: string;
+    middle_name?: string;
+    position: string;
+    barangay_id : string;
+    barangay_address:string;
+  	worker_id : string;
+
+  }[];
 
 };
 
@@ -51,12 +62,12 @@ type BarangaySettingsProps = {
 
 
 
-function BarangaySettings({citizens,workers,accessRoles,managers}: BarangaySettingsProps) {
+function BarangaySettings({citizens,workers,accessRoles,managers,non_managers}: BarangaySettingsProps) {
   
   const TAB_COMPONENTS = {
     Profile: <EditProfile />,
     Security: <PasswordAndSecurity />,
-    Access: <AccessControl citizens={citizens} workers={workers} accessRoles={accessRoles} managers={managers} />,
+    Access: <AccessControl citizens={citizens} workers={workers} accessRoles={accessRoles} managers={managers} non_managers={non_managers} />,
   };
   const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
     Profile: "Edit profile",

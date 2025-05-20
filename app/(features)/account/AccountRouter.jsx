@@ -11,6 +11,7 @@ export default function SettingsRouter() {
   const { barangayId } = useBarangayContext();
 
   const [managers, setManagers] = useState(null);
+  const [nonManagers, setNonManagers] = useState(null);
   const [citizenProfiles, setCitizenProfiles] = useState(null);
   const [workers, setWorkers] = useState(null);
   const [accessRoles, setAccessRoles] = useState(null);
@@ -21,11 +22,12 @@ export default function SettingsRouter() {
     const fetchBarangay = async () => {
       if (role === "barangay" && barangayId) {
         try {
-          const [citizenRes, workerRes, accessRes,managerRes] = await Promise.all([
+          const [citizenRes, workerRes, accessRes,managerRes,nonManagerRes] = await Promise.all([
             fetch(`/api/barangay_settings/access_control/${barangayId}`, { method: "GET", cache: "no-store" }),
             fetch(`/api/barangay_settings/barangay_worker/${barangayId}`, { method: "GET", cache: "no-store" }),
             fetch(`/api/barangay_settings/access_role/${barangayId}`, { method: "GET", cache: "no-store" }),
             fetch(`/api/barangay_settings/managers/${barangayId}`, { method: "GET", cache: "no-store" }),
+            fetch(`/api/barangay_settings/non_managers/${barangayId}`, { method: "GET", cache: "no-store" }),
           ])
           // fetch(`/api/barangay_settings/access_control/${barangayId}`, {
           // const res = await fetch(`/api/barangay_settings/access_control/${barangayId}`, {
@@ -37,8 +39,8 @@ export default function SettingsRouter() {
           // }
           // const data = await res.json();
           // console.log("this is data",data);
-          const [citizenData, workerData,accessData,managersData] = await Promise.all([
-            citizenRes.json(), workerRes.json(),accessRes.json(),managerRes.json()
+          const [citizenData, workerData,accessData,managersData,nonManagerData] = await Promise.all([
+            citizenRes.json(), workerRes.json(),accessRes.json(),managerRes.json(),nonManagerRes.json()
           ]) 
           //   const transformed = citizenData.data.map((citizen) => ({
           //     id: citizen.id,
@@ -55,6 +57,7 @@ export default function SettingsRouter() {
           setAccessRoles(accessData);
           setWorkers(workerData);
           setManagers(managersData);
+          setNonManagers(nonManagerData)
         
         } catch (err) {
           console.error("Failed to fetch barangay profile:", err);
@@ -70,7 +73,7 @@ export default function SettingsRouter() {
   if (loading) return <div>Loading...</div>;
   if (role === "barangay" && citizenProfiles) {
     console.log("Barangay Profile:", citizenProfiles);
-    return <BarangaySettings citizens={citizenProfiles.data} accessRoles={accessRoles.data} workers={workers.data} managers = {managers.data}/>;
+    return <BarangaySettings citizens={citizenProfiles.data} accessRoles={accessRoles.data} workers={workers.data} managers = {managers.data} non_managers={nonManagers.data}/>;
     // return <BarangaySettings citizens={null} accessRoles={null} workers={null} managers = {dataProfile}/>;
   }
   else if (role === "citizen") {

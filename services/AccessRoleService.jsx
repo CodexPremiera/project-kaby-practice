@@ -1,8 +1,8 @@
-import BarangayWorkerRepo from "@/repositories/BarangayWorkerRepo"
+import AccessRoleRepo from "@/repositories/AccessRoleRepo"
 
-class BarangayWorkerService {
+class AccessRoleService {
     constructor(supabase){
-        this.repo = new BarangayWorkerRepo(supabase);
+        this.repo = new AccessRoleRepo(supabase);
     }
 
     async createWorker(workerDetails){
@@ -14,4 +14,4 @@ class BarangayWorkerService {
         return data;
     }
 }
-export default BarangayWorkerService;
+export default AccessRoleService;

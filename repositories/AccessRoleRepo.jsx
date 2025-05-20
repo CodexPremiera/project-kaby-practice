@@ -1,7 +1,7 @@
 import BaseRepo from "./BaseRepo";
-class BarangayWorkerRepo extends BaseRepo{
+class AccessRoleRepo extends BaseRepo{
 	constructor(supabase) {
-		super("BarangayWorker", supabase);
+		super("AccessControl", supabase);
 		this.supabase = supabase;
 	}
 
@@ -14,4 +14,4 @@ class BarangayWorkerRepo extends BaseRepo{
 		return data;
 	}
 }
-export default BarangayWorkerRepo;
+export default AccessRoleRepo;

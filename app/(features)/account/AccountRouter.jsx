@@ -11,6 +11,8 @@ export default function SettingsRouter() {
   const { barangayId } = useBarangayContext();
 
   const [citizenProfiles, setCitizenProfiles] = useState(null);
+  const [workers, setWorkers] = useState(null);
+  const [accessRoles, setAccessRoles] = useState(null);
   const [loading, setLoading] = useState(true);
   console.log("userId in settings router", barangayId);
 
@@ -18,16 +20,22 @@ export default function SettingsRouter() {
     const fetchBarangay = async () => {
       if (role === "barangay" && barangayId) {
         try {
-          const res = await fetch(`/api/barangay_settings/access_control/${barangayId}`, {
-            method: "GET",
-            cache: "no-store",
-          });
-          if (!res.ok) {
-            throw new Error(`Error: ${res.status}`);
-          }
-          
-          const data = await res.json();
-            const transformed = data.data.map((citizen) => ({
+          const [citizenRes, workerRes, accessRes] = await Promise.all([
+            fetch(`/api/barangay_settings/access_control/${barangayId}`, { method: "GET", cache: "no-store" }),
+            fetch(`/api/barangay_settings/barangay_worker/${barangayId}`, { method: "GET", cache: "no-store" }),
+            fetch(`/api/barangay_settings/access_role/${barangayId}`, { method: "GET", cache: "no-store" }),
+          ])
+          // fetch(`/api/barangay_settings/access_control/${barangayId}`, {
+          //   method: "GET",
+          //   cache: "no-store",
+          // });
+          // if (!res.ok) {
+          //   throw new Error(`Error: ${res.status}`);
+          // }
+          const [citizenData, workerData,accessData] = await Promise.all([
+            citizenRes.json(), workerRes.json(),accessRes.json()
+          ]) 
+            const transformed = citizenData.data.map((citizen) => ({
               id: citizen.id,
               first_name: citizen.first_name,
               last_name: citizen.last_name,
@@ -38,6 +46,8 @@ export default function SettingsRouter() {
 
           console.log("Transformed citizens:", transformed);
           setCitizenProfiles(transformed);
+          setAccessRoles(accessData);
+          setWorkers(workerData);
         
         } catch (err) {
           console.error("Failed to fetch barangay profile:", err);
@@ -53,7 +63,7 @@ export default function SettingsRouter() {
   if (loading) return <div>Loading...</div>;
   if (role === "barangay" && citizenProfiles) {
     console.log("Barangay Profile:", citizenProfiles);
-    return <BarangaySettings citizens={citizenProfiles} />;
+    return <BarangaySettings citizens={citizenProfiles} accessRoles={accessRoles.data} workers={workers.data} />;
   }
   else if (role === "citizen") {
     return <CitizenSettings />;

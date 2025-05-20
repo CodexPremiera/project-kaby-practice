@@ -20,9 +20,21 @@ type AccessControlProps = {
     is_worker: boolean;
 
   }[];
+  workers: {
+    id:string;
+    citizen_id: string;
+    position: string;
+  }[];
+  accessRoles: {
+    id: string;
+    worker_id: string;
+    access_role: string;
+    date_added: string;
+  }[];
 };
 
-const AccessControl: React.FC<AccessControlProps> = ({citizens} ) => {
+
+const AccessControl: React.FC<AccessControlProps> = ({citizens, workers,accessRoles} ) => {
   console.log("citizens", citizens);
   const [showWorker, setWorkerModal] = useState<boolean>(false);
   const [showManager, setManagerModal] = useState<boolean>(false);
@@ -31,8 +43,10 @@ const AccessControl: React.FC<AccessControlProps> = ({citizens} ) => {
   const handleCloseModal1 = () => setWorkerModal(false);
   const handleOpenModal2 = () => setManagerModal(true);
   const handleCloseModal2 = () => setManagerModal(false);
+
   return (
-    <ManagerProvider>
+    // <ManagerProvider>
+    <div>
       <div className="flex flex-row justify-between items-center gap-2 w-full ">
         <h1
           className="flex flex-col justify-center text-3xl font-semibold leading-[12px] hidden lg:block">
@@ -59,11 +73,12 @@ const AccessControl: React.FC<AccessControlProps> = ({citizens} ) => {
           <div className="w-6"></div>
         </div>
 
-        <ManagerList/>
+        <ManagerList citizens={citizens.filter(c => c.is_worker)} workers={workers} accessRoles={accessRoles}/>
       </div>
        {showWorker && <AssignWorkerModal citizens= {citizens} onClose={handleCloseModal1} />}
        {showManager && <AddManagerModal citizens= {citizens} onClose={handleCloseModal2} />}
-    </ManagerProvider>
+    {/* // </ManagerProvider> */}
+    </div>
   );
 }
 

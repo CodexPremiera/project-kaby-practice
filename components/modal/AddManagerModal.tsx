@@ -113,8 +113,8 @@ const AddManagerModal = ({ onClose, citizens }: AddManagerModalProps) => {
 				>
 					<option value="">None</option>
 					<option value="Chief Operator">Chief Operator</option>
-					<option value="Document Admin">Document Admin</option>
-					<option value="Account Manager">Account Manager</option>
+					<option value="Citizen Manager">Citizen Manager</option>
+					<option value="Service Manager">Service Manager</option>
 				</select>
 				{/* <input
 					type="text"

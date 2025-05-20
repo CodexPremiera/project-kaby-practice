@@ -10,18 +10,9 @@ export async function POST(request) {
     console.log("Request body:", body);
     
     const data = await barangayWorkerService.createWorker(body);
-
-    
-
-
-
-
     return NextResponse.json({
         message: "Barangay worker created successfully",
         data: data,
     });
-    
-
-
-
 }
+

@@ -23,7 +23,14 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	console.log("Logged in user id: ", user_id);
 	const role = await userService.getUserRole(user_id);
 
-
+  const { data:womp, error:wompwomp } = await supabase
+    .from('worker_roles_view')  // <- use your view name here
+    .select('*')                // or specify columns like 'FirstName, LastName, AccessRole'
+	if (wompwomp){
+		console.log(wompwomp);
+	}else{
+		console.log("womp",womp);
+	}
 
 	console.log("User role: ", role);
 

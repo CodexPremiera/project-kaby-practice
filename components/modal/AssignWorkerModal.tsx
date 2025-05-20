@@ -18,7 +18,7 @@ interface Citizen {
 
 
 const AssignWorkerModal = ({ onClose, citizens }: AssignWorkerModalProps) => {
-    console.log("citizens", citizens);
+    console.log("citizens in assign worker", citizens);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedRoles, setSelectedRoles] = useState<Record<string, string>>({});
     const [positions, setPositions] = useState<Record<string, string>>({});

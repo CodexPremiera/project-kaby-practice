@@ -31,10 +31,23 @@ type AccessControlProps = {
     access_role: string;
     date_added: string;
   }[];
+
+  managers :{
+    citizen_id : string;
+    last_name : string;
+    first_name : string;
+    middle_name : string;
+    barangay_id : string;
+    barangay_address : string;
+    position : string;
+    access_role : string;
+    date_added :string;
+    date_ended:string;
+  }[];
 };
 
 
-const AccessControl: React.FC<AccessControlProps> = ({citizens, workers,accessRoles} ) => {
+const AccessControl: React.FC<AccessControlProps> = ({citizens, workers,accessRoles,managers} ) => {
   console.log("citizens", citizens);
   const [showWorker, setWorkerModal] = useState<boolean>(false);
   const [showManager, setManagerModal] = useState<boolean>(false);
@@ -73,7 +86,7 @@ const AccessControl: React.FC<AccessControlProps> = ({citizens, workers,accessRo
           <div className="w-6"></div>
         </div>
 
-        <ManagerList citizens={citizens.filter(c => c.is_worker)} workers={workers} accessRoles={accessRoles}/>
+        <ManagerList managers={managers}/>
       </div>
        {showWorker && <AssignWorkerModal citizens= {citizens} onClose={handleCloseModal1} />}
        {showManager && <AddManagerModal citizens= {citizens} onClose={handleCloseModal2} />}

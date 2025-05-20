@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import LoadingModal from "@/components/modal/LoadingModal";
+import ErrorModal from "@/components/modal/ErrorModal";
+import SuccessModal from "@/components/modal/SuccessModal";
 
 export default function CitizenRegisterClientForm() {
 	const router = useRouter();
@@ -9,45 +12,91 @@ export default function CitizenRegisterClientForm() {
 		last_name: "",
 		email: "",
 		barangay: "",
-		password: "",
-		confirm_password: "",
+		// password: "",
+		// confirm_password: "",
+		barangay_id: "",
 	});
+
 	const [barangays, setBarangays] = useState([]);
+	const [modalType, setModalType] = useState(null); // Define modalType
+
+	const handleCloseModal = () => {
+		setModalType(null);
+	};
+
 	useEffect(() => {
 		fetch("/api/barangay")
-			.then((res) => {
-				return res.json();
-			})
-			.then((data) => {
-				setBarangays(data.data);
-			})
+			.then((res) => res.json())
+			.then((data) => setBarangays(data.data))
 			.catch((err) => console.error("Failed fetching barangays:", err));
 	}, []);
 
 	const handleChange = (e) => {
-		// console.log(e.target.value);
-		setForm({ ...form, [e.target.name]: e.target.value });
+		// setForm({ ...form, [e.target.name]: e.target.value });
+		const { name, value } = e.target;
+
+		if (name === "barangay") {
+			const selectedBarangay = barangays.find(
+				(b) => b.barangayName === value
+			);
+
+			setForm({
+				...form,
+				barangay: value,
+				barangay_id: selectedBarangay?.id || "", 
+			});
+		} else {
+			setForm({
+				...form,
+				[name]: value,
+			});
+		}
 	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		// console.log("submitted");
+
+		// Password mismatch check
+		// if (form.password !== form.confirm_password) {
+		// 	alert("Passwords do not match!");
+		// 	return;
+		// }
+		setModalType("loading");
+
 		const res = await fetch("/api/auth/register/citizen", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(form),
 		});
 		const data = await res.json();
-		// console.log(data);
+
 		if (res.ok) {
-			alert("Request submitted");
-			router.push("/");
+			setModalType("success");
 		} else {
-			alert(`Error ${data.error}`);
+			setModalType("error");
 		}
 	};
-
+	console.log(barangays, "these is barangay")
 	return (
 		<div>
+			{/* Error Modal */}
+			{modalType === "error" && (
+				<ErrorModal
+					title="Error"
+					content="Register failed. Please check your credentials."
+					onClose={handleCloseModal}
+				/>
+			)}
+			{/* Success Modal */}
+			{modalType === "success" && (
+				<SuccessModal
+					title="Success"
+					content="Account Registered"
+					onClose={handleCloseModal}
+				/>
+			)}
+
+			{/* Sign up Form */}
 			<form className="w-full mt-6" onSubmit={handleSubmit}>
 				<div className="flex gap-3 justify-between">
 					<div className="relative w-full">
@@ -109,7 +158,7 @@ export default function CitizenRegisterClientForm() {
 						))}
 					</select>
 				</div>
-				<div className="relative mt-4">
+				{/* <div className="relative mt-4">
 					<input
 						className="floating-input mt-1 w-full text-black"
 						type="password"
@@ -122,21 +171,21 @@ export default function CitizenRegisterClientForm() {
 					<label htmlFor="password" className="floating-label">
 						Password
 					</label>
-				</div>
-				<div className="relative mt-4">
+				</div> */}
+				{/* <div className="relative mt-4">
 					<input
 						className="floating-input mt-1 w-full text-black"
 						type="password"
-						id="password"
+						id="confirm-password"
 						name="confirm_password"
 						placeholder=" "
 						onChange={handleChange}
 						required
 					/>
-					<label htmlFor="password" className="floating-label">
+					<label htmlFor="confirm-password" className="floating-label">
 						Confirm Password
 					</label>
-				</div>
+				</div> */}
 				<div className="mt-6 flex justify-center items-center">
 					<button
 						type="submit"

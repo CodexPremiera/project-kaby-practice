@@ -12,37 +12,8 @@ const LoginForm = () => {
 	const searchParams = useSearchParams();
 	const status = searchParams.get("status");
 
-	const [modalType, setModalType] = useState<"success" | "error" | null>(null);
-
-	useEffect(() => {
-		if (status === "success") {
-			setModalType("success");
-		} else if (status === "failed") {
-			setModalType("error");
-		}
-	}, [status]);
-
-	const handleCloseModal = () => {
-		setModalType(null);
-	};
-
 	return (
 		<section>
-			{modalType === "success" && (
-				<SuccessModal
-					title="Success"
-					content="You have logged in successfully!"
-					onClose={handleCloseModal}
-				/>
-			)}
-			{modalType === "error" && (
-				<ErrorModal
-					title="Error"
-					content="Login failed. Please check your credentials."
-					onClose={handleCloseModal}
-				/>
-			)}
-
 			<div className="flex flex-wrap xl:flex-nowrap">
 				<div className="relative w-full xl:w-1/2 h-[100vh] bg-hero bg-no-repeat bg-cover bg-center">
 					<div className="absolute inset-0 bg-gradient-to-l from-black/0 via-black/50 to-black/70 z-10" />

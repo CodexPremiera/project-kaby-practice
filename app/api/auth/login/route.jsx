@@ -73,7 +73,7 @@ export async function POST(req) {
 }
 
 export async function GET() {
-	//TO DO: return the user role of the login ID
+	//Return the user role and the user ID of the login ID
 	try {
 		const supabase = await createClient();
 		const authService = new AuthenticationService(supabase);

@@ -1,9 +1,10 @@
 import React from "react";
 import Image from "next/image";
+import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";
 
 const PostComposer = () => {
 	return (
-		<div className="flex items-start gap-4 px-4 py-3 bg-white rounded-[10px]">
+		<div className="flex w-full items-start gap-4 px-4 py-3 background-1 sm:rounded-xl border border-light-color">
 			<div className="w-10 h-10 shrink-0">
 				<Image
 					src="/assets/img/profile/bg-profile.png"
@@ -22,9 +23,7 @@ const PostComposer = () => {
 				/>
 
 				<div className="flex justify-end mt-3">
-					<button className="bg-secondary hover:bg-secondary/80 text-white font-medium py-2 px-5 rounded-full text-sm transition-colors duration-200">
-						Post
-					</button>
+					<ButtonPrimary>Post</ButtonPrimary>
 				</div>
 			</div>
 		</div>

@@ -6,24 +6,72 @@ export default class ServiceRepo extends BaseRepo {
 		super("Services", supabase);
 		this.supabase = supabase;
 	}
+
 	async getAllServices() {
-		const apps = await this.repo.getAll();
-		return apps;
+		return await this.repo.getAll();
 	}
+
+	async getById(id) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select()
+			.eq("id", id)
+			.single();
+
+		if (error) {
+			console.error("Error fetching service:", error);
+			return null;
+		}
+		return data;
+	}
+
 	async getServicesByUser(user_id) {
 		console.log(user_id, "the user id");
-		const { data: data1, error: error1 } = await this.supabase
+		const { data: citizen, error: citizenError } = await this.supabase
 			.from("CitizenProfile")
 			.select("user_id")
-			.eq("id", user_id)
+			.eq("user_id", user_id) // <-- corrected
 			.single();
-		console.log("data1", data1);
+
+		if (citizenError) {
+			console.error("Citizen lookup error:", citizenError);
+			return [];
+		}
+		console.log("Citizen data", citizen);
 
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select()
-			.eq("owner_id", data1.user_id);
+			.eq("owner_id", citizen.user_id); // <-- assuming owner_id is correct
+
 		if (error) console.log(error);
+		return data;
+	}
+
+	async getFrontlineServices(barangayUserId) {
+		const { data: services, error: servicesError } = await this.supabase
+			.from(this.tableName)
+			.select("*")
+			.eq("owner", barangayUserId); // <-- match with your schema
+
+		if (servicesError) {
+			console.error("Error fetching services of the Barangay:", servicesError);
+			throw servicesError;
+		}
+		return services;
+	}
+
+	async getAroundYouServices(citizensUserId) {
+		if (!Array.isArray(citizensUserId) || citizensUserId.length === 0)
+			return [];
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select()
+			.in("owner", citizensUserId);
+		if (error) {
+			console.error(error);
+			throw error;
+		}
 		return data;
 	}
 

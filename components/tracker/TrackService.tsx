@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import React, {useMemo, useState} from "react";
 import { RiMessage2Line, RiSearch2Line } from "react-icons/ri";
-import { Button } from "@/components/ui/button";
+import {MessageCircleMore as MessageIcon} from 'lucide-react'
+
 import {
 	Table,
 	TableHeader,
@@ -16,6 +17,14 @@ import { profiles } from "@/data/profiles";
 import { services } from "@/data/services";
 import RequestSheet from "../services/request/RequestSheet";
 import ServiceTag from "../services/ServiceTag";
+import TrackerSearchBar from "@/components/tracker/TrackerSearchBar";
+import {useRouter, useSearchParams} from "next/navigation";
+import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
+import ButtonClear from "@/components/ui/buttons/ButtonClear";
+import Image from "next/image";
+import TrackerTableView from "@/components/tracker/TrackerTableView";
+import {useMediaQuery} from "@/app/hooks/useMediaQuery";
+import TrackerListView from "@/components/tracker/TrackerListView";
 
 type Profile = {
 	id: string;
@@ -29,10 +38,14 @@ interface TrackServiceProps {
 }
 
 const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
+	const currentUser = "Bondy Might"; // Replace with auth logic later
+
+	const searchParams = useSearchParams();
+	const query = searchParams.get("q") || "";
+
 	const [statuses, setStatuses] = useState<string[]>(
 		profiles.map(() => "Pending")
 	);
-	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
 	const [activeClient, setActiveClient] = useState<Profile | null>(null);
 
@@ -47,7 +60,7 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 			};
 		})
 		.filter((profile) =>
-			profile.service.title.toLowerCase().includes(searchTerm.toLowerCase())
+			profile.service.title.toLowerCase().includes(query.toLowerCase())
 		)
 		.filter((profile) =>
 			statusFilter === "All" ? true : profile.status === statusFilter
@@ -76,100 +89,48 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 		setSelectedItems([]);
 	};
 
+	const isLargeScreen = useMediaQuery("(min-width: 768px)");
+
 	return (
-		<div className="flex flex-col gap-6 p-6 bg-white rounded-[10px]">
+		<div className="flex flex-col gap-8 p-4 sm:p-6 background-1 rounded-[10px]">
 			{/* Header */}
-			<div className="flex flex-wrap items-center justify-between gap-4">
-				<div className="flex items-center w-full sm:w-[350px] px-4 border border-gray-300 bg-white rounded-lg">
-					<RiSearch2Line className="text-gray-500 mr-2" />
-					<input
-						type="text"
-						placeholder="Search a service"
-						className="w-full focus:outline-none text-sm h-10"
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-					/>
+			<div className="flex items-center justify-between gap-12">
+
+				<div className="flex items-center grow max-w-[540px]">
+					<TrackerSearchBar/>
 				</div>
 
-				<div className="flex flex-wrap items-center gap-3">
-					<span className="text-sm">Selected: {selectedItems.length}</span>
-					<Button
-						variant="gray"
-						size="sm"
+				<div className="flex items-center gap-3 w-fit">
+					<div className="flex flex-col justify-end gap-1/2 pr-4 border-r border-secondary">
+						<span className="text-sm text-secondary text-end">Selected</span>
+						<span className="font-semibold text-end">{selectedItems.length} {selectedItems.length > 1 ? "items" : "item"}</span>
+					</div>
+					<ButtonSecondary
 						disabled={selectedItems.length === 0}
-						onClick={cancelSelected}
-					>
-						Cancel Services
-					</Button>
+						onClick={cancelSelected}>
+						Cancel {selectedItems.length > 1 ? "all" : ""}
+					</ButtonSecondary>
 				</div>
 			</div>
 
 			{/* Table */}
-			<div className="overflow-x-auto rounded-lg border border-gray-200">
-				<Table className="table-fixed w-full">
-					<TableHeader>
-						<TableRow className="bg-gray/30 border-none">
-							<TableHead className="w-[40px] px-4">
-								<input
-									type="checkbox"
-									checked={
-										selectedItems.length === filteredClients.length &&
-										filteredClients.length > 0
-									}
-									onChange={() =>
-										selectedItems.length === filteredClients.length
-											? setSelectedItems([])
-											: setSelectedItems(filteredClients.map((c) => c.index))
-									}
-								/>
-							</TableHead>
-							<TableHead className="w-[300px]">Service</TableHead>
-							<TableHead className="w-[150px]">Schedule</TableHead>
-							<TableHead className="w-[130px]">Payment</TableHead>
-							<TableHead className="w-[150px]">Message</TableHead>
-						</TableRow>
-					</TableHeader>
-
-					<TableBody>
-						{filteredClients.map((profile) => (
-							<TableRow
-								key={profile.index}
-								className="hover:bg-gray-50 border-gray-200"
-							>
-								<TableCell className="w-[40px] px-4">
-									<input
-										type="checkbox"
-										checked={selectedItems.includes(profile.index)}
-										onChange={() => toggleSelection(profile.index)}
-									/>
-								</TableCell>
-
-								<TableCell className="w-[300px]">
-									<ServiceTag
-										id={profile.service.id}
-										title={profile.service.title}
-										owner={profile.service.owner}
-										image={profile.service.image}
-									/>
-								</TableCell>
-
-								<TableCell className="w-[150px]">April 23, 2025</TableCell>
-								<TableCell className="w-[130px]">Pending</TableCell>
-
-								<TableCell className="w-[150px] flex gap-2 py-12">
-									<Button
-										variant="gray"
-										size="sm"
-										onClick={() => openRequestSheet(profile)}
-									>
-										<RiMessage2Line />
-									</Button>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</div>
+			{isLargeScreen ? (
+				<TrackerTableView
+					filteredClients={filteredClients}
+					selectedItems={selectedItems}
+					setSelectedItems={setSelectedItems}
+					toggleSelection={toggleSelection}
+					openRequestSheet={openRequestSheet}
+				/>
+			) : (
+				<TrackerListView
+					filteredClients={filteredClients}
+					selectedItems={selectedItems}
+					setSelectedItems={setSelectedItems}
+					toggleSelection={toggleSelection}
+					openRequestSheet={openRequestSheet}
+				/>
+			)}
 
 			{activeClient && (
 				<>

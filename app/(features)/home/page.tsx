@@ -1,13 +1,17 @@
 "use client";
 import Post from "@/components/home/post/Post";
-import Search from "@/components/home/search/Search";
-import { useState } from "react";
+import Services from "@/components/home/services/Services";
+import {useEffect, useState} from "react";
 import ContactList from "@/components/home/contact_list/ContactList";
 import OfficialsList from "@/components/home/official_list/OfficialsList";
 import BarangayProfileTab from "@/components/profile/BarangayProfileTab";
+import {useRouter, useSearchParams} from "next/navigation";
+
+import { useUser } from "@/app/context/UserContext";
+import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
 
 const TAB_COMPONENTS = {
-	Services: <Search />,
+	Services: <Services />,
 	Posts: <Post />,
 	Officials: <OfficialsList />,
 	Contact: <ContactList />,
@@ -21,34 +25,21 @@ const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
 };
 
 const Home = () => {
-	const [activeTab, setActiveTab] =
-		useState<keyof typeof TAB_COMPONENTS>("Services");
+	const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>("Services");
 
 	return (
-		<div className="flex flex-col w-full">
-			<div className="relative flex flex-col w-full min-h-screen ">
-				<BarangayProfileTab />
-				<nav className="flex bg-white gap-4 pl-8  mb-4 border-b border-gray-100 sm:rounded-b-[20px]">
-					{Object.keys(TAB_COMPONENTS).map((tab) => (
-						<button
-							key={tab}
-							onClick={() => setActiveTab(tab as keyof typeof TAB_COMPONENTS)}
-							className={`text-sm px-4 py-3 border-b-2 transition-colors ${
-								activeTab === tab
-									? "border-secondary text-secondary"
-									: "border-transparent text-gray-600 hover:text-secondary"
-							}`}
-						>
-							{TAB_LABELS[tab as keyof typeof TAB_LABELS]}
-						</button>
-					))}
-				</nav>
-
-				{/* Main content area */}
-				<div className="flex-1 justify-center overflow-y-auto items-center ">
-					{TAB_COMPONENTS[activeTab]}
-				</div>
+		<div className="flex flex-col w-full max-w-[1280px] mx-auto gap-8 swiper-coverflow">
+			<div className="flex flex-col w-full gap-8 px-4">
+				<BarangayProfileTab/>
+				<TabSwitcher tabComponents={TAB_COMPONENTS}
+										 tabLabels={TAB_LABELS}
+										 defaultTab={"Services"}
+										 className="flex w-full rounded-3xl px-8 md:px-10 pt-4 lg:pt-4 max-sm:justify-between gap-2 sm:gap-6 lg:gap-10 items-center background-1 border-light-color border"
+										 activeTab={activeTab}
+										 setActiveTab={setActiveTab}
+				/>
 			</div>
+			{TAB_COMPONENTS[activeTab]}
 		</div>
 	);
 };

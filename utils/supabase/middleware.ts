@@ -45,6 +45,7 @@ export async function updateSession(request: NextRequest) {
 	const publicPaths = [
 		"/",              // root
 		"/login",         // login page
+		"/petition",      // petition page
 	];
 	const isPublicPath = publicPaths.includes(request.nextUrl.pathname) ||
 	 	request.nextUrl.pathname.startsWith("/api") ||

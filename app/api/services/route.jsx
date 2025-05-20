@@ -38,6 +38,7 @@ export async function POST(request) {
 }
 
 export async function GET() {
+	// Getting all the services
 	const supabase = await createClient();
 	const serviceService = new ServiceService(supabase);
 

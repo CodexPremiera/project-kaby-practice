@@ -9,9 +9,16 @@ class CitizenService {
 
 	async createCitizenProfile(citizenDetails) {
 		// TODO: verify barangay exist
-		const { email, first_name, last_name, barangay, user_id } = citizenDetails;
+		const { first_name, last_name, barangay, user_id, barangay_id } =
+			citizenDetails;
 
-		const { data, error } = await this.repo.create(citizenDetails);
+		const { data, error } = await this.repo.create({
+			first_name,
+			last_name,
+			barangay,
+			user_id,
+			barangay_id,
+		});
 		if (error) {
 			console.log(error);
 			return { error: "Failed to create citizen profile" };
@@ -25,12 +32,30 @@ class CitizenService {
 		const data = await this.repo.getById(id);
 		return data;
 	}
+	async getCitBarangayId(id) {
+		const data = await this.repo.getFieldByFKId(id, ["barangay_id"]);
+		return data;
+	}
+	async getCitBarangayIdOnly(id) {
+		const data = await this.repo.getFieldByFKId(id, ["barangay_id"]);
+		return data.barangay_id;
+	}
 	async getCitByAuthenticatedId(id) {
 		const data = await this.repo.getByAuthenticatedId(id);
 		return data;
 	}
 	async getCitizenIdUsingRole(id) {
 		const data = await this.repo.getIdUsingRole(id);
+		return data;
+	}
+	async updateCitizenProfile(id, selectedFields = {}) {
+		// console.log("this is selected fields", selectedFields, "this is id", id);
+		const data = await this.repo.update(id, selectedFields);
+
+		return data;
+	}
+	async getAllCitizenProfiles(id) {
+		const data = await this.repo.getAllCitizenProfiles(id);
 		return data;
 	}
 }

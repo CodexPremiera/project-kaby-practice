@@ -50,11 +50,21 @@ export async function POST(request) {
 		});
 		console.log("this is userData", userData);
 
+		// Create barangay profile (note: now passing user_id)
 		const brgyDetails = await barangayService.createBarangayProfile({
-			barangayName,
-			address,
+			address: `${barangay}, ${city}, ${region}`,
+			badge_stock: 1000,
+			barangayName: barangayName,
+			user_id: data.user.id,
 		});
-		console.log("this is brgyDetails", brgyDetails);
+
+		if (!brgyDetails) {
+			return NextResponse.json(
+				{ error: "Failed to create Barangay profile." },
+				{ status: 500 }
+			);
+		}
+
 		return NextResponse.json({ redirectTo: "/barangay_desk" });
 	} catch (err) {
 		// console.log(err);

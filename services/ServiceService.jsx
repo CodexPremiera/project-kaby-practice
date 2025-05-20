@@ -8,6 +8,21 @@ class ServiceService {
 		const services = await this.repo.getAll();
 		return services;
 	}
+
+	async getById(serviceId) {
+		const { data, error } = await this.supabase
+			.from("services")
+			.select("*")
+			.eq("id", serviceId)
+			.single();
+
+		if (error) {
+			console.error("Error fetching service:", error);
+			return null;
+		}
+
+		return data; // Return the service data if found
+	}
 	// async makeService(serviceData){
 	//     // TODO: add logic
 	//     const id = await new AuthenticationService().loggedInUserId();
@@ -22,6 +37,28 @@ class ServiceService {
 	// }
 	async createService(serviceData) {
 		const data = await this.repo.create(serviceData);
+		return data;
+	}
+	async getFrontlineServices(barangayUserId) {
+		const data = await this.repo.getFrontlineServices(barangayUserId);
+		return data;
+	}
+
+	async getAroundYouServices(citizensUserIds) {
+		const userIds = citizensUserIds.map((c) => c.user_id);
+		return await this.repo.getAroundYouServices(userIds);
+	}
+
+	async getServicesByOwners(ownerIds) {
+		const { data, error } = await this.supabase
+			.from("Services")
+			.select("*")
+			.in("owner", ownerIds);
+
+		if (error) {
+			console.error("Error fetching services:", error);
+			return [];
+		}
 		return data;
 	}
 }

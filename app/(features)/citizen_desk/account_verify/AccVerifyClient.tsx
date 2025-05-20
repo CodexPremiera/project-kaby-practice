@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,18 +17,77 @@ import {
 	TableHead,
 	TableCell,
 } from "@/components/ui/table";
-import { profiles } from "@/data/profiles";
+
 import { format } from "date-fns";
+import { useBarangayContext } from "@/app/context/BarangayContext";
+import { createClient } from "@/utils/supabase/client";
+import TemporaryAccountService from "@/services/TemporaryAccountService";
+
+interface Profile {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  barangay: string;
+  created_at: string;
+  status: string;
+  [key: string]: any;
+}
 
 export default function AccVerifyClient(){
+    
     // ==============
+    const {barangayName,barangayAddress} = useBarangayContext();
+    console.log("this is brf=gy name:" , barangayName);
+     const [profiles, setProfiles] = useState<Profile[]>([]);
+      useEffect(() => {
+        if (!barangayName) return;
+        const fetchData = async () => {
+          const supabase = createClient();
+          const tempService = new TemporaryAccountService(supabase);
+          const result: Profile[] = await tempService.getAllByBarangay(barangayName);
+          const pendingPro = result.filter((result) => result.status === "Pending");
+          console.log("pending pro", pendingPro);
 
+          console.log(result, "this result");
+          setProfiles(pendingPro);
+        
+          
+        };
+
+        fetchData();
+      }, [barangayName]);
+      
+      const handleSubmit = async (index: number) => {
+      const profileId = profiles[index].id;
+      const updatedStatus = statuses[index];
+
+      const email = profiles[index].email;
+      console.log("Emailzzz: ", email)
+      console.log("Appointment id: ", profileId ," and new status: ", updatedStatus)
+
+      try {
+        const res = await fetch("/api/features/citizen_desk", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: profileId, status: updatedStatus }),
+        });
+        if(!res.ok){
+          throw new Error("Failed to update appointment status")
+        }
+
+
+
+      } catch (err) {
+        console.error("error ", err);
+      }
+    };
     const [statuses, setStatuses] = useState<string[]>(
             profiles.map(() => "Pending")
         );
-        const [dates] = useState<Date[]>(profiles.map(() => new Date()));
         const [searchTerm, setSearchTerm] = useState("");
         const [selectedItems, setSelectedItems] = useState<number[]>([]);
+
     
         const handleStatusChange = (index: number, newStatus: string) => {
             const updatedStatuses = [...statuses];
@@ -45,7 +104,9 @@ export default function AccVerifyClient(){
         const filteredClients = profiles
             .map((profile, index) => ({ ...profile, index }))
             .filter((profile) =>
-                profile.name.toLowerCase().includes(searchTerm.toLowerCase())
+              `${profile.first_name} ${profile.last_name}`
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
             );
     
         return (
@@ -144,14 +205,16 @@ export default function AccVerifyClient(){
                                         />
                                     </TableCell>
                                     <TableCell className="w-[180px] cursor-pointer">
-                                        {profile.name}
+                                        {profile.first_name} {profile.last_name}
                                     </TableCell>
-                                    <TableCell className="w-[230px]">{profile.address}</TableCell>
+                                    <TableCell className="w-[230px]">{profile.barangay}</TableCell>
                                     <TableCell className="w-[150px]">
-                                        {format(dates[profile.index], "MMMM dd, yyyy")}
+                                        {/* {format(dates[profile.index], "MMMM dd, yyyy")} */}
+                                        {format(new Date(profile.created_at), "MMMM dd, yyyy")}
                                     </TableCell>
                                     <TableCell className="w-[130px]">
                                         <select
+                                            // value={profile.status}
                                             value={statuses[profile.index]}
                                             onChange={(e) =>
                                                 handleStatusChange(profile.index, e.target.value)
@@ -164,7 +227,7 @@ export default function AccVerifyClient(){
                                         </select>
                                     </TableCell>
                                     <TableCell className="w-[110px] flex gap-2 py-12">
-                                        <Button variant="default" size="sm">
+                                        <Button variant="default" size="sm" onClick={() => handleSubmit(profile.index)}>
                                             Submit
                                         </Button>
                                     </TableCell>

@@ -15,7 +15,7 @@ const SearchModal = () => {
 								<input
 									type="text"
 									name=""
-									placeholder="Search for services"
+									placeholder="Services for services"
 									required
 									className="w-full bg-transparent focus:outline-none focus:ring-0"
 								/>

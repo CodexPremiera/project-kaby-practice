@@ -23,7 +23,7 @@ function TextField({
     <div className="flex flex-col w-full gap-1">
       <span className="text-sm">{field_name}</span>
       <div
-        className={`flex items-center gap-2.5 py-3 px-3 rounded-xl border-2 border-primary w-full transition duration-200`}
+        className={`flex items-center gap-2.5 py-3 px-3 rounded-xl border border-secondary w-full transition duration-200`}
       >
         <input
           type="text"

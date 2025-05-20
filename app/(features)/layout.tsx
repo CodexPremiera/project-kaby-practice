@@ -23,7 +23,14 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	console.log("Logged in user id: ", user_id);
 	const role = await userService.getUserRole(user_id);
 
-
+  const { data:womp, error:wompwomp } = await supabase
+    .from('worker_roles_view')  // <- use your view name here
+    .select('*')                // or specify columns like 'FirstName, LastName, AccessRole'
+	if (wompwomp){
+		console.log(wompwomp);
+	}else{
+		console.log("womp",womp);
+	}
 
 	console.log("User role: ", role);
 
@@ -38,7 +45,9 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	} else if (role === "barangay") {
 		const barangayService = new BarangayService(supabase);
 		const barangay = await barangayService.getBarangayFieldsByFKId(user_id);
+		console.log("Barangayzz: ", barangay);
 		barangayData = {
+			barangayId: barangay.id,
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
 		}
@@ -52,6 +61,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		const brgyId = await citizenService.getCitBarangayId(user_id);
 		const barangay = await barangayService.getBarangayFieldsById(brgyId.barangay_id);
 		barangayData = {
+			barangayId: barangay.id,
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
 			// barangayName: "test",

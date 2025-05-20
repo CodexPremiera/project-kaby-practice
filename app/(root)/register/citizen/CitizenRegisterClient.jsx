@@ -91,7 +91,7 @@ export default function CitizenRegisterClientForm() {
 			{modalType === "success" && (
 				<SuccessModal
 					title="Success"
-					content="Account Registered"
+					content="Please wait for your confirmation emaill"
 					onClose={handleCloseModal}
 				/>
 			)}

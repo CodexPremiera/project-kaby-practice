@@ -37,7 +37,7 @@ interface Profile {
 export default function AccVerifyClient(){
     
     // ==============
-    const {barangayName,barangayAddress} = useBarangayContext();
+    const {barangayName} = useBarangayContext();
     console.log("this is brf=gy name:" , barangayName);
      const [profiles, setProfiles] = useState<Profile[]>([]);
       useEffect(() => {

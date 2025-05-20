@@ -12,20 +12,68 @@ import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import EditProfile from "@/components/settings/barangay/edit_profile";
 import AccessControl from "@/components/settings/barangay/access_control";
 
+type BarangaySettingsProps = {
+  citizens: {
+      id: string;
+      first_name: string;
+      last_name: string;
+      middle_name?: string;
+      barangay_id: string;
+      is_worker: boolean;
+  }[];
+  workers: {
+    id:string;
+    citizen_id: string;
+    position: string;
+  }[];
+  accessRoles: {
+    id: string;
+    worker_id: string;
+    access_role: string;
+    date_added: string;
+  }[];
+  managers :{
+    citizen_id : string;
+    last_name : string;
+    first_name : string;
+    middle_name : string;
+    barangay_id : string;
+    barangay_address : string;
+    position : string;
+    access_role : string;
+    date_added :string;
+    date_ended:string;
+  }[];
+  non_managers:{
+    citizen_id: string;
+    first_name: string;
+    last_name: string;
+    middle_name?: string;
+    position: string;
+    barangay_id : string;
+    barangay_address:string;
+  	worker_id : string;
 
-const TAB_COMPONENTS = {
-  Profile: <EditProfile />,
-  Security: <PasswordAndSecurity />,
-  Access: <AccessControl />,
+  }[];
+
 };
 
-const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
-  Profile: "Edit profile",
-  Security: "Password and security",
-  Access: "Access control",
-};
 
-function BarangaySettings(props) {
+
+
+
+function BarangaySettings({citizens,workers,accessRoles,managers,non_managers}: BarangaySettingsProps) {
+  
+  const TAB_COMPONENTS = {
+    Profile: <EditProfile />,
+    Security: <PasswordAndSecurity />,
+    Access: <AccessControl citizens={citizens} workers={workers} accessRoles={accessRoles} managers={managers} non_managers={non_managers} />,
+  };
+  const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
+    Profile: "Edit profile",
+    Security: "Password and security",
+    Access: "Access control",
+  };
   const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>("Profile");
   const [showMobileSwitcher, setShowMobileSwitcher] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");

@@ -170,7 +170,8 @@
 		@apply bg-accent-1 dark:bg-accent-1-dark;
 		@apply hover:bg-accent-2 dark:hover:bg-accent-2-dark;
 		@apply active:bg-accent-1 dark:active:bg-accent-1-dark;
-		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-semibold shrink-0 flex;
+		@apply text-primary-1 dark:text-primary-1-dark;
+		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-medium shrink-0 flex;
 	}
 
 	.button-secondary {

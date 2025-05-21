@@ -2,7 +2,7 @@
 
 export interface Official {
   name: string;
-  email: string;
+  // email: string;
   position: string;
   startTerm: string;
   endTerm: string;
@@ -12,7 +12,7 @@ export interface Official {
 export const officials: Official[] = [
   {
     name: "Derrick Yap",
-    email: "derrick.yap@email.com",
+    // email: "derrick.yap@email.com",
     position: "Punong Barangay",
     startTerm: "Jul 2023",
     endTerm: "Sep 2028",
@@ -20,7 +20,7 @@ export const officials: Official[] = [
   },
   {
     name: "Marie Cruz",
-    email: "marie.cruz@email.com",
+    // email: "marie.cruz@email.com",
     position: "Kagawad",
     startTerm: "Jul 2023",
     endTerm: "Sep 2028",

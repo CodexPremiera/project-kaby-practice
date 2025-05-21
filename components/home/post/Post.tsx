@@ -37,7 +37,7 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 	const [loading, setLoading] = useState(true);
 
 	const SUPABASE_URL =
-		"https://jevvtrbqagijbkdjoveh.supabase.co/storage/v1/object/public";
+		`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public`;
 
 	useEffect(() => {
 		const fetchPosts = async () => {

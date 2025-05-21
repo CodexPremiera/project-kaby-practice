@@ -46,7 +46,7 @@ const Home = () => {
 				<div>Loading posts...</div>
 			),
 		Officials: <OfficialsList />,
-		Contact: <ContactList />,
+		Contact: <ContactList/>,
 	});
 
 	return (

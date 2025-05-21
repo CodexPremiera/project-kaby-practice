@@ -1,7 +1,12 @@
 import React from "react";
-import PostComposer from "./PostComposer";
+import PostComposer from "./PostComposerForm";
 import PostCard from "./PostCard";
 import SwitchTab from "@/components/ui/tabs/SwitchTab";
+
+type UserProps = {
+	userId: string;
+	userRole: string;
+};
 
 const postsData = [
 	{
@@ -28,10 +33,10 @@ const featuredCitizensData = [
 ];
 
 const FeaturedCitizenCard = ({
-															 name,
-															 email,
-															 avatar,
-														 }: {
+	name,
+	email,
+	avatar,
+}: {
 	name: string;
 	email: string;
 	avatar: string;
@@ -39,13 +44,17 @@ const FeaturedCitizenCard = ({
 	<div className="flex items-start gap-3 w-full">
 		<img src={avatar} alt="user profile" className="w-9 rounded-full" />
 		<div className="flex flex-col justify-center items-start">
-			<span className="text-primary font-medium max-w-[13rem] truncate overflow-hidden whitespace-nowrap">{name}</span>
-			<span className="text-secondary text-xs max-w-[13rem] truncate overflow-hidden whitespace-nowrap">{email}</span>
+			<span className="text-primary font-medium max-w-[13rem] truncate overflow-hidden whitespace-nowrap">
+				{name}
+			</span>
+			<span className="text-secondary text-xs max-w-[13rem] truncate overflow-hidden whitespace-nowrap">
+				{email}
+			</span>
 		</div>
 	</div>
 );
 
-const Post = () => {
+const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 	return (
 		<div className="flex w-full justify-between px-6 gap-6">
 			{/* Left Tabs */}
@@ -60,7 +69,7 @@ const Post = () => {
 
 			{/* Center Feed */}
 			<div className="mx-auto md:max-w-[480px] lg:max-w-[600px] min-h-screen flex flex-col pb-20 items-center gap-1 sm:gap-4">
-				<PostComposer />
+				{userRole === "barangay" && <PostComposer />}
 				<div className="flex flex-col gap-4 sm:gap-6 py-4 justify-center">
 					{postsData.map((post, index) => (
 						<PostCard key={index} {...post} />

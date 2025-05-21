@@ -30,3 +30,27 @@ export async function POST(request) {
 
 	return NextResponse.json(data);
 }
+
+export async function GET() {
+	// Getting all the posts
+	const supabase = await createClient();
+	const postService = new PostService(supabase);
+
+	const {
+		data: { user },
+		error: userError,
+	} = await supabase.auth.getUser();
+
+	if (userError || !user) {
+		return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+	}
+	try {
+		const posts = await postService.getAllPosts(user.id);
+		return NextResponse.json(posts);
+	} catch (err) {
+		console.error("Error fetching posts:", err);
+		return new Response(JSON.stringify({ error: "Failed to fetch posts" }), {
+			status: 500,
+		});
+	}
+}

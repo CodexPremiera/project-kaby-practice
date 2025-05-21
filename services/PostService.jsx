@@ -4,8 +4,8 @@ class PostService {
 	constructor(supabase) {
 		this.repo = new PostRepo(supabase);
 	}
-	async getAllPosts(barangay_id) {
-		const data = await this.repo.getAll(barangay_id);
+	async getAllPosts(id) {
+		const data = await this.repo.getAll(id);
 		return data;
 	}
 

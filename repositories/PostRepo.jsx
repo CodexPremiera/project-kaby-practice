@@ -5,11 +5,11 @@ class PostRepo extends BaseRepo {
 		super("Post", supabase);
 		this.supabase = supabase;
 	}
-	async getAll(barangay_id) {
+	async getAll(id) {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select("*")
-			.eq("barangayID", barangay_id);
+			.eq("owner", id);
 
 		if (error) throw error;
 		return data;

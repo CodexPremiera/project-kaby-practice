@@ -19,7 +19,7 @@ interface CustomRowProps {
 }
 
 const ManagerRow: React.FC<CustomRowProps> = ({
-                                                photo  = `https://placehold.co/34x34`,
+                                                photo  = `uploads/depg`,
                                                 name = 'Firstname M. Lastname',
                                                 position = 'Barangay Position',
                                                 role = 'Account Role',
@@ -33,7 +33,7 @@ const ManagerRow: React.FC<CustomRowProps> = ({
       <div className="flex gap-2 w-[240px]">
         <Link href={`#`}>
           <Image
-            src={photo}
+            src={getPublicImageUrl(photo)}
             alt={"photo of account manager"}
             width={34}
             height={34}
@@ -62,5 +62,10 @@ const ManagerRow: React.FC<CustomRowProps> = ({
     </div>
   );
 }
+const getPublicImageUrl = (path: string | null | undefined) => {
+  if (!path) return "/default-avatar.png"; 
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-pictures/${path}`;
+
+};
 
 export default ManagerRow;

@@ -13,6 +13,7 @@ import { createClient } from "@/utils/supabase/server";
 // import { UserContext } from "@/app/context/UserContext";
 // import { BarangayContext } from "@/app/context/BarangayContext";
 import BarangayProvider from "@/app/context/BarangayProvider";
+import CitizenProvider from "@/app/context/CitizenProvider";
 import {MainBarProvider} from "@/app/context/MainBarProvider";
 import UserProvider from "@/app/context/UserProvider";
 const GeneralLayout = async ({ children }: { children: ReactNode }) => {
@@ -32,7 +33,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	let Mainbar = null;
 
 	let barangayData = null;
-
+	let citizenData = null;
 	if (role === "admin") {
 		Header = <AdminHeader />;
 		Mainbar = <AdminMainbar />;
@@ -65,6 +66,17 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 			// barangayName: "test",
 			// barangayAddress: "test2",
 		}
+		console.log("womppp womppp",barangayData);
+		const citizen = await citizenService.getCitByAuthenticatedId(user_id);
+		console.log("womppp womppp  womppp");
+		citizenData = {
+			citizenId: citizen.id,
+			firstName: citizen.first_name,
+			lastName: citizen.last_name,
+			middleName: citizen.middle_name,
+			citizenAddress: citizen.address,
+			citizenProfilePic: citizen.profile_pic,
+		};
 		console.log("Barangay data: ", barangayData);
 
 		Header = <CitizenHeader />;
@@ -93,12 +105,17 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 				)
 				: role === "citizen" ? (
 					
-						<BarangayProvider value={barangayData}>
-							{/* <MainBarProvider barangayId={barangayData.barangayId}>
-								<LayoutWrapper>{children}</LayoutWrapper>
-							</MainBarProvider> */}
+						// <CitizenProvider value={barangayData}>
+						// 	{/* <MainBarProvider barangayId={barangayData.barangayId}>
+						// 		<LayoutWrapper>{children}</LayoutWrapper>
+						// 	</MainBarProvider> */}
+						// 	<LayoutWrapper>{children}</LayoutWrapper>
+						// </CitizenProvider>
+						  <CitizenProvider value={citizenData}>
+							<BarangayProvider value={barangayData}>
 							<LayoutWrapper>{children}</LayoutWrapper>
-						</BarangayProvider>
+							</BarangayProvider>
+						</CitizenProvider>
 			)
 			 : (
 			<LayoutWrapper>{children}</LayoutWrapper>

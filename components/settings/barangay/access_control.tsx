@@ -43,6 +43,7 @@ type AccessControlProps = {
     access_role : string;
     date_added :string;
     date_ended:string;
+    profile_pic:string;
   }[];
   non_managers:{
     citizen_id: string;

@@ -57,6 +57,22 @@
 		font-family: var(--font-work-sans);
 		@apply text-xl lg:text-5xl xl:text-6xl font-bold;
 	}
+
+	:root {
+		--chart-1: 12 76% 61%;
+		--chart-2: 173 58% 39%;
+		--chart-3: 197 37% 24%;
+		--chart-4: 43 74% 66%;
+		--chart-5: 27 87% 67%;
+	}
+
+	.dark {
+		--chart-1: 220 70% 50%;
+		--chart-2: 160 60% 45%;
+		--chart-3: 30 80% 55%;
+		--chart-4: 280 65% 60%;
+		--chart-5: 340 75% 55%;
+	}
 }
 
 @layer utilities {
@@ -170,7 +186,8 @@
 		@apply bg-accent-1 dark:bg-accent-1-dark;
 		@apply hover:bg-accent-2 dark:hover:bg-accent-2-dark;
 		@apply active:bg-accent-1 dark:active:bg-accent-1-dark;
-		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-semibold shrink-0 flex;
+		@apply text-primary-1 dark:text-primary-1-dark;
+		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-medium shrink-0 flex;
 	}
 
 	.button-secondary {
@@ -209,6 +226,11 @@
 		@apply bg-primary-1 dark:bg-primary-1-dark;
 		@apply border-primary-3 dark:border-primary-3-dark;
 	}
+}
+
+.population-pyramid {
+	display: grid;
+	grid-template-columns: 1fr 40px 1fr;
 }
 
 /* Hide track background and slim the scrollbar */

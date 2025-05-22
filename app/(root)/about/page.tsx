@@ -27,21 +27,21 @@ const About = () => {
 				</div>
 			</div>
 			<div className="pt-16 xl:pt-22" id="about">
-				<div className="text-center max-w-[80%] mx-auto mb-10 sm:mb-16 xl:mb-20 card-shadow-custom py-10">
+				<div className="text-center max-w-[80%] mx-auto mb-10 sm:mb-16 xl:mb-20 rounded-[20px] py-10">
 					<Pretitle text="About Kaby" center />
 					<p className="mb-4 max-w-[560px] mx-auto py-6">
 						Kaby bridges the gap between barangays and citizens, making public
 						services more efficient, transparent, and accessible for all.
 					</p>
 				</div>
-				<div className="text-center max-w-[80%] mx-auto mb-10 sm:mb-16 xl:mb-20 card-shadow-custom py-10">
+				<div className="text-center max-w-[80%] mx-auto mb-10 sm:mb-16 xl:mb-20 rounded-[20px] py-10">
 					<Pretitle text="Our Mission" center />
 					<p className="mb-4 max-w-[560px] mx-auto py-6">
 						Kaby bridges the gap between barangays and citizens, making public
 						services more efficient, transparent, and accessible for all.
 					</p>
 				</div>
-				<div className="text-center max-w-[80%] mx-auto mb-10 sm:mb-16 xl:mb-20 card-shadow-custom py-10">
+				<div className="text-center max-w-[80%] mx-auto mb-10 sm:mb-16 xl:mb-20 rounded-[20px] py-10">
 					<Pretitle text="Our Vision" center />
 					<p className="mb-4 max-w-[560px] mx-auto py-6">
 						Kaby bridges the gap between barangays and citizens, making public

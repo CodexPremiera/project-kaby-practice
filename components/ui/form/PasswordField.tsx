@@ -13,7 +13,7 @@ function PasswordField() {
     <div className="flex w-full gap-3 items-center">
       <div className="flex flex-col w-full gap-4">
         <div
-          className={`flex items-center gap-2.5 py-3 px-3 rounded-xl border-2 border-primary ${isEditable ? "" : "background-1"} w-full transition duration-200`}>
+          className={`flex items-center gap-2.5 py-3 px-3 rounded-xl border border-secondary ${isEditable ? "" : "background-1"} w-full transition duration-200`}>
           <input
             type={showPassword ? "text" : "password"}
             className="w-full outline-none leading-[12px] disabled:cursor-default text-secondary"

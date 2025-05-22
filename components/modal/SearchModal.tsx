@@ -4,7 +4,7 @@ import { RiSearch2Line } from "react-icons/ri";
 const SearchModal = () => {
 	return (
 		<div className="fixed z-30 inset-0 bg-black/80 overflow-y-auto h-full w-full flex items-center justify-center">
-			<div className="p-8 w-lg rounded-md card-shadow-custom bg-white">
+			<div className="p-8 w-lg rounded-[20px] bg-white">
 				<div className="text-center">
 					<div className="mt-2 py-3">
 						<form className="flex flex-col flex-grow">
@@ -15,7 +15,7 @@ const SearchModal = () => {
 								<input
 									type="text"
 									name=""
-									placeholder="Search for services"
+									placeholder="Services for services"
 									required
 									className="w-full bg-transparent focus:outline-none focus:ring-0"
 								/>

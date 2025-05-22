@@ -10,7 +10,7 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				default:
-					"bg-white border-gray-200 text-primary-foreground hover:bg-gray-200 hover:text-black",
+					"bg-gray-100 border-gray-200 text-primary-foreground hover:bg-gray-200 hover:text-black",
 				gray: "bg-gray-100 text-black rounded-[10px] hover:bg-gray-300 hover:text-black",
 				destructive:
 					"bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
@@ -46,6 +46,7 @@ function Button({
 		asChild?: boolean;
 	}) {
 	const Comp = asChild ? Slot : "button";
+	className = `button-secondary ${className}`;
 
 	return (
 		<Comp

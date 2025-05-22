@@ -1,8 +1,8 @@
 import BarangayAppointmentRepo from "../repositories/BarangayAppointmentRepo";
 
 class BarangayAppointmentService {
-    constructor(){
-        this.repo = new BarangayAppointmentRepo();
+    constructor(supabase){
+        this.repo = new BarangayAppointmentRepo(supabase);
     }
     async getAllAppointments(){
         const apps = await this.repo.getAll();
@@ -15,8 +15,10 @@ class BarangayAppointmentService {
         return app;
     }
     async createAppointment(appDetails){
-        const {data,error} = await this.repo.create(appDetails);
-        return {data,error};
+        const data = await this.repo.create(appDetails);
+        console.log("this is data",data);
+        
+        return data;
     }
     async updateAppointment(body) {
         console.log("this is boday",body)

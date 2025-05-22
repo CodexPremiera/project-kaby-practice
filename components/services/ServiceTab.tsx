@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "../ui/button";
 import type { Service } from "@/data/services";
 import { RiEditBoxLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
 

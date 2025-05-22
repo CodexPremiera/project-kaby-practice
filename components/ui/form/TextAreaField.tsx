@@ -24,7 +24,7 @@ function TextAreaField({
     <div className="flex flex-col w-full gap-1">
       <span className="text-sm">{field_name}</span>
       <div
-        className={`flex items-center py-3 px-3 rounded-xl border-2 border-primary ${
+        className={`flex items-center py-3 px-3 rounded-xl border-1 border-secondary ${
           hasChanged ? "text-[#111111]" : "text-[#a1a1a1]"
         } w-full transition duration-200`}
       >

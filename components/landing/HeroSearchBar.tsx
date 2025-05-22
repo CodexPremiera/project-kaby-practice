@@ -20,7 +20,7 @@ export default function HeroSearchBar() {
     >
       <input
         type="text"
-        placeholder="Search a service"
+        placeholder="Services a service"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}

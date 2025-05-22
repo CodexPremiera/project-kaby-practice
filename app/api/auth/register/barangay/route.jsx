@@ -1,20 +1,21 @@
-import { createClient } from '@supabase/supabase-js';
-import { Resend } from 'resend';
-import BarangayAppointmentRepo from '../../../../../repositories/BarangayAppointmentRepo';
 import { NextResponse } from 'next/server';
-// import BarangangaySer
-import BarangayAppointmentService from '../../../../../repositories/BarangayAppointmentService';
+// import BarangayAppointmentService from '../../../services/BarangayAppointmentService';
+import { createClient } from '@/utils/supabase/server'
+
+import BarangayAppointmentService from '@/services/BarangayAppointmentService';
 
 // const resend = new Resend(process.env.RESEND_API_KEY);
 
 // const brgyAppointmentRepo = new BarangayAppointmentRepo();
-const brgyAppService = new BarangayAppointmentService();
 export async function POST(req) {
   try {
+    const supabase = await createClient();
+    const brgyAppService = new BarangayAppointmentService(supabase);
 
     const body = await req.json();
-    const {data,error} = await brgyAppService.createAppointment(body);
-
+    const data = await brgyAppService.createAppointment(body);
+    // console.log("this is data",data);
+    
     return NextResponse.json(data);
 
   } catch (err) {

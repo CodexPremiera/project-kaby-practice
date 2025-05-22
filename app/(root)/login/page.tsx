@@ -12,37 +12,8 @@ const LoginForm = () => {
 	const searchParams = useSearchParams();
 	const status = searchParams.get("status");
 
-	const [modalType, setModalType] = useState<"success" | "error" | null>(null);
-
-	useEffect(() => {
-		if (status === "success") {
-			setModalType("success");
-		} else if (status === "failed") {
-			setModalType("error");
-		}
-	}, [status]);
-
-	const handleCloseModal = () => {
-		setModalType(null);
-	};
-
 	return (
 		<section>
-			{modalType === "success" && (
-				<SuccessModal
-					title="Success"
-					content="You have logged in successfully!"
-					onClose={handleCloseModal}
-				/>
-			)}
-			{modalType === "error" && (
-				<ErrorModal
-					title="Error"
-					content="Login failed. Please check your credentials."
-					onClose={handleCloseModal}
-				/>
-			)}
-
 			<div className="flex flex-wrap xl:flex-nowrap">
 				<div className="relative w-full xl:w-1/2 h-[100vh] bg-hero bg-no-repeat bg-cover bg-center">
 					<div className="absolute inset-0 bg-gradient-to-l from-black/0 via-black/50 to-black/70 z-10" />
@@ -50,7 +21,7 @@ const LoginForm = () => {
 						<Logo />
 					</div>
 					<div className="absolute z-10 container h-full flex items-end justify-end pb-20">
-						<div className="card-shadow-custom bg-primary py-3 px-3 w-full mx-8">
+						<div className="rounded-[20px] bg-primary py-3 px-3 w-full mx-8">
 							<p className="text-black mx-3 font-semibold">
 								Ready to lead change in your barangay?
 							</p>
@@ -68,7 +39,7 @@ const LoginForm = () => {
 				</div>
 
 				<div className="w-full xl:w-1/2 flex justify-center items-center">
-					<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
+					<div className="h-auto w-[420px] py-8 px-8 bg-primary rounded-[20px]">
 						<p className="text-lg font-semibold text-center">Login</p>
 						<LoginClientForm />
 						{/* <form className="w-full mt-6">

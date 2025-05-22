@@ -5,21 +5,108 @@ import AdminMainbar from "@/components/mainbar/AdminMainbar";
 import BarangayMainbar from "@/components/mainbar/BarangayMainbar";
 import CitizenMainbar from "@/components/mainbar/CitizenMainbar";
 import { ReactNode } from "react";
+import AuthenticationService from "@/services/AuthenticationService";
+import UserService from "@/services/UserService";
+import CitizenService from "@/services/CitizenService";
+import BarangayService from "@/services/BarangayService";
+import { createClient } from "@/utils/supabase/server";
+// import { UserContext } from "@/app/context/UserContext";
+// import { BarangayContext } from "@/app/context/BarangayContext";
+import BarangayProvider from "@/app/context/BarangayProvider";
+import {MainBarProvider} from "@/app/context/MainBarProvider";
+import UserProvider from "@/app/context/UserProvider";
+const GeneralLayout = async ({ children }: { children: ReactNode }) => {
+	const supabase = await createClient();
+	const authService = new AuthenticationService(supabase);
+	const userService = new UserService(supabase);
 
-const GeneralLayout = ({ children }: { children: ReactNode }) => {
-	return (
-		<div className="flex flex-col w-screen h-screen overflow-hidden">
-			<BarangayHeader />
+	const user_id = await authService.loggedInUserId();
+	console.log("Logged in user id: ", user_id);
+	const role = await userService.getUserRole(user_id);
 
-			{/* Main Content */}
+
+
+	console.log("User role: ", role);
+
+	let Header = null;
+	let Mainbar = null;
+
+	let barangayData = null;
+
+	if (role === "admin") {
+		Header = <AdminHeader />;
+		Mainbar = <AdminMainbar />;
+	} else if (role === "barangay") {
+		const barangayService = new BarangayService(supabase);
+		const barangay = await barangayService.getBarangayFieldsByFKId(user_id);
+		console.log("Barangayzz: ", barangay);
+		barangayData = {
+			barangayId: barangay.id,
+			barangayName: barangay.barangayName,
+			barangayAddress: barangay.address,
+			barangayProfilePic:barangay.profile_pic,
+		}
+		console.log("Barangay data: ", barangayData);
+		
+
+		// conte
+		Header = <BarangayHeader />;
+		Mainbar = <BarangayMainbar />;
+	} else if (role === "citizen") {
+		const citizenService = new CitizenService(supabase);
+		const barangayService = new BarangayService(supabase);
+		const brgyId = await citizenService.getCitBarangayId(user_id);
+		const barangay = await barangayService.getBarangayFieldsById(brgyId.barangay_id);
+		barangayData = {
+			barangayId: barangay.id,
+			barangayName: barangay.barangayName,
+			barangayAddress: barangay.address,
+			barangayProfilePic:barangay.profile_pic,
+			// barangayName: "test",
+			// barangayAddress: "test2",
+		}
+		console.log("Barangay data: ", barangayData);
+
+		Header = <CitizenHeader />;
+		Mainbar = <CitizenMainbar />;
+	}
+	const LayoutWrapper = ({ children }: { children: React.ReactNode }) => (
+		<div className="flex flex-col w-screen min-h-screen overflow-hidden relative">
+			{Header}
 			<div className="flex flex-row flex-1 sm:ml-[75px] h-full">
-				<BarangayMainbar />
-				<div className="flex-1 overflow-y-auto rounded-tl-[20px] sm:px-7 sm:pb-0 pb-[75px] border-light">
+				{Mainbar}
+				<div className="flex-1 sm:rounded-tl-[20px] sm:px-7 py-6 border-light-color bg-gradient mt-16 pb-18">
 					{children}
 				</div>
 			</div>
 		</div>
 	);
+	return (
+		<UserProvider value={{userId: user_id, role}}>
+			{role === "barangay" ? (
+					<BarangayProvider value={barangayData}>
+						{/* <MainBarProvider barangayId={barangayData.barangayId}>
+							<LayoutWrapper>{children}</LayoutWrapper>
+						</MainBarProvider> */}
+						<LayoutWrapper>{children}</LayoutWrapper>
+					</BarangayProvider>
+				)
+				: role === "citizen" ? (
+					
+						<BarangayProvider value={barangayData}>
+							{/* <MainBarProvider barangayId={barangayData.barangayId}>
+								<LayoutWrapper>{children}</LayoutWrapper>
+							</MainBarProvider> */}
+							<LayoutWrapper>{children}</LayoutWrapper>
+						</BarangayProvider>
+			)
+			 : (
+			<LayoutWrapper>{children}</LayoutWrapper>
+
+			)}
+		</UserProvider>
+	);
 };
+
 
 export default GeneralLayout;

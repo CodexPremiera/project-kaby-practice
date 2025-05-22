@@ -28,6 +28,7 @@ type Appointment = {
 	id: number;
 	barangay_name: string;
 	barangay: string;
+	email: string;
 	city: string;
 	region: string;
 	status: string;
@@ -38,30 +39,32 @@ type Props = {
 	appointments: Appointment[];
 };
 
+// const BarangayAppointment = ({ appointments }: Props) => {
+	
 const BarangayAppointment = ({ appointments }: Props) => {
+	
 	const [showCreateAccount, setShowCreateAccount] = useState(false);
+	const pendingApps = appointments.filter((appointment) => appointment.status === "Pending");
+	console.log("these are the appointments: ", pendingApps);
 
 	const [statuses, setStatuses] = useState<string[]>(
-		appointments.map((appointment) => appointment.status || "Pending")
-	);
-	const [dates, setDates] = useState<Date[]>(
-		appointments.map(() => new Date())
-	);
-	const [searchTerm, setSearchTerm] = useState("");
-	const [selectedItems, setSelectedItems] = useState<number[]>([]);
-	const [messages, setMessages] = useState<string[]>(
-		appointments.map(() => "")
+		pendingApps.map((appointment) => appointment.status ||"Pending")
 	);
 
-	const filteredClients = appointments
-		.map((appointment, index) => ({
-			...appointment,
+	const [dates, setDates] = useState<Date[]>(pendingApps.map(() => new Date()));
+	const [searchTerm, setSearchTerm] = useState("");
+	const [selectedItems, setSelectedItems] = useState<number[]>([]);
+	const [messages, setMessages] = useState<string[]>(pendingApps.map(() => ""));
+
+	const filteredClients = pendingApps
+		.map((pendingApps, index) => ({
+			...pendingApps,
 			status: statuses[index],
 			date: dates[index],
 			index,
 		}))
-		.filter((appointment) =>
-			appointment.barangay_name.toLowerCase().includes(searchTerm.toLowerCase())
+		.filter((pendingApps) =>
+			pendingApps.barangay_name.toLowerCase().includes(searchTerm.toLowerCase())
 		);
 
 	const handleStatusChange = (index: number, newStatus: string) => {
@@ -71,22 +74,33 @@ const BarangayAppointment = ({ appointments }: Props) => {
 	};
 
 	const handleSubmit = async (index: number) => {
-		const appointmentId = appointments[index].id;
+		const appointmentId = pendingApps[index].id;
 		const updatedStatus = statuses[index];
 
-		console.log(
-			"Appointment id: ",
-			appointmentId,
-			" and new status: ",
-			updatedStatus
-		);
+		const email = pendingApps[index].email;
+		console.log("Emailzzz: ", email)
+		console.log("Appointment id: ", appointmentId ," and new status: ", updatedStatus)
 
 		try {
-			await fetch("/api/admin/appointment", {
+			const res = await fetch("/api/admin/appointment", {
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ id: appointmentId, status: updatedStatus }),
 			});
+			if(!res.ok){
+				throw new Error("Failed to update appointment status")
+			}
+			if(updatedStatus === "Approved"){
+				
+				// const registerBrgy = await fetch("/api/admin/appointment",{
+				// 	method: 'POST',
+				// 	headers: {"Content-Type": "application/json"},
+				// 	body: JSON.stringify({
+				// 		email:email, 
+				// 		password:email
+				// 	})
+				// });
+			}
 
 			if (updatedStatus === "Approved") {
 				setShowCreateAccount(true);
@@ -118,7 +132,7 @@ const BarangayAppointment = ({ appointments }: Props) => {
 					<RiSearch2Line className="text-gray-500 mr-2" />
 					<input
 						type="text"
-						placeholder="Search a client by name"
+						placeholder="Services a client by name"
 						className="w-full focus:outline-none text-sm h-10"
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}

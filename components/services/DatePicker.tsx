@@ -1,7 +1,6 @@
 "use client";
-import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
-import { isBefore } from "date-fns";
+import { isBefore, startOfDay } from "date-fns";
 import {
 	Popover,
 	PopoverTrigger,
@@ -9,52 +8,70 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "../ui/button";
 
-const DatePicker = () => {
-	const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-	const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+interface DatePickerProps {
+	selectedStartDate: Date | null;
+	selectedEndDate: Date | null;
+	onStartDateChange: (date: Date | null) => void;
+	onEndDateChange: (date: Date | null) => void;
+}
+
+const DatePicker: React.FC<DatePickerProps> = ({
+	selectedStartDate,
+	selectedEndDate,
+	onStartDateChange,
+	onEndDateChange,
+}) => {
+	const today = startOfDay(new Date());
 
 	const handleStartDateSelect = (date?: Date) => {
-		setStartDate(date);
-		if (endDate && date && isBefore(endDate, date)) {
-			setEndDate(undefined); // reset end date if it's before new start date
+		onStartDateChange(date ?? null);
+		if (selectedEndDate && date && isBefore(selectedEndDate, date)) {
+			onEndDateChange(null);
 		}
 	};
 
 	return (
-		<div className="flex gap-6">
+		<div className="flex sm:gap-6">
 			<div className="flex-1 w-full">
 				<p className="text-sm">Start:</p>
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button variant="gray">
-							{startDate ? startDate.toLocaleDateString() : "Select Date"}
+							{selectedStartDate
+								? selectedStartDate.toLocaleDateString()
+								: "Select Date"}
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent className=" bg-white">
+					<PopoverContent className="bg-white">
 						<Calendar
 							mode="single"
-							selected={startDate}
+							selected={selectedStartDate ?? undefined}
 							onSelect={handleStartDateSelect}
+							disabled={(date) => isBefore(date, today)}
 						/>
 					</PopoverContent>
 				</Popover>
 			</div>
 
-			<div className="flex-1">
+			<div className="flex-1 w-full">
 				<p className="text-sm">End:</p>
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button variant="gray">
-							{endDate ? endDate.toLocaleDateString() : "Select Date"}
+							{selectedEndDate
+								? selectedEndDate.toLocaleDateString()
+								: "Select Date"}
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent className=" bg-white">
+					<PopoverContent className="bg-white">
 						<Calendar
 							mode="single"
-							selected={endDate}
-							onSelect={setEndDate}
+							selected={selectedEndDate ?? undefined}
+							onSelect={(date) => onEndDateChange(date ?? null)}
 							disabled={(date) =>
-								startDate ? isBefore(date, startDate) : false
+								selectedStartDate
+									? isBefore(date, selectedStartDate)
+									: isBefore(date, today)
 							}
 						/>
 					</PopoverContent>

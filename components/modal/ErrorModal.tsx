@@ -11,12 +11,12 @@ interface ErrorModalProps {
 
 const ErrorModal = ({ title, content, onClose }: ErrorModalProps) => {
 	return (
-		<div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+		<div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
 			<button
 				onClick={onClose}
 				className="absolute top-5 right-5 text-white hover:text-black text-3xl z-50"
 			>
-				<RiCloseFill className="w-[25px] h-[25px]" />
+				<RiCloseFill className="text-white w-[25px] h-[25px]" />
 			</button>
 			<div className="relative flex flex-col items-center bg-white p-8 rounded-lg shadow-lg w-[350px]">
 				<div className="w-[40px] h-[40px] bg-red-500 rounded-full flex items-center justify-center mb-4">

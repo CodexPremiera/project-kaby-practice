@@ -1,9 +1,10 @@
-const Page = () => {
-	return (
-		<div className="flex flex-col w-full min-h-screen">
-			lol
-		</div>
-	);
-};
+import React from 'react';
+import AccountRouter from "./AccountRouter";
+
+async function Page() {
+	return(
+		<AccountRouter />
+	)
+}
 
 export default Page;

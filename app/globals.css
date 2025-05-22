@@ -14,29 +14,29 @@
 	--heroImage: url("/assets/hero_light.svg");
 
 	/* 60% primary colors - background */
-	--color-primary-1: #FFFFFF;
-	--color-primary-2: #CDCDCD;
-	--color-primary-3: #E9E9E9;
-	--color-primary-1-dark: #1F1F1F;
+	--color-primary-1: #ffffff;
+	--color-primary-2: #cdcdcd;
+	--color-primary-3: #e9e9e9;
+	--color-primary-1-dark: #1f1f1f;
 	--color-primary-2-dark: #363636;
 	--color-primary-3-dark: #363636;
 
 	/* 30% secondary colors - texts */
 	--color-secondary-1: #111111;
 	--color-secondary-2: #767676;
-	--color-secondary-1-dark: #CDCDCD;
-	--color-secondary-2-dark: #A1A1A1;
+	--color-secondary-1-dark: #cdcdcd;
+	--color-secondary-2-dark: #a1a1a1;
 
 	/* 10% accent colors - buttons, gradients */
-	--color-accent-1: #FFA52F;
-	--color-accent-2: #FF9229;
-	--color-accent-1-dark: #FFA52F;
-	--color-accent-2-dark: #FF9229;
+	--color-accent-1: #ffa52f;
+	--color-accent-2: #ff9229;
+	--color-accent-1-dark: #e68027;
+	--color-accent-2-dark: #e68225;
 
 	/* secondary colors with a hint of accent - gradients */
-	--color-tint-2: #FFFBF0;
-	--color-tint-3: #FFFDF5;
-	--color-tint-2-dark: #1C1B17;
+	--color-tint-2: #fffbf0;
+	--color-tint-3: #fffdf5;
+	--color-tint-2-dark: #1c1b17;
 	--color-tint-3-dark: #191815;
 }
 
@@ -55,7 +55,23 @@
 	h1 {
 		color: var(--color-black-100);
 		font-family: var(--font-work-sans);
-		@apply text-4xl lg:text-5xl xl:text-6xl font-bold;
+		@apply text-xl lg:text-5xl xl:text-6xl font-bold;
+	}
+
+	:root {
+		--chart-1: 12 76% 61%;
+		--chart-2: 173 58% 39%;
+		--chart-3: 197 37% 24%;
+		--chart-4: 43 74% 66%;
+		--chart-5: 27 87% 67%;
+	}
+
+	.dark {
+		--chart-1: 220 70% 50%;
+		--chart-2: 160 60% 45%;
+		--chart-3: 30 80% 55%;
+		--chart-4: 280 65% 60%;
+		--chart-5: 340 75% 55%;
 	}
 }
 
@@ -108,15 +124,70 @@
 		@apply bg-primary-3 dark:bg-primary-3-dark;
 	}
 
+	.bg-inverse-1 {
+		@apply bg-secondary-1 dark:bg-secondary-1-dark;
+	}
+
+	.bg-inverse-2 {
+		@apply bg-secondary-2 dark:bg-secondary-2-dark;
+	}
+
 	.bg-accent {
 		@apply bg-accent-1 dark:bg-accent-1-dark;
 	}
 
+	.bg-gradient {
+		@apply bg-linear-to-bl from-tint-2 to-tint-3 dark:from-tint-2-dark dark:to-tint-3-dark;
+	}
+
+	.text-primary {
+		@apply text-secondary-1 dark:text-secondary-1-dark;
+	}
+
+	.text-primary-1 {
+		@apply text-secondary-1 dark:text-secondary-1-dark;
+	}
+
+	.text-secondary {
+		@apply text-secondary-2 dark:text-secondary-2-dark;
+	}
+
+	.text-inverse-1 {
+		@apply text-primary-1 dark:text-primary-1-dark;
+	}
+
+	.text-inverse-2 {
+		@apply text-primary-2 dark:text-primary-2-dark;
+	}
+
+	.text-accent {
+		@apply text-accent-1 dark:text-accent-1-dark;
+	}
+
+	.border-light-color {
+		@apply border-primary-3 dark:border-primary-3-dark;
+	}
+
+	.border-primary {
+		@apply border-secondary-1 dark:border-secondary-1-dark;
+	}
+
+	.border-secondary {
+		@apply border-secondary-2 dark:border-secondary-2-dark;
+	}
+
+	.border-accent {
+		@apply border-accent-1 dark:border-secondary-2-dark;
+	}
+}
+
+@layer components {
 	.button-primary {
 		@apply bg-accent-1 dark:bg-accent-1-dark;
 		@apply hover:bg-accent-2 dark:hover:bg-accent-2-dark;
 		@apply active:bg-accent-1 dark:active:bg-accent-1-dark;
-		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-semibold shrink-0 flex;
+		@apply text-primary-1 dark:text-primary-1-dark;
+		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-medium shrink-0 flex;
 	}
 
 	.button-secondary {
@@ -126,23 +197,86 @@
 		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-semibold shrink-0 flex;
 	}
 
-	.text-primary {
-		@apply text-secondary-1 dark:text-secondary-1-dark;
-	}
-
-	.text-secondary {
+	.button-clear {
 		@apply text-secondary-2 dark:text-secondary-2-dark;
+		@apply hover:text-accent-1 dark:hover:text-accent-1-dark;
+		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-1 px-2 h-10 rounded-full font-semibold shrink-0 flex;
 	}
 
-	.text-accent {
-		@apply text-accent-1 dark:text-accent-1-dark;
+	.switch-tab {
+		@apply flex items-center gap-2.5 transition-all duration-200 border-b-[3px];
+		@apply text-secondary-1 dark:text-secondary-1-dark;
+		@apply pb-2;
+		@apply text-sm lg:text-base;
+		@apply font-medium;
 	}
 
-	.border-light {
-		@apply border border-primary-3 dark:border-primary-3-dark;
+	.button-tab {
+		@apply bg-accent-1 dark:bg-accent-1-dark text-primary-1 dark:text-primary-1-dark;
+		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-xl font-medium shrink-0 flex;
 	}
 
-	.border-primary {
+	.sidebar-tab {
+		@apply flex flex-col items-center justify-center p-3 mt-2 cursor-pointer rounded-xl transition-all duration-300;
+		@apply hover:bg-primary-3 hover:dark:bg-primary-3-dark;
+	}
+
+	.mainbar {
+		@apply z-10 fixed bottom-0 left-0 sm:top-16 w-full sm:w-[75px] sm:h-full flex sm:flex-col max-sm:border-t max-sm:justify-evenly sm:items-center sm:gap-6;
+		@apply bg-primary-1 dark:bg-primary-1-dark;
 		@apply border-primary-3 dark:border-primary-3-dark;
+	}
+}
+
+.population-pyramid {
+	display: grid;
+	grid-template-columns: 1fr 40px 1fr;
+}
+
+/* Hide track background and slim the scrollbar */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(100, 100, 100, 0.3); /* semi-transparent gray */
+	border-radius: 9999px;
+	border: none;
+}
+
+/* Optional: on hover */
+::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(100, 100, 100, 0.5);
+}
+
+.no-scrollbar {
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE and Edge */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
+}
+.loader {
+	border: 4px solid #f3f3f3;
+	border-top: 4px solid #333;
+	border-radius: 50%;
+	width: 36px;
+	height: 36px;
+	animation: spin 1s linear infinite;
+	margin: 0 auto;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
 	}
 }

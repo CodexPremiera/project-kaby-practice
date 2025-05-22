@@ -9,17 +9,17 @@ interface CustomButtonProps {
 }
 
 const ButtonSecondary: React.FC<CustomButtonProps> = ({
-                                               onClick,
-                                               disabled = false,
-                                               children,
-                                               className = "",
-                                             }) => {
+                                                        onClick,
+                                                        disabled = false,
+                                                        children,
+                                                        className = "",
+                                                      }) => {
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={clsx("button-secondary", disabled && "opacity-50", className)}
+      className={clsx("button-secondary", disabled && "background-3 text-secondary opacity-80", className)}
     >
       {children}
     </button>

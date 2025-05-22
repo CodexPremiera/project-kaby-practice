@@ -2,9 +2,6 @@ import Logo from "@/components/Logo";
 import Link from "next/link";
 import CitizenRegisterForm from "./CitizenRegisterClient";
 
-import { motion } from "framer-motion";
-import { fadeIn } from "@/variants";
-
 const RegisterForm = () => {
 	return (
 		<section className="flex flex-wrap xl:flex-nowrap">
@@ -15,7 +12,7 @@ const RegisterForm = () => {
 					<Logo />
 				</div>
 				<div className="absolute z-10 container h-full flex items-end justify-end pb-20">
-					<div className="card-shadow-custom bg-primary py-3 px-3 w-full mx-8">
+					<div className="rounded-[20px] bg-primary py-3 px-3 w-full mx-8">
 						<p className="text-black mx-3 font-semibold">Barangay Not Found?</p>{" "}
 						<Link
 							href="/petition"
@@ -27,7 +24,7 @@ const RegisterForm = () => {
 				</div>
 			</div>
 			<div className="w-full xl:w-1/2 flex justify-center items-center">
-				<div className="h-auto w-[420px] py-8 px-8 bg-primary card-shadow-custom">
+				<div className="h-auto w-[420px] py-8 px-8 bg-primary rounded-[20px]">
 					<p className="text-lg font-semibold text-center">Sign Up (Citizen)</p>
 					<CitizenRegisterForm />
 					{/* <form className="w-full mt-6">

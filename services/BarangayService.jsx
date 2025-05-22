@@ -27,14 +27,16 @@ class BarangayService {
 	}
 	async getBarangayFieldsByFKId(id) {
 		const data = await this.repo.getFieldByFKId(id, [
+			"id",
 			"barangayName",
 			"address",
+			"profile_pic"
 		]);
 		console.log("Barangay by ID", data);
 		return data;
 	}
 	async getBarangayFieldsById(id) {
-		const data = await this.repo.getById(id, ["barangayName", "address"]);
+		const data = await this.repo.getById(id, ["id","barangayName", "address"]);
 		console.log("Barangay by ID", data);
 		return data;
 	}

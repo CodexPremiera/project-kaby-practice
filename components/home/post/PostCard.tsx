@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import {
 	BsDot,
@@ -9,26 +11,14 @@ import {
 	BsThreeDots,
 	BsTrash,
 } from "react-icons/bs";
+import { ImageGalleryModal } from "./ImageGalleryModal";
 
-// Menu config
 const MANAGE_POST = [
 	{ title: "Pin", icon: BsPinAngle },
 	{ title: "Edit", icon: BsPencilSquare },
 	{ title: "Delete", icon: BsTrash },
 ];
 
-interface PostCardProps {
-	avatarUrl: string;
-	username: string;
-	handle: string;
-	timeAgo: string;
-	postText: string;
-	imageUrl?: string;
-	likes: number;
-	views: number;
-}
-
-// Dropdown menu component
 const PostMenu = () => (
 	<div className="relative ml-auto">
 		<div
@@ -58,7 +48,6 @@ const PostMenu = () => (
 	</div>
 );
 
-// Action bar component
 const PostActions = ({ likes, views }: { likes: number; views: number }) => (
 	<div className="flex justify-between text-secondary mt-3 px-1 w-full">
 		<div className="flex items-center space-x-2 hover:text-secondary cursor-pointer transition">
@@ -72,31 +61,57 @@ const PostActions = ({ likes, views }: { likes: number; views: number }) => (
 	</div>
 );
 
-const PostCard = ({
-										avatarUrl,
-										username,
-										handle,
-										timeAgo,
-										postText,
-										imageUrl,
-										likes,
-										views,
-									}: PostCardProps) => {
-	return (
-		<div className="relative flex flex-col px-4 pt-4 pb-5 gap-4 sm:rounded-xl border border-light-color background-1 transition">
+interface PostCardProps {
+	avatarUrl?: string;
+	username?: string;
+	handle?: string;
+	postText?: string;
+	imageUrls?: string[];
+	likes?: number;
+	views?: number;
+	timeAgo?: string;
+}
 
+const PostCard: React.FC<PostCardProps> = ({
+	avatarUrl = "/assets/img/profile/default-avatar.png",
+	username = "Unknown User",
+	handle = "unknown",
+	postText = "",
+	imageUrls = [],
+	likes = 0,
+	views = 0,
+	timeAgo = "",
+}) => {
+	const validImageUrls = imageUrls.filter((url) => url && url.trim() !== "");
+	const captions = validImageUrls.map(() => postText);
+	const likesArray = validImageUrls.map(() => likes);
+	const viewsArray = validImageUrls.map(() => views);
+
+	const [modalOpen, setModalOpen] = useState(false);
+	const [modalIndex, setModalIndex] = useState(0);
+
+	const openModal = (index: number) => {
+		setModalIndex(index);
+		setModalOpen(true);
+	};
+
+	const closeModal = () => {
+		setModalOpen(false);
+	};
+
+	return (
+		<div className="relative flex flex-col px-4 pt-4 pb-5 gap-4 rounded-xl border border-light-color background-1 transition">
 			{/* Header */}
 			<div className="flex gap-3 items-center">
 				<div className="w-10 h-10 shrink-0">
 					<Image
 						src={avatarUrl}
 						alt="User Avatar"
-						width={360}
-						height={360}
+						width={40}
+						height={40}
 						className="object-cover w-full h-full rounded-full"
 					/>
 				</div>
-
 				<div className="flex flex-col">
 					<div className="flex items-center">
 						<span className="font-semibold">{username}</span>
@@ -105,28 +120,71 @@ const PostCard = ({
 					</div>
 					<span className="text-secondary text-sm leading-3">@{handle}</span>
 				</div>
-
 				<PostMenu />
 			</div>
 
 			{/* Body */}
 			<div className="flex flex-col flex-1 text-sm">
-				<div className="text-primary mt-1">{postText}</div>
+				<div className="text-primary mt-1 whitespace-pre-line">{postText}</div>
 
-				{imageUrl && (
-					<div className="mt-3 rounded-2xl overflow-hidden">
+				{/* Images */}
+				{validImageUrls.length === 1 && (
+					<div
+						className="relative mt-3 w-full rounded-2xl overflow-hidden cursor-pointer"
+						style={{ aspectRatio: "16 / 9" }}
+						onClick={() => openModal(0)}
+					>
 						<Image
-							src={imageUrl}
+							src={validImageUrls[0]}
 							alt="Post Image"
-							width={400}
-							height={400}
-							className="object-cover w-full h-full"
+							fill
+							className="object-cover"
 						/>
+					</div>
+				)}
+
+				{validImageUrls.length > 1 && (
+					<div className="mt-3 grid grid-cols-2 gap-2 rounded-2xl overflow-hidden">
+						{validImageUrls.slice(0, 2).map((url, i) => (
+							<div
+								key={i}
+								className="relative w-full aspect-square rounded-lg overflow-hidden cursor-pointer"
+								onClick={() => openModal(i)}
+							>
+								<Image
+									src={url}
+									alt={`Post Image ${i + 1}`}
+									fill
+									className="object-cover"
+								/>
+								{i === 1 && validImageUrls.length > 2 && (
+									<div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-3xl font-semibold rounded-lg">
+										+{validImageUrls.length - 2}
+									</div>
+								)}
+							</div>
+						))}
 					</div>
 				)}
 
 				<PostActions likes={likes} views={views} />
 			</div>
+
+			{/* Modal */}
+			{modalOpen && (
+				<ImageGalleryModal
+					images={validImageUrls}
+					captions={captions}
+					likes={likesArray}
+					views={viewsArray}
+					initialIndex={modalIndex}
+					onClose={closeModal}
+					avatarUrl={avatarUrl}
+					username={username}
+					handle={handle}
+					timeAgo={timeAgo}
+				/>
+			)}
 		</div>
 	);
 };

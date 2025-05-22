@@ -5,6 +5,22 @@ class CitizenProfileRepo extends BaseRepo {
 	constructor(supabase) {
 		super("CitizenProfile", supabase);
 	}
+	async getAllByBarangayId(id,selectFields = "*") {
+		const fields = Array.isArray(selectFields)
+			? selectFields.join(", ")
+			: selectFields;
+
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select(fields)
+			.eq("barangay_id", id);
+		console.log("this is data", data);
+		if (error){
+			console.log("Errr",error);
+			throw error;
+		} 
+		return data;
+	}
 	async create(citizenData) {
 		const citizen = new CitizenModel(citizenData);
 		// console.log(citizenData,"repo");

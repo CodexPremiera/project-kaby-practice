@@ -13,6 +13,7 @@ import { createClient } from "@/utils/supabase/server";
 // import { UserContext } from "@/app/context/UserContext";
 // import { BarangayContext } from "@/app/context/BarangayContext";
 import BarangayProvider from "@/app/context/BarangayProvider";
+import {MainBarProvider} from "@/app/context/MainBarProvider";
 import UserProvider from "@/app/context/UserProvider";
 const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	const supabase = await createClient();
@@ -38,11 +39,16 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	} else if (role === "barangay") {
 		const barangayService = new BarangayService(supabase);
 		const barangay = await barangayService.getBarangayFieldsByFKId(user_id);
+		console.log("Barangayzz: ", barangay);
 		barangayData = {
+			barangayId: barangay.id,
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
+			barangayProfilePic:barangay.profile_pic,
 		}
 		console.log("Barangay data: ", barangayData);
+		
+
 		// conte
 		Header = <BarangayHeader />;
 		Mainbar = <BarangayMainbar />;
@@ -52,8 +58,10 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		const brgyId = await citizenService.getCitBarangayId(user_id);
 		const barangay = await barangayService.getBarangayFieldsById(brgyId.barangay_id);
 		barangayData = {
+			barangayId: barangay.id,
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
+			barangayProfilePic:barangay.profile_pic,
 			// barangayName: "test",
 			// barangayAddress: "test2",
 		}
@@ -77,13 +85,20 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		<UserProvider value={{userId: user_id, role}}>
 			{role === "barangay" ? (
 					<BarangayProvider value={barangayData}>
+						{/* <MainBarProvider barangayId={barangayData.barangayId}>
+							<LayoutWrapper>{children}</LayoutWrapper>
+						</MainBarProvider> */}
 						<LayoutWrapper>{children}</LayoutWrapper>
 					</BarangayProvider>
 				)
 				: role === "citizen" ? (
+					
 						<BarangayProvider value={barangayData}>
+							{/* <MainBarProvider barangayId={barangayData.barangayId}>
+								<LayoutWrapper>{children}</LayoutWrapper>
+							</MainBarProvider> */}
 							<LayoutWrapper>{children}</LayoutWrapper>
-			</BarangayProvider>
+						</BarangayProvider>
 			)
 			 : (
 			<LayoutWrapper>{children}</LayoutWrapper>
@@ -92,5 +107,6 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		</UserProvider>
 	);
 };
+
 
 export default GeneralLayout;

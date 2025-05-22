@@ -73,7 +73,7 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({
-	avatarUrl = "/assets/img/profile/default-avatar.png",
+	avatarUrl = "/assets/default-profile.jpg",
 	username = "Unknown User",
 	handle = "unknown",
 	postText = "",

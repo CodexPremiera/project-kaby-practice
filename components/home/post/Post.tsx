@@ -36,46 +36,37 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 	const [loading, setLoading] = useState(true);
 	const [posts, setPosts] = useState<PostWithProfile[]>([]);
 
+	const fetchPostsAndProfiles = async () => {
+		setLoading(true);
+		try {
+			const res = await fetch("/api/post");
+			const postData: PostType[] = await res.json();
+
+			const resProfiles = await fetch("/api/barangay");
+			const profilesJson = await resProfiles.json();
+			const barangayProfiles: BarangayProfile[] = profilesJson.data || [];
+
+			const postsWithProfiles: PostWithProfile[] = postData.map((post) => {
+				const profile = barangayProfiles.find((b) => b.user_id === post.owner);
+				return { ...post, profile: profile || null };
+			});
+
+			const sortedPosts = postsWithProfiles.sort(
+				(a, b) =>
+					new Date(b.time_uploaded).getTime() -
+					new Date(a.time_uploaded).getTime()
+			);
+
+			setPosts(sortedPosts);
+		} catch (err) {
+			console.error("Error fetching posts or profiles:", err);
+			setPosts([]);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
-		const fetchPostsAndProfiles = async () => {
-			setLoading(true);
-			try {
-				// Fetch posts
-				const res = await fetch("/api/post");
-				const postData: PostType[] = await res.json();
-
-				// Fetch barangay profiles
-				const resProfiles = await fetch("/api/barangay");
-				const profilesJson = await resProfiles.json();
-				const barangayProfiles: BarangayProfile[] = profilesJson.data || [];
-
-				// Merge profiles into posts
-				const postsWithProfiles: PostWithProfile[] = postData.map((post) => {
-					const profile = barangayProfiles.find(
-						(b) => b.user_id === post.owner
-					);
-					return {
-						...post,
-						profile: profile || null,
-					};
-				});
-
-				// Sort posts by newest
-				const sortedPosts = postsWithProfiles.sort(
-					(a, b) =>
-						new Date(b.time_uploaded).getTime() -
-						new Date(a.time_uploaded).getTime()
-				);
-
-				setPosts(sortedPosts);
-			} catch (err) {
-				console.error("Error fetching posts or profiles:", err);
-				setPosts([]);
-			} finally {
-				setLoading(false);
-			}
-		};
-
 		fetchPostsAndProfiles();
 	}, []);
 
@@ -162,6 +153,7 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 										likes={post.no_of_likes ?? 0}
 										views={post.no_of_views ?? 0}
 										timeAgo={timeAgo(post.time_uploaded)}
+										isPinned={post.is_pinned}
 									/>
 								);
 							})
@@ -210,6 +202,7 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 									likes={post.no_of_likes ?? 0}
 									views={post.no_of_views ?? 0}
 									timeAgo={timeAgo(post.time_uploaded)}
+									isPinned={post.is_pinned}
 								/>
 							);
 						})

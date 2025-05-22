@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { BsDot, BsFillEyeFill, BsFillHandThumbsUpFill } from "react-icons/bs";
+import { BsDot, BsPinAngleFill } from "react-icons/bs";
 import { ImageGalleryModal } from "./ImageGalleryModal";
 import ManagePostMenu from "./ManagePostMenu";
 import ErrorModal from "@/components/modal/ErrorModal";
@@ -10,7 +10,7 @@ import ConfirmationModal from "@/components/modal/ConfirmationModal";
 import PostActions from "./PostActions";
 import SuccessModal from "@/components/modal/SuccessModal";
 
-// Update post
+// Update Post
 async function updatePost(postId: string, data: any) {
 	const res = await fetch(`/api/post/${postId}`, {
 		method: "PUT",
@@ -26,7 +26,7 @@ async function updatePost(postId: string, data: any) {
 	return res.json();
 }
 
-// Delete post
+// Delete Post
 async function deletePost(postId: string) {
 	const res = await fetch(`/api/post/${postId}`, {
 		method: "DELETE",
@@ -45,6 +45,7 @@ interface PostCardProps {
 	likes?: number;
 	views?: number;
 	timeAgo?: string;
+	isPinned?: boolean;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -57,17 +58,20 @@ const PostCard: React.FC<PostCardProps> = ({
 	likes = 0,
 	views = 0,
 	timeAgo = "",
+	isPinned: isPinnedProp = false,
 }) => {
 	const validImageUrls = imageUrls.filter((url) => url && url.trim() !== "");
 	const captions = validImageUrls.map(() => postText);
 	const likesArray = validImageUrls.map(() => likes);
 	const viewsArray = validImageUrls.map(() => views);
 
+	const [modalMessage, setModalMessage] = useState<string>("");
 	const [modalOpen, setModalOpen] = useState(false);
 	const [modalIndex, setModalIndex] = useState(0);
 	const [modalType, setModalType] = useState<
 		"none" | "confirmation" | "success" | "error"
 	>("none");
+	const [isPinned, setIsPinned] = useState(isPinnedProp);
 
 	const openModal = (index: number) => {
 		setModalIndex(index);
@@ -78,13 +82,19 @@ const PostCard: React.FC<PostCardProps> = ({
 		setModalOpen(false);
 	};
 
-	// Moved inside component to have access to setModalType and postId
 	const handleManageAction = async (action: string, postId: string) => {
 		try {
 			switch (action) {
 				case "Pin":
-					await updatePost(postId, { is_pinned: true });
-					console.log("Pinned the post!");
+					const newPinnedState = !isPinned;
+					await updatePost(postId, { is_pinned: newPinnedState });
+					setIsPinned(newPinnedState);
+					setModalType("success");
+					setModalMessage(
+						newPinnedState
+							? "Post successfully pinned."
+							: "Post successfully unpinned."
+					);
 					break;
 				case "Edit":
 					console.log("Edit post!");
@@ -103,6 +113,7 @@ const PostCard: React.FC<PostCardProps> = ({
 	const confirmDelete = async () => {
 		try {
 			await deletePost(postId);
+			setModalMessage("The post was deleted successfully.");
 			setModalType("success");
 		} catch (error: any) {
 			setModalType("error");
@@ -114,8 +125,8 @@ const PostCard: React.FC<PostCardProps> = ({
 	};
 
 	return (
-		<div className="relative flex flex-col px-4 pt-4 pb-5 gap-4 rounded-xl border border-light-color background-1 transition ">
-			{/* Confirmation Modal */}
+		<div className="relative flex flex-col px-4 pt-4 pb-5 gap-4 rounded-xl border border-light-color background-1 transition">
+			{/* Modals */}
 			{modalType === "confirmation" && (
 				<ConfirmationModal
 					title="Delete This Post?"
@@ -125,7 +136,6 @@ const PostCard: React.FC<PostCardProps> = ({
 				/>
 			)}
 
-			{/* Success Modal*/}
 			{modalType === "success" && (
 				<SuccessModal
 					title="Post Deleted"
@@ -133,7 +143,14 @@ const PostCard: React.FC<PostCardProps> = ({
 					onClose={() => setModalType("none")}
 				/>
 			)}
-			{/* Error modal */}
+			{modalType === "success" && (
+				<SuccessModal
+					title="Success"
+					content={modalMessage}
+					onClose={() => setModalType("none")}
+				/>
+			)}
+
 			{modalType === "error" && (
 				<ErrorModal
 					title="Error"
@@ -163,9 +180,14 @@ const PostCard: React.FC<PostCardProps> = ({
 						<span className="text-secondary text-sm leading-3">@{handle}</span>
 					</div>
 				</div>
-				<ManagePostMenu
-					onAction={(action) => handleManageAction(action, postId)}
-				/>
+				<div className="flex items-center gap-2">
+					{isPinned && (
+						<BsPinAngleFill className="w-4 h-4" title="Pinned Post" />
+					)}
+					<ManagePostMenu
+						onAction={(action) => handleManageAction(action, postId)}
+					/>
+				</div>
 			</div>
 
 			{/* Body */}
@@ -215,7 +237,7 @@ const PostCard: React.FC<PostCardProps> = ({
 				<PostActions likes={likes} views={views} />
 			</div>
 
-			{/* Image gallery modal */}
+			{/* Image Gallery Modal */}
 			{modalOpen && (
 				<ImageGalleryModal
 					images={validImageUrls}

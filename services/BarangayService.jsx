@@ -30,6 +30,7 @@ class BarangayService {
 			"id",
 			"barangayName",
 			"address",
+			"profile_pic"
 		]);
 		console.log("Barangay by ID", data);
 		return data;

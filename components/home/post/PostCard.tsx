@@ -73,6 +73,10 @@ const PostCard: React.FC<PostCardProps> = ({
 	>("none");
 	const [isPinned, setIsPinned] = useState(isPinnedProp);
 
+	const [isEditing, setIsEditing] = useState(false);
+	const [editedText, setEditedText] = useState(postText);
+	const [saving, setSaving] = useState(false);
+
 	const openModal = (index: number) => {
 		setModalIndex(index);
 		setModalOpen(true);
@@ -97,7 +101,8 @@ const PostCard: React.FC<PostCardProps> = ({
 					);
 					break;
 				case "Edit":
-					console.log("Edit post!");
+					setIsEditing(true);
+					setEditedText(postText);
 					break;
 				case "Delete":
 					setModalType("confirmation");
@@ -136,20 +141,22 @@ const PostCard: React.FC<PostCardProps> = ({
 				/>
 			)}
 
-			{modalType === "success" && (
-				<SuccessModal
-					title="Post Deleted"
-					content="The post was deleted successfully."
-					onClose={() => setModalType("none")}
-				/>
-			)}
-			{modalType === "success" && (
-				<SuccessModal
-					title="Success"
-					content={modalMessage}
-					onClose={() => setModalType("none")}
-				/>
-			)}
+			{modalType === "success" &&
+				modalMessage === "The post was deleted successfully." && (
+					<SuccessModal
+						title="Post Deleted"
+						content="The post was deleted successfully."
+						onClose={() => setModalType("none")}
+					/>
+				)}
+			{modalType === "success" &&
+				modalMessage !== "The post was deleted successfully." && (
+					<SuccessModal
+						title="Success"
+						content={modalMessage}
+						onClose={() => setModalType("none")}
+					/>
+				)}
 
 			{modalType === "error" && (
 				<ErrorModal
@@ -192,49 +199,95 @@ const PostCard: React.FC<PostCardProps> = ({
 
 			{/* Body */}
 			<div className="flex flex-col flex-1 text-sm">
-				<div className="text-primary mt-1 whitespace-pre-line">{postText}</div>
-
-				{/* Images */}
-				{validImageUrls.length === 1 && (
-					<div
-						className="relative mt-3 w-full rounded-2xl overflow-hidden cursor-pointer"
-						style={{ aspectRatio: "16 / 9" }}
-						onClick={() => openModal(0)}
-					>
-						<Image
-							src={validImageUrls[0]}
-							alt="Post Image"
-							fill
-							className="object-cover"
+				{isEditing ? (
+					<>
+						<textarea
+							className="w-full p-2 border border-gray-300 rounded resize-none"
+							rows={4}
+							value={editedText}
+							onChange={(e) => setEditedText(e.target.value)}
+							placeholder="Edit your post text..."
 						/>
-					</div>
-				)}
 
-				{validImageUrls.length > 1 && (
-					<div className="mt-3 grid grid-cols-2 gap-2 rounded-2xl overflow-hidden">
-						{validImageUrls.slice(0, 2).map((url, i) => (
+						<div className="mt-3 flex gap-2">
+							<button
+								onClick={async () => {
+									setSaving(true);
+									try {
+										await updatePost(postId, {
+											content: editedText,
+										});
+										setIsEditing(false);
+										setSaving(false);
+									} catch (error) {
+										setSaving(false);
+										alert("Failed to save changes.");
+									}
+								}}
+								disabled={saving}
+								className="bg-black text-white px-4 py-2 rounded"
+							>
+								{saving ? "Saving..." : "Save"}
+							</button>
+
+							<button
+								onClick={() => setIsEditing(false)}
+								disabled={saving}
+								className="bg-gray-300 px-4 py-2 rounded"
+							>
+								Cancel
+							</button>
+						</div>
+					</>
+				) : (
+					<>
+						<div className="text-primary mt-1 whitespace-pre-line">
+							{postText}
+						</div>
+
+						{/* Images */}
+						{validImageUrls.length === 1 && (
 							<div
-								key={url}
-								className="relative w-full aspect-square rounded-lg overflow-hidden cursor-pointer"
-								onClick={() => openModal(i)}
+								className="relative mt-3 w-full rounded-2xl overflow-hidden cursor-pointer"
+								style={{ aspectRatio: "16 / 9" }}
+								onClick={() => openModal(0)}
 							>
 								<Image
-									src={url}
-									alt={`Post Image ${i + 1}`}
+									src={validImageUrls[0]}
+									alt="Post Image"
 									fill
 									className="object-cover"
 								/>
-								{i === 1 && validImageUrls.length > 2 && (
-									<div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-3xl font-semibold rounded-lg">
-										+{validImageUrls.length - 2}
-									</div>
-								)}
 							</div>
-						))}
-					</div>
-				)}
+						)}
 
-				<PostActions likes={likes} views={views} />
+						{validImageUrls.length > 1 && (
+							<div className="mt-3 grid grid-cols-2 gap-2 rounded-2xl overflow-hidden">
+								{validImageUrls.slice(0, 2).map((url, i) => (
+									<div
+										key={url}
+										className="relative w-full aspect-square rounded-lg overflow-hidden cursor-pointer"
+										onClick={() => openModal(i)}
+									>
+										<Image
+											src={url}
+											alt={`Post Image ${i + 1}`}
+											fill
+											className="object-cover"
+										/>
+										{i === 1 && validImageUrls.length > 2 && (
+											<div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-3xl font-semibold rounded-lg">
+												+{validImageUrls.length - 2}
+											</div>
+										)}
+									</div>
+								))}
+							</div>
+						)}
+
+						<PostActions likes={likes} views={views} />
+					</>
+				)}
 			</div>
 
 			{/* Image Gallery Modal */}

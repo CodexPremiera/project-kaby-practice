@@ -10,7 +10,7 @@ import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import {EllipsisVertical as MoreIcon} from "lucide-react";
 
 
-function BadgeRequestsTable({
+function CitizensTable({
                               filteredClients,
                               selectedItems,
                               toggleSelection,
@@ -34,9 +34,8 @@ function BadgeRequestsTable({
               onChange={handleSelectAll}
             />
           </TableHead>
-          <TableHead className="w-[180px] text-secondary text-sm pt-1 pb-5">Service</TableHead>
-          <TableHead className="w-[140px] text-secondary text-sm pt-1 pb-5">Service Attended</TableHead>
-          <TableHead className="w-[80px] text-secondary text-sm pt-1 pb-5">Date</TableHead>
+          <TableHead className="w-[200px] text-secondary text-sm pt-1 pb-5">Citizen</TableHead>
+          <TableHead className="w-[100px] text-secondary text-sm pt-1 pb-5">Date admitted</TableHead>
           <TableHead className="w-[24px] text-secondary text-sm pt-1 pb-5"/>
         </TableRow>
       </TableHeader>
@@ -73,8 +72,6 @@ function BadgeRequestsTable({
                 </div>
               </button>
             </TableCell>
-
-            <TableCell className="overflow-hidden">Mangrove Tree Planting</TableCell>
             <TableCell className="overflow-hidden">
               {format(profile.date, "MMMM dd, yyyy")}
             </TableCell>
@@ -89,4 +86,4 @@ function BadgeRequestsTable({
   );
 }
 
-export default BadgeRequestsTable;
+export default CitizensTable;

@@ -134,7 +134,7 @@ export function SectorPopulation() {
         <CardDescription>F.Y. 2024-2025</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="w-full h-128">
+        <ChartContainer config={chartConfig} className="w-full">
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis

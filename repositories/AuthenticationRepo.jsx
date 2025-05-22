@@ -51,5 +51,15 @@ class AuthenticationRepo {
 		}
 		return data;
 	}
+	async getEmail(id){
+		const { data: { user }, error } = await supabase.auth.getUser()
+
+		if (error) {
+			console.error(error)
+			return null
+		}
+
+		return user?.email
+	}
 }
 export default AuthenticationRepo;

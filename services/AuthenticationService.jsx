@@ -34,5 +34,9 @@ class AuthenticationService{
         // TODO: ONCE NAA NAY EMAIL THEN SEND THE PASSWORD TO THE EMAIL, SEARCH INVITEUSERBYEMAIL() 
         return data;
     }
+    async getUserEmail(id){
+        const email = await this.repo.getEmail(id);
+        return email;
+    }
 }
 export default AuthenticationService;

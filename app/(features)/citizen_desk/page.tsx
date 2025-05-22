@@ -5,8 +5,8 @@ import { useState } from "react";
 import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import {ChevronDown} from "lucide-react";
 import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
-import Dashboard from "@/components/citizen_desk/tabs/Dashboard";
-import AccountVerification from "@/components/citizen_desk/tabs/AccountVerification";
+import Dashboard from "@/components/citizen_desk/dashboard/Dashboard";
+import AccountVerification from "@/components/citizen_desk/account_verification/AccountVerification";
 import BadgeRequests from "@/components/citizen_desk/badge_requests/BadgeRequests";
 import ReportedUsers from "@/components/citizen_desk/reported_users/ReportedUsers";
 

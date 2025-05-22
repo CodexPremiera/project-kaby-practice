@@ -8,7 +8,7 @@ import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
 import Dashboard from "@/components/citizen_desk/tabs/Dashboard";
 import AccountVerification from "@/components/citizen_desk/tabs/AccountVerification";
 import BadgeRequests from "@/components/citizen_desk/badge_requests/BadgeRequests";
-import ReportedUsers from "@/components/citizen_desk/tabs/ReportedUsers";
+import ReportedUsers from "@/components/citizen_desk/reported_users/ReportedUsers";
 
 const TAB_COMPONENTS = {
 	Dashboard: <Dashboard />,

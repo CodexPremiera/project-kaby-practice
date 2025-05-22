@@ -1,8 +1,7 @@
 "use client";
 
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useState} from "react";
 import {profiles} from "@/data/profiles";
-import {RiSearch2Line} from "react-icons/ri";
 import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";

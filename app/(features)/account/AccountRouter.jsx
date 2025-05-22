@@ -51,17 +51,19 @@ export default function SettingsRouter() {
           //     is_worker: citizen.is_worker
           // }));
 
-          // console.log("Transformed citizens:", transformed);
+          // console.log("Transformed managers:", managersData);
           // setCitizenProfiles(transformed);
           setCitizenProfiles(citizenData);
           setAccessRoles(accessData);
           setWorkers(workerData);
           setManagers(managersData);
           setNonManagers(nonManagerData)
+          console.log("womperzz")
         
         } catch (err) {
           console.error("Failed to fetch barangay profile:", err);
         } finally {
+          console.log("wompers")
           setLoading(false);
         }
       }
@@ -70,13 +72,14 @@ export default function SettingsRouter() {
     fetchBarangay();
   }, [role, barangayId]);
 
-  if (loading) return <div>Loading...</div>;
+  // if (loading) return <div>Loadingerz...</div>;
   if (role === "barangay" && citizenProfiles) {
     console.log("Barangay Profile:", citizenProfiles);
     return <BarangaySettings citizens={citizenProfiles.data} accessRoles={accessRoles.data} workers={workers.data} managers = {managers.data} non_managers={nonManagers.data}/>;
     // return <BarangaySettings citizens={null} accessRoles={null} workers={null} managers = {dataProfile}/>;
   }
   else if (role === "citizen") {
+    console.log("paosk kaah eree")
     return <CitizenSettings />;
   }
 }

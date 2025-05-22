@@ -146,7 +146,7 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 
 								return (
 									<PostCard
-										key={post.id}
+										postId={post.id}
 										avatarUrl={
 											post.profile?.profile_pic
 												? getPublicUrl(
@@ -194,7 +194,7 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 
 							return (
 								<PostCard
-									key={post.id}
+									postId={post.id}
 									avatarUrl={
 										post.profile?.profile_pic
 											? getPublicUrl(

@@ -101,15 +101,8 @@ export const usePostComposer = () => {
 				setModalType("loading");
 				setForm({ content: "", files: [], previewUrls: [] });
 				if (fileInputRef.current) fileInputRef.current.value = "";
-
-				// Show loading modal for 3 seconds then show success modal
 				setTimeout(() => {
 					setModalType("success");
-
-					// Then after 1.5 seconds, refresh the page
-					setTimeout(() => {
-						window.location.reload();
-					}, 1500);
 				}, 3000);
 			} else {
 				console.error("Failed to create post:", await res.json());

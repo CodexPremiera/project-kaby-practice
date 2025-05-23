@@ -1,67 +1,79 @@
 import React, { useState, useEffect } from "react";
-import PostComposer from "./PostComposerForm";
 import PostCard from "./PostCard";
 import SwitchTab from "@/components/ui/tabs/SwitchTab";
 import MonthlyBadges from "./MonthlyBadges";
+import PostComposerForm from "./PostComposerForm";
+import { getPublicUrl } from "@/utils/supabase/storage";
+import { timeAgo } from "@/utils/timeAgo";
 
 type UserProps = {
-	userId: string;
 	userRole: string;
 };
+type PostType = {
+	id: string;
+	owner: string;
+	content: string;
+	media: string | null;
+	no_of_likes: number;
+	no_of_views: number;
+	time_uploaded: string;
+	is_pinned: boolean;
+};
+type BarangayProfile = {
+	user_id: string;
+	barangayName: string;
+	address: string;
+	profile_pic: string;
+};
 
-// Helper function to convert timestamp to "time ago" string
-function timeAgo(dateString: string) {
-	const date = new Date(dateString);
-	const now = new Date();
-	const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+type PostWithProfile = PostType & {
+	profile: BarangayProfile | null;
+};
 
-	if (seconds < 60) return "just now";
-	if (seconds < 3600) {
-		const mins = Math.floor(seconds / 60);
-		return mins === 1 ? "1 minute ago" : `${mins} minutes ago`;
-	}
-	if (seconds < 86400) {
-		const hours = Math.floor(seconds / 3600);
-		return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
-	}
-	if (seconds < 604800) {
-		const days = Math.floor(seconds / 86400);
-		return days === 1 ? "1 day ago" : `${days} days ago`;
-	}
-	return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
-
-const Post: React.FC<UserProps> = ({ userId, userRole }) => {
+const Post: React.FC<UserProps> = ({ userRole }) => {
 	const [activeTab, setActiveTab] = useState<"all" | "pinned">("all");
-	const [posts, setPosts] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [posts, setPosts] = useState<PostWithProfile[]>([]);
 
-	const SUPABASE_URL =
-		`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public`;
+	const fetchPostsAndProfiles = async () => {
+		setLoading(true);
+		try {
+			// Sa api nako gikuha kinsa current naka login (api/post)
+			const res = await fetch("/api/post");
+			const postData: PostType[] = await res.json();
+
+			// Since Post owner only returns an id (not all the details: owner's name, address, pic), I used the (api/barangay) to get access to its details given the id
+			const resProfiles = await fetch("/api/barangay");
+			const profilesJson = await resProfiles.json();
+			const barangayProfiles: BarangayProfile[] = profilesJson.data || [];
+
+			const postsWithProfiles: PostWithProfile[] = postData.map((post) => {
+				const profile = barangayProfiles.find((b) => b.user_id === post.owner);
+				return { ...post, profile: profile || null };
+			});
+
+			const sortedPosts = postsWithProfiles.sort(
+				(a, b) =>
+					new Date(b.time_uploaded).getTime() -
+					new Date(a.time_uploaded).getTime()
+			);
+
+			setPosts(sortedPosts);
+		} catch (err) {
+			console.error("Error fetching posts or profiles:", err);
+			setPosts([]);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	useEffect(() => {
-		const fetchPosts = async () => {
-			setLoading(true);
-			try {
-				const res = await fetch("/api/post");
-				const data = await res.json();
-				setPosts(data);
-			} catch (err) {
-				console.error("Error fetching posts:", err);
-				setPosts([]);
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchPosts();
+		fetchPostsAndProfiles();
 	}, []);
 
 	// Filter posts depending on tab
 	const postsToDisplay =
-		activeTab === "all"
-			? posts
-			: posts.filter((post) => post.is_pinned === true);
+		activeTab === "all" ? posts : posts.filter((post) => post.is_pinned);
 
 	return (
 		<div className="w-full px-6">
@@ -106,7 +118,7 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 				</div>
 
 				<div className="md:w-1/2 max-w-3xl flex flex-col gap-6">
-					{userRole === "barangay" && <PostComposer />}
+					{userRole === "barangay" && <PostComposerForm />}
 					<div className="flex flex-col gap-4">
 						{loading ? (
 							<p>Loading posts...</p>
@@ -120,19 +132,30 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 									: [];
 
 								// Build full public URLs to images stored in 'post-pictures/uploads'
-								const fullImageUrls = mediaArray.map(
-									(filePath) => `${SUPABASE_URL}/post-pictures/${filePath}`
+								const fullImageUrls = mediaArray.map((filePath) =>
+									getPublicUrl(filePath, "post-pictures")
 								);
 
 								return (
 									<PostCard
-										key={post.id}
-										username={post.owner}
+										postId={post.id}
+										avatarUrl={
+											post.profile?.profile_pic
+												? getPublicUrl(
+														post.profile.profile_pic,
+														"profile-pictures"
+													)
+												: "/assets/default-profile.jpg"
+										}
+										username={post.profile?.barangayName || "Unknown User"}
+										handle={post.profile?.address || "Unknown Address"}
 										postText={post.content}
 										imageUrls={fullImageUrls}
 										likes={post.no_of_likes ?? 0}
 										views={post.no_of_views ?? 0}
 										timeAgo={timeAgo(post.time_uploaded)}
+										isPinned={post.is_pinned}
+										userRole={userRole}
 									/>
 								);
 							})
@@ -147,7 +170,7 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 
 			{/* Small screen posts */}
 			<div className="md:hidden mt-4">
-				{userRole === "barangay" && <PostComposer />}
+				{userRole === "barangay" && <PostComposerForm />}
 				<div className="flex flex-col gap-4">
 					{loading ? (
 						<p>Loading posts...</p>
@@ -159,19 +182,30 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 								? JSON.parse(post.media)
 								: [];
 
-							const fullImageUrls = mediaArray.map(
-								(filePath) => `${SUPABASE_URL}/post-pictures/${filePath}`
+							const fullImageUrls = mediaArray.map((filePath) =>
+								getPublicUrl(filePath, "post-pictures")
 							);
 
 							return (
 								<PostCard
-									key={post.id}
-									username={post.owner}
+									postId={post.id}
+									avatarUrl={
+										post.profile?.profile_pic
+											? getPublicUrl(
+													post.profile.profile_pic,
+													"profile-pictures"
+												)
+											: "/assets/default-profile.jpg"
+									}
+									username={post.profile?.barangayName || "Unknown User"}
+									handle={post.profile?.address || "Unknown Address"}
 									postText={post.content}
 									imageUrls={fullImageUrls}
 									likes={post.no_of_likes ?? 0}
 									views={post.no_of_views ?? 0}
 									timeAgo={timeAgo(post.time_uploaded)}
+									isPinned={post.is_pinned}
+									userRole={userRole}
 								/>
 							);
 						})

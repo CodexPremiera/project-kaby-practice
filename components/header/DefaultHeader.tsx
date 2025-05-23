@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 import GuestHeaderMobile from "./GuestHeaderMobile";
-import { ModeToggle } from "../ModeToggle";
+import { ModeToggle } from "./ModeToggle";
 
 const links = [
 	{ name: "about", path: "/about", scroll: false },

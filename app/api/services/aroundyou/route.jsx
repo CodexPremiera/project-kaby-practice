@@ -14,9 +14,11 @@ export async function GET() {
 	const serviceService = new ServiceService(supabase);
 	const citizenService = new CitizenService(supabase);
 	const barangayService = new BarangayService(supabase);
+
 	const userId = await authService.loggedInUserId();
 	const role = await userService.getUserRole(userId);
-
+	const citizens = await citizenService.getAllCitizens();
+	
 	let barangayId = null;
 	if (role === "citizen") {
 		barangayId = await citizenService.getCitBarangayIdOnly(userId);
@@ -27,5 +29,16 @@ export async function GET() {
 	const citizenUserIds = await citizenService.getAllCitizenProfiles(barangayId);
 	// Get services owned by those citizen user IDs
 	const services = await serviceService.getAroundYouServices(citizenUserIds);
-	return NextResponse.json(services);
+	const enrichedServices = services.map((services) => {
+		const profile = citizens.find((c) => c.user_id === services.owner);
+		return {
+			...services,
+			profile,
+			ownerName: profile
+				? `${profile.first_name} ${profile.last_name}`
+				: services.owner,
+		};
+	});
+
+	return NextResponse.json(enrichedServices);
 }

@@ -11,6 +11,9 @@ import {ChevronDown} from "lucide-react";
 import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import EditProfile from "@/components/settings/barangay/edit_profile";
 import AccessControl from "@/components/settings/barangay/access_control";
+import { useUser } from '@/app/context/UserContext';
+import { useBarangayContext } from '@/app/context/BarangayContext';
+import { useCitizenContext } from '@/app/context/CitizenContext';
 
 type BarangaySettingsProps = {
   citizens: {
@@ -43,6 +46,7 @@ type BarangaySettingsProps = {
     access_role : string;
     date_added :string;
     date_ended:string;
+    profile_pic:string;
   }[];
   non_managers:{
     citizen_id: string;
@@ -63,9 +67,14 @@ type BarangaySettingsProps = {
 
 
 function BarangaySettings({citizens,workers,accessRoles,managers,non_managers}: BarangaySettingsProps) {
-  
+  const {role} = useUser(); 
+  const  barangay  = useBarangayContext();
+  const  citizen  = useCitizenContext();
+
+  const profile = role === "barangay" ? barangay : citizen;
+
   const TAB_COMPONENTS = {
-    Profile: <EditProfile />,
+    Profile: <EditProfile role = {role} profile={profile}/>,
     Security: <PasswordAndSecurity />,
     Access: <AccessControl citizens={citizens} workers={workers} accessRoles={accessRoles} managers={managers} non_managers={non_managers} />,
   };
@@ -130,3 +139,5 @@ function BarangaySettings({citizens,workers,accessRoles,managers,non_managers}: 
 }
 
 export default BarangaySettings;
+
+

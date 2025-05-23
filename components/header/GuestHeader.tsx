@@ -5,7 +5,7 @@ import { Link as ScrollLink } from "react-scroll";
 
 import Logo from "../Logo";
 import GuestHeaderMobile from "./GuestHeaderMobile";
-import { ModeToggle } from "../ModeToggle";
+import { ModeToggle } from "./ModeToggle";
 import { Button } from "@/components/ui/button";
 
 // Navigation links configuration

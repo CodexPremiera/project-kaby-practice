@@ -37,6 +37,9 @@ export class ImageGalleryController {
 	getCurrentViews() {
 		return this.views[this.currentIndex] || 0;
 	}
+	getTotalImages() {
+		return this.images.length;
+	}
 
 	next() {
 		this.currentIndex = (this.currentIndex + 1) % this.images.length;

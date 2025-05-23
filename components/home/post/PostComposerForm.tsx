@@ -112,7 +112,7 @@ const PostComposerForm = () => {
 					</div>
 
 					<ButtonPrimary type="submit" disabled={isSubmitting}>
-						{isSubmitting ? "Posting..." : "Post"}
+						{isSubmitting ? "Posting" : "Post"}
 					</ButtonPrimary>
 				</div>
 

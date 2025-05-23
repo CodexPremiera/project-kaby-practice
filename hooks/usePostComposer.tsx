@@ -101,8 +101,6 @@ export const usePostComposer = () => {
 				setModalType("loading");
 				setForm({ content: "", files: [], previewUrls: [] });
 				if (fileInputRef.current) fileInputRef.current.value = "";
-
-				// Show loading modal for 3 seconds then show success modal
 				setTimeout(() => {
 					setModalType("success");
 				}, 3000);

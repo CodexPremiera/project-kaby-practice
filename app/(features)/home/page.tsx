@@ -38,11 +38,7 @@ const Home = () => {
 	}, []);
 
 	const TAB_COMPONENTS = (userId: string | null, userRole: string | null) => ({
-		Services: userRole ? (
-			<Services userRole={userRole} />
-		) : (
-			<div>Loading services...</div>
-		),
+		Services: <Services />,
 		Posts: userRole ? (
 			<Post userRole={userRole} />
 		) : (

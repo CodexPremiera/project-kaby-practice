@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import ServiceCard from "@/components/services/view/ServiceCard";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 type ServiceType = {
 	id: string;
@@ -33,74 +33,66 @@ type ServicesWithProfile = ServiceType & {
 
 interface SearchServiceProps {
 	tab: "all" | "frontline" | "around-you";
-	userRole: "citizen" | "barangay";
 }
 
-const ServicesList: React.FC<SearchServiceProps> = ({ tab, userRole }) => {
-	const router = useRouter();
+const ServicesList: React.FC<SearchServiceProps> = ({ tab }) => {
 	const searchParams = useSearchParams();
 	const query = searchParams.get("q") || "";
-
-	const [services, setServices] = useState<ServicesWithProfile[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [currentUserId, setCurrentUserId] = useState<string>("");
-
-	const fetchServicesAndProfiles = async () => {
-		setLoading(true);
-		try {
-			let url = "/api/services";
-			if (tab === "frontline") url = "/api/services/frontline";
-			else if (tab === "around-you") url = "/api/services/aroundyou";
-
-			const resServices = await fetch(url);
-			if (!resServices.ok) throw new Error("Failed to fetch services");
-			const serviceData: ServiceType[] = await resServices.json();
-
-			const profileApi = "api/auth/login";
-
-			const resProfiles = await fetch(profileApi);
-			if (!resProfiles.ok) throw new Error("Failed to fetch profiles");
-			const profilesJson = await resProfiles.json();
-			const profiles = profilesJson.data || [];
-
-			const servicesWithProfiles: ServicesWithProfile[] = serviceData.map(
-				(service) => {
-					const profile = profiles.find(
-						(p: BarangayProfile | CitizenProfile) => p.user_id === service.owner
-					);
-
-					//Logic Using the service.owner I will
-					const ownerName =
-						userRole === "barangay"
-							? (profile as BarangayProfile)?.barangayName || "Unknown Barangay"
-							: profile
-								? `${(profile as CitizenProfile).first_name} ${(profile as CitizenProfile).last_name}`
-								: "Unknown User";
-
-					return { ...service, profile: profile || null, ownerName };
-				}
-			);
-
-			setServices(servicesWithProfiles);
-		} catch (err: any) {
-			console.error("Error fetching services or profiles:", err);
-			setError(err.message);
-			setServices([]);
-		} finally {
-			setLoading(false);
-		}
-	};
+	const [services, setServices] = useState<ServicesWithProfile[]>([]);
 
 	useEffect(() => {
-		fetchServicesAndProfiles();
-	}, [tab, userRole]);
+		async function fetchServices() {
+			try {
+				let servicesUrl = null;
+				if (tab === "all") {
+					servicesUrl = "/api/services";
+					// "ALL Services" refers to all citizen-created services across the entire Philippines.
+					const [servicesRes, citizensRes] = await Promise.all([
+						fetch(servicesUrl),
+						fetch("/api/citizen"),
+					]);
+
+					if (!servicesRes.ok) throw new Error("Failed to fetch services");
+					if (!citizensRes.ok) throw new Error("Failed to fetch citizens");
+
+					const servicesData = await servicesRes.json();
+					const citizensData = await citizensRes.json();
+
+					const citizenUserIds = citizensData.data.map(
+						(c: CitizenProfile) => c.user_id
+					);
+
+					// Filter services where owner is a citizen
+					const filteredServices = servicesData.filter((service: ServiceType) =>
+						citizenUserIds.includes(service.owner)
+					);
+					setServices(filteredServices);
+				} else if (tab === "frontline" || tab === "around-you") {
+					servicesUrl =
+						tab === "frontline"
+							? "/api/services/frontline"
+							: "/api/services/aroundyou";
+
+					const res = await fetch(servicesUrl);
+					if (!res.ok) throw new Error(`Failed to fetch ${tab} services`);
+
+					const servicesData = await res.json();
+					setServices(servicesData);
+				}
+			} catch (err: any) {
+				setError(err.message);
+			} finally {
+				setLoading(false);
+			}
+		}
+
+		fetchServices();
+	}, [tab]);
 
 	const filteredAndSearchedServices = useMemo(() => {
-		let filtered = services.filter(
-			(service) =>
-				service.status !== "closed" && service.owner !== currentUserId
-		);
+		let filtered = services.filter((service) => service.status !== "Closed");
 
 		if (query.trim() !== "") {
 			const normalizedQuery = query.toLowerCase().trim();
@@ -113,7 +105,7 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab, userRole }) => {
 		}
 
 		return filtered;
-	}, [services, query, currentUserId]);
+	}, [services, query]);
 
 	if (loading) return <div>Loading services...</div>;
 	if (error) return <div>Error loading services: {error}</div>;
@@ -132,7 +124,7 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab, userRole }) => {
 						displayBadge: service.displayBadge,
 						status: service.status,
 					}}
-					onSelect={(id) => router.push(`/services/${id}`)}
+					routePrefix="/services"
 				/>
 			))}
 		</>

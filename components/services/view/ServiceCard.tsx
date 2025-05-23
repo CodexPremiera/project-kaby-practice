@@ -18,18 +18,28 @@ interface Service {
 
 interface ServiceCardProps {
 	service: Service;
-	onSelect: (id: string) => void;
+	onSelect?: (id: string) => void;
+	routePrefix?: string;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect }) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({
+	service,
+	onSelect,
+	routePrefix,
+}) => {
 	const router = useRouter();
-	const isOwner = service.owner;
 
 	const handleClick = () => {
-		if (isOwner) {
-			router.push(`/services/${service.id}/request`);
-		} else {
+		if (onSelect) {
 			onSelect(service.id);
+		} else if (routePrefix) {
+			const path = routePrefix.includes(":id")
+				? routePrefix.replace(":id", service.id)
+				: `${routePrefix}/${service.id}`;
+
+			router.push(path);
+		} else {
+			router.push(`/services/${service.id}`);
 		}
 	};
 

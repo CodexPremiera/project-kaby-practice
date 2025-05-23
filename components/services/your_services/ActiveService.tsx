@@ -136,7 +136,7 @@ const ActiveService: React.FC<UserProps> = ({ userId, userRole }) => {
 						displayBadge: service.displayBadge,
 						status: service.status,
 					}}
-					onSelect={() => router.push(`/services/${service.id}/request`)}
+					routePrefix="/services/:id/request"
 				/>
 			))}
 		</div>

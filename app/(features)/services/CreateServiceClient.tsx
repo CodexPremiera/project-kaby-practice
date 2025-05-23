@@ -59,7 +59,7 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 	const today = new Date().toISOString().split("T")[0];
 
 	const agreementFeeValue =
-		form.serviceCost !== undefined
+		form.serviceCost !== undefined && form.serviceCost >= 0
 			? form.paymentType === "Fixed Rate"
 				? form.serviceCost
 				: Math.max(
@@ -135,11 +135,6 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 				return;
 			}
 
-			// Get public URL of uploaded image
-			const { data: publicUrlData } = supabase.storage
-				.from("services-pictures")
-				.getPublicUrl(uploadData.path);
-
 			uploadedImagePath = uploadData.path;
 		}
 
@@ -173,6 +168,9 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 			});
 			if (res.ok) {
 				setModalType("success");
+				setTimeout(() => {
+					window.location.reload();
+				}, 1000);
 			} else {
 				setModalType("error");
 			}
@@ -417,7 +415,11 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 										<p className="text-sm">Display Badge</p>
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
-												<Button variant="gray" className="w-24 justify-between">
+												<Button
+													variant="gray"
+													className="w-24 justify-between"
+													disabled={userRole === "citizen"} // disables button for citizens
+												>
 													{form.displayBadge}
 												</Button>
 											</DropdownMenuTrigger>
@@ -437,6 +439,9 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 												))}
 											</DropdownMenuContent>
 										</DropdownMenu>
+										<p className="text-sm text-gray-600 italic">
+											You currently have 0 Badges
+										</p>
 									</div>
 								) : null}
 							</div>

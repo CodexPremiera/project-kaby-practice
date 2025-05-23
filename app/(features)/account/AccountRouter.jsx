@@ -9,7 +9,7 @@ import BarangaySettings from "@/components/settings/barangay_settings";
 
 export default function SettingsRouter() {
   const { role } = useUser();
-  const { barangayId } = useBarangayContext();
+  // const { barangayId } = useBarangayContext();
   // let {citizenId} = useCitizenContext();
   const citizenCtx = useCitizenContext();
   let citizenId = citizenCtx?.citizenId || null;

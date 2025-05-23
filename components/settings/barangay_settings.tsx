@@ -67,14 +67,15 @@ type BarangaySettingsProps = {
 
 
 function BarangaySettings() {
-  const {role} = useUser(); 
+  // const {role} = useUser(); 
   const  barangay  = useBarangayContext();
   const  citizen  = useCitizenContext();
 
-  const profile = role === "barangay" ? barangay : citizen;
+  // const profile = role === "barangay" ? barangay : citizen;
 
   const TAB_COMPONENTS = {
-    Profile: <EditProfile role = {role} profile={profile}/>,
+    Profile: <EditProfile />,
+    // Profile: <EditProfile role = {role} profile={profile}/>,
     Security: <PasswordAndSecurity />,
     Access: <AccessControl />,
   };

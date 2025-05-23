@@ -8,10 +8,24 @@ export async function GET(request,{params}) {
 
 
     try {
-        const data = await citizenService.getDemograpbicsById(user_id);
+        const data = await citizenService.getDemographicsById(user_id);
         return NextResponse.json({ data: data });
     } catch (err) {
         console.log(err);
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
+}
+export async function PUT(request, {params}){
+    const {user_id} = await params;
+    const supabase = await createClient();
+    const citizenService = new CitizenService(supabase);
+    const body = await request.json();
+    try{
+        const data = await citizenService.updateDemographicsById(user_id,body);
+        return NextResponse.json({data:data});
+    } catch(err){
+        console.log(err);
+        return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+
 }

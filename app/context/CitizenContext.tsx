@@ -8,7 +8,7 @@ export type CitizenContext = {
     lastName: string | null;
     firstName: string | null;
     middleName: string | null;
-    citizenAddress: string | null;
+    // citizenAddress: string | null;
     citizenProfilePic : string | null;
 };
 

@@ -3,13 +3,16 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import { useBarangayContext } from "@/app/context/BarangayContext";
+import { useCitizenContext } from "@/app/context/CitizenContext";
 import CitizenSettings from "@/components/settings/citizen_settings";
 import BarangaySettings from "@/components/settings/barangay_settings";
 
 export default function SettingsRouter() {
   const { role } = useUser();
   const { barangayId } = useBarangayContext();
-
+  let {citizenId} = useCitizenContext();
+  console.log("barangya id", barangayId);
+  console.log("citcont", citizenId);
   const [managers, setManagers] = useState(null);
   const [nonManagers, setNonManagers] = useState(null);
   const [citizenProfiles, setCitizenProfiles] = useState(null);
@@ -17,6 +20,7 @@ export default function SettingsRouter() {
   const [accessRoles, setAccessRoles] = useState(null);
   const [loading, setLoading] = useState(true);
   console.log("userId in settings router", barangayId);
+
 
   useEffect(() => {
     const fetchBarangay = async () => {
@@ -79,7 +83,8 @@ export default function SettingsRouter() {
     // return <BarangaySettings citizens={null} accessRoles={null} workers={null} managers = {dataProfile}/>;
   }
   else if (role === "citizen") {
-    console.log("paosk kaah eree")
-    return <CitizenSettings />;
+    console.log("paosk kaah eree");
+
+    return <CitizenSettings citizenId={citizenId}/>;
   }
 }

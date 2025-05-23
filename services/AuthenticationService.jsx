@@ -38,5 +38,30 @@ class AuthenticationService{
         const email = await this.repo.getEmail(id);
         return email;
     }
+    async changeUserPassword(currentPassword, newPassword) {
+	const userId = await this.loggedInUserId();
+	const email = await this.getUserEmail(userId);
+
+	if (!email) {
+		return { success: false, error: "Unable to find user email." };
+	}
+	const { error: authError } = await this.repo.loginUser({
+		email,
+		password: currentPassword,
+	});
+	if (authError) {
+		console.log(authError, "auth error");
+		return { success: false, error: "Current password is incorrect." };
+	}
+	if (currentPassword === newPassword) {
+		return { success: false, error: "New password cannot be the same as the old password." };
+	}
+	const result = await this.repo.changePassword(newPassword);
+	if (result.error) {
+		return { success: false, error: result.error.message || "Failed to update password." };
+	}
+	return { success: true, message: "Password changed successfully." };
+}
+
 }
 export default AuthenticationService;

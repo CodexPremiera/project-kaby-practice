@@ -52,7 +52,7 @@ class AuthenticationRepo {
 		return data;
 	}
 	async getEmail(id){
-		const { data: { user }, error } = await supabase.auth.getUser()
+		const { data: { user }, error } = await this.supabase.auth.getUser()
 
 		if (error) {
 			console.error(error)
@@ -61,5 +61,18 @@ class AuthenticationRepo {
 
 		return user?.email
 	}
+	async changePassword(newPassword) {
+		const { data, error } = await this.supabase.auth.updateUser({
+			password: newPassword,
+		});
+
+		if (error) {
+			console.error(error);
+			return { error };
+		}
+
+		return { success: true, data };
+	}
+
 }
 export default AuthenticationRepo;

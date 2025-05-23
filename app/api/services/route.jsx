@@ -41,13 +41,9 @@ export async function POST(request) {
 }
 
 export async function GET() {
-	// Getting ALL Citizen Services (Not just around you)
+	// Getting ALL Services
 	const supabase = await createClient();
 	const serviceService = new ServiceService(supabase);
-	const userService = new UserService(supabase);
-	const citizenService = new CitizenService(supabase);
-	const barangayService = new BarangayService(supabase);
-
 	const {
 		data: { user },
 		error: userError,
@@ -57,8 +53,6 @@ export async function GET() {
 		return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 	}
 
-	let owner = null;
-	const role = await userService.getUserRole(user.id);
 	try {
 		const services = await serviceService.getAllServices();
 		return NextResponse.json(services);

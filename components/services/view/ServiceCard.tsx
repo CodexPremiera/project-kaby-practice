@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Crown as BadgeIcon } from "lucide-react";
+import { getPublicUrl } from "@/utils/supabase/storage";
 
 interface Service {
 	id: string;
@@ -48,7 +49,11 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect }) => {
 		>
 			<div className="relative w-full h-[140px] sm:h-[180px] md:h-[160px] lg:h-[144px] xl:h-[180px] overflow-hidden rounded-t-[10px]">
 				<Image
-					src={service.image}
+					src={
+						service.image
+							? getPublicUrl(service.image, "services-pictures")
+							: "/default-image.jpg"
+					}
 					alt={`${service.title} image`}
 					fill
 					className="object-cover"

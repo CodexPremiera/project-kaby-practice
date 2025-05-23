@@ -28,7 +28,7 @@ type CitizenProfile = {
 
 type ServicesWithProfile = ServiceType & {
 	profile: BarangayProfile | CitizenProfile | null;
-	ownerName: string; // Added ownerName here
+	ownerName: string;
 };
 
 interface SearchServiceProps {

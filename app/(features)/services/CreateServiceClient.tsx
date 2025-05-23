@@ -14,6 +14,12 @@ import DatePicker from "@/components/services/DatePicker";
 import SuccessModal from "@/components/modal/SuccessModal";
 import ErrorModal from "@/components/modal/ErrorModal";
 import ErrorPopup from "@/components/modal/ErrorPopup";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+	process.env.NEXT_PUBLIC_SUPABASE_URL!,
+	process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 interface CreateServiceProps {
 	onClose: () => void;
@@ -48,6 +54,7 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 	const [errorMessages, setErrorMessages] = useState<{ [key: string]: string }>(
 		{}
 	);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const today = new Date().toISOString().split("T")[0];
 
@@ -78,34 +85,21 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 		}
 	}, [userRole]);
 
-	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
-		if (file) {
-			const reader = new FileReader();
-			reader.onloadend = () => {
-				setForm((prev) => ({
-					...prev,
-					selectedImage: reader.result as string,
-				}));
-			};
-			reader.readAsDataURL(file);
-		}
-	};
+	const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
 	const handleCreateService = async () => {
+		setIsSubmitting(true);
 		setErrorMessages({});
 		const errors: { [key: string]: string } = {};
 
+		if (!form.serviceTitle.trim())
+			errors.serviceTitle = "Service title is required";
 		if (!form.selectedImage) errors.image = "Image is required";
 		if (form.serviceType === "Select Type")
 			errors.serviceType = "Service Type is required";
 		if (!form.description.trim())
 			errors.description = "Description is required";
-		if (!form.attachRequirements)
-			errors.attachRequirements = "Attach requirements is required";
-		if (!form.eligibleForBadges)
-			errors.eligibleForBadges = "Eligible for badges is required";
-		if (form.serviceCost === undefined)
+		if (form.serviceCost === undefined || isNaN(form.serviceCost))
 			errors.serviceCost = "Service cost is required";
 		if (!form.paymentType) errors.paymentType = "Payment type is required";
 
@@ -117,7 +111,36 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 
 		if (Object.keys(errors).length > 0) {
 			setErrorMessages(errors);
+			setIsSubmitting(false);
 			return;
+		}
+
+		let uploadedImagePath = "";
+		if (selectedImageFile) {
+			const uniqueName = `${Date.now()}-${selectedImageFile.name
+				.replace(/\s+/g, "-")
+				.toLowerCase()}`;
+
+			const { data: uploadData, error: uploadError } = await supabase.storage
+				.from("services-pictures")
+				.upload(`uploads/${uniqueName}`, selectedImageFile, {
+					cacheControl: "3600",
+					upsert: false,
+				});
+
+			if (uploadError) {
+				console.error("Image upload error:", uploadError.message);
+				setModalType("error");
+				setIsSubmitting(false);
+				return;
+			}
+
+			// Get public URL of uploaded image
+			const { data: publicUrlData } = supabase.storage
+				.from("services-pictures")
+				.getPublicUrl(uploadData.path);
+
+			uploadedImagePath = uploadData.path;
 		}
 
 		const finalStartDate =
@@ -132,7 +155,7 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 			allow_attach_file: form.attachRequirements,
 			start_date: finalStartDate,
 			end_date: finalEndDate,
-			image: form.selectedImage,
+			image: uploadedImagePath,
 			owner: null,
 			service_cost: form.serviceCost ?? 0,
 			agreement_fee: agreementFeeValue,
@@ -156,6 +179,8 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 		} catch (err) {
 			setModalType("error");
 			console.error("Error creating service", err);
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
@@ -227,7 +252,16 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 									type="file"
 									id="service-image-upload"
 									accept="image/*"
-									onChange={handleImageChange}
+									onChange={(e) => {
+										const file = e.target.files ? e.target.files[0] : null;
+										setSelectedImageFile(file);
+										if (file) {
+											setForm((prev) => ({
+												...prev,
+												selectedImage: URL.createObjectURL(file),
+											}));
+										}
+									}}
 									className="hidden"
 								/>
 							</div>

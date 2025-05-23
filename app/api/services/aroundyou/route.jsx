@@ -23,7 +23,7 @@ export async function GET() {
 	} else if (role === "barangay") {
 		barangayId = await barangayService.getIDByUserID(userId);
 	}
-	// Get citizen user IDs under the barangay
+	// Get citizen user IDs under the same barangay
 	const citizenUserIds = await citizenService.getAllCitizenProfiles(barangayId);
 	// Get services owned by those citizen user IDs
 	const services = await serviceService.getAroundYouServices(citizenUserIds);

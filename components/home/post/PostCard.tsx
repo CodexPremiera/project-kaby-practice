@@ -46,6 +46,7 @@ interface PostCardProps {
 	views?: number;
 	timeAgo?: string;
 	isPinned?: boolean;
+	userRole?: string;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -59,6 +60,7 @@ const PostCard: React.FC<PostCardProps> = ({
 	views = 0,
 	timeAgo = "",
 	isPinned: isPinnedProp = false,
+	userRole,
 }) => {
 	const validImageUrls = imageUrls.filter((url) => url && url.trim() !== "");
 	const captions = validImageUrls.map(() => postText);
@@ -191,9 +193,11 @@ const PostCard: React.FC<PostCardProps> = ({
 					{isPinned && (
 						<BsPinAngleFill className="w-4 h-4" title="Pinned Post" />
 					)}
-					<ManagePostMenu
-						onAction={(action) => handleManageAction(action, postId)}
-					/>
+					{userRole === "barangay" && (
+						<ManagePostMenu
+							onAction={(action) => handleManageAction(action, postId)}
+						/>
+					)}
 				</div>
 			</div>
 

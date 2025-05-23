@@ -154,6 +154,7 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 										views={post.no_of_views ?? 0}
 										timeAgo={timeAgo(post.time_uploaded)}
 										isPinned={post.is_pinned}
+										userRole={userRole}
 									/>
 								);
 							})
@@ -203,6 +204,7 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 									views={post.no_of_views ?? 0}
 									timeAgo={timeAgo(post.time_uploaded)}
 									isPinned={post.is_pinned}
+									userRole={userRole}
 								/>
 							);
 						})

@@ -27,15 +27,17 @@ const ManagePostMenu: React.FC<ManagePostProps> = ({ onAction }) => {
 			<PopoverTrigger asChild>
 				<BsThreeDots className="text-primary" />
 			</PopoverTrigger>
-			<PopoverContent className="w-40 p-2 bg-white">
+			<PopoverContent className="w-45 p-2 bg-white">
 				{MANAGE_POST.map(({ title, icon: Icon }) => (
 					<div
 						key={title}
 						onClick={() => onAction(title)}
-						className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary/10 cursor-pointer transition"
+						className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-secondary/10 cursor-pointer transition"
 					>
-						<Icon size={18} />
-						<span className="text-sm">{title}</span>
+						<div className="flex justify-between w-full items-center">
+							<span className="text-sm">{title}</span>
+							<Icon size={12} />
+						</div>
 					</div>
 				))}
 			</PopoverContent>

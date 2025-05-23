@@ -2,9 +2,9 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import ServiceCard from "@/components/services/view/ServiceCard";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
-interface Service {
+type ServiceType = {
 	id: string;
 	status: string;
 	owner: string;
@@ -12,36 +12,75 @@ interface Service {
 	title: string;
 	image: string;
 	description: string;
-}
+	displayBadge?: boolean;
+};
+
+type BarangayProfile = {
+	user_id: string;
+	barangayName: string;
+};
+
+type CitizenProfile = {
+	user_id: string;
+	first_name: string;
+	last_name: string;
+};
+
+type ServicesWithProfile = ServiceType & {
+	profile: BarangayProfile | CitizenProfile | null;
+	ownerName: string;
+};
 
 interface SearchServiceProps {
 	tab: "all" | "frontline" | "around-you";
 }
 
 const ServicesList: React.FC<SearchServiceProps> = ({ tab }) => {
-	const router = useRouter();
-	const currentUser = "Bondy Might"; // Replace with auth logic later
 	const searchParams = useSearchParams();
 	const query = searchParams.get("q") || "";
-
-	const [services, setServices] = useState<Service[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [services, setServices] = useState<ServicesWithProfile[]>([]);
 
 	useEffect(() => {
 		async function fetchServices() {
 			try {
-				let url = "/api/services";
-				if (tab === "frontline") {
-					url = "/api/services/frontline";
-				} else if (tab === "around-you") {
-					url = "/api/services/aroundyou";
-				}
+				let servicesUrl = null;
+				if (tab === "all") {
+					servicesUrl = "/api/services";
+					// "ALL Services" refers to all citizen-created services across the entire Philippines.
+					const [servicesRes, citizensRes] = await Promise.all([
+						fetch(servicesUrl),
+						fetch("/api/citizen"),
+					]);
 
-				const res = await fetch(url);
-				if (!res.ok) throw new Error("Failed to fetch services");
-				const data = await res.json();
-				setServices(data);
+					if (!servicesRes.ok) throw new Error("Failed to fetch services");
+					if (!citizensRes.ok) throw new Error("Failed to fetch citizens");
+
+					const servicesData = await servicesRes.json();
+					const citizensData = await citizensRes.json();
+
+					const citizenUserIds = citizensData.data.map(
+						(c: CitizenProfile) => c.user_id
+					);
+
+					// Filter services where owner is a citizen
+					const filteredServices = servicesData.filter((service: ServiceType) =>
+						citizenUserIds.includes(service.owner)
+					);
+					setServices(filteredServices);
+				} else if (tab === "frontline" || tab === "around-you") {
+					servicesUrl =
+						tab === "frontline"
+							? "/api/services/frontline"
+							: "/api/services/aroundyou";
+
+					const res = await fetch(servicesUrl);
+					if (!res.ok) throw new Error(`Failed to fetch ${tab} services`);
+
+					const servicesData = await res.json();
+					setServices(servicesData);
+				}
 			} catch (err: any) {
 				setError(err.message);
 			} finally {
@@ -53,9 +92,7 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab }) => {
 	}, [tab]);
 
 	const filteredAndSearchedServices = useMemo(() => {
-		let filtered = services.filter(
-			(service) => service.status !== "closed" && service.owner !== currentUser
-		);
+		let filtered = services.filter((service) => service.status !== "Closed");
 
 		if (query.trim() !== "") {
 			const normalizedQuery = query.toLowerCase().trim();
@@ -78,8 +115,16 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab }) => {
 			{filteredAndSearchedServices.map((service) => (
 				<ServiceCard
 					key={service.id}
-					service={service}
-					onSelect={() => router.push(`/services/${service.id}`)}
+					service={{
+						id: service.id,
+						title: service.title,
+						owner: service.ownerName,
+						type: service.type,
+						image: service.image,
+						displayBadge: service.displayBadge,
+						status: service.status,
+					}}
+					routePrefix="/services"
 				/>
 			))}
 		</>

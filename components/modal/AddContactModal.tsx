@@ -6,9 +6,10 @@ import { RiCloseFill } from "react-icons/ri";
 interface AddContactProps {
   onClose: () => void;
   barangayId: string;
+  onContactAdded : () => void;
 }
 
-const AddContactModal = ({ onClose, barangayId }: AddContactProps) => {
+const AddContactModal = ({ onClose, barangayId,onContactAdded }: AddContactProps) => {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
 
@@ -34,6 +35,7 @@ const AddContactModal = ({ onClose, barangayId }: AddContactProps) => {
       const data = await res.json();
       console.log("Successfully assigned:", data);
       alert("Contact Saved");
+      onContactAdded();
       onClose(); 
     } catch (error) {
       console.log(error);

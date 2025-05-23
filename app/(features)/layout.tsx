@@ -120,6 +120,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 			 : (
 			<LayoutWrapper>{children}</LayoutWrapper>
 
+
 			)}
 		</UserProvider>
 	);

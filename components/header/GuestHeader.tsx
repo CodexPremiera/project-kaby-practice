@@ -14,9 +14,8 @@ const links = [
 	{ name: "get started", path: "get_started", scroll: true },
 	{ name: "faq", path: "faq", scroll: true },
 ];
-
 const GuestHeader = () => {
-	return (
+ 	return (
 		<header className="flex flex-shrink-0 items-center justify-between py-4 px-12 border-b bg-white dark:bg-[#1F1F1F] text-[#111] dark:text-[#e9e9e9] border-b-[#CDCDCD] dark:border-b-[#444444]">
 			<div className="container mx-auto flex items-center justify-between">
 
@@ -55,6 +54,7 @@ const GuestHeader = () => {
 					</ul>
 
 					{/* Actions */}
+					
 					<div className="flex items-center gap-4">
 						<ModeToggle />
 						<Link href="/login" passHref>

@@ -44,6 +44,7 @@ const AssignWorkerModal = ({ onClose, citizens }: AssignWorkerModalProps) => {
         console.log("this is le citizen", citizen.id);
 
         const barangay_id = citizen.barangay_id;
+        console.log("this is barnagay id",barangay_id);
 
         if (!position) {
             alert("Please enter a position before submitting.");
@@ -59,7 +60,7 @@ const AssignWorkerModal = ({ onClose, citizens }: AssignWorkerModalProps) => {
                 body: JSON.stringify({
                     citizen_id: citizen.id,
                     position,
-                    barangay_id,
+                    barangay_id:citizen.barangay_id,
                 }),
             });
 

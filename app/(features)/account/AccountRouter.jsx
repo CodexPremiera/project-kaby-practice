@@ -10,7 +10,10 @@ import BarangaySettings from "@/components/settings/barangay_settings";
 export default function SettingsRouter() {
   const { role } = useUser();
   const { barangayId } = useBarangayContext();
-  let {citizenId} = useCitizenContext();
+  // let {citizenId} = useCitizenContext();
+  const citizenCtx = useCitizenContext();
+  let citizenId = citizenCtx?.citizenId || null;
+
   console.log("barangya id", barangayId);
   console.log("citcont", citizenId);
   const [managers, setManagers] = useState(null);
@@ -85,6 +88,7 @@ export default function SettingsRouter() {
   else if (role === "citizen") {
     console.log("paosk kaah eree");
 
+    // return <CitizenSettings citizenId={"aaa"}/>;
     return <CitizenSettings citizenId={citizenId}/>;
   }
 }

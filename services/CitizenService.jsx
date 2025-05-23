@@ -11,13 +11,7 @@ class CitizenService {
 		return data;
 	}
 	async getCitizensByBarangayId(barangay_id) {
-		const data = await this.repo.getAllByBarangayId(barangay_id, [
-			"last_name",
-			"middle_name",
-			"first_name",
-			"id",
-			"is_worker",
-		]);
+		const data = await this.repo.getAllByBarangayId(barangay_id,["last_name","middle_name","first_name","id","is_worker","barangay_id"]);
 		return data;
 	}
 	async createCitizenProfile(citizenDetails) {
@@ -41,6 +35,7 @@ class CitizenService {
 
 		return { data, error: null };
 	}
+
 	async getCitizenById(id) {
 		const data = await this.repo.getById(id);
 		return data;
@@ -102,6 +97,10 @@ class CitizenService {
 		return contacts;
 	}
 	async updateContactDetailsById(id, selectedFields={}){
+		const data = await this.repo.update(id,selectedFields);
+		return data;
+	}
+	async setIsWorker(id,selectedFields={}){
 		const data = await this.repo.update(id,selectedFields);
 		return data;
 	}

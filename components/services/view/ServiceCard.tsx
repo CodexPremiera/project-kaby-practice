@@ -76,7 +76,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 					</span>
 				)}
 			</div>
-
 			<div className="px-6 pt-3 pb-5">
 				<p className="font-semibold">{service.title}</p>
 				<p className="flex gap-1 text-secondary">

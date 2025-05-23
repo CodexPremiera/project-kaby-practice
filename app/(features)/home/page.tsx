@@ -7,7 +7,6 @@ import ContactList from "@/components/home/contact_list/ContactList";
 import OfficialsList from "@/components/home/official_list/OfficialsList";
 import BarangayProfileTab from "@/components/profile/BarangayProfileTab";
 import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
-
 const TAB_LABELS = {
 	Services: "Services",
 	Posts: "Posts",

@@ -6,8 +6,18 @@ class CitizenService {
 		this.repo = new CitizenProfileRepo(supabase);
 		this.barangayRepo = new BarangayProfileRepo(supabase);
 	}
+	async getAllCitizens() {
+		const data = await this.repo.getAll();
+		return data;
+	}
 	async getCitizensByBarangayId(barangay_id) {
-		const data = await this.repo.getAllByBarangayId(barangay_id,["last_name","middle_name","first_name","id","is_worker"]);
+		const data = await this.repo.getAllByBarangayId(barangay_id, [
+			"last_name",
+			"middle_name",
+			"first_name",
+			"id",
+			"is_worker",
+		]);
 		return data;
 	}
 	async createCitizenProfile(citizenDetails) {

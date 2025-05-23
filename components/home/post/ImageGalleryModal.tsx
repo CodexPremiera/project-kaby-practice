@@ -2,11 +2,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import {
-	RiArrowLeftSLine,
-	RiArrowRightSLine,
-	RiCloseLine,
-} from "react-icons/ri";
 import { BsDot, BsFillHandThumbsUpFill, BsFillEyeFill } from "react-icons/bs";
 import { ImageGalleryController } from "./ImageGalleryController";
 
@@ -81,44 +76,56 @@ export const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({
 			ref={modalRef}
 		>
 			<div
-				className="flex sm:flex-row flex-col max-w-6xl sm:max-h-[90vh] h-[95vh] bg-white rounded-lg shadow-lg overflow-hidden"
+				className="flex sm:flex-row flex-col max-w-6xl sm:max-h-[90vh] h-[95vh] rounded-lg shadow-lg overflow-hidden"
 				onClick={(e) => e.stopPropagation()}
 			>
 				{/* Left: Image + navigation */}
 				<div className="relative w-full sm:w-[60vw] max-w-[800px] flex items-center justify-center bg-black">
-					<div
-						onClick={prevImage}
-						className="absolute left-4 text-white text-lg cursor-pointer select-none z-20 hover:text-gray-300 transition"
-						aria-label="Previous image"
-					>
-						◀
-					</div>
+					{gallery.getTotalImages() > 1 && (
+						<div
+							onClick={prevImage}
+							className="absolute left-4 text-white text-lg cursor-pointer select-none z-20 hover:text-gray-300 transition"
+							aria-label="Previous image"
+						>
+							◀
+						</div>
+					)}
+
 					<Image
 						src={gallery.getCurrentImage()}
 						alt={`Image ${currentIndex + 1}`}
 						width={800}
 						height={600}
-						className="object-contain max-h-[90vh]"
+						className="object-contain max-w-full max-h-full"
 						priority
 					/>
+
+					{gallery.getTotalImages() > 1 && (
+						<div
+							onClick={nextImage}
+							className="absolute right-4 text-white text-lg cursor-pointer select-none z-20 hover:text-gray-300 transition"
+							aria-label="Next image"
+						>
+							▶
+						</div>
+					)}
+
 					<div
-						onClick={nextImage}
-						className="absolute right-4 text-white text-lg cursor-pointer select-none z-20 hover:text-gray-300 transition"
-						aria-label="Next image"
-					>
-						▶
-					</div>
-					<RiCloseLine
-						size={36}
-						color="white"
-						className="absolute top-4 right-4 cursor-pointer"
+						role="button"
+						tabIndex={0}
 						onClick={onClose}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" || e.key === " ") onClose();
+						}}
 						aria-label="Close gallery"
-					/>
+						className="absolute top-0 right-4 cursor-pointer text-white text-3xl select-none"
+					>
+						×
+					</div>
 				</div>
 
 				{/* Right: Details — hidden on mobile */}
-				<div className="hidden sm:flex w-[40vw] max-w-[400px] p-6 overflow-y-auto border-l border-gray-300 flex-col justify-between">
+				<div className="hidden sm:flex w-[40vw] max-w-[400px] p-6 overflow-y-auto border-l border-gray-300 flex-col justify-between bg-white">
 					{/* Header */}
 					<div className="flex items-center gap-3 border-b border-gray-300 pb-4 mb-4">
 						<div className="w-10 h-10 shrink-0">

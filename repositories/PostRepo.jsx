@@ -22,5 +22,25 @@ class PostRepo extends BaseRepo {
 
 		return { data, error };
 	}
+	async updatePost(id, post_data) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.update(post_data)
+			.eq("id", id)
+			.select();
+
+		if (error) throw error;
+		return data;
+	}
+	async deletePost(id) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.delete()
+			.eq("id", id)
+			.select();
+
+		if (error) throw error;
+		return data;
+	}
 }
 export default PostRepo;

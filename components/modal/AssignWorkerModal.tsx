@@ -3,6 +3,7 @@ import React, { useState } from "react";
 interface AssignWorkerModalProps {
   onClose: () => void;
   citizens: Citizen[] | null;
+  refresh : () => void;
 }
 interface Citizen {
     id: string;
@@ -17,7 +18,7 @@ interface Citizen {
 
 
 
-const AssignWorkerModal = ({ onClose, citizens }: AssignWorkerModalProps) => {
+const AssignWorkerModal = ({ onClose, citizens,refresh }: AssignWorkerModalProps) => {
     console.log("citizens in assign worker", citizens);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedRoles, setSelectedRoles] = useState<Record<string, string>>({});
@@ -71,6 +72,9 @@ const AssignWorkerModal = ({ onClose, citizens }: AssignWorkerModalProps) => {
             const data = await res.json();
             console.log("Successfully assigned:", data);
             alert(`Successfully assigned ${citizenId} as ${position}`);
+            onclose;
+            refresh();
+
         } catch (error) {
             console.error("Error assigning citizen:", error);
             alert("Failed to assign worker. Check the console for details.");

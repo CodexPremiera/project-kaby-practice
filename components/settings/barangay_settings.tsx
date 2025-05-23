@@ -66,7 +66,7 @@ type BarangaySettingsProps = {
 
 
 
-function BarangaySettings({citizens,workers,accessRoles,managers,non_managers}: BarangaySettingsProps) {
+function BarangaySettings() {
   const {role} = useUser(); 
   const  barangay  = useBarangayContext();
   const  citizen  = useCitizenContext();
@@ -76,7 +76,7 @@ function BarangaySettings({citizens,workers,accessRoles,managers,non_managers}: 
   const TAB_COMPONENTS = {
     Profile: <EditProfile role = {role} profile={profile}/>,
     Security: <PasswordAndSecurity />,
-    Access: <AccessControl citizens={citizens} workers={workers} accessRoles={accessRoles} managers={managers} non_managers={non_managers} />,
+    Access: <AccessControl />,
   };
   const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
     Profile: "Edit profile",
@@ -91,6 +91,14 @@ function BarangaySettings({citizens,workers,accessRoles,managers,non_managers}: 
     setActiveTab(tab);
     setShowMobileSwitcher(false); // Auto-close mobile tab switcher
   };
+
+
+
+
+
+
+
+  
 
   return (
     <div className="flex relative">

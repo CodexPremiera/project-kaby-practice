@@ -97,9 +97,9 @@ function Demographics({ userId }: ContactProps) {
     <>
       {/* Header */}
       <div className="flex flex-col items-start gap-2 lg:gap-4 w-full">
-        <h1 className="text-[1.75rem] font-semibold hidden lg:block">Demographics</h1>
+        <h1 className="text-[1.75rem] font-semibold hidden lg:block">Contact Details</h1>
         <p className="text-sm text-muted-foreground">
-          Update your demographics and keep your profile up to date.
+          Update your contact details and keep your profile up to date.
         </p>
       </div>
 

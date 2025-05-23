@@ -6,6 +6,10 @@ import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";
 import TextField from "@/components/ui/form/TextField";
 import SelectField from "@/components/ui/form/SelectField";
 import DateField from "@/components/ui/form/DateField";
+import { profile } from "console";
+import UploadProfilePic from "@/services/UploadProfilePic";
+import { createClient } from "@/utils/supabase/client";
+
 
 interface NameIdentityProps {
   userId: string | null;
@@ -20,12 +24,14 @@ function NameAndIdentity({ userId }: NameIdentityProps) {
     sex: "",
     birthdate: "",
     birthplace: "",
+    profile_pic:"",
   });
 
   const [formData, setFormData] = useState({ ...originalData });
   const [isDisabled, setIsDisabled] = useState(true);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Fetch original data
   useEffect(() => {
@@ -48,6 +54,7 @@ function NameAndIdentity({ userId }: NameIdentityProps) {
           sex: userData.sex || "",
           birthdate: userData.birthdate || "",
           birthplace: userData.birthplace || "",
+          profile_pic : userData.profile_pic || "",
         };
 
         setOriginalData(parsed);
@@ -71,22 +78,45 @@ function NameAndIdentity({ userId }: NameIdentityProps) {
   }, [formData, originalData]);
 
   const handleReset = () => setFormData({ ...originalData });
-
   const handleSave = async () => {
     setSubmitting(true);
+    const supabase = createClient(); // instantiate Supabase client
+    const uploadService = new UploadProfilePic(supabase);
+
+    let profilePicPath = originalData.profile_pic;
+
+    // If a new file is selected, upload it
+    if (selectedFile) {
+      const fileExt = selectedFile.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `uploads/${fileName}`;
+
+      try {
+        await uploadService.uploadProfilePic(filePath, selectedFile);
+        profilePicPath = filePath;
+        setSelectedFile(null);
+      } catch (error) {
+        console.error("Upload failed:", error);
+      }
+    }
+
+    const dataToUpdate = {
+      ...formData,
+      profile_pic: profilePicPath,
+    };
+
     try {
       const res = await fetch(`/api/citizen_settings/name_identity/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToUpdate),
       });
 
       if (!res.ok) throw new Error("Failed to update data");
 
-      const updated = await res.json();
-      setOriginalData({ ...formData });
+      setOriginalData(dataToUpdate);
     } catch (err) {
       console.error("Save failed:", err);
     } finally {
@@ -107,6 +137,35 @@ function NameAndIdentity({ userId }: NameIdentityProps) {
       </div>
 
       {/* Form Fields */}
+      <div className="flex justify-center items-center mb-6">
+        <div className="relative w-32 h-32">
+          <img
+            src={getPublicImageUrl(formData.profile_pic)}
+            alt="Profile"
+            className="w-full h-full object-cover rounded-full border border-gray-300 shadow-sm"
+          />
+          <label
+            htmlFor="profile-pic-upload"
+            className="absolute bottom-0 right-0 bg-[#FFDAB9] text-white rounded-full p-1 cursor-pointer hover:bg-primary/90"
+          >
+            <span className="text-xs font-bold text-black">+</span>
+            <input
+              id="profile-pic-upload"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const imageUrl = URL.createObjectURL(file);
+                  setFormData((prev) => ({ ...prev!, profile_pic: imageUrl }));
+                  setSelectedFile(file);
+                }
+              }}
+              className="hidden"
+            />
+          </label>
+        </div>
+      </div>
       <div className="flex flex-col gap-8 w-full mt-6">
         <div className="flex max-md:flex-col gap-4 w-full">
           <TextField
@@ -178,5 +237,11 @@ function NameAndIdentity({ userId }: NameIdentityProps) {
     </>
   );
 }
+const getPublicImageUrl = (path: string | null | undefined) => {
+  if (!path) return "/default-avatar.png";
+  if (path.startsWith("blob:")) return path;
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-pictures/${path}`;
+};
+
 
 export default NameAndIdentity;

@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import ServicesList from "@/components/home/services/ServicesList";
+import ServicesList from "@/components/services/ServicesList";
 import ButtonTab from "@/components/ui/tabs/ButtonTab";
 import { useRouter, useSearchParams } from "next/navigation";
-import ServiceSearchBar from "@/components/home/services/ServiceSearchBar";
+import ServiceSearchBar from "@/components/services/ServiceSearchBar";
 
 const TAB_COMPONENTS = {
 	all: [],

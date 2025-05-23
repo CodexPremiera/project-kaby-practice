@@ -42,8 +42,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect }) => {
 		>
 			<div className="relative w-full h-[140px] sm:h-[180px] md:h-[160px] lg:h-[144px] xl:h-[180px] overflow-hidden rounded-t-[10px]">
 				<Image
-					/*src={service.image}*/ /*<<< temporarily disabled*/
-					src={"https://picsum.photos/id/237/200/300"}
+					src={service.image} /*<<< temporarily disabled*/
+					/*src={"https://picsum.photos/id/237/200/300"}*/
 					alt="service image"
 					fill
 					className="object-cover"

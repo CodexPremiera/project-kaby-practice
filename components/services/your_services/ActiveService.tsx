@@ -56,7 +56,7 @@ const ActiveService: React.FC<ActiveServiceProps> = ({ userId, userRole }) => {
 	}
 
 	return (
-		<div className="grid justify-center gap-6 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 mx-auto justify-items-center py-4">
+		<div className="w-full grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto justify-items-center py-4">
 			{activeServices.map((service) => (
 				<ServiceCard
 					key={service.id}

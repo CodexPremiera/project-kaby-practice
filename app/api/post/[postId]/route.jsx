@@ -17,7 +17,7 @@ export async function PUT(request, context) {
 		return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 	}
 
-	const postId = context.params.postId;
+	const { postId } = await context.params;
 	const body = await request.json();
 
 	try {

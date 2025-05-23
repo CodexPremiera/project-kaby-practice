@@ -289,7 +289,11 @@ const PostCard: React.FC<PostCardProps> = ({
 							</div>
 						)}
 
-						<PostActions likes={likes} views={views} />
+						<PostActions
+							postId={postId}
+							initialLikes={likes}
+							initialViews={views}
+						/>
 					</>
 				)}
 			</div>

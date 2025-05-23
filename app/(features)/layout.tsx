@@ -97,30 +97,18 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		<UserProvider value={{userId: user_id, role}}>
 			{role === "barangay" ? (
 					<BarangayProvider value={barangayData}>
-						{/* <MainBarProvider barangayId={barangayData.barangayId}>
-							<LayoutWrapper>{children}</LayoutWrapper>
-						</MainBarProvider> */}
 						<LayoutWrapper>{children}</LayoutWrapper>
 					</BarangayProvider>
-				)
-				: role === "citizen" ? (
-					
-						// <CitizenProvider value={barangayData}>
-						// 	{/* <MainBarProvider barangayId={barangayData.barangayId}>
-						// 		<LayoutWrapper>{children}</LayoutWrapper>
-						// 	</MainBarProvider> */}
-						// 	<LayoutWrapper>{children}</LayoutWrapper>
-						// </CitizenProvider>
-						  <CitizenProvider value={citizenData}>
+				) : role === "citizen" ? (
+						<CitizenProvider value={citizenData}>
 							<BarangayProvider value={barangayData}>
-							<LayoutWrapper>{children}</LayoutWrapper>
+								<LayoutWrapper>{children}</LayoutWrapper>
 							</BarangayProvider>
 						</CitizenProvider>
-			)
-			 : (
-			<LayoutWrapper>{children}</LayoutWrapper>
-
-			)}
+					)
+				: (
+						<LayoutWrapper>{children}</LayoutWrapper>
+					)}
 		</UserProvider>
 	);
 };

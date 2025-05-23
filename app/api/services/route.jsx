@@ -2,8 +2,11 @@
 
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import ServiceService from "../../../services/ServiceService";
+import ServiceService from "@/services/ServiceService";
 import AuthenticationService from "@/services/AuthenticationService";
+import UserService from "@/services/UserService";
+import CitizenService from "@/services/CitizenService";
+import BarangayService from "@/services/BarangayService";
 
 export async function POST(request) {
 	const supabase = await createClient();
@@ -38,10 +41,24 @@ export async function POST(request) {
 }
 
 export async function GET() {
-	// Getting all the services
+	// Getting ALL Citizen Services (Not just around you)
 	const supabase = await createClient();
 	const serviceService = new ServiceService(supabase);
+	const userService = new UserService(supabase);
+	const citizenService = new CitizenService(supabase);
+	const barangayService = new BarangayService(supabase);
 
+	const {
+		data: { user },
+		error: userError,
+	} = await supabase.auth.getUser();
+
+	if (userError || !user) {
+		return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+	}
+
+	let owner = null;
+	const role = await userService.getUserRole(user.id);
 	try {
 		const services = await serviceService.getAllServices();
 		return NextResponse.json(services);

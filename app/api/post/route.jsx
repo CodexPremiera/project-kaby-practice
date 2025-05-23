@@ -46,6 +46,10 @@ export async function GET() {
 		data: { user },
 		error: userError,
 	} = await supabase.auth.getUser();
+	
+	if (userError || !user) {
+		return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+	}
 
 	let owner = null;
 	const role = await userService.getUserRole(user.id);

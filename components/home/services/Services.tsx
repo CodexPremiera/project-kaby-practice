@@ -6,6 +6,10 @@ import ButtonTab from "@/components/ui/tabs/ButtonTab";
 import { useRouter, useSearchParams } from "next/navigation";
 import ServiceSearchBar from "@/components/home/services/ServiceSearchBar";
 
+type UserProps = {
+	userRole: string;
+};
+
 const TAB_COMPONENTS = {
 	all: [],
 	frontline: ["Barangay"],
@@ -18,7 +22,7 @@ const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
 	"around-you": "Around you",
 };
 
-const Services = () => {
+const Services: React.FC<UserProps> = ({ userRole }) => {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const tabParam = searchParams.get("stab") as keyof typeof TAB_COMPONENTS;
@@ -71,7 +75,10 @@ const Services = () => {
 
 				{/* Results Content */}
 				<div className="w-full grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto justify-items-center py-4">
-					<ServicesList tab={activeTab} />
+					<ServicesList
+						tab={activeTab}
+						userRole={userRole as "citizen" | "barangay"}
+					/>
 				</div>
 			</div>
 		</div>

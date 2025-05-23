@@ -7,7 +7,6 @@ import { getPublicUrl } from "@/utils/supabase/storage";
 import { timeAgo } from "@/utils/timeAgo";
 
 type UserProps = {
-	userId: string;
 	userRole: string;
 };
 type PostType = {
@@ -31,7 +30,7 @@ type PostWithProfile = PostType & {
 	profile: BarangayProfile | null;
 };
 
-const Post: React.FC<UserProps> = ({ userId, userRole }) => {
+const Post: React.FC<UserProps> = ({ userRole }) => {
 	const [activeTab, setActiveTab] = useState<"all" | "pinned">("all");
 	const [loading, setLoading] = useState(true);
 	const [posts, setPosts] = useState<PostWithProfile[]>([]);
@@ -39,9 +38,11 @@ const Post: React.FC<UserProps> = ({ userId, userRole }) => {
 	const fetchPostsAndProfiles = async () => {
 		setLoading(true);
 		try {
+			// Sa api nako gikuha kinsa current naka login (api/post)
 			const res = await fetch("/api/post");
 			const postData: PostType[] = await res.json();
 
+			// Since Post owner only returns an id (not all the details: owner's name, address, pic), I used the (api/barangay) to get access to its details given the id
 			const resProfiles = await fetch("/api/barangay");
 			const profilesJson = await resProfiles.json();
 			const barangayProfiles: BarangayProfile[] = profilesJson.data || [];

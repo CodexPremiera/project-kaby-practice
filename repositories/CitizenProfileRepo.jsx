@@ -5,7 +5,20 @@ class CitizenProfileRepo extends BaseRepo {
 	constructor(supabase) {
 		super("CitizenProfile", supabase);
 	}
-	async getAllByBarangayId(id,selectFields = "*") {
+	async getAll() {
+		try {
+			const { data, error } = await this.supabase
+				.from(this.tableName)
+				.select("*");
+			if (error) {
+				throw new Error(error.message);
+			}
+			return data;
+		} catch (err) {
+			throw new Error("Failed to fetch citizens");
+		}
+	}
+	async getAllByBarangayId(id, selectFields = "*") {
 		const fields = Array.isArray(selectFields)
 			? selectFields.join(", ")
 			: selectFields;
@@ -15,10 +28,10 @@ class CitizenProfileRepo extends BaseRepo {
 			.select(fields)
 			.eq("barangay_id", id);
 		console.log("this is data", data);
-		if (error){
-			console.log("Errr",error);
+		if (error) {
+			console.log("Errr", error);
 			throw error;
-		} 
+		}
 		return data;
 	}
 	async create(citizenData) {

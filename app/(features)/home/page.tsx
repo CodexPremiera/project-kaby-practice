@@ -38,15 +38,18 @@ const Home = () => {
 	}, []);
 
 	const TAB_COMPONENTS = (userId: string | null, userRole: string | null) => ({
-		Services: <Services />,
-		Posts:
-			userId && userRole ? (
-				<Post userId={userId} userRole={userRole} />
-			) : (
-				<div>Loading posts...</div>
-			),
+		Services: userRole ? (
+			<Services userRole={userRole} />
+		) : (
+			<div>Loading services...</div>
+		),
+		Posts: userRole ? (
+			<Post userRole={userRole} />
+		) : (
+			<div>Loading posts...</div>
+		),
 		Officials: <OfficialsList />,
-		Contact: <ContactList/>,
+		Contact: <ContactList />,
 	});
 
 	return (

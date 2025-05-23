@@ -13,8 +13,6 @@ import { useEffect, useState } from "react";
 import DatePicker from "@/components/services/DatePicker";
 import SuccessModal from "@/components/modal/SuccessModal";
 import ErrorModal from "@/components/modal/ErrorModal";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { BsExclamationTriangle } from "react-icons/bs";
 import ErrorPopup from "@/components/modal/ErrorPopup";
 
 interface CreateServiceProps {

@@ -10,13 +10,13 @@ import Stat from "./Stat";
 
 const userTypeData = [
 	{
-		img: "/assets/img/get_started/img.png",
+		img: "https://eac-network.org/wp-content/uploads/2023/10/2nd-September-Blog-Being-A-Good-Neighbor-Builds-Strong-Communities-Feature-final-scalia-gallery-fullwidth.jpg",
 		name: "For Citizens",
 		description: ["Streamline processes", "Keep your community engaged."],
 		href: "/register/citizen",
 	},
 	{
-		img: "/assets/img/get_started/img.png",
+		img: "https://media.istockphoto.com/id/1355159388/photo/business-people-sitting-around-the-table-and-talking.jpg?s=612x612&w=0&k=20&c=w8pZYQMUG013b50faYS7RgvQ3Rmxc9Vet34AWoRb-_U=",
 		name: "For Barangays",
 		description: [
 			"Stay informed",
@@ -30,8 +30,8 @@ const userTypeData = [
 const GetStarted = () => {
 	return (
 		<section className="pt-16 xl:pt-38" id="get_started">
-			<div className="justify-center mx-auto px-8">
-				<div className="flex flex-col xl:flex-row relative">
+			<div className="flex w-full justify-center mx-auto px-8">
+				<div className="flex flex-col xl:flex-row relative max-w-[1440px] w-full">
 					{/* text */}
 					<motion.div
 						variants={fadeIn("right", 0.2)}
@@ -71,20 +71,24 @@ const GetStarted = () => {
 											quality={100}
 										/>
 
+										{/* Gradient overlay */}
+										<div className="absolute h-[50%] top-0 translate-y-full inset-0 bg-gradient-to-b from-transparent to-black opacity-60 rounded-[10px] pointer-events-none" />
+
+
 										{/* Black overlay with 20% opacity when hovered */}
-										<div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-[10px]"></div>
+											<div className="absolute inset-0 bg-inverse-1 opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-[10px]"></div>
 
 										{/* Default Overlay */}
-										<div className="w-full h-[86px] absolute bottom-0 left-0 right-0 flex justify-between items-center text-black-100">
-											<div className="pl-8">
-												<h4 className="text-black font-primary tracking-[1px] uppercase font-semibold">
+										<div className="w-full h-[84px] absolute bottom-0 left-0 right-0 flex justify-between items-center text-primary">
+											<div className="px-8">
+												<h4 className="text-inverse-1 tracking-[1px] uppercase font-semibold">
 													{item.name}
 												</h4>
 											</div>
 										</div>
 
 										{/* Hover Effect */}
-										<div className="w-full h-[360px] bg-secondary absolute bottom-0 left-0 right-0 flex justify-between pt-[40px] group-hover:translate-y-0 translate-y-[100%] transition-all duration-500 ">
+										<div className="w-full h-[360px] bg-accent absolute bottom-0 left-0 right-0 flex justify-between pt-[40px] group-hover:translate-y-0 translate-y-[100%] transition-all duration-500 ">
 											<div className="pl-8">
 												<h4 className="text-black uppercase mb-2 font-semibold">
 													{item.name}

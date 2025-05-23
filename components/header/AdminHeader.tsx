@@ -2,7 +2,7 @@
 
 import Logo from "../Logo";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "../ModeToggle";
+import { ModeToggle } from "./ModeToggle";
 import { RiUser3Line } from "react-icons/ri";
 import Link from "next/link";
 

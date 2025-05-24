@@ -22,19 +22,23 @@ const ContactList = () => {
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+  const fetchContacts = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/features/home/contacts/${barangayId}`, {
+        method: "GET",
+        cache: "no-store",
+      });
+      const data = await res.json();
+      console.log(data.data);
+      setContacts(data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(()=>{
-    const fetchContacts = async() =>{
-        try{
-          const res = await fetch(`/api/features/home/contacts/${barangayId}`,  { method: "GET", cache: "no-store" });
-          const data = await res.json();
-          console.log(data.data);
-          setContacts(data.data);
-        } catch(error){
-          console.log(error);
-        } finally{
-          setLoading(false);
-        }
-      }
       if(barangayId)fetchContacts();
     },[]);
 
@@ -62,7 +66,7 @@ const ContactList = () => {
       {contacts.map((contact, index) => (
         <ContactItem key={index} label={contact.name} value={contact.number} />
       ))}
-       {showModal && <AddContactModal  onClose={handleCloseModal} barangayId={barangayId} />}
+       {showModal && <AddContactModal  onClose={handleCloseModal} barangayId={barangayId} onContactAdded={fetchContacts} />}
 
     </div>
   );

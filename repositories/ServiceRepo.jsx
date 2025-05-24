@@ -25,6 +25,18 @@ export default class ServiceRepo extends BaseRepo {
 		return data;
 	}
 
+	async getServicesByOwners(ownerIds) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select("*")
+			.in("owner", ownerIds);
+
+		if (error) {
+			console.error("Error fetching services:", error);
+			return [];
+		}
+		return data;
+	}
 	async getServicesByUser(user_id) {
 		console.log(user_id, "the user id");
 		const { data: citizen, error: citizenError } = await this.supabase

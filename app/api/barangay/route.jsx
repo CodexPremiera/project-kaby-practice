@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import BarangayService from "../../../services/BarangayService";
+import BarangayService from "@/services/BarangayService";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(

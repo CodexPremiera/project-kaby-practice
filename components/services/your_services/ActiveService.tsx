@@ -4,42 +4,105 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ServiceCard from "../view/ServiceCard";
 
-type ActiveServiceProps = {
+type UserProps = {
 	userId: string;
 	userRole: string;
 };
 
-const ActiveService: React.FC<ActiveServiceProps> = ({ userId, userRole }) => {
-	const [services, setServices] = useState<any[]>([]);
-	const [loading, setLoading] = useState<boolean>(true);
+type ServiceType = {
+	id: string;
+	owner: string;
+	title: string;
+	type: string;
+	image: string;
+	displayBadge: boolean;
+	status: string;
+};
+
+type BarangayProfile = {
+	user_id: string;
+	barangayName: string;
+};
+
+type CitizenProfile = {
+	user_id: string;
+	first_name: string;
+	last_name: string;
+};
+
+type ServiceWithProfile = ServiceType & {
+	profile: BarangayProfile | CitizenProfile | null;
+	ownerName: string;
+};
+
+const ActiveService: React.FC<UserProps> = ({ userId, userRole }) => {
+	const [services, setServices] = useState<ServiceWithProfile[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 	const router = useRouter();
 
-	// Fetch all services from the API
-	const fetchServices = async () => {
-		try {
-			const res = await fetch("/api/services");
-			const data = await res.json();
-			setServices(data);
-			setLoading(false);
-		} catch (err) {
-			console.error("Error fetching services:", err);
-			setLoading(false);
-		}
-	};
-
 	useEffect(() => {
-		fetchServices();
-	}, []);
+		const fetchData = async () => {
+			try {
+				setLoading(true);
+				setError(null);
 
-	// Handle service card selection — always redirect to /services/request
-	const handleServiceSelect = (service: any) => {
-		router.push(`/services/${service.id}/request`);
-	};
+				// Fetch all services
+				const resServices = await fetch("/api/services");
+				if (!resServices.ok) throw new Error("Failed to fetch services");
+				const serviceData: ServiceType[] = await resServices.json();
 
-	// Filter active services owned by the current user
-	const activeServices = services.filter(
-		(service) => service.owner === userId && service.status === "Active"
-	);
+				// Fetch profiles list based on userRole
+				let profiles: BarangayProfile[] | CitizenProfile[] = [];
+
+				if (userRole === "barangay") {
+					const resBarangayProfiles = await fetch("/api/barangay");
+					if (!resBarangayProfiles.ok)
+						throw new Error("Failed to fetch barangay profiles");
+					const barangayProfilesJson = await resBarangayProfiles.json();
+					profiles = barangayProfilesJson.data || [];
+				} else if (userRole === "citizen") {
+					const resCitizenProfiles = await fetch("/api/citizen");
+					if (!resCitizenProfiles.ok)
+						throw new Error("Failed to fetch citizen profiles");
+					const citizenProfilesJson = await resCitizenProfiles.json();
+					profiles = citizenProfilesJson.data || [];
+				}
+
+				// Find the profile for current userId
+				const matchedProfile =
+					profiles.find((p) => p.user_id === userId) || null;
+
+				// Filter services owned by user and active
+				const myActiveServices = serviceData
+					.filter(
+						(service) => service.owner === userId && service.status === "Active"
+					)
+					.map((service) => {
+						let ownerName = "Unknown User";
+
+						if (userRole === "barangay" && matchedProfile) {
+							ownerName = (matchedProfile as BarangayProfile).barangayName;
+						} else if (userRole === "citizen" && matchedProfile) {
+							const citizenProfile = matchedProfile as CitizenProfile;
+							ownerName = `${citizenProfile.first_name} ${citizenProfile.last_name}`;
+						}
+
+						return { ...service, ownerName, profile: matchedProfile };
+					});
+
+				setServices(myActiveServices);
+			} catch (err: any) {
+				console.error(err);
+				setError(err.message || "Unknown error");
+				setServices([]);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchData();
+	}, [userId, userRole]);
 
 	if (loading) {
 		return (
@@ -47,7 +110,11 @@ const ActiveService: React.FC<ActiveServiceProps> = ({ userId, userRole }) => {
 		);
 	}
 
-	if (activeServices.length === 0) {
+	if (error) {
+		return <div className="text-center py-10 text-red-500">Error: {error}</div>;
+	}
+
+	if (services.length === 0) {
 		return (
 			<div className="text-center py-10 text-gray-500">
 				No active services found.
@@ -56,12 +123,20 @@ const ActiveService: React.FC<ActiveServiceProps> = ({ userId, userRole }) => {
 	}
 
 	return (
-		<div className="grid justify-center gap-6 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 mx-auto justify-items-center py-4">
-			{activeServices.map((service) => (
+    <div className="w-full grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto justify-items-center py-4">
+      {services.map((service) => (
 				<ServiceCard
 					key={service.id}
-					service={service}
-					onSelect={handleServiceSelect}
+					service={{
+						id: service.id,
+						title: service.title,
+						owner: service.ownerName,
+						type: service.type,
+						image: service.image,
+						displayBadge: service.displayBadge,
+						status: service.status,
+					}}
+					routePrefix="/services/:id/request"
 				/>
 			))}
 		</div>

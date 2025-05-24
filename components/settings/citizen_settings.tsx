@@ -9,34 +9,39 @@ import PasswordAndSecurity from "@/components/settings/citizens/password_and_sec
 import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
 import {ChevronDown} from "lucide-react";
 import {useMediaQuery} from "@/app/hooks/useMediaQuery";
+import { useCitizenContext } from '@/app/context/CitizenContext';
 
 
-const TAB_COMPONENTS = {
-  Identity: <NameAndIdentity />,
-  Demographics: <Demographics />,
-  Residence: <Residence />,
-  Contact: <ContactDetails />,
-  Security: <PasswordAndSecurity />,
-};
+interface CitSettingsProps {
+  citizenId : string ;
+}
+function CitizenSettings({citizenId} : CitSettingsProps) {
 
-const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
-  Identity: "Name and identity",
-  Demographics: "Demographics",
-  Residence: "Residence",
-  Contact: "Contact details",
-  Security: "Password and security",
-};
-
-function CitizenSettings(props) {
   const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>("Identity");
   const [showMobileSwitcher, setShowMobileSwitcher] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+
 
   const handleTabChange = (tab: keyof typeof TAB_COMPONENTS) => {
     setActiveTab(tab);
     setShowMobileSwitcher(false); // Auto-close mobile tab switcher
   };
+  console.log("this is ictizen id", citizenId)
+  const TAB_COMPONENTS = {
+    Identity: <NameAndIdentity userId={citizenId} />,
+    Demographics: <Demographics userId={citizenId} />,
+    Residence: <Residence userId={citizenId}/>,
+    Contact: <ContactDetails userId={citizenId}/>,
+    Security: <PasswordAndSecurity />,
+  };
 
+  const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
+    Identity: "Name and identity",
+    Demographics: "Demographics",
+    Residence: "Residence",
+    Contact: "Contact details",
+    Security: "Password and security",
+  };
   return (
     <div className="flex relative">
       <div className="main flex flex-col lg:flex-row items-start w-full mx-auto lg:ml-[40px] xl:ml-[72px]">

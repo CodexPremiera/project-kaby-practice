@@ -50,15 +50,7 @@ class ServiceService {
 	}
 
 	async getServicesByOwners(ownerIds) {
-		const { data, error } = await this.supabase
-			.from("Services")
-			.select("*")
-			.in("owner", ownerIds);
-
-		if (error) {
-			console.error("Error fetching services:", error);
-			return [];
-		}
+		const data = await this.repo.getServicesByOwners(ownerIds);
 		return data;
 	}
 }

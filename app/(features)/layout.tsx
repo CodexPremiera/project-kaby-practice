@@ -66,19 +66,19 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 			// barangayName: "test",
 			// barangayAddress: "test2",
 		}
-		console.log("womppp womppp",barangayData);
+		console.log("womppp womppp",user_id);
+
 		const citizen = await citizenService.getCitByAuthenticatedId(user_id);
-		console.log("womppp womppp  womppp");
+		console.log("womppp womppp  womppp",citizen);
 		citizenData = {
 			citizenId: citizen.id,
 			firstName: citizen.first_name,
 			lastName: citizen.last_name,
 			middleName: citizen.middle_name,
-			citizenAddress: citizen.address,
 			citizenProfilePic: citizen.profile_pic,
 		};
 		console.log("Barangay data: ", barangayData);
-
+		console.log("brrr brr", citizenData);
 		Header = <CitizenHeader />;
 		Mainbar = <CitizenMainbar />;
 	}
@@ -99,16 +99,17 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 					<BarangayProvider value={barangayData}>
 						<LayoutWrapper>{children}</LayoutWrapper>
 					</BarangayProvider>
-				) : role === "citizen" ? (
-						<CitizenProvider value={citizenData}>
+				)
+				: role === "citizen" && citizenData && barangayData 	 ?  (
+            <CitizenProvider value={citizenData}>
 							<BarangayProvider value={barangayData}>
 								<LayoutWrapper>{children}</LayoutWrapper>
 							</BarangayProvider>
 						</CitizenProvider>
-					)
-				: (
-						<LayoutWrapper>{children}</LayoutWrapper>
-					)}
+			)
+			 : (
+			<LayoutWrapper>{children}</LayoutWrapper>
+			)}
 		</UserProvider>
 	);
 };

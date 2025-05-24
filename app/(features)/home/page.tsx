@@ -7,7 +7,6 @@ import ContactList from "@/components/home/contact_list/ContactList";
 import OfficialsList from "@/components/home/official_list/OfficialsList";
 import BarangayProfileTab from "@/components/profile/BarangayProfileTab";
 import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
-
 const TAB_LABELS = {
 	Services: "Services",
 	Posts: "Posts",
@@ -39,14 +38,13 @@ const Home = () => {
 
 	const TAB_COMPONENTS = (userId: string | null, userRole: string | null) => ({
 		Services: <Services />,
-		Posts:
-			userId && userRole ? (
-				<Post userId={userId} userRole={userRole} />
-			) : (
-				<div>Loading posts...</div>
-			),
+		Posts: userRole ? (
+			<Post userRole={userRole} />
+		) : (
+			<div>Loading posts...</div>
+		),
 		Officials: <OfficialsList />,
-		Contact: <ContactList/>,
+		Contact: <ContactList />,
 	});
 
 	return (

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 interface AddManagerModalProps {
   onClose: () => void;
   non_managers: Citizen[] | null;
+  refresh : () => void;
 }
 interface Citizen {
 	citizen_id: string;
@@ -15,7 +16,7 @@ interface Citizen {
 	worker_id : string;
 }[];
 
-const AddManagerModal = ({ onClose, non_managers }: AddManagerModalProps) => {
+const AddManagerModal = ({ onClose, non_managers,refresh }: AddManagerModalProps) => {
 	console.log("citizens", non_managers);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedRoles, setSelectedRoles] = useState<Record<string, string>>({});
@@ -45,6 +46,8 @@ const AddManagerModal = ({ onClose, non_managers }: AddManagerModalProps) => {
 			const data = await res.json();
             console.log("Successfully assigned:", data);
 			alert("Assigned Successfully");
+			onclose;
+			refresh();
 		}catch(error){
 			console.log(error);
 			alert("failed");

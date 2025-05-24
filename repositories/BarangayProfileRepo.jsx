@@ -9,7 +9,7 @@ class BarangayProfileRepo extends BaseRepo {
 		try {
 			const { data, error } = await this.supabase
 				.from(this.tableName)
-				.select("id, barangayName");
+				.select("*");
 			if (error) {
 				throw new Error(error.message);
 			}

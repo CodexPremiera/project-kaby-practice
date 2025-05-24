@@ -68,7 +68,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 			// barangayAddress: "test2",
 		}
 		console.log("womppp womppp",user_id);
-		
+
 		const citizen = await citizenService.getCitByAuthenticatedId(user_id);
 		console.log("womppp womppp  womppp",citizen);
 		citizenData = {
@@ -98,30 +98,18 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		<UserProvider value={{userId: user_id, role,has_password}}>
 			{role === "barangay" ? (
 					<BarangayProvider value={barangayData}>
-						{/* <MainBarProvider barangayId={barangayData.barangayId}>
-							<LayoutWrapper>{children}</LayoutWrapper>
-						</MainBarProvider> */}
 						<LayoutWrapper>{children}</LayoutWrapper>
 					</BarangayProvider>
 				)
-				: role === "citizen" &&citizenData && barangayData 	 ?  (
-					
-						// <CitizenProvider value={barangayData}>
-						// 	{/* <MainBarProvider barangayId={barangayData.barangayId}>
-						// 		<LayoutWrapper>{children}</LayoutWrapper>
-						// 	</MainBarProvider> */}
-						// 	<LayoutWrapper>{children}</LayoutWrapper>
-						// </CitizenProvider>
-						  <CitizenProvider value={citizenData}>
+				: role === "citizen" && citizenData && barangayData 	 ?  (
+            <CitizenProvider value={citizenData}>
 							<BarangayProvider value={barangayData}>
-							<LayoutWrapper>{children}</LayoutWrapper>
+								<LayoutWrapper>{children}</LayoutWrapper>
 							</BarangayProvider>
 						</CitizenProvider>
 			)
 			 : (
 			<LayoutWrapper>{children}</LayoutWrapper>
-
-
 			)}
 		</UserProvider>
 	);

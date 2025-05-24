@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import LoadingModal from "@/components/modal/LoadingModal";
 import ErrorModal from "@/components/modal/ErrorModal";
 import SuccessModal from "@/components/modal/SuccessModal";
+import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary';
 
 export default function CitizenRegisterClientForm() {
 	const router = useRouter();
@@ -158,41 +158,11 @@ export default function CitizenRegisterClientForm() {
 						))}
 					</select>
 				</div>
-				{/* <div className="relative mt-4">
-					<input
-						className="floating-input mt-1 w-full text-black"
-						type="password"
-						id="password"
-						name="password"
-						placeholder=" "
-						onChange={handleChange}
-						required
-					/>
-					<label htmlFor="password" className="floating-label">
-						Password
-					</label>
-				</div> */}
-				{/* <div className="relative mt-4">
-					<input
-						className="floating-input mt-1 w-full text-black"
-						type="password"
-						id="confirm-password"
-						name="confirm_password"
-						placeholder=" "
-						onChange={handleChange}
-						required
-					/>
-					<label htmlFor="confirm-password" className="floating-label">
-						Confirm Password
-					</label>
-				</div> */}
+
 				<div className="mt-6 flex justify-center items-center">
-					<button
-						type="submit"
-						className="w-[300px] py-2 text-white bg-gray rounded-md hover:bg-black"
-					>
-						Sign Up
-					</button>
+					<ButtonPrimary type="submit" className="min-w-[50%]">
+						Sign up
+					</ButtonPrimary>
 				</div>
 			</form>
 		</div>

@@ -14,14 +14,16 @@ const LoginForm = () => {
 
 	return (
 		<section>
-			<div className="flex flex-wrap xl:flex-nowrap">
-				<div className="relative w-full xl:w-1/2 h-[100vh] bg-hero bg-no-repeat bg-cover bg-center">
+			<div className="flex flex-wrap xl:flex-nowrap h-screen bg-primary-1 xl:gap-16 px-12 py-12 bg-gradient">
+				<div className="flex flex-col relative justify-between w-full xl:w-1/2 h-[200px] xl:h-full ">
+					<div className="flex rounded-3xl bg-hero bg-no-repeat bg-cover bg-center w-full h-full" />
+					{/*
 					<div className="absolute inset-0 bg-gradient-to-l from-black/0 via-black/50 to-black/70 z-10" />
-					<div className="absolute top-4 left-4 z-20">
+					<div className="w-full top-4 left-4 z-20">
 						<Logo />
 					</div>
-					<div className="absolute z-10 container h-full flex items-end justify-end pb-20">
-						<div className="rounded-[20px] bg-primary py-3 px-3 w-full mx-8">
+					<div className="w-full z-10 container h-fit flex">
+						<div className="rounded-[20px] bg-primary py-3 px-3 w-full">
 							<p className="text-black mx-3 font-semibold">
 								Ready to lead change in your barangay?
 							</p>
@@ -36,62 +38,27 @@ const LoginForm = () => {
 							</Link>
 						</div>
 					</div>
+					*/}
 				</div>
 
-				<div className="w-full xl:w-1/2 flex justify-center items-center">
-					<div className="h-auto w-[420px] py-8 px-8 bg-primary rounded-[20px]">
-						<p className="text-lg font-semibold text-center">Login</p>
-						<LoginClientForm />
-						{/* <form className="w-full mt-6">
-							<div className="relative mt-4">
-								<input
-									className="floating-input mt-1 w-full text-black"
-									type="text"
-									id="region"
-									name="region"
-									placeholder=" "
-									required
-								/>
-								<label htmlFor="region" className="floating-label">
-									Username
-								</label>
-							</div>
-							<div className="relative mt-4">
-								<input
-									className="floating-input mt-1 w-full text-black"
-									type="password"
-									id="password"
-									name="password"
-									placeholder=" "
-									required
-								/>
-								<label htmlFor="password" className="floating-label">
-									Password
-								</label>
-							</div>
-							<div className="flex flex-col justify-between items-end">
-								<Link href="" className="text-[12px] text-secondary mt-1">
-									Forgot Password
-								</Link>
-							</div>
-							<div className="mt-6 flex justify-center items-center">
-								<button
-									type="submit"
-									className="w-[300px] py-2 text-white bg-gray rounded-md hover:bg-black"
+				<div className="w-full xl:w-1/2 xl:h-full xl:justify-between flex flex-col items-center max-xl:gap-8 xl:py-8">
+					<div className="w-fit top-4 left-4 z-20">
+						<Logo/>
+					</div>
+					<div className="h-fit xl:h-full flex items-center w-full max-w-[480px]">
+						<div className="flex flex-col h-auto w-full rounded-xl xl:gap-12">
+							<h1 className="font-semibold text-center" >Welcome back</h1>
+							<LoginClientForm/>
+
+							<p className="flex justify-center items-center gap-2 mt-5">
+								<span>Don't have an account?</span>
+								<Link
+									href="/register/citizen"
+									className="text-secondary mt-1"
 								>
-									Submit
-								</button>
-							</div>
-						</form> */}
-						{}
-						<div className="flex flex-col justify-between items-center mt-5">
-							<p className="text-[12px]">Don't have an account?</p>
-							<Link
-								href="/register/citizen"
-								className="text-[12px] text-secondary mt-1"
-							>
-								Signup
-							</Link>
+									Signup
+								</Link>
+							</p>
 						</div>
 					</div>
 				</div>

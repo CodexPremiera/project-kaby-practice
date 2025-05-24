@@ -10,23 +10,28 @@ import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
 import {ChevronDown} from "lucide-react";
 import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import { useCitizenContext } from '@/app/context/CitizenContext';
+import SetPasswordModal from '@/components/modal/SetPasswordModal';
 
 
 interface CitSettingsProps {
   citizenId : string ;
+  showSetPasswordModal: boolean;
 }
-function CitizenSettings({citizenId} : CitSettingsProps) {
+function CitizenSettings({citizenId,showSetPasswordModal} : CitSettingsProps) {
 
   const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>("Identity");
   const [showMobileSwitcher, setShowMobileSwitcher] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+  const [showModal, setShowModal] = useState(!showSetPasswordModal);
 
+  const closeModal = () => setShowModal(false);
 
   const handleTabChange = (tab: keyof typeof TAB_COMPONENTS) => {
     setActiveTab(tab);
     setShowMobileSwitcher(false); // Auto-close mobile tab switcher
   };
   console.log("this is ictizen id", citizenId)
+  console.log("pakita ka if false", showSetPasswordModal)
   const TAB_COMPONENTS = {
     Identity: <NameAndIdentity userId={citizenId} />,
     Demographics: <Demographics userId={citizenId} />,
@@ -83,6 +88,8 @@ function CitizenSettings({citizenId} : CitSettingsProps) {
           </div>
         </div>
       </div>
+        {showSetPasswordModal && <SetPasswordModal onClose={closeModal}/>}
+
     </div>
   )
 

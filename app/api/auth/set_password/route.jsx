@@ -28,9 +28,9 @@ export async function POST(request) {
 	const supabase = await createClient();
 	const authService = new AuthenticationService(supabase);
 	const body = await request.json();
-
+    console.log("This is the new password",body);
 	try {
-		const result = await authService.set(body.current_password, body.new_password);
+		const result = await authService.setUserPassword(body.current_password);
 		return NextResponse.json(result);
 	} catch (error) {
 		console.error("Unexpected error:", error);

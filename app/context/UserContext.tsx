@@ -6,6 +6,7 @@ import { createContext, useContext } from "react";
 export type UserContextType = {
   userId: string | null;
   role: "admin" | "barangay" | "citizen" | null;
+  has_password : boolean |null;
 };
 
 export const UserContext = createContext<UserContextType | null>(null);

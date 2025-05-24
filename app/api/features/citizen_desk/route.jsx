@@ -29,9 +29,9 @@ export async function PUT(request) {
         email: details.email,
     };
     const account = await authService.createAccount(accountDetails);
-    // console.log("this account", account)
-    const user_id = account.user.id;
-    // console.log(user_id, "this user id");
+    console.log("this account", account)
+    const user_id = account.data.user.id;
+    console.log(user_id, "this user id");
     const citizenProfileData = {
         ...details,
         user_id,

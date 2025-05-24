@@ -39,12 +39,13 @@ export async function updateSession(request: NextRequest) {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	// console.log(user, "this is user");
+	console.log(user, "this is user");
 
 
 	const publicPaths = [
 		"/",              // root
 		"/login",         // login page
+		"/auth/callback", 
 		"/petition",      // petition page
 	];
 	const isPublicPath = publicPaths.includes(request.nextUrl.pathname) ||

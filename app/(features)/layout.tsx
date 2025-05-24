@@ -25,7 +25,8 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	console.log("Logged in user id: ", user_id);
 	const role = await userService.getUserRole(user_id);
 
-
+	const has_password = await authService.hasPassword();
+	console.log("this has pass", has_password);
 
 	console.log("User role: ", role);
 
@@ -94,7 +95,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		</div>
 	);
 	return (
-		<UserProvider value={{userId: user_id, role}}>
+		<UserProvider value={{userId: user_id, role,has_password}}>
 			{role === "barangay" ? (
 					<BarangayProvider value={barangayData}>
 						{/* <MainBarProvider barangayId={barangayData.barangayId}>

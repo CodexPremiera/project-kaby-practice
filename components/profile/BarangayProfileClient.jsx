@@ -6,7 +6,7 @@ import { useBarangayContext } from "@/app/context/BarangayContext";
 
 export default function BarangayProfileClient() {
     const data = useBarangayContext();
-    const {barangayName,barangayAddress,barangayProfilePic} = useBarangayContext();
+    const {barangayName,barangayAddress,barangayProfilePic,about} = useBarangayContext();
     console.log(data,"this is barangay profile pic");
 
     return (
@@ -38,9 +38,12 @@ export default function BarangayProfileClient() {
                             {barangayAddress}
                         </span>
             </div>
+            <div className="flex-col gap-2">
+                {about}
+            </div>
         </div>
     )
-}
+}   
 const getPublicImageUrl = (path) => {
 //   if (!path) return "/default-avatar.png"; 
     console.log("this is path",path);

@@ -64,19 +64,26 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
 			barangayProfilePic:barangay.profile_pic,
+			about: barangay.about,
 			// barangayName: "test",
 			// barangayAddress: "test2",
 		}
-		console.log("womppp womppp",user_id);
+		console.log("womppp womppp",barangayData);
 
 		const citizen = await citizenService.getCitByAuthenticatedId(user_id);
 		console.log("womppp womppp  womppp",citizen);
+		
+		// TODO: HIDDE THIS OR SOMETHING
+		const {data:access,error} = await supabase.from("worker_roles_view").select("access_role").eq("citizen_id",citizen.id).maybeSingle();
+		console.log("this is access role", access?.access_role);
+		// ================================================
 		citizenData = {
 			citizenId: citizen.id,
 			firstName: citizen.first_name,
 			lastName: citizen.last_name,
 			middleName: citizen.middle_name,
 			citizenProfilePic: citizen.profile_pic,
+			access_role : access?.access_role,
 		};
 		console.log("Barangay data: ", barangayData);
 		console.log("brrr brr", citizenData);

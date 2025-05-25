@@ -1,41 +1,74 @@
 "use client";
 
-import React, { use } from "react";
-import { useRouter } from "next/navigation";
-import { services } from "@/data/services";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-interface PageProps {
-	params: Promise<{ id: string }>;
+import React, { useEffect, useState } from "react";
+import { getCurrentUser, getServiceById, Service } from "../ViewServiceClient";
+import { useRouter, useParams } from "next/navigation";
+
+interface UploadedFile {
+	name: string;
+	url: string;
 }
 
-const Payment: React.FC<PageProps> = ({ params }) => {
+const Payment: React.FC = () => {
 	const router = useRouter();
-	const currentUser = "Bondy Might"; // Replace with your auth later
+	const { id } = useParams<{ id: string }>();
 
-	const { id } = use(params);
-	const service = services.find((s) => s.id === id);
+	const [service, setService] = useState<Service | null>(null);
+	const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
-	if (!service) {
+	useEffect(() => {
+		const fetchData = async () => {
+			if (!id) {
+				setError("Invalid service ID");
+				setLoading(false);
+				return;
+			}
+
+			const [user, fetchedService] = await Promise.all([
+				getCurrentUser(),
+				getServiceById(id),
+			]);
+
+			setCurrentUserId(user);
+			setService(fetchedService);
+			setError(!fetchedService ? "Service not found" : null);
+			setLoading(false);
+		};
+
+		fetchData();
+	}, [id]);
+
+	if (loading) {
+		return (
+			<div className="flex items-center justify-center min-h-screen">
+				<p>Loading service requirements...</p>
+			</div>
+		);
+	}
+
+	if (error || !service) {
 		return (
 			<div className="flex items-center justify-center min-h-screen p-6">
 				<div className="text-center">
-					<h1 className="text-2xl font-bold mb-4">Service Not Found</h1>
+					<h1 className="text-2xl font-bold mb-4">
+						{error ? "Service Not Found" : "No service data available"}
+					</h1>
 					<p className="text-gray-500">
-						The service you’re looking for doesn’t exist.
+						{error || "No service information could be retrieved."}
 					</p>
 				</div>
 			</div>
 		);
 	}
 
-	const isOwner = currentUser === service.owner;
-
-	const shouldShowBadge =
-		(service.type === "Barangay" && service.eligibleForBadges === "Yes") ||
-		((service.type === "Personal" || service.type === "Event") &&
-			service.displayBadge === "Yes");
+	const isOwner = currentUserId === service.owner;
 
 	return (
 		<div className="flex flex-col md:flex-row  max-w-7xl mx-auto sm:h-[550px] h-full py-2">
@@ -70,29 +103,22 @@ const Payment: React.FC<PageProps> = ({ params }) => {
 						{/* Payment Details */}
 						<div className="flex flex-col gap-4 py-4 px-8 pb-4">
 							<div>
-								<div className="text-sm flex justify-between ">
+								<div className="text-sm flex justify-between">
 									<p>Service Fee:</p>
-									<p>{service.feeRange}</p>
+									<p>₱{service.service_cost}</p>
 								</div>
 								<div className="text-sm flex justify-between">
 									<p>Agreement Fee:</p>
-									<p>{service.agreementFee}</p>
+									<p>₱{service.agreement_fee}</p>
 								</div>
-							</div>
-							<div>
-								<div className="text-sm flex justify-between ">
+								<div className="text-sm flex justify-between">
 									<p>Convenience Fee:</p>
-									<p>{service.convenienceFee}</p>
+									<p>₱{service.convenience_fee}</p>
 								</div>
 								<div className="flex justify-between items-center font-semibold">
 									<p className="text-sm">Total Due:</p>
-									<p className="text-lg  text-secondary">
-										{`₱${(
-											parseFloat(
-												service.convenienceFee.replace(/[^\d.-]/g, "")
-											) +
-											parseFloat(service.agreementFee.replace(/[^\d.-]/g, ""))
-										).toFixed(2)}`}
+									<p className="text-lg text-secondary">
+										₱{service.total_price}
 									</p>
 								</div>
 							</div>

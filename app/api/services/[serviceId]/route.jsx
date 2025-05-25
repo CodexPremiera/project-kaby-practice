@@ -1,34 +1,19 @@
-import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+"use server";
 import ServiceService from "@/services/ServiceService";
-// TODO: i am using repo but make service for services
-
-//const repo = new ServiceRepo();
-//export async function GET(request, {params}){
-//    const profileId = (await params).profileId;
-//    console.log("went here", profileId);
-
-//    const data = await repo.getServicesByUser(profileId);
-//    console.log("data", data);
-
-//    return NextResponse.json(data);
-//}
-
-//Getting all the service detail based sa service ID?
+import { createClient } from "@/utils/supabase/server";
+import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
-	console.log("API route accessed with serviceId:", params.serviceId); // Add logging here
-
-	const supabase = createClient();
+	const supabase = await createClient();
 	const serviceService = new ServiceService(supabase);
 	const { serviceId } = params;
 	const service = await serviceService.getById(serviceId);
 
 	if (!service) {
-		console.log("Service not found for serviceId:", serviceId); // Log if service is not found
+		console.log("Service not found for serviceId:", serviceId);
 		return NextResponse.json({ error: "Service not found" }, { status: 404 });
 	}
 
-	console.log("Fetched service data:", service); // Log the fetched service
+	console.log("Fetched service data:", service);
 	return NextResponse.json(service);
 }

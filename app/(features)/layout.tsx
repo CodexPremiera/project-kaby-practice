@@ -47,6 +47,8 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
 			barangayProfilePic:barangay.profile_pic,
+			about: barangay.about,
+
 		}
 		console.log("Barangay data: ", barangayData);
 		

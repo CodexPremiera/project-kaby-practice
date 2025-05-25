@@ -99,7 +99,7 @@ const ViewService: React.FC = () => {
 
 				<div className="flex flex-col sm:flex-row justify-between text-sm px-6">
 					<p>
-						By: {service.owner} • {service.type}
+						By: {service.owner_name} • {service.type}
 					</p>
 					<div className="flex items-center gap-2">
 						<RiAlarmLine />

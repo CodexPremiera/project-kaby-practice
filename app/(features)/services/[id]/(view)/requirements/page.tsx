@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
 	RiAlarmLine,
+	RiArrowLeftDoubleLine,
+	RiArrowLeftLine,
 	RiMoreFill,
 	RiStarFill,
 	RiUser2Fill,
@@ -19,6 +21,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { getPublicUrl } from "@/utils/supabase/storage";
+import Image from "next/image";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface UploadedFile {
 	file: File;
@@ -81,8 +90,6 @@ const Requirements: React.FC = () => {
 		);
 	}
 
-	const isOwner = currentUserId === service.owner;
-
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files) {
 			const filesArray = Array.from(e.target.files).map((file) => ({
@@ -99,175 +106,195 @@ const Requirements: React.FC = () => {
 
 	return (
 		<div>
-			<div className="flex flex-row justify-between items-center border-b p-4 mb-4 border-gray-200 text-md font-semibold px-6">
-				<div>
-					<span
+			<div className="flex justify-between w-full bg-secondary py-2 px-3 items-center rounded-t-xl text-sm ">
+				<div className="flex gap-4 font-medium  text-white ">
+					<RiArrowLeftLine
 						onClick={() => router.push(`/services/${service.id}`)}
-						className="hover:text-secondary"
-					>
-						{service.title}
-					</span>{" "}
-					/ Requirements
+						size={22}
+						className="hover:bg-white rounded-full"
+					/>
+					Avail Service: {service.title}
 				</div>
-				<div className="flex items-center gap-4">
-					<div className="flex items-center gap-1">
-						<span>{service.ratings}</span>
-						<RiStarFill className="text-secondary" />
-					</div>
-					<div className="flex items-center gap-1">
-						<span>{service.no_of_avail}</span>
-						<RiUser2Fill className="text-secondary" />
-					</div>
-
-					{service.display_badge && (
-						<Button
-							variant="secondary"
-							size="sm"
-							className="font-medium text-sm"
-						>
-							<RiVipCrown2Fill />
-						</Button>
-					)}
-				</div>
+				<div className=" text-white">1/2</div>
 			</div>
 
 			<div className="flex flex-col md:flex-row mx-auto">
-				<div className="w-full rounded-[10px] bg-white text-sm ">
-					<div className="flex flex-col md:flex-row gap-8 mb-6 px-10 w-full pt-2">
-						{/* Date Picker */}
-						<div className="flex-1 justify-center items-center sm:border-r sm:border-gray-200 sm:pr-8">
-							<p className="mb-2 font-medium">Schedule a date:</p>
-							<div className="flex flex-row gap-3">
+				<div className="w-full rounded-[10px] bg-white">
+					<div className="flex flex-row items-center  border-b p-4 mb-4 border-gray-200 px-6 gap-3">
+						<div className="flex gap-3 items-center">
+							<div className="font-semibold text-md">Schedule Your Request</div>
+							<div className="flex flex-row gap-3 items-center text-sm">
 								<RiAlarmLine />
-								<p className="text-gray-600 italic pb-2 text-xs">
+								<p className="text-gray-600 italic">
 									{service.end_date
 										? `The service is available ${service.start_date} - ${service.end_date}.`
 										: "Service is available anytime."}
 								</p>
 							</div>
-							<div className="w-full mb-3">
-								<div className="w-full flex items-center justify-between border border-gray-200 rounded-[10px] px-4 py-1">
-									<span>
-										{selectedDate
-											? format(selectedDate, "PPP")
-											: "Pick a date to schedule your request."}
-									</span>
-								</div>
-								<div className="flex mt-2 justify-center">
-									<Calendar
-										mode="single"
-										selected={selectedDate}
-										onSelect={setSelectedDate}
-										initialFocus
-									/>
+						</div>
+					</div>
+					<div className="flex flex-col md:flex-row gap-6 mb-6 px-6 ">
+						<div className="flex-1 flex-col w-full gap-4 border border-gray-200 py-4 rounded-[10px]">
+							<div className="flex-1">
+								<div className="w-full mb-3">
+									<div className="flex flex-col justify-between px-4">
+										<div className="flex flex-row justify-center items-center">
+											<div className="flex md:w-[100px] h-[80px] w-[60px] justify-center items-center bg-black/80 rounded-lg overflow-hidden p-4 relative">
+												<Image
+													src={
+														service.image
+															? getPublicUrl(service.image, "services-pictures")
+															: "/default-image.jpg"
+													}
+													alt={`${service.title} image`}
+													fill
+													className="object-contain"
+												/>
+											</div>
+											<div className="flex-1 px-4 text-sm">
+												<div className="flex flex-row justify-between font-semibold border-b border-gray-200 py-4">
+													{service.title}
+													<div className="flex items-center gap-4 text-sm px-4">
+														<div className="flex items-center gap-1">
+															<span>{service.ratings}</span>
+															<RiStarFill className="text-secondary" />
+														</div>
+														<div className="flex items-center gap-1">
+															<span>{service.no_of_avail}</span>
+															<RiUser2Fill className="text-secondary" />
+														</div>
+													</div>
+												</div>
+												<p className="pt-1">
+													By: {service.owner_name} • {service.type}
+												</p>
+											</div>
+										</div>
+
+										<div className="flex flex-col mt-2 justify-center py-6">
+											<Popover>
+												<PopoverTrigger asChild>
+													<Button
+														variant="outline"
+														className="w-full justify-between"
+													>
+														{selectedDate
+															? format(selectedDate, "PPP")
+															: "Select date"}
+													</Button>
+												</PopoverTrigger>
+												<PopoverContent className="w-auto p-0 bg-white">
+													<Calendar
+														mode="single"
+														selected={selectedDate}
+														onSelect={(date) => {
+															setSelectedDate(date);
+														}}
+														initialFocus
+													/>
+												</PopoverContent>
+											</Popover>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
-
-						{/* File Upload */}
-						<div className="flex-2">
-							<p className="mb-2 font-medium">Requirements:</p>
-
-							{!service.allow_attach_file ? (
-								<div className="bg-gray-50 rounded-lg border border-dashed border-gray-300 p-6 text-center text-gray-600">
-									This service does not have any requirements you need to
-									upload.
-								</div>
-							) : (
-								<>
-									<div>
-										<input
-											type="file"
-											multiple
-											onChange={handleFileChange}
-											className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-white hover:file:bg-secondary/80"
-										/>
-									</div>
-
-									{/* Uploaded Files List */}
-									<div className="pt-4">
-										<p className="mb-1">Uploaded files:</p>
-										<div className="bg-gray-100 rounded-lg px-4 py-3 text-gray-700 space-y-2 max-h-[310px] overflow-y-auto">
-											{uploadedFiles.length > 0 ? (
-												uploadedFiles.map((item, idx) => (
-													<div
-														key={idx}
-														className="flex justify-between items-start md:items-center bg-white rounded p-2 shadow-sm gap-1 flex-col md:flex-row"
-													>
-														<div>
-															<span className="truncate max-w-xs block">
-																{item.file.name}
-															</span>
-															<span className="text-xs text-gray-500 block">
-																Uploaded: {format(item.uploadedAt, "PPpp")}
-															</span>
-														</div>
-														<DropdownMenu>
-															<DropdownMenuTrigger asChild>
-																<button
-																	className="text-gray-500 hover:text-gray-700"
-																	aria-label="Options"
-																>
-																	<RiMoreFill size={18} />
-																</button>
-															</DropdownMenuTrigger>
-															<DropdownMenuContent
-																align="end"
-																className="bg-white"
-															>
-																<DropdownMenuItem
-																	onClick={() => {
-																		const url = URL.createObjectURL(item.file);
-																		window.open(url, "_blank");
-																	}}
-																>
-																	View
-																</DropdownMenuItem>
-																<DropdownMenuItem
-																	onClick={() => handleRemoveFile(idx)}
-																	className="text-red-600"
-																>
-																	Delete
-																</DropdownMenuItem>
-															</DropdownMenuContent>
-														</DropdownMenu>
-													</div>
-												))
-											) : (
-												<p className="text-gray-500">No files uploaded yet.</p>
-											)}
+						<div className="flex-1 flex-col w-full gap-4 py-4 rounded-[10px] space-y-6">
+							{/* Requirements */}
+							<div className="flex flex-col space-y-3 px-4">
+								<h2 className="text-sm font-semibold text-gray-800">
+									Requirements
+								</h2>
+								{/* File Upload */}
+								<div className="text-sm">
+									{!service.allow_attach_file ? (
+										<div className="bg-gray-50 rounded-lg border border-dashed border-gray-300 p-6 text-center text-gray-600">
+											This service does not have any requirements you need to
+											upload.
 										</div>
-									</div>
-								</>
-							)}
+									) : (
+										<>
+											<div>
+												<input
+													type="file"
+													multiple
+													onChange={handleFileChange}
+													className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-white hover:file:bg-secondary/80"
+												/>
+											</div>
+
+											{/* Uploaded Files List */}
+											<div className="pt-4">
+												<p className="mb-1">Uploaded files:</p>
+												<div className="bg-gray-100 rounded-lg px-4 py-3 text-gray-700 space-y-2 max-h-[310px] overflow-y-auto">
+													{uploadedFiles.length > 0 ? (
+														uploadedFiles.map((item, idx) => (
+															<div
+																key={idx}
+																className="flex justify-between items-start md:items-center bg-white rounded p-2 shadow-sm gap-1 flex-col md:flex-row"
+															>
+																<div>
+																	<span className="truncate max-w-xs block">
+																		{item.file.name}
+																	</span>
+																	<span className="text-xs text-gray-500 block">
+																		Uploaded: {format(item.uploadedAt, "PPpp")}
+																	</span>
+																</div>
+																<DropdownMenu>
+																	<DropdownMenuTrigger asChild>
+																		<button
+																			className="text-gray-500 hover:text-gray-700"
+																			aria-label="Options"
+																		>
+																			<RiMoreFill size={18} />
+																		</button>
+																	</DropdownMenuTrigger>
+																	<DropdownMenuContent
+																		align="end"
+																		className="bg-white"
+																	>
+																		<DropdownMenuItem
+																			onClick={() => {
+																				const url = URL.createObjectURL(
+																					item.file
+																				);
+																				window.open(url, "_blank");
+																			}}
+																		>
+																			View
+																		</DropdownMenuItem>
+																		<DropdownMenuItem
+																			onClick={() => handleRemoveFile(idx)}
+																			className="text-red-600"
+																		>
+																			Delete
+																		</DropdownMenuItem>
+																	</DropdownMenuContent>
+																</DropdownMenu>
+															</div>
+														))
+													) : (
+														<p className="text-gray-500">
+															No files uploaded yet.
+														</p>
+													)}
+												</div>
+											</div>
+										</>
+									)}
+								</div>
+							</div>
 						</div>
 					</div>
-
-					{/* Action Buttons */}
-					{isOwner ? (
-						<div className="flex items-end justify-end px-5 w-full">
-							<Button
-								onClick={() => router.push(`/services/${service.id}/request`)}
-							>
-								Manage Request
-							</Button>
-						</div>
-					) : (
-						<div className="flex justify-between items-center gap-3 py-4 px-5">
-							<Button
-								variant="gray"
-								onClick={() => router.push(`/services/${service.id}`)}
-							>
-								Back
-							</Button>
-							<Button
-								variant="secondary"
-								onClick={() => router.push(`/services/${service.id}/payment`)}
-							>
-								Proceed
-							</Button>
-						</div>
-					)}
+					<div className="flex justify-end">
+						<Button
+							variant="secondary"
+							onClick={() => router.push(`/services/${service.id}/payment`)}
+						>
+							Proceed
+						</Button>
+					</div>
 				</div>
 			</div>
 		</div>

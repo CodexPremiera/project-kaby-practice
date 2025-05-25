@@ -130,7 +130,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 							<TableCell>
 								<button
 									className="flex items-center gap-3 w-[18.75rem]"
-									onClick={() => router.push(`/services/${profile.id}`)}
+									onClick={() => router.push(`/profile/${profile.id}`)}
 								>
 									<Image
 										src={profile.service.image}

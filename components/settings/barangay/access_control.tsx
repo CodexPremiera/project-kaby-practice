@@ -164,7 +164,7 @@ const AccessControl: React.FC = () => {
 
         <ManagerList managers={managers}/>
       </div>
-       {showWorker && <AssignWorkerModal citizens= {citizenProfiles} onClose={handleCloseModal1} refresh={fetchBarangay} />}
+       {showWorker && <AssignWorkerModal citizens= {citizenProfiles} onClose={handleCloseModal1} refresh={fetchBarangay}/>}
        {showManager && <AddManagerModal non_managers = {nonManagers} onClose={handleCloseModal2} refresh={fetchBarangay}/>}
     {/* // </ManagerProvider> */}
     </div>

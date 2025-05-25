@@ -9,10 +9,11 @@ class AccessRoleService {
         const data = await this.repo.create(details);
         return data;
     }
-    async getAccessRpleUsingBrgyId(brgy_id){
+    async getAccessRoleUsingBrgyId(brgy_id){
         const data = await this.repo.getAllByBrgyFK(brgy_id);
+        console.log("unsay pakita", data);
         return data;
     }
-    async
+
 }
 export default AccessRoleService;

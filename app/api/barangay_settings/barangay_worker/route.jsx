@@ -17,4 +17,26 @@ export async function POST(request) {
         data: data,
     });
 }
+export async function PUT(request){
+    const supabase = await createClient();
+    const barangayWorkerService = new BarangayWorkerService(supabase);
+    
+    const body = await request.json();
+    const {citizen_id, position} = body;
+    const data = await barangayWorkerService.updateWorker(citizen_id,{position:position});
+    console.log("Request body:", body);
+
+    return NextResponse.json(data);
+}
+export async function DELETE(request){
+    const supabase = await createClient();
+    const barangayWorkerService = new BarangayWorkerService(supabase);
+    const body = await request.json();
+
+    const {citizen_id} = body;
+    const data = await barangayWorkerService.removeWorker(citizen_id);
+
+    return NextResponse.json(data);
+
+}
 

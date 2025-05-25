@@ -13,5 +13,6 @@ class AccessRoleRepo extends BaseRepo{
 		if (error) throw error;
 		return data;
 	}
+
 }
 export default AccessRoleRepo;

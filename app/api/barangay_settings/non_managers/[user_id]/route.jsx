@@ -7,7 +7,7 @@ export async function GET(request,{params}) {
     const supabase = await createClient();
 
     const {data, error} = await supabase.from('worker_no_roles').select("*").eq("barangay_id",user_id);
-    console.log("this is data", data);
+    console.log("this is data called", data);
 
     return NextResponse.json({ data: data });
 }

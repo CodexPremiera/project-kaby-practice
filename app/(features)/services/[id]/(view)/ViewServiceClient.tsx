@@ -1,6 +1,7 @@
 export interface Service {
 	id: string;
 	owner: string;
+	owner_name: string;
 	title: string;
 	image?: string;
 	description: string;

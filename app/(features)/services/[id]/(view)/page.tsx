@@ -12,6 +12,7 @@ import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import { getCurrentUser, getServiceById, Service } from "./ViewServiceClient";
+import { format } from "date-fns";
 
 const ViewService: React.FC = () => {
 	const router = useRouter();
@@ -99,14 +100,14 @@ const ViewService: React.FC = () => {
 
 				<div className="flex flex-col sm:flex-row justify-between text-sm px-6">
 					<p>
-						By: {service.owner} • {service.type}
+						By: {service.owner_name} • {service.type}
 					</p>
 					<div className="flex items-center gap-2">
 						<RiAlarmLine />
 						<span>
 							Scheduled:{" "}
 							{service.end_date
-								? `${service.start_date} - ${service.end_date}`
+								? `${format(new Date(service.start_date), "MMM d")}-${format(new Date(service.end_date), "d, yyyy")}`
 								: "Not Applicable"}
 						</span>
 					</div>

@@ -15,4 +15,22 @@ export type CitizenContext = {
 
 export const CitizenContext = createContext<CitizenContext | null>(null);
 
-export const useCitizenContext = () => useContext(CitizenContext);
+// export const useCitizenContext = () => useContext(CitizenContext);
+export const useCitizenContext = () => {
+  const context = useContext(CitizenContext);
+
+  if (!context) {
+    // Return safe default values for non-citizen users
+    return {
+      citizenId: null,
+      lastName: null,
+      firstName: null,
+      middleName: null,
+      citizenProfilePic: null,
+      access_role: null,
+    };
+  }
+
+  return context;
+};
+

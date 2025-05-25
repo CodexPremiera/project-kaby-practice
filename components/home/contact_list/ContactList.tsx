@@ -15,7 +15,11 @@ type Contacts = {
 const ContactList = () => {
 
   const {role} = useUser();
-  const {access_role} = useCitizenContext();
+  
+  let {access_role} = useCitizenContext();
+  if(role === "citizen"){
+
+  }
   
   const {barangayId} = useBarangayContext();
   const [loading, setLoading] = useState(true);
@@ -58,12 +62,12 @@ const ContactList = () => {
         <div className="flex items-center gap-2.5 self-stretch w-40 text-primary font-medium">
           Contact Number
         </div>
-
-        {role === "barangay" || access_role === "Chief Operator"? (
+        {(role === "barangay" || (role === "citizen" && access_role === "Chief Operator")) ? (
           <ButtonSecondary className="text-sm" onClick={handleOpenModal}>+</ButtonSecondary>
         ) : (
           <span className="text-sm text-primary font-medium">Call</span>
         )}
+
       </div>
 
       {contacts.map((contact, index) => (

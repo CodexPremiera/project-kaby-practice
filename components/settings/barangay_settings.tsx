@@ -1,17 +1,12 @@
 "use client"
 
-import React, {useEffect, useState} from 'react';
-import NameAndIdentity from "@/components/settings/citizens/name_and_identity";
-import Demographics from "@/components/settings/citizens/demographics";
-import Residence from "@/components/settings/citizens/residence";
-import ContactDetails from "@/components/settings/citizens/contact_details";
+import React, {useState} from 'react';
 import PasswordAndSecurity from "@/components/settings/citizens/password_and_security";
 import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
 import {ChevronDown} from "lucide-react";
 import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import EditProfile from "@/components/settings/barangay/edit_profile";
 import AccessControl from "@/components/settings/barangay/access_control";
-import { useUser } from '@/app/context/UserContext';
 import { useBarangayContext } from '@/app/context/BarangayContext';
 import { useCitizenContext } from '@/app/context/CitizenContext';
 import SetPasswordModal from '@/components/modal/SetPasswordModal';
@@ -19,9 +14,6 @@ import SetPasswordModal from '@/components/modal/SetPasswordModal';
 type BarangaySettingsProps = {
   showSetPasswordModal : boolean ;
 };
-
-
-
 
 
 function BarangaySettings({showSetPasswordModal} : BarangaySettingsProps) {

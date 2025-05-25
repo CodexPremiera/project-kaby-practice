@@ -1,33 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { RiMessage2Line, RiSearch2Line } from "react-icons/ri";
-import { Button } from "@/components/ui/button";
+import React, { useMemo, useState } from "react";
 
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-	Table,
-	TableHeader,
-	TableBody,
-	TableRow,
-	TableHead,
-	TableCell,
-} from "@/components/ui/table";
-import { Calendar } from "@/components/ui/calendar";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
-import { format } from "date-fns";
 import { profiles } from "@/data/profiles";
+import { services } from "@/data/services";
+import { useRouter, useSearchParams } from "next/navigation";
+import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
+import { useMediaQuery } from "@/app/hooks/useMediaQuery";
 import RequestSheet from "./RequestSheet";
-import ProfileTag from "@/components/profile/ProfileTag";
+import RequestTableView from "./RequestTableView";
+import RequestListView from "./RequestListView";
+import RequestSearchBar from "./RequestSearchBar";
+import { RiEditBoxLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
+import { router } from "next/client";
 
 type Profile = {
 	id: string;
@@ -36,46 +21,36 @@ type Profile = {
 	image: string;
 };
 
-interface ManageRequestsProps {
+interface RequestServiceProps {
 	statusFilter: string;
 }
 
-const ManageRequests: React.FC<ManageRequestsProps> = ({ statusFilter }) => {
+const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
+	const searchParams = useSearchParams();
+	const query = searchParams.get("q") || "";
+
 	const [statuses, setStatuses] = useState<string[]>(
 		profiles.map(() => "Pending")
 	);
-	const [dates, setDates] = useState<Date[]>(profiles.map(() => new Date()));
-	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
-
-	// RequestSheet state
 	const [activeClient, setActiveClient] = useState<Profile | null>(null);
 
 	const filteredClients = profiles
-		.map((profile, index) => ({
-			...profile,
-			status: statuses[index],
-			date: dates[index],
-			index,
-		}))
+		.map((profile, index) => {
+			const service = services[index % services.length];
+			return {
+				...profile,
+				service,
+				status: statuses[index],
+				index,
+			};
+		})
 		.filter((profile) =>
-			profile.name.toLowerCase().includes(searchTerm.toLowerCase())
+			profile.service.title.toLowerCase().includes(query.toLowerCase())
 		)
 		.filter((profile) =>
 			statusFilter === "All" ? true : profile.status === statusFilter
 		);
-
-	const handleStatusChange = (index: number, newStatus: string) => {
-		const updatedStatuses = [...statuses];
-		updatedStatuses[index] = newStatus;
-		setStatuses(updatedStatuses);
-	};
-
-	const handleDateChange = (index: number, newDate: Date) => {
-		const updatedDates = [...dates];
-		updatedDates[index] = newDate;
-		setDates(updatedDates);
-	};
 
 	const toggleSelection = (index: number) => {
 		setSelectedItems((prev) =>
@@ -91,152 +66,81 @@ const ManageRequests: React.FC<ManageRequestsProps> = ({ statusFilter }) => {
 		setActiveClient(null);
 	};
 
+	const cancelSelected = () => {
+		const updatedStatuses = [...statuses];
+		selectedItems.forEach((index) => {
+			updatedStatuses[index] = "Canceled";
+		});
+		setStatuses(updatedStatuses);
+		setSelectedItems([]);
+	};
+
+	const isLargeScreen = useMediaQuery("(min-width: 768px)");
+
 	return (
-		<div className="flex flex-col gap-6 p-6 bg-white rounded-[10px]">
+		<div className="flex flex-col gap-8 p-4 sm:p-6 background-1 rounded-[10px]">
 			{/* Header */}
-			<div className="flex flex-wrap items-center justify-between gap-4">
-				<div className="flex items-center w-full sm:w-[350px] px-4 border border-gray-300 bg-white rounded-lg">
-					<RiSearch2Line className="text-gray-500 mr-2" />
-					<input
-						type="text"
-						placeholder="Services a client by name"
-						className="w-full focus:outline-none text-sm h-10"
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-					/>
-				</div>
-
-				<div className="flex flex-wrap items-center gap-3">
-					<span className="text-sm">Selected: {selectedItems.length}</span>
-
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="default" size="sm">
-								Batch Status
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent className="z-10 bg-white">
-							{["Pending", "Ongoing", "Completed", "Canceled"].map((status) => (
-								<DropdownMenuItem
-									key={status}
-									onClick={() => {
-										const updatedStatuses = [...statuses];
-										selectedItems.forEach((index) => {
-											updatedStatuses[index] = status;
-										});
-										setStatuses(updatedStatuses);
-									}}
-								>
-									{status}
-								</DropdownMenuItem>
-							))}
-						</DropdownMenuContent>
-					</DropdownMenu>
-
-					<Button variant="default" size="sm">
-						Submit
-					</Button>
+			<div className="flex flex-row justify-between items-center border-b pb-4  border-gray-200 text-md font-semibold">
+				<div>Service Title</div>
+				<div className="flex items-center gap-4">
+					<div className="flex items-center gap-1">
+						<span>0</span>
+						<RiStarFill className="text-secondary" />
+					</div>
+					<div className="flex items-center gap-1">
+						<span>0</span>
+						<RiUser2Fill className="text-secondary" />
+					</div>
+					<div>
+						<RiEditBoxLine
+							onClick={() => router.push(`/services/serviceId/edit`)}
+							size={22}
+							className="hover:bg-white rounded-full"
+						/>
+					</div>
 				</div>
 			</div>
+			<div className="flex items-center justify-between gap-12">
+				<div className="flex items-center grow max-w-[540px]">
+					<RequestSearchBar />
+				</div>
+
+				<div className="flex items-center gap-3 w-fit">
+					<div className="flex flex-col justify-end gap-1/2 pr-4 border-r border-secondary">
+						<span className="text-sm text-secondary text-end">Selected</span>
+						<span className="font-semibold text-end">
+							{selectedItems.length}{" "}
+							{selectedItems.length > 1 ? "items" : "item"}
+						</span>
+					</div>
+					<ButtonSecondary
+						disabled={selectedItems.length === 0}
+						onClick={cancelSelected}
+					>
+						Cancel {selectedItems.length > 1 ? "all" : ""}
+					</ButtonSecondary>
+				</div>
+			</div>
+
 			{/* Table */}
-			<div className="overflow-x-auto rounded-lg border border-gray-200">
-				<Table className="table-fixed w-full">
-					<TableHeader>
-						<TableRow className=" bg-gray/30 border-none">
-							<TableHead className="w-[40px] px-4">
-								<input
-									type="checkbox"
-									checked={
-										selectedItems.length === filteredClients.length &&
-										filteredClients.length > 0
-									}
-									onChange={() =>
-										selectedItems.length === filteredClients.length
-											? setSelectedItems([])
-											: setSelectedItems(filteredClients.map((c) => c.index))
-									}
-								/>
-							</TableHead>
-							<TableHead className="w-[300px]">Client</TableHead>
-							<TableHead className="w-[100px]">Payment</TableHead>
-							<TableHead className="w-[120px]">Schedule</TableHead>
-							<TableHead className="w-[130px]">Status</TableHead>
-							<TableHead className="w-[150px]">Action</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{filteredClients.map((profile) => (
-							<TableRow
-								key={profile.index}
-								className="hover:bg-gray-50 border-gray-200"
-							>
-								<TableCell className="w-[40px] px-4">
-									<input
-										type="checkbox"
-										checked={selectedItems.includes(profile.index)}
-										onChange={() => toggleSelection(profile.index)}
-										className="outline-none"
-									/>
-								</TableCell>
-								<TableCell className="w-[300px] cursor-pointer">
-									<ProfileTag
-										id={profile.id}
-										name={profile.name}
-										address={profile.address}
-										image={profile.image}
-									/>
-								</TableCell>
-								<TableCell className="w-[100px]">Paid</TableCell>
-								<TableCell className="w-[120px]">
-									<Popover>
-										<PopoverTrigger asChild>
-											<Button size="sm" className="w-full">
-												{format(profile.date, "MM/dd/yyyy")}
-											</Button>
-										</PopoverTrigger>
-										<PopoverContent className="w-auto p-0 bg-white">
-											<Calendar
-												mode="single"
-												selected={profile.date}
-												onSelect={(date) =>
-													date && handleDateChange(profile.index, date)
-												}
-												initialFocus
-											/>
-										</PopoverContent>
-									</Popover>
-								</TableCell>
-								<TableCell className="w-[130px]">
-									<select
-										value={statuses[profile.index]}
-										onChange={(e) =>
-											handleStatusChange(profile.index, e.target.value)
-										}
-										className="w-full px-1 py-1 text-sm border border-gray-300 rounded-md bg-white"
-									>
-										<option value="Pending">Pending</option>
-										<option value="Ongoing">Ongoing</option>
-										<option value="Completed">Completed</option>
-										<option value="Canceled">Canceled</option>
-									</select>
-								</TableCell>
-								<TableCell className="w-[150px] flex gap-2 py-12">
-									<Button variant="default" size="sm">
-										Submit
-									</Button>
-									<Button
-										variant="gray"
-										size="sm"
-										onClick={() => openRequestSheet(profile)}
-									>
-										<RiMessage2Line />
-									</Button>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</div>
+			{isLargeScreen ? (
+				<RequestTableView
+					filteredClients={filteredClients}
+					selectedItems={selectedItems}
+					setSelectedItems={setSelectedItems}
+					toggleSelection={toggleSelection}
+					openRequestSheet={openRequestSheet}
+				/>
+			) : (
+				<RequestListView
+					filteredClients={filteredClients}
+					selectedItems={selectedItems}
+					setSelectedItems={setSelectedItems}
+					toggleSelection={toggleSelection}
+					openRequestSheet={openRequestSheet}
+				/>
+			)}
+
 			{activeClient && (
 				<>
 					<div className="fixed inset-0 bg-black/20 z-40"></div>
@@ -249,4 +153,4 @@ const ManageRequests: React.FC<ManageRequestsProps> = ({ statusFilter }) => {
 	);
 };
 
-export default ManageRequests;
+export default ManageRequest;

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
+import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";
+import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
+import ButtonInverse from "@/components/ui/buttons/ButtonInverse";
+import ButtonTab from "@/components/ui/tabs/ButtonTab";
 
-interface AssignWorkerModalProps {
-  onClose: () => void;
-  citizens: Citizen[] | null;
-  // citizenPositions : Worker[] | null;
-  refresh: () => void;
-}
+
 
 interface Citizen {
   id: string;
@@ -16,7 +15,7 @@ interface Citizen {
   is_worker: boolean;
 }
 
-const AssignWorkerModal = ({ onClose, citizens, refresh }: AssignWorkerModalProps) => {
+const AssignWorkerModal = ({ onClose, citizens, refresh }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [positions, setPositions] = useState<Record<string, string>>({});
   const [view, setView] = useState<"citizens" | "workers">("citizens");
@@ -87,25 +86,15 @@ const AssignWorkerModal = ({ onClose, citizens, refresh }: AssignWorkerModalProp
         </h2>
 
         <div className="flex gap-3 items-center">
-          <button
-            onClick={() => setView("citizens")}
-            className={`px-4 py-2 rounded ${view === "citizens" ? "bg-blue-600 text-white" : "bg-white text-black"}`}
-          >
-            Citizens
-          </button>
-          <button
-            onClick={() => setView("workers")}
-            className={`px-4 py-2 rounded ${view === "workers" ? "bg-blue-600 text-white" : "bg-white text-black"}`}
-          >
-            Workers
-          </button>
+          <ButtonTab onClick={() => setView("citizens")} active={view === "citizens"}>Citizens</ButtonTab>
+          <ButtonTab onClick={() => setView("workers")} active={view === "workers"}>Workers</ButtonTab>
 
           <input
             type="text"
             placeholder="Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="ml-auto px-3 py-2 border rounded w-[300px]"
+            className="ml-auto px-3 py-2 border border-secondary rounded-full w-[300px]"
           />
         </div>
 
@@ -126,31 +115,22 @@ const AssignWorkerModal = ({ onClose, citizens, refresh }: AssignWorkerModalProp
                     [citizen.id]: e.target.value,
                   }))
                 }
-                className="px-3 py-2 border rounded w-[200px]"
+                className="px-3 py-2 border border-secondary rounded-full w-[200px]"
               />
 
-              <button
-                className="ml-4 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-                onClick={() => handleSubmit(citizen)}
-              >
-                {view === "citizens" ? "Assign" : "Update"}
-              </button>
               {view === "workers" && (
-                <button
-                  className="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  onClick={() => handleDelete(citizen)}
-                >Unassign</button>
+                <ButtonSecondary onClick={() => handleDelete(citizen)}>
+                  Unassign
+                </ButtonSecondary>
               )}
+              <ButtonInverse onClick={() => handleSubmit(citizen)}>
+                {view === "citizens" ? "Assign" : "Update"}
+              </ButtonInverse>
             </div>
           ))}
         </div>
 
-        <button
-          onClick={onClose}
-          className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-        >
-          Close
-        </button>
+        <ButtonPrimary onClick={onClose}>Close</ButtonPrimary>
       </div>
     </div>
   );

@@ -204,6 +204,13 @@
 		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-semibold shrink-0 flex;
 	}
 
+	.button-inverse {
+		@apply bg-primary-1-dark dark:bg-primary-1 text-primary-1 dark:text-primary-1-dark;
+		@apply hover:bg-primary-2-dark dark:hover:bg-primary-2;
+		@apply active:bg-primary-2-dark dark:active:bg-primary-2;
+		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-semibold shrink-0 flex;
+	}
+
 	.button-outline {
 		@apply text-secondary-1 dark:text-secondary-1-dark border-2 border-secondary-1 dark:border-secondary-1-dark;
 		@apply hover:bg-secondary-1 dark:hover:bg-secondary-1-dark hover:text-primary-1 dark:hover:text-primary-1-dark;

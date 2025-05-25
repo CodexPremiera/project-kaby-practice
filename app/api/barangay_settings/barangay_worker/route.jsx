@@ -37,6 +37,5 @@ export async function DELETE(request){
     const data = await barangayWorkerService.removeWorker(citizen_id);
 
     return NextResponse.json(data);
-
 }
 

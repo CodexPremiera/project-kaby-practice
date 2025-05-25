@@ -14,5 +14,36 @@ class AccessRoleRepo extends BaseRepo{
 		return data;
 	}
 
+
+
+
+	async updateRoleUsingCitizenFK(citizen_id, selectedFields={}){
+		console.log("this is fields", selectedFields);
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.update(selectedFields)
+			.eq("citizen_id", citizen_id)
+			.select();
+		if (error){
+			console.log(error);
+			throw error;
+		}
+		console.log("this is data", data);
+		return data;
+	}
+	async deleteRoleByWorkerId(worker_id) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.delete()
+			.eq("worker_id", worker_id)
+			.select();
+
+		if (error) {
+			console.error("Delete error:", error);
+			throw error;
+		}
+		return data;
+	}
+
 }
 export default AccessRoleRepo;

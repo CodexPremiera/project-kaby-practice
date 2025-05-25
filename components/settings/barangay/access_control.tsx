@@ -142,7 +142,7 @@ const AccessControl: React.FC = () => {
           Access Control
         </h1>
         <ButtonSecondary onClick={handleOpenModal1}>Assign Workers</ButtonSecondary>
-        <ButtonSecondary onClick={handleOpenModal2}>Add a manager</ButtonSecondary>
+        <ButtonSecondary onClick={handleOpenModal2}>Assign Managers</ButtonSecondary>
       </div>
 
       <div className="flex flex-col gap-6 w-full">
@@ -165,7 +165,7 @@ const AccessControl: React.FC = () => {
         <ManagerList managers={managers}/>
       </div>
        {showWorker && <AssignWorkerModal citizens= {citizenProfiles} onClose={handleCloseModal1} refresh={fetchBarangay}/>}
-       {showManager && <AddManagerModal non_managers = {nonManagers} onClose={handleCloseModal2} refresh={fetchBarangay}/>}
+       {showManager && <AddManagerModal non_managers = {nonManagers} onClose={handleCloseModal2} refresh={fetchBarangay} managers={managers}/>}
     {/* // </ManagerProvider> */}
     </div>
   );

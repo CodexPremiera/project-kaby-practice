@@ -39,7 +39,7 @@ export async function updateSession(request: NextRequest) {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	// console.log(user, "this is user");
+	console.log(user, "this is user");
 
 
 	const publicPaths = [
@@ -88,30 +88,82 @@ export async function updateSession(request: NextRequest) {
 	// 		return NextResponse.redirect(url);
 	// 	}
 	// }
-		if (user && request.nextUrl.pathname === "/citizen_desk") {
+	// ===============
+	if (user && request.nextUrl.pathname === "/citizen_desk") {
+		const { data: profile, error } = await supabase
+			.from("userroles")
+			.select("role")
+			.eq("user_id", user.id)
+			.single();
+
+		console.log("this is profile", profile);
+		if (error || !profile) {
+			// no profile, redirect away
+			const url = request.nextUrl.clone();
+			url.pathname = "/home";
+			return NextResponse.redirect(url);
+		}
+
+		const role = profile.role;
+		console.log("this is role",role);
+		if(role === "citizen"){
+			console.log("nanigasuki");
 			const citService = new CitizenService(supabase);
-			const { data: barangayProfile, error: barangayError } = await supabase
-				.from("userroles")
-				.select("role")
-				.eq("user_id", user.id)
-				.single();
 			const citizen_id = await citService.getCitizenIdUsingAuth(user.id);
+
+			if (!citizen_id) {
+				// not a citizen, redirect away
+				const url = request.nextUrl.clone();
+				url.pathname = "/home";
+				return NextResponse.redirect(url);
+			}
+
 			const { data: workerRole, error: workerError } = await supabase
 				.from("worker_roles_view")
 				.select("access_role")
 				.eq("citizen_id", citizen_id.id)
-				.maybeSingle(); 
-			console.log(citizen_id, "this is his role");
-			const isBarangay = barangayProfile?.role === "barangay";
+				.maybeSingle();
+
 			const isCitizenManager = workerRole?.access_role === "Citizen Manager";
 
-			if (!isBarangay && !isCitizenManager) {
-				console.log("User blocked from /citizen_desk");
+			// if (!isBarangay && !isCitizenManager) {
+			if ( !isCitizenManager) {
 				const url = request.nextUrl.clone();
 				url.pathname = "/home";
-			return NextResponse.redirect(url);
+				return NextResponse.redirect(url);
+			}
+			
 		}
 	}
+
+
+
+
+	// ==============
+	// 	if (user && request.nextUrl.pathname === "/citizen_desk") {
+	// 		const citService = new CitizenService(supabase);
+	// 		const { data: barangayProfile, error: barangayError } = await supabase
+	// 			.from("userroles")
+	// 			.select("role")
+	// 			.eq("user_id", user.id)
+	// 			.single();
+	// 		const citizen_id = await citService.getCitizenIdUsingAuth(user.id);
+	// 		const { data: workerRole, error: workerError } = await supabase
+	// 			.from("worker_roles_view")
+	// 			.select("access_role")
+	// 			.eq("citizen_id", citizen_id.id)
+	// 			.maybeSingle(); 
+	// 		console.log(citizen_id, "this is his role");
+	// 		const isBarangay = barangayProfile?.role === "barangay";
+	// 		const isCitizenManager = workerRole?.access_role === "Citizen Manager";
+
+	// 		if (!isBarangay && !isCitizenManager) {
+	// 			console.log("User blocked from /citizen_desk");
+	// 			const url = request.nextUrl.clone();
+	// 			url.pathname = "/home";
+	// 		return NextResponse.redirect(url);
+	// 	}
+	// }
 
 
 	// IMPORTANT: You *must* return the supabaseResponse object as it is.

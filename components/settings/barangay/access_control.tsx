@@ -2,62 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
-import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";
-import TextField from "@/components/ui/form/TextField";
-import EmailField from "@/components/ui/form/EmailField";
-import {ManagerProvider} from "@/components/settings/access_control/manager_context";
 import ManagerList from "@/components/settings/access_control/manager_list";
 import AddManagerModal from "@/components/modal/AddManagerModal";
 import AssignWorkerModal from "@/components/modal/AssignWorkerModal";
 import { useBarangayContext } from "@/app/context/BarangayContext";
-
-type AccessControlProps = {
-  citizens: {
-    id: string;
-    first_name: string;
-    last_name: string;
-    middle_name?: string;
-    barangay_id: string;
-    is_worker: boolean;
-
-  }[];
-  workers: {
-    id:string;
-    citizen_id: string;
-    position: string;
-  }[];
-  accessRoles: {
-    id: string;
-    worker_id: string;
-    access_role: string;
-    date_added: string;
-  }[];
-
-  managers :{
-    citizen_id : string;
-    last_name : string;
-    first_name : string;
-    middle_name : string;
-    barangay_id : string;
-    barangay_address : string;
-    position : string;
-    access_role : string;
-    date_added :string;
-    date_ended:string;
-    profile_pic:string;
-  }[];
-  non_managers:{
-    citizen_id: string;
-    first_name: string;
-    last_name: string;
-    middle_name?: string;
-    position: string;
-    barangay_id : string;
-    barangay_address:string;
-  	worker_id : string;
-
-  }[];
-};
 
 
 const AccessControl: React.FC = () => {
@@ -119,18 +67,6 @@ const AccessControl: React.FC = () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
   // ===============
 
   return (
@@ -141,8 +77,10 @@ const AccessControl: React.FC = () => {
           className="flex flex-col justify-center text-3xl font-semibold leading-[12px] hidden lg:block">
           Access Control
         </h1>
-        <ButtonSecondary onClick={handleOpenModal1}>Assign Workers</ButtonSecondary>
-        <ButtonSecondary onClick={handleOpenModal2}>Assign Managers</ButtonSecondary>
+        <div className="flex gap-2">
+          <ButtonSecondary onClick={handleOpenModal1}>Assign Workers</ButtonSecondary>
+          <ButtonSecondary onClick={handleOpenModal2}>Assign Managers</ButtonSecondary>
+        </div>
       </div>
 
       <div className="flex flex-col gap-6 w-full">

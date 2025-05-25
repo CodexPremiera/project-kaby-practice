@@ -17,10 +17,7 @@ const ContactList = () => {
   const {role} = useUser();
   
   let {access_role} = useCitizenContext();
-  if(role === "citizen"){
 
-  }
-  
   const {barangayId} = useBarangayContext();
   const [loading, setLoading] = useState(true);
   console.log("this zzz",access_role);

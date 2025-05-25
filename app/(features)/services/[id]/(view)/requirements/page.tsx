@@ -11,16 +11,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
 	RiAlarmLine,
-	RiArrowLeftDoubleLine,
 	RiArrowLeftLine,
 	RiMoreFill,
 	RiStarFill,
 	RiUser2Fill,
-	RiVipCrown2Fill,
 } from "react-icons/ri";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { isBefore, isAfter, format } from "date-fns";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import Image from "next/image";
 import {
@@ -127,7 +125,7 @@ const Requirements: React.FC = () => {
 								<RiAlarmLine />
 								<p className="text-gray-600 italic">
 									{service.end_date
-										? `The service is available ${service.start_date} - ${service.end_date}.`
+										? `The service is available ${format(new Date(service.start_date), "MMM d")}-${format(new Date(service.end_date), "d, yyyy")}`
 										: "Service is available anytime."}
 								</p>
 							</div>
@@ -187,10 +185,14 @@ const Requirements: React.FC = () => {
 													<Calendar
 														mode="single"
 														selected={selectedDate}
-														onSelect={(date) => {
-															setSelectedDate(date);
-														}}
+														onSelect={(date) => setSelectedDate(date)}
 														initialFocus
+														disabled={(date) =>
+															(service.start_date &&
+																isBefore(date, new Date(service.start_date))) ||
+															(service.end_date &&
+																isAfter(date, new Date(service.end_date)))
+														}
 													/>
 												</PopoverContent>
 											</Popover>

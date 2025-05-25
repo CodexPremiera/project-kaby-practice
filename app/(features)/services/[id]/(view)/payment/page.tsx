@@ -23,7 +23,6 @@ const Payment: React.FC = () => {
 	const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
 	useEffect(() => {

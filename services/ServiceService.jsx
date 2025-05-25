@@ -10,18 +10,8 @@ class ServiceService {
 	}
 
 	async getById(serviceId) {
-		const { data, error } = await this.supabase
-			.from("services")
-			.select("*")
-			.eq("id", serviceId)
-			.single();
-
-		if (error) {
-			console.error("Error fetching service:", error);
-			return null;
-		}
-
-		return data; // Return the service data if found
+		const data = await this.repo.getById(serviceId);
+		return data;
 	}
 	// async makeService(serviceData){
 	//     // TODO: add logic

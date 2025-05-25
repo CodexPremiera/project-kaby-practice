@@ -29,6 +29,7 @@ function BarangaySettings({showSetPasswordModal} : BarangaySettingsProps) {
   const  barangay  = useBarangayContext();
   const  citizen  = useCitizenContext();
 
+
   // const profile = role === "barangay" ? barangay : citizen;
 
   const TAB_COMPONENTS = {

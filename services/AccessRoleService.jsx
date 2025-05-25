@@ -1,4 +1,5 @@
 import AccessRoleRepo from "@/repositories/AccessRoleRepo"
+import { write } from "fs";
 
 class AccessRoleService {
     constructor(supabase){
@@ -17,9 +18,9 @@ class AccessRoleService {
 
 
 
-    async updateRole(citizen_id,selectedFields={}){
-        console.log("this is the citizen id in role", citizen_id);
-        const data = await this.repo.updateRoleUsingCitizenFK(citizen_id,selectedFields);
+    async updateRole(worker_id,selectedFields={}){
+        console.log("thisi is the citizen id in role", worker_id);
+        const data = await this.repo.updateRoleUsingWorkerFK(worker_id,selectedFields);
         return data;
     }
     async removeRole(worker_id){

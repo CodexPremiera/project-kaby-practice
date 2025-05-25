@@ -21,11 +21,12 @@ export async function PUT(request){
     const accessService = new AccessRoleService(supabase);
     
     const body = await request.json();
-    const {citizen_id} = body;
-    // const data = await accessService.updateRole(citizen_id,);
+    const {worker_id, access_role} = body;
+    console.log("roleszz", body);
+    const data = await accessService.updateRole(worker_id,{access_role:access_role});
     console.log("Request body issss:", body);
 
-    return NextResponse.json(body);
+    return NextResponse.json(data);
 }
 export async function DELETE(request){
     const supabase = await createClient();

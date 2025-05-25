@@ -17,12 +17,12 @@ class AccessRoleRepo extends BaseRepo{
 
 
 
-	async updateRoleUsingCitizenFK(citizen_id, selectedFields={}){
+	async updateRoleUsingWorkerFK(worker_id, selectedFields={}){
 		console.log("this is fields", selectedFields);
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.update(selectedFields)
-			.eq("citizen_id", citizen_id)
+			.eq("worker_id", worker_id)
 			.select();
 		if (error){
 			console.log(error);

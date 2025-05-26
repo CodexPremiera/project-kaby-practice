@@ -121,7 +121,7 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab }) => {
 						owner: service.ownerName,
 						type: service.type,
 						image: service.image,
-						displayBadge: service.displayBadge,
+						display_badge: service.displayBadge,
 						status: service.status,
 					}}
 					routePrefix="/services"

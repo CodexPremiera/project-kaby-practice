@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import SuccessModal from "@/components/modal/SuccessModal";
 import ErrorModal from "@/components/modal/ErrorModal";
+import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary';
 
 export default function AppointmentClientForm() {
 	const [modalType, setModalType] = useState(null);
@@ -133,12 +134,9 @@ export default function AppointmentClientForm() {
 					</label>
 				</div>
 				<div className="mt-6 flex justify-center items-center">
-					<button
-						type="submit"
-						className="w-[300px] py-2 text-white bg-gray rounded-md hover:bg-black"
-					>
+					<ButtonPrimary type="submit" className="min-w-[50%]">
 						Submit
-					</button>
+					</ButtonPrimary>
 				</div>
 			</form>
 		</div>

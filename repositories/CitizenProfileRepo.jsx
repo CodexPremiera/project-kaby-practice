@@ -50,7 +50,7 @@ class CitizenProfileRepo extends BaseRepo {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select("*")
-			.eq("user_id", id);
+			.eq("user_id", id).single();
 		if (error) console.log(error);
 		return data;
 	}
@@ -85,6 +85,14 @@ class CitizenProfileRepo extends BaseRepo {
 			.from(this.tableName)
 			.select("user_id")
 			.eq("barangay_id", barangay_id);
+		if (error) console.log(error);
+		return data;
+	}
+	async getCitizenId(id){
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select("id")
+			.eq("user_id", id).single();
 		if (error) console.log(error);
 		return data;
 	}

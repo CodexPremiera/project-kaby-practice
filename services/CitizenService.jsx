@@ -17,6 +17,7 @@ class CitizenService {
 			"first_name",
 			"id",
 			"is_worker",
+			"barangay_id",
 		]);
 		return data;
 	}
@@ -41,6 +42,7 @@ class CitizenService {
 
 		return { data, error: null };
 	}
+
 	async getCitizenById(id) {
 		const data = await this.repo.getById(id);
 		return data;
@@ -69,6 +71,73 @@ class CitizenService {
 	}
 	async getAllCitizenProfiles(id) {
 		const data = await this.repo.getAllCitizenProfiles(id);
+		return data;
+	}
+
+	async getNameAndIdentityById(id) {
+		const data = await this.repo.getById(id, [
+			"first_name",
+			"last_name",
+			"middle_name",
+			"suffix",
+			"sex",
+			"birthdate",
+			"birthplace",
+			"profile_pic",
+		]);
+		return data;
+	}
+	async updateNameAndIdentityById(id, selectedFields = {}) {
+		const data = await this.repo.update(id, selectedFields);
+		return data;
+	}
+	async getDemographicsById(id) {
+		const data = await this.repo.getById(id, [
+			"citizenship",
+			"religion",
+			"employment",
+			"highest_education",
+			"other_information",
+		]);
+		return data;
+	}
+	async updateDemographicsById(id, selectedFields = {}) {
+		const data = await this.repo.update(id, selectedFields);
+		return data;
+	}
+	async getResidenceById(id) {
+		const data = await this.repo.getById(id, [
+			"region",
+			"province",
+			"city",
+			"barangay",
+			"sitio",
+			"years_of_residence",
+		]);
+		return data;
+	}
+	async updateResidencyById(id, selectedFields = {}) {
+		const data = await this.repo.update(id, selectedFields);
+		return data;
+	}
+	async getContactDetailsById(citizen_id) {
+		const contacts = await this.repo.getById(citizen_id, [
+			"mobile_number",
+			"telephone_number",
+		]);
+
+		return contacts;
+	}
+	async updateContactDetailsById(id, selectedFields = {}) {
+		const data = await this.repo.update(id, selectedFields);
+		return data;
+	}
+	async setIsWorker(id, selectedFields = {}) {
+		const data = await this.repo.update(id, selectedFields);
+		return data;
+	}
+	async getCitizenIdUsingAuth(id){
+		const data = await this.repo.getCitizenId(id);
 		return data;
 	}
 }

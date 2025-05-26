@@ -8,9 +8,12 @@ export async function GET(request,{params}) {
     const {user_id} = await params;
 
     const supabase = await createClient();
-
+    console.log("iser id", user_id);
     const {data, error} = await supabase.from('worker_roles_view').select("*").eq("barangay_id",user_id);
-    console.log("this is data", data);
+    if(error){
+        console.log(error);
+    }
+    // console.log("this is data", data);
 
     return NextResponse.json({ data: data });
 }

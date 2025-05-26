@@ -37,15 +37,20 @@ export async function POST(request) {
 			);
 		}
 		// const {data, error} = await authService.registerUser({email,password}); // this is the that should create the user without using signUo()
-		const { data, error } = await supabaseAdmin.auth.admin.createUser({
-			email,
-			password,
-			email_confirm: true,
-		});
-		console.log("this is data", data);
+		// ========================= i will remove this ============================
+		// const { data, error } = await supabaseAdmin.auth.admin.createUser({
+		// 	email,
+		// 	password,
+		// 	email_confirm: true,
+		// });
+		// console.log("this is data", data);
+		const account = await authService.createAccount({email:email});
+    	const user_id = account.data.user.id;
+		
 
+		// ========================================================================
 		const { data: userData, error: userError } = await userService.createUser({
-			user_id: data.user.id,
+			user_id: user_id,
 			role: "barangay",
 		});
 		console.log("this is userData", userData);
@@ -55,7 +60,7 @@ export async function POST(request) {
 			address: `${barangay}, ${city}, ${region}`,
 			badge_stock: 1000,
 			barangayName: barangayName,
-			user_id: data.user.id,
+			user_id: user_id,
 		});
 
 		if (!brgyDetails) {

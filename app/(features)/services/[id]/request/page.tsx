@@ -2,51 +2,80 @@
 import React from "react";
 
 import { useState } from "react";
-import RequestSidebar from "@/components/services/request/RequestSidebar";
-import ManageRequests from "@/components/services/request/ManageRequest";
-import Link from "next/link";
-import { RiArrowLeftLine } from "react-icons/ri";
-import ServiceTab from "@/components/services/ServiceTab";
-import { services } from "@/data/services";
+import { useMediaQuery } from "@/app/hooks/useMediaQuery";
+import { ChevronDown } from "lucide-react";
+import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
+import ManageRequest from "@/components/services/request/ManageRequest";
 
-const RequestPage = () => {
-	const [activeTab, setActiveTab] = useState("Pending");
+const TAB_COMPONENTS = {
+	Pending: <ManageRequest statusFilter="Pending" />,
+	Ongoing: <ManageRequest statusFilter="Ongoing" />,
+	Completed: <ManageRequest statusFilter="Completed" />,
+	Canceled: <ManageRequest statusFilter="Canceled" />,
+};
+
+const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
+	Pending: "Pending",
+	Ongoing: "Ongoing",
+	Completed: "Completed",
+	Canceled: "Canceled",
+};
+
+const Request = () => {
+	const [activeTab, setActiveTab] =
+		useState<keyof typeof TAB_COMPONENTS>("Pending");
+	const [showMobileSwitcher, setShowMobileSwitcher] = useState(false);
+	const isLargeScreen = useMediaQuery("(min-width: 1280px)");
+
+	const handleTabChange = (tab: keyof typeof TAB_COMPONENTS) => {
+		setActiveTab(tab);
+		setShowMobileSwitcher(false); // Auto-close mobile tab switcher
+	};
 
 	return (
-		<div>
-			<div className="fixed top-16 sm:left-18 right-0 flex z-20 items-center gap-2 pb-4 text-sm text-muted-foreground bg-white w-full py-2 sm:px-12 px-4">
-				<Link href="/services" className="flex items-center gap-1">
-					<RiArrowLeftLine className="text-lg" />
-					<span className="hover:text-secondary">Services</span>
-				</Link>
-				<span>/</span>
-				<Link href={`/services/1/request`} className="flex items-center gap-1">
-					<span className="text-secondary">Request</span>
-				</Link>
-			</div>
+		<div className="flex relative w-full justify-center">
+			<div className="main flex flex-col xl:flex-row items-start w-full max-w-[1440px] mx-auto gap-6 xl:gap-20">
+				{!isLargeScreen && (
+					<div className="flex w-fit gap-4 items-center relative mx-6 px-2">
+						<h1 className="text-2xl font-semibold">{TAB_LABELS[activeTab]}</h1>
 
-			<div className="flex flex-col sm:flex-row sm:gap-4 gap-2 pb-20 mt-9">
-				{/* Sidebar */}
-				<div className="flex-1 w-full">
-					<RequestSidebar activeTab={activeTab} onSelectTab={setActiveTab} />
-				</div>
+						<button onClick={() => setShowMobileSwitcher((prev) => !prev)}>
+							<ChevronDown className="w-6 h-6" />
+						</button>
 
-				{/* Content area */}
-				<div className="flex-4 w-full">
-					<ServiceTab service={services[0]} />
-					{/* Switch content dynamically based on the activeTab */}
-					{activeTab === "Pending" && <ManageRequests statusFilter="Pending" />}
-					{activeTab === "Ongoing" && <ManageRequests statusFilter="Ongoing" />}
-					{activeTab === "Completed" && (
-						<ManageRequests statusFilter="Completed" />
-					)}
-					{activeTab === "Canceled" && (
-						<ManageRequests statusFilter="Canceled" />
-					)}
+						{showMobileSwitcher && (
+							<TabSwitcher
+								tabComponents={TAB_COMPONENTS}
+								tabLabels={TAB_LABELS}
+								defaultTab={"Pending"}
+								className="flex w-[200px] flex-col flex-shrink-0 absolute bottom-0 left-0 translate-y-full background-1 p-4 rounded-xl drop-shadow-xl items-start gap-6 z-10"
+								activeTab={activeTab}
+								setActiveTab={handleTabChange}
+							/>
+						)}
+					</div>
+				)}
+
+				{isLargeScreen && (
+					<TabSwitcher
+						tabComponents={TAB_COMPONENTS}
+						tabLabels={TAB_LABELS}
+						defaultTab={"Pending"}
+						className="flex flex-col flex-shrink-0 sticky top-0 justify-center items-start gap-6 w-fit pt-4"
+						activeTab={activeTab}
+						setActiveTab={setActiveTab}
+					/>
+				)}
+
+				<div className="w-full px-4">
+					<div className="flex flex-col gap-6 w-full background-1  sm:rounded-3xl border border-light-color p-2 lg:p-4 xl:p-6 rounded-xl mb-10">
+						
+						{TAB_COMPONENTS[activeTab]}
+					</div>
 				</div>
 			</div>
 		</div>
 	);
 };
 
-export default RequestPage;
+export default Request;

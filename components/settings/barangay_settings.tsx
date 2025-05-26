@@ -1,96 +1,60 @@
 "use client"
 
-import React, {useEffect, useState} from 'react';
-import NameAndIdentity from "@/components/settings/citizens/name_and_identity";
-import Demographics from "@/components/settings/citizens/demographics";
-import Residence from "@/components/settings/citizens/residence";
-import ContactDetails from "@/components/settings/citizens/contact_details";
+import React, {useState} from 'react';
 import PasswordAndSecurity from "@/components/settings/citizens/password_and_security";
 import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
 import {ChevronDown} from "lucide-react";
 import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import EditProfile from "@/components/settings/barangay/edit_profile";
 import AccessControl from "@/components/settings/barangay/access_control";
-import { useUser } from '@/app/context/UserContext';
 import { useBarangayContext } from '@/app/context/BarangayContext';
 import { useCitizenContext } from '@/app/context/CitizenContext';
+import SetPasswordModal from '@/components/modal/SetPasswordModal';
 
 type BarangaySettingsProps = {
-  citizens: {
-      id: string;
-      first_name: string;
-      last_name: string;
-      middle_name?: string;
-      barangay_id: string;
-      is_worker: boolean;
-  }[];
-  workers: {
-    id:string;
-    citizen_id: string;
-    position: string;
-  }[];
-  accessRoles: {
-    id: string;
-    worker_id: string;
-    access_role: string;
-    date_added: string;
-  }[];
-  managers :{
-    citizen_id : string;
-    last_name : string;
-    first_name : string;
-    middle_name : string;
-    barangay_id : string;
-    barangay_address : string;
-    position : string;
-    access_role : string;
-    date_added :string;
-    date_ended:string;
-    profile_pic:string;
-  }[];
-  non_managers:{
-    citizen_id: string;
-    first_name: string;
-    last_name: string;
-    middle_name?: string;
-    position: string;
-    barangay_id : string;
-    barangay_address:string;
-  	worker_id : string;
-
-  }[];
-
+  showSetPasswordModal : boolean ;
 };
 
 
-
-
-
-function BarangaySettings({citizens,workers,accessRoles,managers,non_managers}: BarangaySettingsProps) {
-  const {role} = useUser(); 
+function BarangaySettings({showSetPasswordModal} : BarangaySettingsProps) {
+  // const {role} = useUser(); 
   const  barangay  = useBarangayContext();
   const  citizen  = useCitizenContext();
 
-  const profile = role === "barangay" ? barangay : citizen;
+
+  // const profile = role === "barangay" ? barangay : citizen;
 
   const TAB_COMPONENTS = {
-    Profile: <EditProfile role = {role} profile={profile}/>,
+    Profile: <EditProfile />,
+    // Profile: <EditProfile role = {role} profile={profile}/>,
     Security: <PasswordAndSecurity />,
-    Access: <AccessControl citizens={citizens} workers={workers} accessRoles={accessRoles} managers={managers} non_managers={non_managers} />,
+    Access: <AccessControl />,
   };
   const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
     Profile: "Edit profile",
     Security: "Password and security",
     Access: "Access control",
   };
+  
+  const [showModal, setShowModal] = useState(!showSetPasswordModal);
+  
   const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>("Profile");
   const [showMobileSwitcher, setShowMobileSwitcher] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
-
+  
+  const closeModal = () => setShowModal(false);
   const handleTabChange = (tab: keyof typeof TAB_COMPONENTS) => {
     setActiveTab(tab);
     setShowMobileSwitcher(false); // Auto-close mobile tab switcher
   };
+
+
+
+
+
+
+
+  
 
   return (
     <div className="flex relative">
@@ -133,7 +97,10 @@ function BarangaySettings({citizens,workers,accessRoles,managers,non_managers}: 
           </div>
         </div>
       </div>
+            {showSetPasswordModal && <SetPasswordModal onClose={closeModal}/>}
+            {/* rest of settings */}
     </div>
+    
   )
 
 }

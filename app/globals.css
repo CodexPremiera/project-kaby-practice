@@ -9,7 +9,7 @@
 	--color-accent: #ffc029;
 	--color-black: #1a1a1a;
 	--color-gray: #cccccc;
-	--backgroundImage: url("/assets/img/hero/bg.png");
+	--backgroundImage: url("https://thumbs.dreamstime.com/b/berlin-bundestag-reichstag-building-germany-digital-art-painting-berlin-bundestag-reichstag-building-germany-original-digital-art-267164534.jpg");
 	--glowImage: url("/assets/hero_glow.svg");
 	--heroImage: url("/assets/hero_light.svg");
 
@@ -55,7 +55,7 @@
 	h1 {
 		color: var(--color-black-100);
 		font-family: var(--font-work-sans);
-		@apply text-xl lg:text-5xl xl:text-6xl font-bold;
+		@apply text-xl lg:text-4xl xl:text-5xl font-bold;
 	}
 
 	:root {
@@ -82,6 +82,13 @@
 
 	.bg-hero-gradient::before {
 		@apply bg-left bg-no-repeat bg-bottom md:bg-center bg-size-[auto_100%] -translate-y-1/12 h-[160%] w-[125%] absolute left-0 md:bottom-0;
+		background-image: var(--glowImage);
+		background-repeat: no-repeat;
+		content: "";
+	}
+
+	.bg-login-gradient::before {
+		@apply bg-no-repeat bg-bottom bg-size-[auto_100%] -translate-y-1/12 h-[160%] w-[125%] absolute left-0 md:bottom-0;
 		background-image: var(--glowImage);
 		background-repeat: no-repeat;
 		content: "";
@@ -194,6 +201,13 @@
 		@apply bg-primary-3 dark:bg-primary-3-dark;
 		@apply hover:bg-primary-2 dark:hover:bg-primary-2-dark;
 		@apply active:bg-primary-3 dark:active:bg-primary-3-dark;
+		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-semibold shrink-0 flex;
+	}
+
+	.button-inverse {
+		@apply bg-primary-1-dark dark:bg-primary-1 text-primary-1 dark:text-primary-1-dark;
+		@apply hover:bg-primary-2-dark dark:hover:bg-primary-2;
+		@apply active:bg-primary-2-dark dark:active:bg-primary-2;
 		@apply cursor-pointer transition duration-200 justify-center items-center gap-2.5 py-3 px-4 h-10 rounded-full font-semibold shrink-0 flex;
 	}
 

@@ -1,30 +1,30 @@
 "use client";
 
 import React from "react";
-import {useManagerContext} from "@/components/settings/access_control/manager_context";
+// import {useManagerContext} from "@/components/settings/access_control/manager_context";
 
 function ManagerModal({ index }: { index: number }) {
-  const { removeManager, editManager } = useManagerContext();
+  // const { removeManager, editManager } = useManagerContext();
 
   const handleEdit = () => {
-    editManager(index, { name: "Edited Name" }); // Example
+    // editManager(index, { name: "Edited Name" }); // Example
   };
 
-  const handleRemove = () => {
-    removeManager(index);
-  };
+  // const handleRemove = () => {
+  //   removeManager(index);
+  // };
 
   return (
     <div className="flex flex-col gap-1 text-[#111] absolute top-0 right-0 translate-x-full h-fit bg-white shadow-md py-2 z-10">
       <span
         className="py-1 px-3 hover:text-[#E2B714] transition duration-100 cursor-pointer"
-        onClick={handleEdit}
+        // onClick={handleEdit}
       >
         Edit
       </span>
       <span
         className="py-1 px-3 hover:text-[#E2B714] transition duration-100 cursor-pointer"
-        onClick={handleRemove}
+        // onClick={handleRemove}
       >
         Remove
       </span>

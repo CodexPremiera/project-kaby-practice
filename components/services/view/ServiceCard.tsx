@@ -12,7 +12,7 @@ interface Service {
 	owner: string;
 	type: string;
 	image: string;
-	displayBadge?: boolean;
+	display_badge?: boolean;
 	status?: string;
 }
 
@@ -28,8 +28,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 	routePrefix,
 }) => {
 	const router = useRouter();
-	const currentUser = "Bondy Might"; // Replace with your auth later
-	const isOwner = currentUser === service.owner;
 
 	const handleClick = () => {
 		if (onSelect) {
@@ -70,13 +68,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 					fill
 					className="object-cover"
 				/>
-				{service.displayBadge && (
+				{service.display_badge && (
 					<span className="absolute top-2 right-2 bg-accent rounded-full p-1.5">
 						<BadgeIcon size={16} color="white" fill="white" />
 					</span>
 				)}
 			</div>
-
 			<div className="px-6 pt-3 pb-5">
 				<p className="font-semibold">{service.title}</p>
 				<p className="flex gap-1 text-secondary">

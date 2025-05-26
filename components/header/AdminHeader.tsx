@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./ModeToggle";
 import { RiUser3Line } from "react-icons/ri";
 import Link from "next/link";
+import {LogoutToggle} from "@/components/header/logout/LogoutToggle";
 
 const AdminHeader = () => {
 	return (
@@ -19,6 +20,8 @@ const AdminHeader = () => {
 			<div className="flex items-center gap-4">
 				<Link href="/barangay/profile" className="flex items-center gap-2">
 					<span className="hidden sm:inline text-sm font-medium pr-2">
+						<LogoutToggle />
+
 						Admin
 					</span>
 				</Link>

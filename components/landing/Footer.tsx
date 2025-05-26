@@ -8,10 +8,13 @@ import {
 	RiArrowRightLine,
 } from "react-icons/ri";
 
+import {MapPin} from 'lucide-react'
+
 import { motion } from "framer-motion";
 import { fadeIn } from "@/variants";
 import Socials from "./Socials";
 import { Button } from "@/components/ui/button";
+import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";
 
 const Footer = () => {
 	return (
@@ -20,7 +23,7 @@ const Footer = () => {
 			initial="hidden"
 			whileInView="show"
 			viewport={{ once: false, amount: 0.1 }}
-			className="mt-16 xl:mt-32 bg-black text-primary"
+			className="mt-16 xl:mt-32 bg-inverse-1 !text-secondary"
 		>
 			<div className="container mx-auto">
 				<div className="py-12 xl:py-[30px] flex flex-col xl:flex-row gap-[10px] xl:gap-[20px]">
@@ -32,47 +35,44 @@ const Footer = () => {
 						</Link>
 						<ul className="space-y-2">
 							<li className="flex items-center gap-4">
-								<RiMapPin2Fill className="text-accent text-xl" />
-								<p className="text-md">
+								<MapPin className=""/>
+								<p className="text-md text-inverse-1">
 									N. Bacalso Ave 51 6000 Cebu City Central Visayas
 								</p>
 							</li>
 							<li className="flex items-center gap-4">
-								<RiPhoneFill className="text-accent text-xl" />
-								<p className="text-md">1 (555) 000-0000</p>
+								<RiPhoneFill className="text-xl" />
+								<p className="text-md text-inverse-1">(555) 000-0000</p>
 							</li>
 							<li className="flex items-center gap-4 ">
-								<RiMailFill className="text-accent text-xl" />
-								<p className="text-md">kaby@mail.com</p>
+								<RiMailFill className="text-xl" />
+								<p className="text-md text-inverse-1">kaby@mail.com</p>
 							</li>
 							<li className="flex items-center gap-4 py-[18px]">
 								<Socials
 									containerStyles="flex gap-6 text-white"
-									iconStyles="hover:text-accent transition-all"
+									iconStyles="hover:text-secondarytransition-all"
 								/>
 							</li>
 						</ul>
 					</div>
 					{/* newsletter */}
 					<div className="flex-1 text-border ml-8 ">
-						<h4 className="text-3xl font-bold text-white mb-10"> Newsletter</h4>
-						<p className="mb-9 max-w-[400px] text-md">
+						<h4 className="text-3xl font-bold text-inverse-1 mb-10"> Newsletter</h4>
+						<p className="mb-9 max-w-[400px] text-md text-inverse-1">
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
 							eiusmod tempor incididunt ut labore et dolore magna aliqua.
 						</p>
 						{/* input */}
-						<div className="relative max-w-[400px] flex flex-col items-end">
+						<div className="relative max-w-[400px] flex flex-col items-end gap-2">
 							<input
 								type="text"
 								placeholder="Enter your email"
-								className="bg-[#222427] h-16 w-full pl-7 rounded-none outline-none flex items-center text-primary"
+								className="bg-inverse-2 h-16 w-full pl-7 rounded-xl outline-none flex items-center text-inverse-1"
 							/>
-							<Button
-								variant="secondary"
-								className="text-black font-semibold mt-4 w-[200px]"
-							>
+							<ButtonPrimary className="!bg-accent-dark">
 								Subscribe
-							</Button>
+							</ButtonPrimary>
 						</div>
 					</div>
 				</div>

@@ -6,6 +6,7 @@ import { useUser } from "@/app/context/UserContext";
 import  { useEffect, useState } from "react";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import AddContactModal from "@/components/modal/AddContactModal";
+import { useCitizenContext } from '@/app/context/CitizenContext';
 
 type Contacts = {
   name:string;
@@ -14,27 +15,34 @@ type Contacts = {
 const ContactList = () => {
 
   const {role} = useUser();
+  
+  let {access_role} = useCitizenContext();
+
   const {barangayId} = useBarangayContext();
   const [loading, setLoading] = useState(true);
-  
+  console.log("this zzz",access_role);
   const [contacts,setContacts] = useState<Contacts[] | null> (null);
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+  const fetchContacts = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/features/home/contacts/${barangayId}`, {
+        method: "GET",
+        cache: "no-store",
+      });
+      const data = await res.json();
+      console.log(data.data);
+      setContacts(data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(()=>{
-    const fetchContacts = async() =>{
-        try{
-          const res = await fetch(`/api/features/home/contacts/${barangayId}`,  { method: "GET", cache: "no-store" });
-          const data = await res.json();
-          console.log(data.data);
-          setContacts(data.data);
-        } catch(error){
-          console.log(error);
-        } finally{
-          setLoading(false);
-        }
-      }
       if(barangayId)fetchContacts();
     },[]);
 
@@ -51,18 +59,18 @@ const ContactList = () => {
         <div className="flex items-center gap-2.5 self-stretch w-40 text-primary font-medium">
           Contact Number
         </div>
-
-        {role === "barangay" ? (
+        {(role === "barangay" || (role === "citizen" && access_role === "Chief Operator")) ? (
           <ButtonSecondary className="text-sm" onClick={handleOpenModal}>+</ButtonSecondary>
         ) : (
           <span className="text-sm text-primary font-medium">Call</span>
         )}
+
       </div>
 
       {contacts.map((contact, index) => (
         <ContactItem key={index} label={contact.name} value={contact.number} />
       ))}
-       {showModal && <AddContactModal  onClose={handleCloseModal} barangayId={barangayId} />}
+       {showModal && <AddContactModal  onClose={handleCloseModal} barangayId={barangayId} onContactAdded={fetchContacts} />}
 
     </div>
   );

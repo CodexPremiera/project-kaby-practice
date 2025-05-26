@@ -3,6 +3,7 @@ import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import ErrorModal from "@/components/modal/ErrorModal";
 import SuccessModal from "@/components/modal/SuccessModal";
+import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary';
 const supabase = createClient(
 	process.env.NEXT_PUBLIC_SUPABASE_URL,
 	process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -163,12 +164,9 @@ export default function PetitionForm() {
 					</label>
 				</div>
 				<div className="mt-6 flex justify-center items-center">
-					<button
-						type="submit"
-						className="w-[300px] py-2 text-white bg-gray rounded-md hover:bg-black"
-					>
+					<ButtonPrimary type="submit" className="min-w-[50%]">
 						Submit
-					</button>
+					</ButtonPrimary>
 				</div>
 			</form>
 		</div>

@@ -11,7 +11,7 @@ interface SuccessModalProps {
 
 const SuccessModal = ({ title, content, onClose }: SuccessModalProps) => {
 	return (
-		<div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+		<div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
 			<button
 				onClick={onClose}
 				className="absolute top-5 right-5 text-white hover:text-black text-3xl z-50"
@@ -29,7 +29,7 @@ const SuccessModal = ({ title, content, onClose }: SuccessModalProps) => {
 
 				<button
 					onClick={onClose}
-					className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+					className="mt-4 px-6 py-2 bg-black text-white rounded-md "
 				>
 					Close
 				</button>

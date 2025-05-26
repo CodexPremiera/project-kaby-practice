@@ -38,6 +38,7 @@ interface Managers {
     access_role : string;
     date_added :string;
     date_ended:string;
+    profile_pic:string;
 }
 
 const ManagerList = ({ managers}: ManagerListProps) => {
@@ -47,6 +48,7 @@ const ManagerList = ({ managers}: ManagerListProps) => {
     position: manager.position,
     role: manager.access_role,
     added: manager.date_added,
+    photo : manager.profile_pic,
   }));
 
   console.log("managers",managers)

@@ -30,12 +30,13 @@ class BarangayService {
 			"id",
 			"barangayName",
 			"address",
+			"profile_pic"
 		]);
 		console.log("Barangay by ID", data);
 		return data;
 	}
 	async getBarangayFieldsById(id) {
-		const data = await this.repo.getById(id, ["id","barangayName", "address"]);
+		const data = await this.repo.getById(id, ["id","barangayName", "address","profile_pic", "about", "website"]);
 		console.log("Barangay by ID", data);
 		return data;
 	}
@@ -49,6 +50,12 @@ class BarangayService {
 		console.log("Barangay ID: ", data);
 		return data;
 	}
+	async updateBarangayProfile(id, selectedFields = {}){
+		console.log("this is selected fields ", selectedFields);
+		const data = this.repo.update(id,selectedFields);
+		return data;
+	}
+
 
 	// async getCitizenById(id){
 	//     const data= await this.repo.getById(id);

@@ -1,53 +1,82 @@
-"use client"
+"use client";
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import NameAndIdentity from "@/components/settings/citizens/name_and_identity";
 import Demographics from "@/components/settings/citizens/demographics";
 import Residence from "@/components/settings/citizens/residence";
 import ContactDetails from "@/components/settings/citizens/contact_details";
 import PasswordAndSecurity from "@/components/settings/citizens/password_and_security";
 import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
-import {ChevronDown} from "lucide-react";
-import {useMediaQuery} from "@/app/hooks/useMediaQuery";
+import { ChevronDown } from "lucide-react";
+import { useMediaQuery } from "@/app/hooks/useMediaQuery";
+import { useCitizenContext } from "@/app/context/CitizenContext";
+import SetPasswordModal from "@/components/modal/SetPasswordModal";
+import EditProfile from "./barangay/edit_profile"; // reuse same EditProfile component
 
+interface CitSettingsProps {
+  citizenId: string;
+  showSetPasswordModal: boolean;
+}
 
-const TAB_COMPONENTS = {
-  Identity: <NameAndIdentity />,
-  Demographics: <Demographics />,
-  Residence: <Residence />,
-  Contact: <ContactDetails />,
-  Security: <PasswordAndSecurity />,
-};
-
-const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> = {
-  Identity: "Name and identity",
-  Demographics: "Demographics",
-  Residence: "Residence",
-  Contact: "Contact details",
-  Security: "Password and security",
-};
-
-function CitizenSettings(props) {
-  const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>("Identity");
-  const [showMobileSwitcher, setShowMobileSwitcher] = useState(false);
+function CitizenSettings({ citizenId, showSetPasswordModal }: CitSettingsProps) {
+  const { access_role } = useCitizenContext();
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+
+  const [showMobileSwitcher, setShowMobileSwitcher] = useState(false);
+  const [showModal, setShowModal] = useState(!showSetPasswordModal);
+
+  const closeModal = () => setShowModal(false);
+
+  const baseTabs = {
+    Identity: <NameAndIdentity userId={citizenId} />,
+    Demographics: <Demographics userId={citizenId} />,
+    Residence: <Residence userId={citizenId} />,
+    Contact: <ContactDetails userId={citizenId} />,
+    Security: <PasswordAndSecurity />,
+  };
+
+  const TAB_COMPONENTS = access_role === "Chief Operator"
+    ? {
+        ...baseTabs,
+        Profile: <EditProfile />, 
+      }
+    : baseTabs;
+
+  // ✅ Corresponding tab labels
+  const baseLabels = {
+    Identity: "Name and identity",
+    Demographics: "Demographics",
+    Residence: "Residence",
+    Contact: "Contact details",
+    Security: "Password and security",
+  };
+
+  const TAB_LABELS: Record<keyof typeof TAB_COMPONENTS, string> =
+    access_role === "Chief Operator"
+      ? {
+          ...baseLabels,
+          Profile: "Edit Barangay Profile",
+        }
+      : baseLabels;
+
+  // ✅ Start on the first tab ("Identity") no matter what
+  const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>("Identity");
 
   const handleTabChange = (tab: keyof typeof TAB_COMPONENTS) => {
     setActiveTab(tab);
-    setShowMobileSwitcher(false); // Auto-close mobile tab switcher
+    setShowMobileSwitcher(false);
   };
 
   return (
     <div className="flex relative">
       <div className="main flex flex-col lg:flex-row items-start w-full mx-auto lg:ml-[40px] xl:ml-[72px]">
+        {/* Mobile View */}
         {!isLargeScreen && (
           <div className="flex w-fit gap-4 items-center relative mx-6 px-2">
             <h1 className="text-2xl font-semibold">{TAB_LABELS[activeTab]}</h1>
-
-            <button onClick={() => setShowMobileSwitcher(prev => !prev)}>
+            <button onClick={() => setShowMobileSwitcher((prev) => !prev)}>
               <ChevronDown className="w-6 h-6" />
             </button>
-
             {showMobileSwitcher && (
               <TabSwitcher
                 tabComponents={TAB_COMPONENTS}
@@ -61,6 +90,7 @@ function CitizenSettings(props) {
           </div>
         )}
 
+        {/* Desktop View */}
         {isLargeScreen && (
           <TabSwitcher
             tabComponents={TAB_COMPONENTS}
@@ -72,15 +102,18 @@ function CitizenSettings(props) {
           />
         )}
 
+        {/* Active Tab Content */}
         <div className="flex w-full pt-6 lg:pt-20 max-xl:justify-center">
           <div className="flex flex-col gap-6 w-full max-w-[780px] mx-6 xl:ml-30 2xl:ml-40 background-1 rounded-2xl sm:rounded-3xl border border-light-color p-6 md:p-12 rounded-xl ">
             {TAB_COMPONENTS[activeTab]}
           </div>
         </div>
       </div>
-    </div>
-  )
 
+      {/* Show SetPasswordModal if required */}
+      {showSetPasswordModal && <SetPasswordModal onClose={closeModal} />}
+    </div>
+  );
 }
 
 export default CitizenSettings;

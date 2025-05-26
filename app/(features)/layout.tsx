@@ -13,6 +13,8 @@ import { createClient } from "@/utils/supabase/server";
 // import { UserContext } from "@/app/context/UserContext";
 // import { BarangayContext } from "@/app/context/BarangayContext";
 import BarangayProvider from "@/app/context/BarangayProvider";
+import CitizenProvider from "@/app/context/CitizenProvider";
+import {MainBarProvider} from "@/app/context/MainBarProvider";
 import UserProvider from "@/app/context/UserProvider";
 const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	const supabase = await createClient();
@@ -23,14 +25,8 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	console.log("Logged in user id: ", user_id);
 	const role = await userService.getUserRole(user_id);
 
-  const { data:womp, error:wompwomp } = await supabase
-    .from('worker_roles_view')  // <- use your view name here
-    .select('*')                // or specify columns like 'FirstName, LastName, AccessRole'
-	if (wompwomp){
-		console.log(wompwomp);
-	}else{
-		console.log("womp",womp);
-	}
+	const has_password = await authService.hasPassword();
+	console.log("this has pass", has_password);
 
 	console.log("User role: ", role);
 
@@ -38,7 +34,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	let Mainbar = null;
 
 	let barangayData = null;
-
+	let citizenData = null;
 	if (role === "admin") {
 		Header = <AdminHeader />;
 		Mainbar = <AdminMainbar />;
@@ -50,8 +46,13 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 			barangayId: barangay.id,
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
+			barangayProfilePic:barangay.profile_pic,
+			about: barangay.about,
+
 		}
 		console.log("Barangay data: ", barangayData);
+		
+
 		// conte
 		Header = <BarangayHeader />;
 		Mainbar = <BarangayMainbar />;
@@ -64,11 +65,30 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 			barangayId: barangay.id,
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
+			barangayProfilePic:barangay.profile_pic,
+			about: barangay.about,
 			// barangayName: "test",
 			// barangayAddress: "test2",
 		}
-		console.log("Barangay data: ", barangayData);
+		console.log("womppp womppp",barangayData);
 
+		const citizen = await citizenService.getCitByAuthenticatedId(user_id);
+		console.log("womppp womppp  womppp",citizen);
+		
+		// TODO: HIDDE THIS OR SOMETHING
+		const {data:access,error} = await supabase.from("worker_roles_view").select("access_role").eq("citizen_id",citizen.id).maybeSingle();
+		console.log("this is access role", access?.access_role);
+		// ================================================
+		citizenData = {
+			citizenId: citizen.id,
+			firstName: citizen.first_name,
+			lastName: citizen.last_name,
+			middleName: citizen.middle_name,
+			citizenProfilePic: citizen.profile_pic,
+			access_role : access?.access_role,
+		};
+		console.log("Barangay data: ", barangayData);
+		console.log("brrr brr", citizenData);
 		Header = <CitizenHeader />;
 		Mainbar = <CitizenMainbar />;
 	}
@@ -84,23 +104,25 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		</div>
 	);
 	return (
-		<UserProvider value={{userId: user_id, role}}>
+		<UserProvider value={{userId: user_id, role,has_password}}>
 			{role === "barangay" ? (
 					<BarangayProvider value={barangayData}>
 						<LayoutWrapper>{children}</LayoutWrapper>
 					</BarangayProvider>
 				)
-				: role === "citizen" ? (
-						<BarangayProvider value={barangayData}>
-							<LayoutWrapper>{children}</LayoutWrapper>
-			</BarangayProvider>
+				: role === "citizen" && citizenData && barangayData 	 ?  (
+            <CitizenProvider value={citizenData}>
+							<BarangayProvider value={barangayData}>
+								<LayoutWrapper>{children}</LayoutWrapper>
+							</BarangayProvider>
+						</CitizenProvider>
 			)
 			 : (
 			<LayoutWrapper>{children}</LayoutWrapper>
-
 			)}
 		</UserProvider>
 	);
 };
+
 
 export default GeneralLayout;

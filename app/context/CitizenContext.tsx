@@ -1,19 +1,36 @@
-// "use client";
 
-// import { createContext, useContext } from "react";
+"use client";
 
-// export type BarangayContextType = {
-//   barangayName: string | null;
-//   barangayAddress: string | null;
+import { createContext, useContext } from "react";
 
-// };
+export type CitizenContext = {
+    citizenId: string | null;
+    lastName: string | null;
+    firstName: string | null;
+    middleName: string | null;
+    // citizenAddress: string | null;
+    citizenProfilePic : string | null;
+    access_role :string | null;
+};
 
-// export const BarangayContext = createContext<BarangayContextType | null>(null);
+export const CitizenContext = createContext<CitizenContext | null>(null);
 
-// export const useBarangayContext = () => {
-//   const context = useContext(BarangayContext);
-//   if (!context) {
-//     throw new Error("useBarangayContext must be used within a BarangayProvider");
-//   }
-//   return context;
-// };
+// export const useCitizenContext = () => useContext(CitizenContext);
+export const useCitizenContext = () => {
+  const context = useContext(CitizenContext);
+
+  if (!context) {
+    // Return safe default values for non-citizen users
+    return {
+      citizenId: null,
+      lastName: null,
+      firstName: null,
+      middleName: null,
+      citizenProfilePic: null,
+      access_role: null,
+    };
+  }
+
+  return context;
+};
+

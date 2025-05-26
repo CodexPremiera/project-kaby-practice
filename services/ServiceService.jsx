@@ -10,18 +10,8 @@ class ServiceService {
 	}
 
 	async getById(serviceId) {
-		const { data, error } = await this.supabase
-			.from("services")
-			.select("*")
-			.eq("id", serviceId)
-			.single();
-
-		if (error) {
-			console.error("Error fetching service:", error);
-			return null;
-		}
-
-		return data; // Return the service data if found
+		const data = await this.repo.getById(serviceId);
+		return data;
 	}
 	// async makeService(serviceData){
 	//     // TODO: add logic
@@ -50,15 +40,7 @@ class ServiceService {
 	}
 
 	async getServicesByOwners(ownerIds) {
-		const { data, error } = await this.supabase
-			.from("Services")
-			.select("*")
-			.in("owner", ownerIds);
-
-		if (error) {
-			console.error("Error fetching services:", error);
-			return [];
-		}
+		const data = await this.repo.getServicesByOwners(ownerIds);
 		return data;
 	}
 }

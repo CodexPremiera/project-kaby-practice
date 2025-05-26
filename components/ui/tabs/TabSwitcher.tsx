@@ -2,18 +2,18 @@
 
 "use client";
 
-import {JSX, useEffect, useState} from "react";
+import {JSX, ReactNode, useEffect, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import SwitchTab from "@/components/ui/tabs/SwitchTab";
 
 type TabSwitcherProps<T extends string> = {
-  tabComponents: Record<T, JSX.Element>;
-  tabLabels: Record<T, string>;
-  defaultTab: T;
-  className?: string;
-  switchTabClass?: string;
-  activeTab?: T;
-  setActiveTab?: (tab: T) => void;
+	tabComponents: Record<T, ReactNode>;
+	tabLabels: Record<T, string>;
+	defaultTab: T;
+	className?: string;
+	switchTabClass?: string;
+	activeTab?: T;
+	setActiveTab?: (tab: T) => void;
 };
 
 function TabSwitcher<T extends string>({

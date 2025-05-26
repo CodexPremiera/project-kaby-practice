@@ -8,6 +8,6 @@ type Props = {
   children: ReactNode;
 };
 
-export default function UserProvider({ value, children }: Props) {
+export default function UserProvider({ value, children }) {
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }

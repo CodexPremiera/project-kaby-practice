@@ -5,7 +5,20 @@ class CitizenProfileRepo extends BaseRepo {
 	constructor(supabase) {
 		super("CitizenProfile", supabase);
 	}
-	async getAllByBarangayId(id,selectFields = "*") {
+	async getAll() {
+		try {
+			const { data, error } = await this.supabase
+				.from(this.tableName)
+				.select("*");
+			if (error) {
+				throw new Error(error.message);
+			}
+			return data;
+		} catch (err) {
+			throw new Error("Failed to fetch citizens");
+		}
+	}
+	async getAllByBarangayId(id, selectFields = "*") {
 		const fields = Array.isArray(selectFields)
 			? selectFields.join(", ")
 			: selectFields;
@@ -15,10 +28,10 @@ class CitizenProfileRepo extends BaseRepo {
 			.select(fields)
 			.eq("barangay_id", id);
 		console.log("this is data", data);
-		if (error){
-			console.log("Errr",error);
+		if (error) {
+			console.log("Errr", error);
 			throw error;
-		} 
+		}
 		return data;
 	}
 	async create(citizenData) {
@@ -37,7 +50,7 @@ class CitizenProfileRepo extends BaseRepo {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select("*")
-			.eq("user_id", id);
+			.eq("user_id", id).single();
 		if (error) console.log(error);
 		return data;
 	}
@@ -72,6 +85,14 @@ class CitizenProfileRepo extends BaseRepo {
 			.from(this.tableName)
 			.select("user_id")
 			.eq("barangay_id", barangay_id);
+		if (error) console.log(error);
+		return data;
+	}
+	async getCitizenId(id){
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select("id")
+			.eq("user_id", id).single();
 		if (error) console.log(error);
 		return data;
 	}

@@ -10,7 +10,7 @@ export async function GET(request) {
     const supabase = await createClient();
 
     const {data, error} = await supabase.from('worker_roles_view').select("*").eq("barangay_id","c84e9fff-2c23-4969-8ad4-7cd0bcc4a4c4");
-    console.log("this is data", data);
+    console.log("this is data called", data);
 
     return NextResponse.json({ data: data });
     

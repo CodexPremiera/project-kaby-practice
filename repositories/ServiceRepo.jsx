@@ -1,4 +1,4 @@
-import ServiceModel from "../models/ServiceModel";
+import ServiceModel from "@/models/ServiceModel";
 import BaseRepo from "./BaseRepo";
 
 export default class ServiceRepo extends BaseRepo {
@@ -25,12 +25,24 @@ export default class ServiceRepo extends BaseRepo {
 		return data;
 	}
 
+	async getServicesByOwners(ownerIds) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select("*")
+			.in("owner", ownerIds);
+
+		if (error) {
+			console.error("Error fetching services:", error);
+			return [];
+		}
+		return data;
+	}
 	async getServicesByUser(user_id) {
 		console.log(user_id, "the user id");
 		const { data: citizen, error: citizenError } = await this.supabase
 			.from("CitizenProfile")
 			.select("user_id")
-			.eq("user_id", user_id) // <-- corrected
+			.eq("user_id", user_id)
 			.single();
 
 		if (citizenError) {
@@ -42,7 +54,7 @@ export default class ServiceRepo extends BaseRepo {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select()
-			.eq("owner_id", citizen.user_id); // <-- assuming owner_id is correct
+			.eq("owner_id", citizen.user_id);
 
 		if (error) console.log(error);
 		return data;
@@ -52,7 +64,7 @@ export default class ServiceRepo extends BaseRepo {
 		const { data: services, error: servicesError } = await this.supabase
 			.from(this.tableName)
 			.select("*")
-			.eq("owner", barangayUserId); // <-- match with your schema
+			.eq("owner", barangayUserId);
 
 		if (servicesError) {
 			console.error("Error fetching services of the Barangay:", servicesError);

@@ -8,14 +8,16 @@ type LoadingModalProps = {
 
 export default function LoadingModal({ title, content }: LoadingModalProps) {
 	return (
-		<div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-			<div className="relative flex flex-col items-center bg-white p-8 rounded-lg shadow-lg w-[350px]">
-				<div className="w-[40px] h-[40px] bg-green-500 rounded-full flex items-center justify-center mb-4">
-					<RiCheckLine className="text-white w-6 h-6" />
+		<div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 ">
+			<div className="relative flex flex-col items-center bg-white h-60 p-8 py-12 rounded-lg shadow-lg w-[350px] justify-center">
+				<div className="relative flex items-center justify-center gap-3">
+					<div className="h-5 w-5 bg-secondary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+					<div className="h-5 w-5 bg-secondary rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+					<div className="h-5 w-5 bg-secondary rounded-full animate-bounce"></div>
 				</div>
-				<h2 className="text-xl font-semibold text-center mb-4">{title}</h2>
-				<div className="loader mb-4"></div>
-				<p className="text-sm text-center text-gray-600 mb-4">{content}</p>
+
+				<h2 className="text-xl font-semibold text-center mt-6">{title}</h2>
+				<p className="text-sm text-center text-gray-600 mt-2">{content}</p>
 			</div>
 		</div>
 	);

@@ -113,7 +113,7 @@ const CreateAccount: React.FC<Props> = ({ onClose }) => {
 										onChange={handleChange}
 									/>
 								</div>
-								<div className="flex flex-col">
+								{/* <div className="flex flex-col">
 									<p className="text-sm">Password:</p>
 									<Input
 										placeholder="Enter Password"
@@ -132,7 +132,7 @@ const CreateAccount: React.FC<Props> = ({ onClose }) => {
 										value={formData.confirmPassword}
 										onChange={handleChange}
 									/>
-								</div>
+								</div> */}
 							</div>
 						</div>
 

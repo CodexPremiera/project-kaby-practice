@@ -1,24 +1,21 @@
+import RequestRepo from "@/repositories/RequestRepo";
+
 class RequestService {
 	constructor(supabase) {
 		this.repo = new RequestRepo(supabase);
 	}
-	async getAllServices() {
-		const services = await this.repo.getAll();
-		return services;
+	async getAllRequests() {
+		const data = await this.repo.getAll();
+		return data;
 	}
 
-	async getById(serviceId) {
-		const { data, error } = await this.supabase
-			.from("services")
-			.select("*")
-			.eq("id", serviceId)
-			.single();
+	async getById(id) {
+		const data = await this.repo.getById(id);
+		return data;
+	}
 
-		if (error) {
-			console.error("Error fetching service:", error);
-			return null;
-		}
-
+	async getRequestsByServiceId(service_id,status) {
+		const data = await this.repo.getRequestsByServiceId(service_id, status);
 		return data;
 	}
 	async createRequest(requestData) {

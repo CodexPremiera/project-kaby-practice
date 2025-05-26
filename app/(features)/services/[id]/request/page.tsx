@@ -6,8 +6,6 @@ import { useMediaQuery } from "@/app/hooks/useMediaQuery";
 import { ChevronDown } from "lucide-react";
 import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
 import ManageRequest from "@/components/services/request/ManageRequest";
-import { RiEditBoxLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
-import { router } from "next/client";
 
 const TAB_COMPONENTS = {
 	Pending: <ManageRequest statusFilter="Pending" />,

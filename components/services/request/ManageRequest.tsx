@@ -1,25 +1,20 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 
-import { profiles } from "@/data/profiles";
-import { services } from "@/data/services";
-import { useRouter, useSearchParams } from "next/navigation";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import { useMediaQuery } from "@/app/hooks/useMediaQuery";
-import RequestSheet from "./RequestSheet";
 import RequestTableView from "./RequestTableView";
-import RequestListView from "./RequestListView";
 import RequestSearchBar from "./RequestSearchBar";
 import { RiEditBoxLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
 import { router } from "next/client";
-
-type Profile = {
-	id: string;
-	name: string;
-	address: string;
-	image: string;
-};
+import {
+	getRequestsByService,
+	Request,
+} from "@/lib/clients/RequestServiceClient";
+import RequestSheet from "./RequestSheet";
+import RequestListView from "./RequestListView";
 
 interface RequestServiceProps {
 	statusFilter: string;
@@ -29,59 +24,58 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 	const searchParams = useSearchParams();
 	const query = searchParams.get("q") || "";
 
-	const [statuses, setStatuses] = useState<string[]>(
-		profiles.map(() => "Pending")
-	);
-	const [selectedItems, setSelectedItems] = useState<number[]>([]);
-	const [activeClient, setActiveClient] = useState<Profile | null>(null);
+	const pathname = usePathname();
+	const serviceId = pathname.split("/")[2];
 
-	const filteredClients = profiles
-		.map((profile, index) => {
-			const service = services[index % services.length];
-			return {
-				...profile,
-				service,
-				status: statuses[index],
-				index,
-			};
-		})
-		.filter((profile) =>
-			profile.service.title.toLowerCase().includes(query.toLowerCase())
-		)
-		.filter((profile) =>
-			statusFilter === "All" ? true : profile.status === statusFilter
-		);
-
-	const toggleSelection = (index: number) => {
-		setSelectedItems((prev) =>
-			prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-		);
-	};
-
-	const openRequestSheet = (client: Profile) => {
-		setActiveClient(client);
-	};
-
-	const closeRequestSheet = () => {
-		setActiveClient(null);
-	};
-
-	const cancelSelected = () => {
-		const updatedStatuses = [...statuses];
-		selectedItems.forEach((index) => {
-			updatedStatuses[index] = "Canceled";
-		});
-		setStatuses(updatedStatuses);
-		setSelectedItems([]);
-	};
+	const [requests, setRequests] = useState<Request[]>([]);
+	const [selectedItems, setSelectedItems] = useState<string[]>([]);
+	const [activeRequest, setActiveRequest] = useState<Request | null>(null);
 
 	const isLargeScreen = useMediaQuery("(min-width: 768px)");
 
+	useEffect(() => {
+		const fetchRequests = async () => {
+			if (!serviceId) return;
+			const data = await getRequestsByService(
+				serviceId,
+				statusFilter === "All" ? undefined : statusFilter
+			);
+			setRequests(data);
+		};
+
+		fetchRequests();
+	}, [serviceId, statusFilter]);
+
+	const filteredRequests = requests.filter((req) =>
+		req.service_id.toLowerCase().includes(query.toLowerCase())
+	);
+
+	const toggleSelection = (id: string) => {
+		setSelectedItems((prev) =>
+			prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+		);
+	};
+
+	const openRequestSheet = (request: Request) => {
+		setActiveRequest(request);
+	};
+
+	const closeRequestSheet = () => {
+		setActiveRequest(null);
+	};
+
+	const cancelSelected = () => {
+		const updatedRequests = requests.map((req) =>
+			selectedItems.includes(req.id) ? { ...req, status: "Canceled" } : req
+		);
+		setRequests(updatedRequests);
+		setSelectedItems([]);
+	};
+
 	return (
 		<div className="flex flex-col gap-8 p-4 sm:p-6 background-1 rounded-[10px]">
-			{/* Header */}
-			<div className="flex flex-row justify-between items-center border-b pb-4  border-gray-200 text-md font-semibold">
-				<div>Service Title</div>
+			<div className="flex flex-row justify-between items-center border-b pb-4 border-gray-200 text-md font-semibold">
+				<div>Service Requests</div>
 				<div className="flex items-center gap-4">
 					<div className="flex items-center gap-1">
 						<span>0</span>
@@ -93,13 +87,14 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 					</div>
 					<div>
 						<RiEditBoxLine
-							onClick={() => router.push(`/services/serviceId/edit`)}
+							onClick={() => router.push(`/services/${serviceId}/edit`)}
 							size={22}
-							className="hover:bg-white rounded-full"
+							className="hover:bg-white rounded-full cursor-pointer"
 						/>
 					</div>
 				</div>
 			</div>
+
 			<div className="flex items-center justify-between gap-12">
 				<div className="flex items-center grow max-w-[540px]">
 					<RequestSearchBar />
@@ -122,10 +117,9 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 				</div>
 			</div>
 
-			{/* Table */}
 			{isLargeScreen ? (
 				<RequestTableView
-					filteredClients={filteredClients}
+					requests={filteredRequests}
 					selectedItems={selectedItems}
 					setSelectedItems={setSelectedItems}
 					toggleSelection={toggleSelection}
@@ -133,7 +127,7 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 				/>
 			) : (
 				<RequestListView
-					filteredClients={filteredClients}
+					requests={filteredRequests}
 					selectedItems={selectedItems}
 					setSelectedItems={setSelectedItems}
 					toggleSelection={toggleSelection}
@@ -141,11 +135,19 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 				/>
 			)}
 
-			{activeClient && (
+			{activeRequest && (
 				<>
 					<div className="fixed inset-0 bg-black/20 z-40"></div>
 					<div className="fixed bottom-0 md:right-12 right-0 z-50 w-[450px] h-[500px] bg-white rounded-t-xl shadow-xl overflow-hidden flex flex-col">
-						<RequestSheet profile={activeClient} onClose={closeRequestSheet} />
+						<RequestSheet
+							profile={{
+								id: activeRequest.id,
+								name: activeRequest.owner,
+								address: activeRequest.owner,
+								image: activeRequest.owner,
+							}}
+							onClose={closeRequestSheet}
+						/>
 					</div>
 				</>
 			)}

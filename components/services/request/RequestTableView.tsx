@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Table,
 	TableBody,
@@ -11,33 +11,35 @@ import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import { MessageCircleMore as MessageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Request } from "@/lib/clients/RequestServiceClient";
+import {
+	getServiceById,
+	getCurrentUser,
+	Service,
+} from "@/lib/clients/ViewServiceClient";
 
-type ServiceProfile = {
-	id: string;
-	index: number;
-	service: {
-		image: string;
-		title: string;
-		owner: string;
-	};
-};
-
-type EditableRow = {
-	index: number;
-	schedule: string;
-	status: string;
-};
+// Helper to format Date to "YYYY-MM-DD"
+function formatDateToInputValue(date: string | Date | undefined): string {
+	if (!date) return "";
+	if (typeof date === "string") {
+		return date.slice(0, 10);
+	}
+	const year = date.getFullYear();
+	const month = (date.getMonth() + 1).toString().padStart(2, "0");
+	const day = date.getDate().toString().padStart(2, "0");
+	return `${year}-${month}-${day}`;
+}
 
 type RequestTableViewProps = {
-	filteredClients: ServiceProfile[];
-	selectedItems: number[];
-	setSelectedItems: React.Dispatch<React.SetStateAction<number[]>>;
-	toggleSelection: (index: number) => void;
-	openRequestSheet: (profile: ServiceProfile) => void;
+	requests: Request[];
+	selectedItems: string[];
+	setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>;
+	toggleSelection: (id: string) => void;
+	openRequestSheet: (request: Request) => void;
 };
 
 const RequestTableView: React.FC<RequestTableViewProps> = ({
-	filteredClients,
+	requests,
 	selectedItems,
 	setSelectedItems,
 	toggleSelection,
@@ -45,31 +47,34 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 }) => {
 	const router = useRouter();
 
-	const [editableData, setEditableData] = useState<EditableRow[]>(
-		filteredClients.map((client) => ({
-			index: client.index,
-			schedule: "2025-04-23",
-			status: "Pending",
-		}))
-	);
+	const [editableData, setEditableData] = useState<
+		{ id: string; schedule_date: string; status: string }[]
+	>([]);
+
+	useEffect(() => {
+		setEditableData(
+			requests.map((req) => ({
+				id: req.id,
+				schedule_date: formatDateToInputValue(req.schedule_date),
+				status: req.status,
+			}))
+		);
+	}, [requests]);
 
 	const handleInputChange = (
-		index: number,
-		field: keyof EditableRow,
+		id: string,
+		field: "schedule_date" | "status",
 		value: string
 	) => {
 		setEditableData((prev) =>
-			prev.map((item) =>
-				item.index === index ? { ...item, [field]: value } : item
-			)
+			prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
 		);
 	};
 
-	const handleSubmit = (index: number) => {
-		const data = editableData.find((item) => item.index === index);
-		console.log("Submitting for:", index, data);
-	};
+	const allSelected =
+		selectedItems.length === requests.length && requests.length > 0;
 
+	const [service, setService] = useState<Service | null>(null);
 	return (
 		<Table className="table-fixed w-full">
 			<TableHeader>
@@ -78,84 +83,66 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 						<input
 							type="checkbox"
 							className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
-							checked={
-								selectedItems.length === filteredClients.length &&
-								filteredClients.length > 0
-							}
+							checked={allSelected}
 							onChange={() =>
-								selectedItems.length === filteredClients.length
+								allSelected
 									? setSelectedItems([])
-									: setSelectedItems(filteredClients.map((c) => c.index))
+									: setSelectedItems(requests.map((r) => r.id))
 							}
 						/>
 					</TableHead>
-					<TableHead className="w-[200px] text-secondary text-sm pt-1 pb-5">
-						Client
-					</TableHead>
-					<TableHead className="w-[140px] text-secondary text-sm pt-1 pb-5">
-						Schedule
-					</TableHead>
-					<TableHead className="w-[80px] text-secondary text-sm pt-1 pb-5">
-						Payment
-					</TableHead>
-					<TableHead className="w-[120px] text-secondary text-sm pt-1 pb-5">
-						Status
-					</TableHead>
-					<TableHead className="w-[90px] text-secondary text-sm pt-1 pb-5">
-						Actions
-					</TableHead>
+					<TableHead className="w-[200px]">Title</TableHead>
+					<TableHead className="w-[140px]">Schedule</TableHead>
+					<TableHead className="w-[80px]">Payment</TableHead>
+					<TableHead className="w-[120px]">Status</TableHead>
+					<TableHead className="w-[90px]">Actions</TableHead>
 				</TableRow>
 			</TableHeader>
 
-			<TableBody className="border-b border-light-color">
-				{filteredClients.map((profile) => {
-					const rowData = editableData.find(
-						(item) => item.index === profile.index
-					);
+			<TableBody>
+				{requests.map((request) => {
+					const rowData = editableData.find((item) => item.id === request.id);
 
 					return (
-						<TableRow
-							key={profile.index}
-							className="hover:bg-gray-50 border-light-color h-18"
-						>
+						<TableRow key={request.id}>
 							<TableCell>
 								<input
 									type="checkbox"
 									className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
-									checked={selectedItems.includes(profile.index)}
-									onChange={() => toggleSelection(profile.index)}
+									checked={selectedItems.includes(request.id)}
+									onChange={() => toggleSelection(request.id)}
 								/>
 							</TableCell>
 
 							<TableCell>
 								<button
-									className="flex items-center gap-3 w-[18.75rem]"
-									onClick={() => router.push(`/profile/${profile.id}`)}
+									className="flex items-center gap-3"
+									onClick={() => router.push(`/services/${request.service_id}`)}
 								>
 									<Image
-										src={profile.service.image}
-										alt={`${profile.service.title}'s Avatar`}
+										// src={request.service_id || "/default-avatar.png"}
+										src={
+											"https://jevvtrbqagijbkdjoveh.supabase.co/storage/v1/object/public/services-pictures/uploads/1747983680603-looking-for-local-electricians.jpg"
+										}
+										alt=""
 										width={36}
 										height={36}
 										className="object-cover w-10 h-10 rounded-full"
 									/>
-									<div className="user_name flex flex-col justify-center items-start p-1 h-9">
-										<div className="text-primary font-semibold text-md">
-											{profile.service.title}
-										</div>
-										<div className="text-secondary text-sm">
-											{profile.service.owner}
-										</div>
-									</div>
+									<div>{request.service_id}</div>
 								</button>
 							</TableCell>
 
 							<TableCell>
 								<input
 									type="date"
-									value={rowData?.schedule}
+									value={rowData?.schedule_date || ""}
 									onChange={(e) =>
-										handleInputChange(profile.index, "schedule", e.target.value)
+										handleInputChange(
+											request.id,
+											"schedule_date",
+											e.target.value
+										)
 									}
 									className="border rounded px-2 py-1 text-sm"
 								/>
@@ -165,30 +152,23 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 
 							<TableCell>
 								<select
-									value={rowData?.status}
+									value={rowData?.status || ""}
 									onChange={(e) =>
-										handleInputChange(profile.index, "status", e.target.value)
+										handleInputChange(request.id, "status", e.target.value)
 									}
 									className="border rounded px-2 py-1 text-sm"
 								>
 									<option value="Pending">Pending</option>
 									<option value="Ongoing">Ongoing</option>
 									<option value="Completed">Completed</option>
-									<option value="Cancelled">Cancelled</option>
+									<option value="Canceled">Canceled</option>
 								</select>
 							</TableCell>
 
 							<TableCell className="flex items-center gap-2">
-								<ButtonClear onClick={() => openRequestSheet(profile)}>
+								<ButtonClear onClick={() => openRequestSheet(request)}>
 									<MessageIcon strokeWidth={2} className="w-6 p-0" />
 								</ButtonClear>
-
-								<button
-									onClick={() => handleSubmit(profile.index)}
-									className="text-xs px-2 py-1 bg-gray-200 text-black rounded"
-								>
-									Submit
-								</button>
 							</TableCell>
 						</TableRow>
 					);

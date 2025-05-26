@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import React, { useEffect, useState } from "react";
-import { getCurrentUser, getServiceById, Service } from "../ViewServiceClient";
+import {
+	getCurrentUser,
+	getServiceById,
+	Service,
+} from "@/lib/clients/ViewServiceClient";
 import { useRouter, useParams } from "next/navigation";
 import { RiArrowLeftLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
 import { getPublicUrl } from "@/utils/supabase/storage";

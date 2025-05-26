@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getCurrentUser, getServiceById, Service } from "../ViewServiceClient";
+import {
+	getCurrentUser,
+	getServiceById,
+	Service,
+} from "@/lib/clients/ViewServiceClient";
 import { useRouter, useParams } from "next/navigation";
 import {
 	DropdownMenu,

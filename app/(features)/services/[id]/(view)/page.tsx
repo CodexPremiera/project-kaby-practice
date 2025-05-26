@@ -11,7 +11,7 @@ import {
 import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getPublicUrl } from "@/utils/supabase/storage";
-import { getCurrentUser, getServiceById, Service } from "./ViewServiceClient";
+import { getCurrentUser, getServiceById, Service } from "@/lib/clients/ViewServiceClient";
 import { format } from "date-fns";
 
 const ViewService: React.FC = () => {

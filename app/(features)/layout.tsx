@@ -25,7 +25,8 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	console.log("Logged in user id: ", user_id);
 	const role = await userService.getUserRole(user_id);
 
-
+	const has_password = await authService.hasPassword();
+	console.log("this has pass", has_password);
 
 	console.log("User role: ", role);
 
@@ -46,6 +47,8 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
 			barangayProfilePic:barangay.profile_pic,
+			about: barangay.about,
+
 		}
 		console.log("Barangay data: ", barangayData);
 		
@@ -63,19 +66,26 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 			barangayName: barangay.barangayName,
 			barangayAddress: barangay.address,
 			barangayProfilePic:barangay.profile_pic,
+			about: barangay.about,
 			// barangayName: "test",
 			// barangayAddress: "test2",
 		}
-		console.log("womppp womppp",user_id);
+		console.log("womppp womppp",barangayData);
 
 		const citizen = await citizenService.getCitByAuthenticatedId(user_id);
 		console.log("womppp womppp  womppp",citizen);
+		
+		// TODO: HIDDE THIS OR SOMETHING
+		const {data:access,error} = await supabase.from("worker_roles_view").select("access_role").eq("citizen_id",citizen.id).maybeSingle();
+		console.log("this is access role", access?.access_role);
+		// ================================================
 		citizenData = {
 			citizenId: citizen.id,
 			firstName: citizen.first_name,
 			lastName: citizen.last_name,
 			middleName: citizen.middle_name,
 			citizenProfilePic: citizen.profile_pic,
+			access_role : access?.access_role,
 		};
 		console.log("Barangay data: ", barangayData);
 		console.log("brrr brr", citizenData);
@@ -94,7 +104,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		</div>
 	);
 	return (
-		<UserProvider value={{userId: user_id, role}}>
+		<UserProvider value={{userId: user_id, role,has_password}}>
 			{role === "barangay" ? (
 					<BarangayProvider value={barangayData}>
 						<LayoutWrapper>{children}</LayoutWrapper>

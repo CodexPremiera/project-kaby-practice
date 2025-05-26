@@ -136,5 +136,9 @@ class CitizenService {
 		const data = await this.repo.update(id, selectedFields);
 		return data;
 	}
+	async getCitizenIdUsingAuth(id){
+		const data = await this.repo.getCitizenId(id);
+		return data;
+	}
 }
 export default CitizenService;

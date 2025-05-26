@@ -88,5 +88,13 @@ class CitizenProfileRepo extends BaseRepo {
 		if (error) console.log(error);
 		return data;
 	}
+	async getCitizenId(id){
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select("id")
+			.eq("user_id", id).single();
+		if (error) console.log(error);
+		return data;
+	}
 }
 export default CitizenProfileRepo;

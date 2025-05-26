@@ -10,6 +10,7 @@ type MainBar = {
 	badge_stock: number |null;
 	officials_count: number |null;
 	residents_count: number |null;
+	about : string | null;
 
 }
 export default function StatsTabClient() {
@@ -55,7 +56,9 @@ export default function StatsTabClient() {
 						residents
 					</span>
 				</div>
-
+				{/* <div className="flex flex-col">
+					{mainBar.about}
+				</div> */}
 				<div className="flex flex-col">
 					<div className="flex align-center justify-center gap-1.5">
 						<h1 className="text-xl md:text-2xl lg:text-3xl font-semibold overflow-hidden">

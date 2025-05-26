@@ -8,8 +8,9 @@ export async function GET(request,{params}) {
 
 
     try {
-        const data = await accessService.getWorkersUsingBrgyId(user_id);
-        return NextResponse.json({ data: data });
+        // const data = await accessService.getAccessRoleUsingBrgyId(user_id);
+        // console.log("this is the access role",data);
+        return NextResponse.json({ data: "hello" });
     } catch (err) {
         console.log(err);
         return NextResponse.json({ error: err.message }, { status: 500 });

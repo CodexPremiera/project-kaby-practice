@@ -56,7 +56,7 @@ const ManagerRow: React.FC<CustomRowProps> = ({
 
       <ButtonDropdown
         icon={<Ellipsis size={24} />}
-        modal={<ManagerModal index={index} /> }
+        // modal={<ManagerModal index={index} /> }
       />
 
     </div>

@@ -7,14 +7,17 @@ export async function GET(request,{params}) {
     const {user_id} = await params;
     const supabase = await createClient();
     const citizenService = new CitizenService(supabase);
+    console.log("this ")
 
+    
 
 
     try {
         const data = await citizenService.getCitizensByBarangayId(user_id);
+        console.log("this is the data", data);
         return NextResponse.json({ data: data });
     } catch (err) {
-        console.log(err);
+        console.log("tjhis is heerr",err);
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }

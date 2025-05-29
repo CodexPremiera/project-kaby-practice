@@ -296,8 +296,11 @@ const Requirements: React.FC = () => {
 					<div className="flex justify-end">
 						<Button
 							variant="secondary"
-							onClick={() => router.push(`/services/${service.id}/payment`)}
-						>
+							onClick={() => {
+								// router.push(`/services/${service.id}/payment`)
+								console.log("Ohayo sekai");
+							}}
+						>	
 							Proceed
 						</Button>
 					</div>

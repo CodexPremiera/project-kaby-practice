@@ -46,6 +46,22 @@ const Requirements: React.FC = () => {
 	const [error, setError] = useState<string | null>(null);
 	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+	const handleSubmit = async (e:any) => {
+		e.preventDefault();
+		const res = await fetch("/api/request", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				service_id: service?.id,
+				is_paid: false,
+				status: "Pending",
+				owner: service?.owner,
+				user_id: currentUserId
+			}),
+		});
+		const data = await res.json();
+		console.log(data, currentUserId);
+	};
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -296,10 +312,7 @@ const Requirements: React.FC = () => {
 					<div className="flex justify-end">
 						<Button
 							variant="secondary"
-							onClick={() => {
-								// router.push(`/services/${service.id}/payment`)
-								console.log("Ohayo sekai");
-							}}
+							onClick={handleSubmit}
 						>	
 							Proceed
 						</Button>

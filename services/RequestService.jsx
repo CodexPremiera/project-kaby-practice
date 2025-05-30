@@ -13,7 +13,10 @@ class RequestService {
 		const data = await this.repo.getById(id);
 		return data;
 	}
-
+	async getRequestByUser(id){
+		const data = await this.repo.getRequestsByUser(id);
+		return data;
+	}
 	async getRequestsByServiceId(service_id,status) {
 		const data = await this.repo.getRequestsByServiceId(service_id, status);
 		return data;
@@ -22,5 +25,12 @@ class RequestService {
 		const data = await this.repo.create(requestData);
 		return data;
 	}
+
+	async updateRequest(id, selectedFields = {}){
+		const data = await this.repo.update(id, selectedFields);
+		return data; 
+	}
+	// call the function from the repo
+	async updateRequestByOwnerId(){}
 }
 export default RequestService;

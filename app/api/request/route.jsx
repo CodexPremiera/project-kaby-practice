@@ -21,3 +21,30 @@ export async function POST(request){
         console.log(data, "pakening");
         return NextResponse.json(data);
 }
+
+//for updating 'pending' status
+export async function PUT(request){
+        const supabase = await createClient();
+        const upReqService = new RequestService(supabase);
+        const upCitService = new CitizenService(supabase);
+        const body = await request.json();
+
+        // update fields using ownerid
+
+        // get data sa json
+        const {user_id, ...someValues} = body;
+        console.log("the val bolante ", someValues);
+        // get cit-id from auth-id
+        const this_id = await upCitService.getCitByAuthenticatedId(user_id);
+        console.log("this dot", user_id, this_id.id)
+        // get the remarks-id using cit-id fk
+        const remark_id = await upReqService.getRequestByUser(this_id.id);
+        console.log("idk service", remark_id); 
+
+        // update status and is_paid using the remark id 
+        const data = await upReqService.updateRequest(remark_id.id, someValues);
+        console.log("update", remark_id.id, someValues);
+
+        console.log("something", data);
+        return NextResponse.json(data);
+}

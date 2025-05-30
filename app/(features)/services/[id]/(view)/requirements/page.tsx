@@ -59,8 +59,15 @@ const Requirements: React.FC = () => {
 				user_id: currentUserId
 			}),
 		});
-		const data = await res.json();
-		console.log(data, currentUserId);
+
+		if(res.ok){
+			const data = await res.json();
+			console.log(data, currentUserId);
+			router.push(`/services/${service?.id}/payment`)
+		} else {
+			router.push(`/services/${service?.id}/requirements`)
+		}
+
 	};
 
 	useEffect(() => {

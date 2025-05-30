@@ -38,7 +38,8 @@ const Payment: React.FC = () => {
 			body: JSON.stringify({
 				user_id: currentUserId,
 				is_paid: true,
-				status: "Ongoing"
+				status: "Ongoing",
+				// owner: service?.owner 
 			})
 		})
 	}

@@ -21,12 +21,26 @@ export default class RequestRepo extends BaseRepo {
 		}
 		return data;
 	}
+
 	async getRequestsByUser(user_id) {
 		console.log(user_id, "the user id");
 		const { data: data1, error: error1 } = await this.supabase
 			.from(this.tableName)
 			.select("id")
 			.eq("customer_id", user_id)
+			.single();
+		console.log("data", data1);
+
+		if (error1) console.log(error1);
+		return data1;
+	}
+
+	async getRequestsByOwner(owner_id) {
+		console.log(owner_id, "the user id");
+		const { data: data1, error: error1 } = await this.supabase
+			.from(this.tableName)
+			.select("id")
+			.eq("owner", owner_id)
 			.single();
 		console.log("data", data1);
 
@@ -55,19 +69,17 @@ export default class RequestRepo extends BaseRepo {
 	
 	// make a repository that updates the fields using the owner
 	async updateRequestsByOwnerId(owner_id, fields = {}){
-		// const { data, error } = await this.supabase
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.update(fields)
+			.eq("owner", owner_id)
+			.select();
+		if(error){
+			console.log(error);
+			throw error;
+		}
 
-		// console.log("this is fields", fields);
-		// const { data, error } = await this.supabase
-		// 	.from(this.tableName)
-		// 	.update(fields)
-		// 	.eq("id", owner_id)
-		// 	.select();
-		// if (error){
-		// 	console.log(error);
-		// 	throw error;
-		// }
-		// console.log("this is data", data);
-		// return data;
+		console.log("the data ", data);
+		return data;
 	}
 }

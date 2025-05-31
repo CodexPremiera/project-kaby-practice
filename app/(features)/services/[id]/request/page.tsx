@@ -34,7 +34,7 @@ const Request = () => {
 		photo?: string;
 		type: string;
 		status: string;
-		category: string;
+		category?: string;
 		start_date: Date;
 		end_date: Date;
 	} | null>(null);
@@ -54,7 +54,7 @@ const Request = () => {
 					photo: data.image,
 					type: data.type,
 					status: data.status,
-					category: data.category,
+					category: data.category ?? undefined,
 					start_date: data.start_date,
 					end_date: data.end_date,
 				});

@@ -10,18 +10,19 @@ export interface Service {
 	agreement_fee: number;
 	convenience_fee: number;
 	total_price: number;
+	payment_type: string;
 	start_date: Date;
 	end_date: Date;
 	display_badge: boolean;
 	eligible_for_badges: boolean;
 	ratings: number;
 	no_of_avail: number;
+	date_created: Date;
 	date_closed: Date;
 	allow_attach_file: boolean;
 	status: string;
-	category:string | null;
+	category: string | null;
 }
-
 
 export const getServiceById = async (id: string): Promise<Service | null> => {
 	try {

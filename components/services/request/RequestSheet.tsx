@@ -29,8 +29,8 @@ const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
 	};
 
 	return (
-		<div className="flex flex-col w-full">
-			<div className="flex bg-gray-200 justify-between items-center py-2">
+		<div className="flex flex-col w-full h-full">
+			<div className="flex background-1 justify-between items-center py-2">
 				<div className="font-semibold px-4">{getCustomerName(request)}</div>
 				<div className="px-2">
 					<Button
@@ -45,7 +45,7 @@ const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
 			</div>
 
 			{/* Tabs */}
-			<nav className="flex gap-6 border-b border-gray-200 pl-4">
+			<nav className="flex gap-6 border-b border-gray-200 pl-4 text-primary-1">
 				{tabs.map((tab) => (
 					<TabButton
 						key={tab}
@@ -57,7 +57,7 @@ const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
 			</nav>
 
 			{/* Tab Content */}
-			<div className="mt-4 px-4">{renderContent()}</div>
+			<div className="mt-4 px-4 h-full">{renderContent()}</div>
 		</div>
 	);
 };

@@ -148,7 +148,7 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 			{activeRequest && (
 				<>
 					<div className="fixed inset-0 bg-black/20 z-40"></div>
-					<div className="fixed bottom-0 md:right-12 right-0 z-50 w-[450px] h-[500px] bg-white rounded-t-xl shadow-xl overflow-hidden flex flex-col">
+					<div className="fixed bottom-0 md:right-12 right-0 z-50 w-[450px] h-[500px] background-1 rounded-t-xl shadow-xl overflow-hidden flex flex-col">
 						<RequestSheet
 							request={activeRequest}
 							onClose={closeRequestSheet}

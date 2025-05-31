@@ -12,11 +12,8 @@ import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import { MessageCircleMore as MessageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Request } from "@/lib/clients/RequestServiceClient";
-import {
-	getServiceById,
-	getCurrentUser,
-	Service,
-} from "@/lib/clients/ViewServiceClient";
+import { getPublicUrl } from "@/utils/supabase/storage";
+import { Button } from "@/components/ui/button";
 
 // Helper to format Date to "YYYY-MM-DD"
 function formatDateToInputValue(date: string | Date | undefined): string {
@@ -73,8 +70,6 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 
 	const allSelected =
 		selectedItems.length === requests.length && requests.length > 0;
-
-	const [service, setService] = useState<Service | null>(null);
 	return (
 		<Table className="table-fixed w-full">
 			<TableHeader>
@@ -91,9 +86,9 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 							}
 						/>
 					</TableHead>
-					<TableHead className="w-[200px]">Title</TableHead>
-					<TableHead className="w-[140px]">Schedule</TableHead>
+					<TableHead className="w-[200px]">Customer</TableHead>
 					<TableHead className="w-[80px]">Payment</TableHead>
+					<TableHead className="w-[140px]">Schedule</TableHead>
 					<TableHead className="w-[120px]">Status</TableHead>
 					<TableHead className="w-[90px]">Actions</TableHead>
 				</TableRow>
@@ -114,24 +109,31 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 								/>
 							</TableCell>
 
-							<TableCell>
+							<TableCell className="hover:bg-gray-100">
 								<button
 									className="flex items-center gap-3"
-									onClick={() => router.push(`/services/${request.service_id}`)}
+									onClick={() => router.push(`/profile/${request.customer_id}`)}
 								>
 									<Image
-										// src={request.service_id || "/default-avatar.png"}
 										src={
-											"https://jevvtrbqagijbkdjoveh.supabase.co/storage/v1/object/public/services-pictures/uploads/1747983680603-looking-for-local-electricians.jpg"
+											request.customer_photo
+												? getPublicUrl(
+														request.customer_photo,
+														"profile-pictures"
+													)
+												: "/default-image.jpg"
 										}
-										alt=""
+										alt={`${request.customer_name ?? "User"} image`}
 										width={36}
 										height={36}
 										className="object-cover w-10 h-10 rounded-full"
 									/>
-									<div>{request.service_id}</div>
+
+									<div>{request.customer_name}</div>
 								</button>
 							</TableCell>
+
+							<TableCell>Not Paid</TableCell>
 
 							<TableCell>
 								<input
@@ -147,8 +149,6 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 									className="border rounded px-2 py-1 text-sm"
 								/>
 							</TableCell>
-
-							<TableCell>Not Paid</TableCell>
 
 							<TableCell>
 								<select
@@ -169,6 +169,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 								<ButtonClear onClick={() => openRequestSheet(request)}>
 									<MessageIcon strokeWidth={2} className="w-6 p-0" />
 								</ButtonClear>
+								<Button>Submit</Button>
 							</TableCell>
 						</TableRow>
 					);

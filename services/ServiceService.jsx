@@ -26,6 +26,7 @@ class ServiceService {
 	//     return {data,error};
 	// }
 	async createService(serviceData) {
+		console.log("this is createService Servoce",serviceData);
 		const data = await this.repo.create(serviceData);
 		return data;
 	}

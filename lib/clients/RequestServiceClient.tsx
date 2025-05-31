@@ -9,40 +9,56 @@ export interface Request {
 	schedule_date: Date;
 	status: string;
 	request_files: string | null;
-}
 
-function toRequest(req: any): Request {
-	return {
-		...req,
-		schedule_date: new Date(req.schedule_date),
+	added_date: string; // ISO string from Supabase
+
+	CitizenProfile?: {
+		first_name: string | null;
+		last_name: string | null;
+		middle_name: string | null;
+		profile_pic?: string | null;
 	};
 }
 
-export async function getRequestsByService(
-	serviceId: string,
-	status?: string
-): Promise<Request[]> {
-	try {
-		const url = new URL(
-			`/api/services/${serviceId}/request`,
-			process.env.NEXT_PUBLIC_BASE_URL
-		);
+export const getCustomerName = (request: Request) =>
+	`${request.CitizenProfile?.first_name ?? ''} ${
+		request.CitizenProfile?.middle_name ? request.CitizenProfile.middle_name[0] + '.' : ''
+		} ${request.CitizenProfile?.last_name ?? ''}`.trim();
+	
 
-		if (status) url.searchParams.set("tab", status);
 
-		const response = await fetch(url.toString());
-		const data = await response.json();
-
-		if (!Array.isArray(data.requests)) {
-			console.error("Invalid data format: requests is not an array");
-			return [];
+		function toRequest(req: any): Request {
+			return {
+				...req,
+				schedule_date: new Date(req.schedule_date),
+			};
 		}
 
-		const requests: Request[] = data.requests.map(toRequest);
+		export async function getRequestsByService(
+			serviceId: string,
+			status?: string
+		): Promise<Request[]> {
+			try {
+				const url = new URL(
+					`/api/services/${serviceId}/request`,
+					process.env.NEXT_PUBLIC_BASE_URL
+				);
 
-		return requests;
-	} catch (error) {
-		console.error("Error fetching service requests:", error);
-		return [];
-	}
-}
+				if (status) url.searchParams.set("tab", status);
+
+				const response = await fetch(url.toString());
+				const data = await response.json();
+
+				if (!Array.isArray(data.requests)) {
+					console.error("Invalid data format: requests is not an array");
+					return [];
+				}
+
+				const requests: Request[] = data.requests.map(toRequest);
+
+				return requests;
+			} catch (error) {
+				console.error("Error fetching service requests:", error);
+				return [];
+			}
+		}

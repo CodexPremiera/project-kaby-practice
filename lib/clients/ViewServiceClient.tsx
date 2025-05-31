@@ -19,7 +19,7 @@ export interface Service {
 	date_closed: Date;
 	allow_attach_file: boolean;
 	status: string;
-	category: string;
+	category:string | null;
 }
 
 

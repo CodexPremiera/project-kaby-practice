@@ -30,6 +30,7 @@ const serviceTypes = ["Barangay", "Personal", "Event"];
 const yesNoOptions = ["Yes", "No"];
 const dateOptions = ["Available Date", "Not Applicable"];
 const paymentTypes = ["Fixed Rate", "Quote"];
+const serviceCategory = ["Environmental", "Livelihood Support", "Education", "Disaster Response", "Infrastructure", "Social Welfare", "Health & Wellness", "Beauty & Grooming", "Therapeutic & Counseling", "Coaching", "Pet Care", "Household", "Legal & Certification", "Other"];
 
 const CreateServiceClient: React.FC<CreateServiceProps> = ({
 	onClose,
@@ -49,6 +50,10 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 		serviceCost: undefined as number | undefined,
 		paymentType: "Fixed Rate",
 		agreementFeePercent: 100,
+
+		category : "Select Category",
+
+
 	});
 	const [modalType, setModalType] = useState<"success" | "error" | null>(null);
 	const [errorMessages, setErrorMessages] = useState<{ [key: string]: string }>(
@@ -109,6 +114,10 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 			}
 		}
 
+		if(form.category === "Select Category"){
+			errors.category = "Please select a category"
+		}
+
 		if (Object.keys(errors).length > 0) {
 			setErrorMessages(errors);
 			setIsSubmitting(false);
@@ -158,6 +167,9 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 			total_price: totalPrice,
 			eligible_for_badges: form.eligibleForBadges,
 			display_badge: form.displayBadge,
+
+
+			category :form.category,
 		};
 
 		try {
@@ -180,6 +192,7 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 		} finally {
 			setIsSubmitting(false);
 		}
+		console.log("service data",serviceData);
 	};
 
 	return (
@@ -301,7 +314,35 @@ const CreateServiceClient: React.FC<CreateServiceProps> = ({
 										</DropdownMenuContent>
 									</DropdownMenu>
 								</div>
+							{/* ======================================================================== */}
+								
+								<div className="flex-1">
+									<p className="text-sm">Service Category:</p>
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Button variant="gray" className="w-full justify-between">
+												{form.category}
+											</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent className="bg-white">
+											{serviceCategory.map((opt) => (
+												<DropdownMenuItem
+													key={opt}
+													onClick={() =>
+														setForm((prev) => ({
+															...prev,
+															category: opt,
+														}))
+													}
+												>
+													{opt}
+												</DropdownMenuItem>
+											))}
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</div>
 
+												{/* ======================== */}
 								<div className="flex-1">
 									<p className="text-sm">Schedule Option:</p>
 									<DropdownMenu>

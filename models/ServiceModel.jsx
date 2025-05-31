@@ -20,7 +20,8 @@ class ServiceModel {
 		no_of_avail = 0,
 		date_closed = null,
 		date_created = new Date().toISOString(),
-		status = "Active"
+		status = "Active",
+		category
 	) {
 		this.title = title;
 		this.owner = owner;
@@ -48,6 +49,8 @@ class ServiceModel {
 		this.date_closed = date_closed;
 		this.date_created = date_created;
 		this.status = status;
+		this.category = category; 
+
 	}
 }
 

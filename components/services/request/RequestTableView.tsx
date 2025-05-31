@@ -11,12 +11,9 @@ import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import { MessageCircleMore as MessageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Request } from "@/lib/clients/RequestServiceClient";
-import {
-	getServiceById,
-	getCurrentUser,
-	Service,
-} from "@/lib/clients/ViewServiceClient";
+import {getCustomerName, Request} from "@/lib/clients/RequestServiceClient";
+import { Service } from "@/lib/clients/ViewServiceClient";
+
 
 // Helper to format Date to "YYYY-MM-DD"
 function formatDateToInputValue(date: string | Date | undefined): string {
@@ -67,7 +64,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 		value: string
 	) => {
 		setEditableData((prev) =>
-			prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+			prev.map((item) => (item.id === id ? {...item, [field]: value} : item))
 		);
 	};
 
@@ -75,6 +72,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 		selectedItems.length === requests.length && requests.length > 0;
 
 	const [service, setService] = useState<Service | null>(null);
+
 	return (
 		<Table className="table-fixed w-full">
 			<TableHeader>
@@ -91,7 +89,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 							}
 						/>
 					</TableHead>
-					<TableHead className="w-[200px]">Title</TableHead>
+					<TableHead className="w-[200px]">Customer</TableHead>
 					<TableHead className="w-[140px]">Schedule</TableHead>
 					<TableHead className="w-[80px]">Payment</TableHead>
 					<TableHead className="w-[120px]">Status</TableHead>
@@ -129,7 +127,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 										height={36}
 										className="object-cover w-10 h-10 rounded-full"
 									/>
-									<div>{request.owner}</div>
+									<div>{getCustomerName(request)}</div>
 								</button>
 							</TableCell>
 
@@ -167,7 +165,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 
 							<TableCell className="flex items-center gap-2">
 								<ButtonClear onClick={() => openRequestSheet(request)}>
-									<MessageIcon strokeWidth={2} className="w-6 p-0" />
+									<MessageIcon strokeWidth={2} className="w-6 p-0"/>
 								</ButtonClear>
 							</TableCell>
 						</TableRow>

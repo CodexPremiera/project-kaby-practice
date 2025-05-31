@@ -11,7 +11,6 @@ import { RiEditBoxLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
 import { router } from "next/client";
 
 import {
-	getRequestsByService,
 	Request,
 } from "@/lib/clients/RequestServiceClient";
 import RequestSheet from "./RequestSheet";

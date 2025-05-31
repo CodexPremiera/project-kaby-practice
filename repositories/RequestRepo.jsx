@@ -48,12 +48,28 @@ export default class RequestRepo extends BaseRepo {
 		return data1;
 	}
 
-	// THIS GETS THE SERVICES BY ID
+	// THIS GETS THE SERVICES BY ID INCLUDING CITIZEN PROFILE INFO
 	async getRequestsByServiceId(service_id, status) {
 		let query = this.supabase
-			.from(this.tableName)
-			.select("*")
-			.eq("service_id", service_id);
+		.from(this.tableName)
+		.select(`
+			id,
+			service_id,
+			is_paid,
+			schedule_date,
+			ratings,
+			request_files,
+			status,
+			owner,
+			customer_id,
+			added_date,
+			CitizenProfile (
+				first_name,
+				last_name,
+				middle_name
+			)
+		`)
+		.eq("service_id", service_id);
 
 		if (status) {
 			query = query.eq("status", status);
@@ -62,12 +78,13 @@ export default class RequestRepo extends BaseRepo {
 		const { data, error } = await query;
 
 		if (error) {
-			console.error("Error fetching requests:", error);
+			console.error("Error fetching requests with profile info:", error);
 			throw error;
 		}
+
 		return data;
 	}
-	
+
 	// make a repository that updates the fields using the owner
 	async updateRequestsByOwnerId(owner_id, fields = {}){
 		const { data, error } = await this.supabase

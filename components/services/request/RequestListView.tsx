@@ -2,15 +2,15 @@ import React from "react";
 import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import { MessageCircleMore as MessageIcon } from "lucide-react";
-import { Request } from "@/lib/clients/RequestServiceClient";
+import { ServiceRequest } from "@/lib/clients/RequestServiceClient";
 import { getServiceById } from "@/lib/clients/ViewServiceClient";
 
 type RequestListViewProps = {
-	requests: Request[];
+	requests: ServiceRequest[];
 	selectedItems: string[];
 	setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>;
 	toggleSelection: (id: string) => void;
-	openRequestSheet: (request: Request) => void;
+	openRequestSheet: (request: ServiceRequest) => void;
 };
 
 const RequestListView: React.FC<RequestListViewProps> = ({

@@ -11,7 +11,7 @@ import { RiEditBoxLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
 import { router } from "next/client";
 
 import {
-	Request,
+	ServiceRequest,
 } from "@/lib/clients/RequestServiceClient";
 import RequestSheet from "./RequestSheet";
 import RequestListView from "./RequestListView";
@@ -27,9 +27,9 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 	const pathname = usePathname();
 	const serviceId = pathname.split("/")[2];
 
-	const [requests, setRequests] = useState<Request[]>([]);
+	const [requests, setRequests] = useState<ServiceRequest[]>([]);
 	const [selectedItems, setSelectedItems] = useState<string[]>([]);
-	const [activeRequest, setActiveRequest] = useState<Request | null>(null);
+	const [activeRequest, setActiveRequest] = useState<ServiceRequest | null>(null);
 
 	const isLargeScreen = useMediaQuery("(min-width: 768px)");
 
@@ -66,7 +66,7 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 		);
 	};
 
-	const openRequestSheet = (request: Request) => {
+	const openRequestSheet = (request: ServiceRequest) => {
 		setActiveRequest(request);
 	};
 
@@ -150,12 +150,7 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 					<div className="fixed inset-0 bg-black/20 z-40"></div>
 					<div className="fixed bottom-0 md:right-12 right-0 z-50 w-[450px] h-[500px] bg-white rounded-t-xl shadow-xl overflow-hidden flex flex-col">
 						<RequestSheet
-							profile={{
-								id: activeRequest.id,
-								name: activeRequest.owner,
-								address: activeRequest.owner,
-								image: activeRequest.owner,
-							}}
+							request={activeRequest}
 							onClose={closeRequestSheet}
 						/>
 					</div>

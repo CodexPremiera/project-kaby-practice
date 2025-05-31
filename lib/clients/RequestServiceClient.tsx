@@ -1,4 +1,4 @@
-export interface Request {
+export interface ServiceRequest {
 	id: string;
 	service_id: string;
 	owner: string;
@@ -13,11 +13,15 @@ export interface Request {
 		first_name: string | null;
 		last_name: string | null;
 		middle_name: string | null;
-		profile_pic?: string | null;
+		profile_pic: string | null;
 	};
+
+	Services?: {
+		title: string
+	}
 }
 
-export const getCustomerName = (request: Request) =>
+export const getCustomerName = (request: ServiceRequest) =>
 	`${request.CitizenProfile?.first_name ?? ''} ${
 		request.CitizenProfile?.middle_name ? request.CitizenProfile.middle_name[0] + '.' : ''
 	} ${request.CitizenProfile?.last_name ?? ''}`.trim();

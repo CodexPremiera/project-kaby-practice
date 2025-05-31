@@ -68,6 +68,9 @@ export default class RequestRepo extends BaseRepo {
 				last_name,
 				middle_name,
 				profile_pic
+			),
+			Services(
+				title	
 			)
 		`)
 		.eq("service_id", service_id);

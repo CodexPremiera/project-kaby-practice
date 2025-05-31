@@ -1,35 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Button } from "@/components/ui/button";
-
-interface Profile {
-	id: string;
-	name: string;
-	address: string;
-	image: string;
-}
+import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
 
 interface ChatProps {
-	profile: Profile;
+	request: ServiceRequest;
 }
 
-const Chat: React.FC<ChatProps> = ({ profile }) => {
-	const [messages, setMessages] = useState<{ sender: string; text: string }[]>(
-		[]
-	);
+interface Message {
+	id: string;
+	request_id: string;
+	message: string;
+	sent_at: string;
+	sender_id: string;
+}
+
+const Chat = ({ request } : ChatProps) => {
+	const requestId = request.id;
+
+	const [messages, setMessages] = useState<Message[]>([]);
 	const [newMessage, setNewMessage] = useState("");
 
 	const handleSendMessage = () => {
 		if (newMessage.trim() === "") return;
-		setMessages((prev) => [...prev, { sender: "You", text: newMessage }]);
+		// setMessages((prev) => [...prev, { sender: "You", text: newMessage }]);
 		setNewMessage("");
 	};
+
+	useEffect(() => {
+		const fetchRequests = async () => {
+			try {
+				const res = await fetch(
+						`/api/services/${request.service_id}/request/${requestId}/Chat`
+				);
+
+				if (!res.ok) {
+					throw new Error('Failed to fetch chats');
+				}
+
+				const { chats } = await res.json();
+
+				setMessages(chats);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		if (requestId) {
+			fetchRequests();
+		}
+	}, [requestId]);
 
 	return (
 		<div className="flex flex-col h-[310px] border border-gray-300  rounded-lg  overflow-hidden justify-between">
 			<div className="p-3 border-b border-gray-200 text-sm font-medium text-gray-700">
-				Chatting with {profile.name}
+				Chatting with {getCustomerName(request)}
 			</div>
 
 			{/* Message History */}
@@ -43,17 +69,17 @@ const Chat: React.FC<ChatProps> = ({ profile }) => {
 						<div
 							key={idx}
 							className={`flex ${
-								msg.sender === "You" ? "justify-end" : "justify-start"
+								msg.sender_id === request.owner ? "justify-end" : "justify-start"
 							}`}
 						>
 							<div
 								className={`px-3 py-2 rounded-lg max-w-[70%] break-words ${
-									msg.sender === "You"
+									msg.sender_id === request.owner
 										? "bg-secondary text-white"
 										: "bg-white border border-gray-200"
 								}`}
 							>
-								<p className="break-words whitespace-pre-wrap">{msg.text}</p>
+								<p className="break-words whitespace-pre-wrap">{msg.message}</p>
 							</div>
 						</div>
 					))

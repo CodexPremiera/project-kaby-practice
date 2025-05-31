@@ -11,7 +11,7 @@ import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import { MessageCircleMore as MessageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import {getCustomerName, Request} from "@/lib/clients/RequestServiceClient";
+import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
 import { Service } from "@/lib/clients/ViewServiceClient";
 
 
@@ -28,11 +28,11 @@ function formatDateToInputValue(date: string | Date | undefined): string {
 }
 
 type RequestTableViewProps = {
-	requests: Request[];
+	requests: ServiceRequest[];
 	selectedItems: string[];
 	setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>;
 	toggleSelection: (id: string) => void;
-	openRequestSheet: (request: Request) => void;
+	openRequestSheet: (request: ServiceRequest) => void;
 };
 
 const RequestTableView: React.FC<RequestTableViewProps> = ({
@@ -143,7 +143,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 											e.target.value
 										)
 									}
-									className="border rounded px-2 py-1 text-sm"
+									className="rounded px-2 py-1 text-sm"
 								/>
 							</TableCell>
 
@@ -155,7 +155,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 									onChange={(e) =>
 										handleInputChange(request.id, "status", e.target.value)
 									}
-									className="border rounded px-2 py-1 text-sm"
+									className="rounded px-2 py-1 text-sm"
 								>
 									<option value="Pending">Pending</option>
 									<option value="Ongoing">Ongoing</option>

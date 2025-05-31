@@ -9,6 +9,7 @@ import RequestTableView from "./RequestTableView";
 import RequestSearchBar from "./RequestSearchBar";
 import { RiEditBoxLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
 import { router } from "next/client";
+
 import {
 	getRequestsByService,
 	Request,
@@ -35,15 +36,25 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 
 	useEffect(() => {
 		const fetchRequests = async () => {
-			if (!serviceId) return;
-			const data = await getRequestsByService(
-				serviceId,
-				statusFilter === "All" ? undefined : statusFilter
-			);
-			setRequests(data);
+			try {
+				const res = await fetch(
+					`/api/services/${serviceId}/request${statusFilter ? `?tab=${statusFilter}` : ''}`
+				);
+
+				if (!res.ok) {
+					throw new Error('Failed to fetch service requests');
+				}
+
+				const { requests } = await res.json();
+				setRequests(requests);
+			} catch (error) {
+				console.error(error);
+			}
 		};
 
-		fetchRequests();
+		if (serviceId) {
+			fetchRequests();
+		}
 	}, [serviceId, statusFilter]);
 
 	const filteredRequests = requests.filter((req) =>

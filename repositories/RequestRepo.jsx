@@ -48,6 +48,7 @@ export default class RequestRepo extends BaseRepo {
 		return data1;
 	}
 
+	// THIS GETS THE SERVICES BY ID
 	async getRequestsByServiceId(service_id, status) {
 		let query = this.supabase
 			.from(this.tableName)

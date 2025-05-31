@@ -129,7 +129,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 										height={36}
 										className="object-cover w-10 h-10 rounded-full"
 									/>
-									<div>{request.service_id}</div>
+									<div>{request.owner}</div>
 								</button>
 							</TableCell>
 

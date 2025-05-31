@@ -30,7 +30,7 @@ const serviceTypes = ["Barangay", "Personal", "Event"];
 const yesNoOptions = ["Yes", "No"];
 const dateOptions = ["Available Date", "Not Applicable"];
 const paymentTypes = ["Fixed Rate", "Quote"];
-const serviceCategory = ["Environmental", "Category2", "Category 3"];
+const serviceCategory = ["Environmental", "Livelihood Support", "Education", "Disaster Response", "Infrastructure", "Social Welfare", "Health & Wellness", "Beauty & Grooming", "Therapeutic & Counseling", "Coaching", "Pet Care", "Household", "Legal & Certification", "Other"];
 
 const CreateServiceClient: React.FC<CreateServiceProps> = ({
 	onClose,

@@ -1,44 +1,45 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+	return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: string) {
-  return new Date(date).toLocaleDateString('en-US', {
-    month: "long",
-    day: "numeric",
-    year: "numeric"
-  })
+export function formatDate(date: string | Date | null | undefined) {
+	if (!date) return "";
+	const d = typeof date === "string" ? new Date(date) : date;
+	return d.toLocaleDateString("en-US", {
+		month: "long",
+		day: "numeric",
+		year: "numeric",
+	});
 }
-
 export const getRelativeTime = (date: string | Date): string => {
-  const now = new Date();
-  const past = new Date(date);
-  const seconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+	const now = new Date();
+	const past = new Date(date);
+	const seconds = Math.floor((now.getTime() - past.getTime()) / 1000);
 
-  const intervals: [number, Intl.RelativeTimeFormatUnit][] = [
-    [60, 'second'],
-    [60, 'minute'],
-    [24, 'hour'],
-    [7, 'day'],
-    [4.34524, 'week'], // 1 month = ~4.345 weeks
-    [12, 'month'],
-    [Number.POSITIVE_INFINITY, 'year'],
-  ];
+	const intervals: [number, Intl.RelativeTimeFormatUnit][] = [
+		[60, "second"],
+		[60, "minute"],
+		[24, "hour"],
+		[7, "day"],
+		[4.34524, "week"], // 1 month = ~4.345 weeks
+		[12, "month"],
+		[Number.POSITIVE_INFINITY, "year"],
+	];
 
-  let value = seconds;
-  let unit: Intl.RelativeTimeFormatUnit = 'second';
+	let value = seconds;
+	let unit: Intl.RelativeTimeFormatUnit = "second";
 
-  for (const [interval, nextUnit] of intervals) {
-    unit = nextUnit;
-    if (value < interval) break;
-    value = value / interval;
-  }
+	for (const [interval, nextUnit] of intervals) {
+		unit = nextUnit;
+		if (value < interval) break;
+		value = value / interval;
+	}
 
-  return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
-    -Math.floor(value),
-    unit
-  );
+	return new Intl.RelativeTimeFormat("en", { numeric: "auto" }).format(
+		-Math.floor(value),
+		unit
+	);
 };

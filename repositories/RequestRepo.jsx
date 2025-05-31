@@ -66,7 +66,8 @@ export default class RequestRepo extends BaseRepo {
 			CitizenProfile (
 				first_name,
 				last_name,
-				middle_name
+				middle_name,
+				profile_pic
 			)
 		`)
 		.eq("service_id", service_id);

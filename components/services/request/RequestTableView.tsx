@@ -120,6 +120,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 									<Image
 										// src={request.service_id || "/default-avatar.png"}
 										src={
+											request.CitizenProfile?.profile_pic ??
 											"https://jevvtrbqagijbkdjoveh.supabase.co/storage/v1/object/public/services-pictures/uploads/1747983680603-looking-for-local-electricians.jpg"
 										}
 										alt=""

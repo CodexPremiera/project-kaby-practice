@@ -13,6 +13,7 @@ export interface Request {
 		first_name: string | null;
 		last_name: string | null;
 		middle_name: string | null;
+		profile_pic?: string | null;
 	};
 }
 

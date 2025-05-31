@@ -1,11 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-	getCurrentUser,
-	getServiceById,
-	Service,
-} from "@/lib/clients/ViewServiceClient";
+import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
+import { getCurrentUser, CurrentUser } from "@/lib/clients/useAuthClient";
 import { useRouter, useParams } from "next/navigation";
 import {
 	DropdownMenu,
@@ -41,12 +38,12 @@ const Requirements: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
 
 	const [service, setService] = useState<Service | null>(null);
-	const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+	const [currentUser, setCurrentUser] = useState<CurrentUser>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-	const handleSubmit = async (e:any) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		const res = await fetch("/api/request", {
 			method: "POST",
@@ -56,18 +53,15 @@ const Requirements: React.FC = () => {
 				is_paid: false,
 				status: "Pending",
 				owner: service?.owner,
-				user_id: currentUserId
 			}),
 		});
 
-		if(res.ok){
+		if (res.ok) {
 			const data = await res.json();
-			console.log(data, currentUserId);
-			router.push(`/services/${service?.id}/payment`)
+			router.push(`/services/${service?.id}/payment`);
 		} else {
-			router.push(`/services/${service?.id}/requirements`)
+			router.push(`/services/${service?.id}/requirements`);
 		}
-
 	};
 
 	useEffect(() => {
@@ -83,7 +77,7 @@ const Requirements: React.FC = () => {
 				getServiceById(id),
 			]);
 
-			setCurrentUserId(user);
+			setCurrentUser(user);
 			setService(fetchedService);
 			setError(!fetchedService ? "Service not found" : null);
 			setLoading(false);
@@ -317,10 +311,7 @@ const Requirements: React.FC = () => {
 						</div>
 					</div>
 					<div className="flex justify-end">
-						<Button
-							variant="secondary"
-							onClick={handleSubmit}
-						>	
+						<Button variant="secondary" onClick={handleSubmit}>
 							Proceed
 						</Button>
 					</div>

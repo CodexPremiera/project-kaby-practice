@@ -22,17 +22,6 @@ export interface Service {
 	category: string;
 }
 
-export const getCurrentUser = async (): Promise<string | null> => {
-	try {
-		const res = await fetch("/api/auth/login");
-		if (!res.ok) throw new Error("Failed to fetch user");
-		const data = await res.json();
-		return data.user_id ?? null;
-	} catch (err) {
-		console.error("Error fetching current user:", err);
-		return null;
-	}
-};
 
 export const getServiceById = async (id: string): Promise<Service | null> => {
 	try {

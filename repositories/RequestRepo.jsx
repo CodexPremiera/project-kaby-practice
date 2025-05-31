@@ -21,22 +21,31 @@ export default class RequestRepo extends BaseRepo {
 		}
 		return data;
 	}
+
 	async getRequestsByUser(user_id) {
 		console.log(user_id, "the user id");
 		const { data: data1, error: error1 } = await this.supabase
 			.from(this.tableName)
-			.select("citizen_id")
-			.eq("id", user_id)
+			.select("id")
+			.eq("customer_id", user_id)
 			.single();
-		console.log("data1", data);
+		console.log("data", data1);
 
-		const { data, error } = await this.supabase
+		if (error1) console.log(error1);
+		return data1;
+	}
+
+	async getRequestsByOwner(owner_id) {
+		console.log(owner_id, "the user id");
+		const { data: data1, error: error1 } = await this.supabase
 			.from(this.tableName)
-			.select()
-			.eq("citizen_id", data1.user_id);
+			.select("id")
+			.eq("owner", owner_id)
+			.single();
+		console.log("data", data1);
 
-		if (error) console.log(error);
-		return data;
+		if (error1) console.log(error1);
+		return data1;
 	}
 
 	async getRequestsByServiceId(service_id, status) {
@@ -55,6 +64,22 @@ export default class RequestRepo extends BaseRepo {
 			console.error("Error fetching requests:", error);
 			throw error;
 		}
+		return data;
+	}
+	
+	// make a repository that updates the fields using the owner
+	async updateRequestsByOwnerId(owner_id, fields = {}){
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.update(fields)
+			.eq("owner", owner_id)
+			.select();
+		if(error){
+			console.log(error);
+			throw error;
+		}
+
+		console.log("the data ", data);
 		return data;
 	}
 }

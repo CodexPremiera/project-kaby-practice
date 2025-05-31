@@ -29,6 +29,21 @@ const Payment: React.FC = () => {
 	const [error, setError] = useState<string | null>(null);
 	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
+	const handleSubmit = async (e:any) => {
+		e.preventDefault();
+		console.log("clicked ayyy");
+		const res = await fetch("/api/request",{
+			method: "PUT",
+			headers: { "Content-Type": "application/json"},
+			body: JSON.stringify({
+				user_id: currentUserId,
+				is_paid: true,
+				status: "Ongoing",
+				// owner: service?.owner 
+			})
+		})
+	}
+
 	useEffect(() => {
 		const fetchData = async () => {
 			if (!id) {
@@ -209,7 +224,7 @@ const Payment: React.FC = () => {
 							<div className="flex justify-end">
 								<Button
 									variant="secondary"
-									onClick={() => router.push(`/services/${service.id}/payment`)}
+									onClick={handleSubmit}
 								>
 									Proceed
 								</Button>

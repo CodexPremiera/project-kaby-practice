@@ -29,8 +29,7 @@ export async function PUT(request){
         const upCitService = new CitizenService(supabase);
         const body = await request.json();
 
-        // update fields using ownerid
-
+        // FINAL CODE FOR PUT -- DO NOT DELETE --
         // get data sa json
         const {user_id, ...someValues} = body;
         console.log("the val bolante ", someValues);
@@ -48,3 +47,4 @@ export async function PUT(request){
         console.log("something", data);
         return NextResponse.json(data);
 }
+

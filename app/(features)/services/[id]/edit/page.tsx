@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { RiArrowLeftLine } from "react-icons/ri";
@@ -10,6 +10,9 @@ import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
 import ServiceOverview from "@/components/services/view/ServiceDetails/ServiceOverview";
 import ServicePayment from "@/components/services/view/ServiceDetails/ServicePayment";
 import ServiceSettings from "@/components/services/view/ServiceDetails/ServiceSettings";
+import SuccessModal from "@/components/modal/SuccessModal";
+import ErrorModal from "@/components/modal/ErrorModal";
+import ConfirmationModal from "@/components/modal/ConfirmationModal";
 
 const EditPage = () => {
 	const router = useRouter();
@@ -22,24 +25,70 @@ const EditPage = () => {
 	const [showMobileSwitcher, setShowMobileSwitcher] = useState(false);
 	const isLargeScreen = useMediaQuery("(min-width: 1280px)");
 
-	const [serviceInfo, setServiceInfo] = useState<Service | null>(null);
+	const [service, setService] = useState<Service | null>(null);
+	const [originalService, setOriginalService] = useState<Service | null>(null);
 	const [loading, setLoading] = useState(true);
 
+	const [saving, setSaving] = useState(false);
+	const [modalType, setModalType] = useState<"success" | "error" | null>(null);
+	const [showConfirmModal, setShowConfirmModal] = useState(false);
+
 	useEffect(() => {
-		const fetchServiceInfo = async () => {
+		async function fetchService() {
 			if (!serviceId) return;
 			setLoading(true);
 			const data = await getServiceById(serviceId);
-			if (data) setServiceInfo(data);
+			if (data) {
+				setService(data);
+				setOriginalService(data);
+			}
 			setLoading(false);
-		};
-		fetchServiceInfo();
+		}
+		fetchService();
 	}, [serviceId]);
 
-	const handleTabChange = (tab: typeof activeTab) => {
-		setActiveTab(tab);
-		setShowMobileSwitcher(false);
+	const hasChanges = useMemo(() => {
+		if (!service || !originalService) return false;
+		return JSON.stringify(service) !== JSON.stringify(originalService);
+	}, [service, originalService]);
+
+	const handleSubmit = async () => {
+		if (!service) return;
+
+		setSaving(true);
+		setModalType(null);
+
+		const { owner_name, ...serviceToUpdate } = service;
+
+		try {
+			const response = await fetch(`/api/services/${service.id}`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(serviceToUpdate),
+			});
+
+			if (!response.ok) {
+				setModalType("error");
+				setSaving(false);
+				return;
+			}
+
+			const updatedService = await response.json();
+
+			setOriginalService(updatedService);
+			setService(updatedService);
+			setModalType("success");
+			window.location.reload();
+		} catch (err) {
+			setModalType("error");
+		} finally {
+			setSaving(false);
+		}
 	};
+
+	const closeModal = () => setModalType(null);
 
 	const TAB_LABELS = {
 		Overview: "Overview",
@@ -48,15 +97,41 @@ const EditPage = () => {
 	};
 
 	const TAB_COMPONENTS = {
-		Overview: (
-			<ServiceOverview service={serviceInfo} setService={setServiceInfo} />
-		),
-		Payment: (
-			<ServicePayment service={serviceInfo} setService={setServiceInfo} />
-		),
-		Settings: (
-			<ServiceSettings service={serviceInfo} setService={setServiceInfo} />
-		),
+		Overview: <ServiceOverview service={service} setService={setService} />,
+		Payment: <ServicePayment service={service} setService={setService} />,
+		Settings: <ServiceSettings service={service} setService={setService} />,
+	};
+
+	const handleTabChange = (tab: typeof activeTab) => {
+		setActiveTab(tab);
+		setShowMobileSwitcher(false);
+	};
+
+	const renderSaveButton = () => {
+		if (!["Overview", "Payment", "Settings"].includes(activeTab)) return null;
+
+		const buttonText =
+			activeTab === "Overview"
+				? "Save Overview"
+				: activeTab === "Payment"
+					? "Save Payment"
+					: "Save Settings";
+
+		return (
+			<div className="flex justify-end gap-4">
+				<button
+					onClick={() => setShowConfirmModal(true)}
+					disabled={!hasChanges || saving}
+					className={`px-6 py-2 rounded text-white ${
+						hasChanges && !saving
+							? "bg-black hover:bg-opacity-90 cursor-pointer"
+							: "bg-gray-400 cursor-not-allowed"
+					}`}
+				>
+					{saving ? "Saving..." : buttonText}
+				</button>
+			</div>
+		);
 	};
 
 	return (
@@ -67,6 +142,7 @@ const EditPage = () => {
 				</div>
 			) : (
 				<>
+					{/* Breadcrumb */}
 					<div className="flex flex-col gap-2">
 						<div className="flex flex-row items-center text-sm gap-3">
 							<div
@@ -78,16 +154,15 @@ const EditPage = () => {
 							</div>
 							<div
 								className="flex flex-row items-center gap-3 hover:text-secondary cursor-pointer"
-								onClick={() =>
-									router.push(`/services/${serviceInfo?.id}/request`)
-								}
+								onClick={() => router.push(`/services/${service?.id}/request`)}
 							>
-								/ {serviceInfo?.title}
+								/ {service?.title}
 							</div>
 							<div className="text-black">/ Edit</div>
 						</div>
 					</div>
 
+					{/* Main Layout */}
 					<div className="main flex flex-col xl:flex-row items-start w-full max-w-[1440px] mx-auto gap-6 xl:gap-20">
 						{!isLargeScreen && (
 							<div className="flex w-fit gap-4 items-center relative mx-6 px-2">
@@ -121,12 +196,42 @@ const EditPage = () => {
 							/>
 						)}
 
-						<div className="w-full px-4">
-							<div className="flex flex-col gap-6 w-full background-1 sm:rounded-3xl border border-light-color p-2 lg:p-4 xl:p-6 rounded-xl mb-10">
+						<div className="w-full px-4 flex flex-col gap-4">
+							<div className="flex flex-col gap-6 w-full background-1 sm:rounded-3xl border border-light-color p-2 lg:p-4 xl:p-6 rounded-xl mb-4">
 								{TAB_COMPONENTS[activeTab]}
 							</div>
+							{renderSaveButton()}
 						</div>
 					</div>
+
+					{/* Modals */}
+					{modalType === "success" && (
+						<SuccessModal
+							title="Success"
+							content="Service updated successfully!"
+							onClose={closeModal}
+						/>
+					)}
+
+					{modalType === "error" && (
+						<ErrorModal
+							title="Error"
+							content="An unexpected error occurred while saving!"
+							onClose={closeModal}
+						/>
+					)}
+
+					{showConfirmModal && (
+						<ConfirmationModal
+							title="Confirm Save"
+							content="Are you sure you want to save these changes?"
+							onConfirm={() => {
+								setShowConfirmModal(false);
+								handleSubmit();
+							}}
+							onClose={() => setShowConfirmModal(false)}
+						/>
+					)}
 				</>
 			)}
 		</div>

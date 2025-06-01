@@ -3,7 +3,7 @@ export interface Service {
 	owner: string;
 	owner_name: string;
 	title: string;
-	image?: string;
+	image?: string | null;
 	description: string;
 	type: string;
 	service_cost: number;
@@ -11,8 +11,9 @@ export interface Service {
 	convenience_fee: number;
 	total_price: number;
 	payment_type: string;
-	start_date: Date;
-	end_date: Date;
+	percentage: number;
+	start_date: Date | null;
+	end_date: Date | null;
 	display_badge: boolean;
 	eligible_for_badges: boolean;
 	ratings: number;

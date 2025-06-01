@@ -43,3 +43,39 @@ export const getRelativeTime = (date: string | Date): string => {
 		unit
 	);
 };
+
+export function formatDateToInputValue(
+	date: string | Date | undefined
+): string {
+	if (!date) return "";
+	if (typeof date === "string") {
+		return date.slice(0, 10);
+	}
+	const year = date.getFullYear();
+	const month = (date.getMonth() + 1).toString().padStart(2, "0");
+	const day = date.getDate().toString().padStart(2, "0");
+	return `${year}-${month}-${day}`;
+}
+
+export type PaymentCalculationResult = {
+	agreementFeeValue: number;
+	convenienceFee: number;
+	totalPrice: number;
+};
+
+export function calculatePayment(
+	serviceCost: number,
+	paymentType: string,
+	agreementFeePercent: number = 100
+): PaymentCalculationResult {
+	const feePercent = paymentType === "Fixed" ? 100 : agreementFeePercent;
+	const agreementFeeValue = (serviceCost * feePercent) / 100;
+	const convenienceFee = agreementFeeValue * 0.03;
+	const totalPrice = agreementFeeValue + convenienceFee;
+
+	return {
+		agreementFeeValue,
+		convenienceFee,
+		totalPrice,
+	};
+}

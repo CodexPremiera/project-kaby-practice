@@ -35,8 +35,8 @@ const Request = () => {
 		type: string;
 		status: string;
 		category?: string;
-		start_date: Date;
-		end_date: Date;
+		start_date?: Date;
+		end_date?: Date;
 	} | null>(null);
 
 	const [loading, setLoading] = useState(true);
@@ -51,12 +51,12 @@ const Request = () => {
 					title: data.title,
 					ratings: data.ratings,
 					avail: data.no_of_avail,
-					photo: data.image,
+					photo: data.image ?? undefined,
 					type: data.type,
 					status: data.status,
 					category: data.category ?? undefined,
-					start_date: data.start_date,
-					end_date: data.end_date,
+					start_date: data.start_date ?? undefined,
+					end_date: data.end_date ?? undefined,
 				});
 			}
 			setLoading(false);
@@ -125,7 +125,7 @@ const Request = () => {
 										</div>
 
 										<div className="flex flex-col">
-											<div className="flex flex-row items-center">
+											<div className="flex flex-row items-center justify-center gap-1">
 												<div className="text-base font-semibold">
 													{serviceInfo.title}
 												</div>
@@ -135,7 +135,7 @@ const Request = () => {
 														onClick={() =>
 															router.push(`/services/${serviceId}/edit`)
 														}
-														size={22}
+														size={26}
 														className="hover:bg-gray-100 p-1 rounded-full cursor-pointer"
 													/>
 												</div>

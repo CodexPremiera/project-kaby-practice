@@ -10,70 +10,122 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { calculatePayment } from "@/lib/utils";
 
 interface Props {
 	service: Service | null;
 	setService: React.Dispatch<React.SetStateAction<Service | null>>;
 }
 
-const paymentTypes = ["Fixed Rate", "Quote"];
+interface PaymentForm {
+	serviceCost: number;
+	paymentType: string;
+	agreementFeePercent: number;
+	agreementFeeValue: number;
+	convenienceFee: number;
+	totalPrice: number;
+}
 
 const ServicePayment: React.FC<Props> = ({ service, setService }) => {
-	const [paymentType, setPaymentType] = useState("Fixed Rate");
-	const [agreementFeePercent, setAgreementFeePercent] = useState(5);
+	const paymentTypes = ["Fixed", "Quote"];
+
+	const [form, setForm] = useState<PaymentForm>(() => ({
+		serviceCost: service?.service_cost ?? 0,
+		paymentType: service?.payment_type || "Fixed",
+		agreementFeePercent: service?.percentage ?? 5,
+		agreementFeeValue: service?.agreement_fee ?? 0,
+		convenienceFee: service?.convenience_fee ?? 0,
+		totalPrice: service?.total_price ?? 0,
+	}));
 
 	useEffect(() => {
-		if (service) {
-			setPaymentType(service.payment_type);
-			setAgreementFeePercent(5);
-		}
-	}, [service]);
+		if (!service) return;
+
+		const { agreementFeeValue, convenienceFee, totalPrice } = calculatePayment(
+			form.serviceCost,
+			form.paymentType,
+			form.agreementFeePercent
+		);
+
+		setForm((prev) => ({
+			...prev,
+			agreementFeeValue,
+			convenienceFee,
+			totalPrice,
+		}));
+
+		setService((prev) =>
+			prev
+				? {
+						...prev,
+						service_cost: form.serviceCost,
+						payment_type: form.paymentType,
+						percentage: form.agreementFeePercent,
+						agreement_fee: agreementFeeValue,
+						convenience_fee: convenienceFee,
+						total_price: totalPrice,
+					}
+				: prev
+		);
+	}, [form.serviceCost, form.paymentType, form.agreementFeePercent]);
 
 	if (!service) return <p>No payment data available</p>;
 
-	// Calculations
-	const agreementFeeValue =
-		paymentType === "Fixed Rate"
-			? service.service_cost
-			: (service.service_cost * agreementFeePercent) / 100;
-
-	const convenienceFee = agreementFeeValue * 0.03;
-	const totalPrice = agreementFeeValue + convenienceFee;
-
-	const handleSubmit = () => {
-		const updatedService = {
-			...service,
-			paymentType,
-			agreementFeePercent,
-		};
-		console.log("Save Payment Changes:", updatedService);
-		// Call your API update here if you like
-		setService(updatedService);
-	};
-
 	return (
 		<div>
-			<h2 className="text-xl font-semibold mb-4">Payment Details</h2>
+			<div className="flex items-center justify-between gap-4">
+				<div className="text-xl font-semibold">Payment Details</div>
+				<div
+					className={`w-3 h-3 rounded-full ${
+						service.status === "Active" ? "bg-green-400" : "bg-gray-400"
+					}`}
+					title={`Status: ${service.status}`}
+				/>
+			</div>
 
-			<div className="flex flex-col gap-4 text-sm">
-				<div className="flex justify-between sm:gap-6 gap-4 pb-2">
-					<div className="flex-1">
-						<p className="text-sm">Service Cost</p>
-						<Input type="number" value={service.service_cost} />
-					</div>
-					<div className="flex-1">
-						<p className="text-sm">Payment Type:</p>
+			<div className="flex flex-col gap-2 text-sm py-6">
+				{/* Service Cost */}
+				<div className="flex items-center gap-2 w-full">
+					<span className="text-sm text-gray-500 whitespace-nowrap">
+						Service Cost (₱):
+					</span>
+					<Input
+						type="number"
+						value={form.serviceCost}
+						min={0}
+						onChange={(e) =>
+							setForm((prev) => ({
+								...prev,
+								serviceCost: Math.max(0, Number(e.target.value)),
+							}))
+						}
+						className="flex-1"
+					/>
+				</div>
+
+				{/* Payment Type & Percentage */}
+				<div className="flex flex-col sm:flex-row w-full gap-4 pt-2">
+					<div className="flex items-center gap-2 w-full">
+						<span className="text-sm text-gray-500 whitespace-nowrap">
+							Payment Type:
+						</span>
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<Button variant="gray" className="w-full justify-between">
-									{paymentType}
+								<Button variant="gray" className="flex-1 justify-between">
+									{form.paymentType}
 								</Button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent className="bg-white">
 								{paymentTypes.map((type) => (
 									<DropdownMenuItem
 										key={type}
-										onClick={() => setPaymentType(type)}
+										onClick={() =>
+											setForm((prev) => ({
+												...prev,
+												paymentType: type,
+												agreementFeePercent: type === "Fixed" ? 100 : 5,
+											}))
+										}
 									>
 										{type}
 									</DropdownMenuItem>
@@ -82,44 +134,56 @@ const ServicePayment: React.FC<Props> = ({ service, setService }) => {
 						</DropdownMenu>
 					</div>
 
-					<div className="flex-1">
-						<p className="text-sm">Percentage (%)</p>
+					<div className="flex items-center gap-2 w-full">
+						<span className="text-sm text-gray-500 whitespace-nowrap">
+							Percentage:
+						</span>
 						<Input
 							type="number"
-							disabled={paymentType === "Fixed Rate"}
-							value={agreementFeePercent}
+							disabled={form.paymentType === "Fixed"}
+							value={form.agreementFeePercent}
 							min={5}
 							onChange={(e) =>
-								setAgreementFeePercent(Math.max(5, Number(e.target.value)))
+								setForm((prev) => ({
+									...prev,
+									agreementFeePercent: Math.max(5, Number(e.target.value)),
+								}))
 							}
+							className="flex-1"
 						/>
 					</div>
-					<div className="flex-1">
-						<p className="text-sm">Agreement Fee Value (₱)</p>
-						<Input type="text" value={agreementFeeValue.toFixed(2)} disabled />
-					</div>
 				</div>
 
-				<div className="sm:py-2 py-4">
+				{/* Agreement Fee */}
+				<div className="flex items-center gap-2 w-full pt-2">
+					<span className="text-sm text-gray-500 whitespace-nowrap">
+						Agreement Fee Value (₱):
+					</span>
+					<Input
+						type="text"
+						value={form.agreementFeeValue.toFixed(2)}
+						disabled
+						className="flex-1"
+					/>
+				</div>
+
+				{/* Convenience Fee & Total */}
+				<div className="py-4">
 					<div className="flex justify-between text-sm py-2">
-						<p className="text-gray-600">Convenience Fee (+3%)</p>
-						<p className="font-semibold">₱{service.convenience_fee}</p>
+						<span className="text-gray-600">Convenience Fee (+3%)</span>
+						<span className="font-semibold">
+							₱{form.convenienceFee.toFixed(2)}
+						</span>
 					</div>
-
-					<div className="flex justify-between font-semibold text-secondary">
-						<p>Total Price:</p>
-						<p>₱{service.total_price}</p>
+					<div className="flex justify-between text-xl font-semibold text-secondary">
+						<span>Total Price (₱):</span>
+						<span>
+							{form.serviceCost === 0
+								? "Free"
+								: `₱${form.totalPrice.toFixed(2)}`}
+						</span>
 					</div>
 				</div>
-			</div>
-
-			<div className="flex justify-end w-full">
-				<button
-					onClick={handleSubmit}
-					className="mt-6 px-6 py-2 bg-black text-white rounded hover:bg-opacity-90"
-				>
-					Save Payment
-				</button>
 			</div>
 		</div>
 	);

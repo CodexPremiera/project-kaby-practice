@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Service } from "@/lib/clients/ViewServiceClient";
 import { formatDate } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import ScheduleDateEditor from "../../ScheduleDateEditor";
 
 interface Props {
 	service: Service | null;
@@ -14,17 +15,18 @@ const ServiceSettings: React.FC<Props> = ({ service, setService }) => {
 	const [showStatus, setShowStatus] = useState(true);
 	const [showDelete, setShowDelete] = useState(false);
 
+	// Handle changing service status
 	const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const newStatus = e.target.value;
-		setService((prev) => (prev ? { ...prev, status: newStatus } : prev));
+		setService((prev) =>
+			prev
+				? {
+						...prev,
+						status: newStatus,
+					}
+				: prev
+		);
 	};
-
-	const handleSubmit = () => {
-		console.log("Updated service:", service);
-		// your PUT API call here (updateService(service))
-	};
-
-	const handleDelete = () => {};
 
 	if (!service) return <p>No service data available</p>;
 
@@ -33,23 +35,43 @@ const ServiceSettings: React.FC<Props> = ({ service, setService }) => {
 			<h2 className="text-xl font-semibold">Danger Zone</h2>
 
 			<div>
-				<div className="font-semibold">{service.title}</div>
-				<div className="flex flex-row justify-between">
-					<div>
-						<div className="text-sm text-gray-500">
-							Date Created: {formatDate(service.date_created)}
-						</div>
-						<div className="text-sm text-gray-500">
-							Created By: {service.owner_name}
-						</div>
-					</div>
-
+				<div className="flex flex-row items-center">
+					<div className="font-semibold">{service.title}</div>
 					<div
-						className={`h-9 flex items-center px-4 rounded text-white text-sm font-semibold mx-4 ${
+						className={`h-6 flex items-center px-2 rounded text-white text-sm font-medium mx-4 ${
 							service.status === "Active" ? "bg-green-400" : "bg-gray-400"
 						}`}
 					>
 						{service.status}
+					</div>
+				</div>
+
+				<div className="text-sm ">
+					<ScheduleDateEditor
+						startDate={service.start_date}
+						endDate={service.end_date}
+						onConfirm={(start, end) => {
+							setService((prev) =>
+								prev
+									? {
+											...prev,
+											start_date: start,
+											end_date: end,
+										}
+									: prev
+							);
+						}}
+					/>
+				</div>
+
+				<div className="flex flex-row justify-between">
+					<div>
+						<div className="text-sm text-gray-500">
+							Date Created: {formatDate(service.date_created)} • Date Closed:{" "}
+							{service.date_closed
+								? formatDate(service.date_closed)
+								: "Not yet"}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -60,13 +82,12 @@ const ServiceSettings: React.FC<Props> = ({ service, setService }) => {
 					className="flex justify-between items-center cursor-pointer border border-gray-200 p-4"
 					onClick={() => setShowStatus((prev) => !prev)}
 				>
-					<div className="font-semibold text-sm">Service Status</div>
-
+					<div className="font-semibold text-sm">Change Service Status?</div>
 					{showStatus ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
 				</div>
 
 				{showStatus && (
-					<div className="flex flex-row  justify-between border-r border-l border-b border-gray-200 text-sm p-4 ">
+					<div className="flex flex-row justify-between border-r border-l border-b border-gray-200 text-sm p-4 ">
 						<p>
 							Set status to <strong>Active</strong> if you are still accepting
 							orders. Otherwise, set it to <strong>Closed</strong>.
@@ -108,15 +129,6 @@ const ServiceSettings: React.FC<Props> = ({ service, setService }) => {
 						</p>
 					</div>
 				)}
-			</div>
-
-			<div className="flex justify-end w-full">
-				<button
-					onClick={handleSubmit}
-					className="mt-6 px-6 py-2 bg-black text-white rounded hover:bg-opacity-90"
-				>
-					Update Service
-				</button>
 			</div>
 		</div>
 	);

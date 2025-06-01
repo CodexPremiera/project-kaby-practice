@@ -17,17 +17,7 @@ import { Request } from "@/lib/clients/RequestServiceClient";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import { Button } from "@/components/ui/button";
 import SuccessModal from "@/components/modal/SuccessModal";
-
-function formatDateToInputValue(date: string | Date | undefined): string {
-	if (!date) return "";
-	if (typeof date === "string") {
-		return date.slice(0, 10);
-	}
-	const year = date.getFullYear();
-	const month = (date.getMonth() + 1).toString().padStart(2, "0");
-	const day = date.getDate().toString().padStart(2, "0");
-	return `${year}-${month}-${day}`;
-}
+import { formatDateToInputValue } from "@/lib/utils";
 
 type RequestTableViewProps = {
 	requests: Request[];

@@ -45,6 +45,7 @@ const Chat = ({ request } : ChatProps) => {
 			const { chat } = await res.json();
 			setMessages((prev) => [...prev, chat]);
 			setNewMessage("");
+			console.log(chat)
 		} catch (error) {
 			console.error(error);
 		}
@@ -88,18 +89,20 @@ const Chat = ({ request } : ChatProps) => {
 							No messages yet. Start a conversation!
 						</p>
 					) : (
-						messages.map((msg, idx) => (
-							/* CHAT BOX */
-							<Chatbox
-								key={msg.id}
-								message={msg}
-								isOwner={msg.sender_id === request.owner}
-							/>
-						))
+						messages.map((msg) => {
+							if (!msg || !msg.sender_id) return null; // Skip invalid message
+
+							return (
+								<Chatbox
+									key={msg.id}
+									message={msg}
+									isOwner={msg.sender_id === request.owner}
+								/>
+							);
+						})
 					)}
 				</div>
 			</div>
-
 
 			{/* Message Input */}
 			<div className="bottom-4 w-full py-3 flex gap-2 items-center">

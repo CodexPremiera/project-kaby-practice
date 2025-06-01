@@ -31,6 +31,7 @@ export default class TransactionChatRepo extends BaseRepo {
 		const { data, error } = await this.supabase
 		.from("TransactionChats")
 		.insert([chatData])
+		.select()
 		.single();
 
 		if (error) {

@@ -24,3 +24,29 @@ export async function GET(req, context) {
 		);
 	}
 }
+
+export async function POST(req, context) {
+	const { requestId } = context.params;
+	const body = await req.json();
+
+	const supabase = await createClient();
+	const transactionChatService = new TransactionChatService(supabase);
+
+	try {
+		const newChat = await transactionChatService.createChat({
+			request_id: requestId,
+			message: body.message,
+			sender_id: body.sender_id,
+			sent_at: new Date().toISOString(),
+		});
+
+		return NextResponse.json({ chat: newChat });
+	} catch (error) {
+		console.error("Error sending message:", error);
+		return NextResponse.json({
+			error: "Failed to send message" },
+			{ status: 500 }
+		);
+	}
+}
+

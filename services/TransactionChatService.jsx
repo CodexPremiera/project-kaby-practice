@@ -6,8 +6,11 @@ class TransactionChatService {
 	}
 
 	async getChatsByRequestId(requestId) {
-		const data = await this.repo.getChatsByRequestId(requestId);
-		return data;
+		return await this.repo.getChatsByRequestId(requestId);
+	}
+
+	async createChat(chatData) {
+		return await this.repo.createChat(chatData);
 	}
 }
 export default TransactionChatService;

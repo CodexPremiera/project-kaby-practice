@@ -26,4 +26,18 @@ export default class TransactionChatRepo extends BaseRepo {
 
 		return data;
 	}
+
+	async createChat(chatData) {
+		const { data, error } = await this.supabase
+		.from("TransactionChats")
+		.insert([chatData])
+		.single();
+
+		if (error) {
+			console.error("Error creating chat message", error);
+			throw error;
+		}
+
+		return data;
+	}
 }

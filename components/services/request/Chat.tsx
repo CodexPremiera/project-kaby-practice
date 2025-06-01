@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import TextField from "@/components/ui/form/TextField";
+import Chatbox from "@/components/services/request/Chatbox";
 
 interface ChatProps {
 	request: ServiceRequest;
@@ -24,10 +25,29 @@ const Chat = ({ request } : ChatProps) => {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [newMessage, setNewMessage] = useState("");
 
-	const handleSendMessage = () => {
+	const handleSendMessage = async () => {
 		if (newMessage.trim() === "") return;
-		// setMessages((prev) => [...prev, { sender: "You", text: newMessage }]);
-		setNewMessage("");
+
+		try {
+			const res = await fetch(`/api/services/${request.service_id}/request/${request.id}/Chat`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					message: newMessage,
+					sender_id: request.owner, // Or whoever is the current user
+				}),
+			});
+
+			if (!res.ok) throw new Error("Failed to send message");
+
+			const { chat } = await res.json();
+			setMessages((prev) => [...prev, chat]);
+			setNewMessage("");
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	useEffect(() => {
@@ -69,22 +89,12 @@ const Chat = ({ request } : ChatProps) => {
 						</p>
 					) : (
 						messages.map((msg, idx) => (
-							<div
-								key={idx}
-								className={`flex ${
-									msg.sender_id === request.owner ? "justify-end" : "justify-start"
-								}`}
-							>
-								<div
-									className={`px-3 py-2 rounded-lg max-w-[70%] break-words ${
-										msg.sender_id === request.owner
-											? "bg-accent text-inverse-1"
-											: "background-3"
-									}`}
-								>
-									<p className="break-words whitespace-pre-wrap">{msg.message}</p>
-								</div>
-							</div>
+							/* CHAT BOX */
+							<Chatbox
+								key={msg.id}
+								message={msg}
+								isOwner={msg.sender_id === request.owner}
+							/>
 						))
 					)}
 				</div>

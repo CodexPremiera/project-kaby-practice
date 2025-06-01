@@ -19,6 +19,7 @@ export interface Service {
 	date_closed: Date;
 	allow_attach_file: boolean;
 	status: string;
+	category:string | null;
 }
 
 export const getCurrentUser = async (): Promise<string | null> => {

@@ -88,6 +88,7 @@ export default class ServiceRepo extends BaseRepo {
 	}
 
 	async create(serviceData) {
+		console.log("this is repo serviceData", serviceData);
 		try {
 			const newService = new ServiceModel(
 				serviceData.title,
@@ -104,9 +105,11 @@ export default class ServiceRepo extends BaseRepo {
 				serviceData.display_badge,
 				serviceData.eligible_for_badges,
 				serviceData.allow_attach_file,
-				serviceData.status
+				serviceData.status,
 			);
-
+			newService.category = serviceData.category;
+			// console.log("category",serviceData.category);
+			console.log("this is new Service", newService);
 			const { data, error } = await this.supabase
 				.from(this.tableName)
 				.insert([newService])

@@ -10,5 +10,5 @@ export async function logout() {
     console.log("doneeeee logged iyt")
     await supabase.auth.signOut()
   
-    redirect('/login') // or home, or wherever you want
+    redirect('/') 
   }

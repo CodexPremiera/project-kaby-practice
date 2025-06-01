@@ -15,8 +15,8 @@ import { useCitizenContext } from "@/app/context/CitizenContext";
 
 const CitizenMainbar = () => {
 	const pathname = usePathname();
-	const {access_role} = useCitizenContext();
-	console.log("this is the access rolezzz", access_role);
+	// const {access_role} = useCitizenContext();
+	// console.log("this is the access rolezzz", access_role);
 	const base_nav_items = [
 		{ name: "Home", path: `/home`, icon: RiCommunityLine },
 		{ name: "Your Services", path: `/services`, icon: RiServiceLine },
@@ -25,13 +25,13 @@ const CitizenMainbar = () => {
 	];
 
 	// Add /citizen_desk only if role is "Citizen Manager"
-	if (access_role === "Citizen Manager") {
-		base_nav_items.push({
-			name: "Citizen Desk",
-			path: `/citizen_desk`,
-			icon: RiAccountPinBoxLine,
-		});
-	}
+	// if (access_role === "Citizen Manager") {
+	// 	base_nav_items.push({
+	// 		name: "Citizen Desk",
+	// 		path: `/citizen_desk`,
+	// 		icon: RiAccountPinBoxLine,
+	// 	});
+	// }
 	return (
 		<div className="mainbar">
 			{base_nav_items.map((item) => (

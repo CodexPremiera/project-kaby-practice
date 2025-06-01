@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import {
 	Table,
@@ -12,23 +14,10 @@ import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import { MessageCircleMore as MessageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Request } from "@/lib/clients/RequestServiceClient";
-import {
-	getServiceById,
-	getCurrentUser,
-	Service,
-} from "@/lib/clients/ViewServiceClient";
-
-// Helper to format Date to "YYYY-MM-DD"
-function formatDateToInputValue(date: string | Date | undefined): string {
-	if (!date) return "";
-	if (typeof date === "string") {
-		return date.slice(0, 10);
-	}
-	const year = date.getFullYear();
-	const month = (date.getMonth() + 1).toString().padStart(2, "0");
-	const day = date.getDate().toString().padStart(2, "0");
-	return `${year}-${month}-${day}`;
-}
+import { getPublicUrl } from "@/utils/supabase/storage";
+import { Button } from "@/components/ui/button";
+import SuccessModal from "@/components/modal/SuccessModal";
+import { formatDateToInputValue } from "@/lib/utils";
 
 type RequestTableViewProps = {
 	requests: Request[];
@@ -46,10 +35,10 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 	openRequestSheet,
 }) => {
 	const router = useRouter();
-
 	const [editableData, setEditableData] = useState<
 		{ id: string; schedule_date: string; status: string }[]
 	>([]);
+	const [modalType, setModalType] = useState<"success" | null>(null);
 
 	useEffect(() => {
 		setEditableData(
@@ -71,110 +60,178 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 		);
 	};
 
+	const updateRequest = async (
+		id: string,
+		schedule_date: string,
+		status: string,
+		serviceId: string
+	) => {
+		try {
+			const response = await fetch(`/api/services/${serviceId}/request/${id}`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ schedule_date, status }),
+			});
+
+			if (!response.ok) {
+				throw new Error("Failed to update request");
+			}
+
+			return await response.json();
+		} catch (error) {
+			console.error("Update error:", error);
+			alert("Failed to update the request.");
+		}
+	};
+
 	const allSelected =
 		selectedItems.length === requests.length && requests.length > 0;
 
-	const [service, setService] = useState<Service | null>(null);
 	return (
-		<Table className="table-fixed w-full">
-			<TableHeader>
-				<TableRow className="border-b border-light-color text-sm">
-					<TableHead className="w-[30px] pt-1 pb-5">
-						<input
-							type="checkbox"
-							className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
-							checked={allSelected}
-							onChange={() =>
-								allSelected
-									? setSelectedItems([])
-									: setSelectedItems(requests.map((r) => r.id))
-							}
-						/>
-					</TableHead>
-					<TableHead className="w-[200px]">Title</TableHead>
-					<TableHead className="w-[140px]">Schedule</TableHead>
-					<TableHead className="w-[80px]">Payment</TableHead>
-					<TableHead className="w-[120px]">Status</TableHead>
-					<TableHead className="w-[90px]">Actions</TableHead>
-				</TableRow>
-			</TableHeader>
+		<>
+			<Table className="table-fixed w-full">
+				<TableHeader>
+					<TableRow className="border-b border-light-color text-sm">
+						<TableHead className="w-[30px] pt-1 pb-5">
+							<input
+								type="checkbox"
+								className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
+								checked={allSelected}
+								onChange={() =>
+									allSelected
+										? setSelectedItems([])
+										: setSelectedItems(requests.map((r) => r.id))
+								}
+							/>
+						</TableHead>
+						<TableHead className="w-[200px]">Customer</TableHead>
+						<TableHead className="w-[80px]">Payment</TableHead>
+						<TableHead className="w-[140px]">Schedule</TableHead>
+						<TableHead className="w-[120px]">Status</TableHead>
+						<TableHead className="w-[90px]">Actions</TableHead>
+					</TableRow>
+				</TableHeader>
 
-			<TableBody>
-				{requests.map((request) => {
-					const rowData = editableData.find((item) => item.id === request.id);
+				<TableBody>
+					{requests.map((request) => {
+						const rowData = editableData.find((item) => item.id === request.id);
 
-					return (
-						<TableRow key={request.id}>
-							<TableCell>
-								<input
-									type="checkbox"
-									className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
-									checked={selectedItems.includes(request.id)}
-									onChange={() => toggleSelection(request.id)}
-								/>
-							</TableCell>
+						const isDisabled =
+							!rowData ||
+							(rowData.schedule_date ===
+								formatDateToInputValue(request.schedule_date) &&
+								rowData.status === request.status);
 
-							<TableCell>
-								<button
-									className="flex items-center gap-3"
-									onClick={() => router.push(`/services/${request.service_id}`)}
-								>
-									<Image
-										// src={request.service_id || "/default-avatar.png"}
-										src={
-											"https://jevvtrbqagijbkdjoveh.supabase.co/storage/v1/object/public/services-pictures/uploads/1747983680603-looking-for-local-electricians.jpg"
-										}
-										alt=""
-										width={36}
-										height={36}
-										className="object-cover w-10 h-10 rounded-full"
+						return (
+							<TableRow key={request.id}>
+								<TableCell>
+									<input
+										type="checkbox"
+										className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
+										checked={selectedItems.includes(request.id)}
+										onChange={() => toggleSelection(request.id)}
 									/>
-									<div>{request.service_id}</div>
-								</button>
-							</TableCell>
+								</TableCell>
 
-							<TableCell>
-								<input
-									type="date"
-									value={rowData?.schedule_date || ""}
-									onChange={(e) =>
-										handleInputChange(
-											request.id,
-											"schedule_date",
-											e.target.value
-										)
-									}
-									className="border rounded px-2 py-1 text-sm"
-								/>
-							</TableCell>
+								<TableCell className="hover:bg-gray-100">
+									<button
+										className="flex items-center gap-3"
+										onClick={() =>
+											router.push(`/profile/${request.customer_id}`)
+										}
+									>
+										<Image
+											src={
+												request.customer_photo
+													? getPublicUrl(
+															request.customer_photo,
+															"profile-pictures"
+														)
+													: "/default-image.jpg"
+											}
+											alt={`${request.customer_name ?? "User"} image`}
+											width={36}
+											height={36}
+											className="object-cover w-10 h-10 rounded-full"
+										/>
+										<div>{request.customer_name}</div>
+									</button>
+								</TableCell>
 
-							<TableCell>Not Paid</TableCell>
+								<TableCell>{!request.is_paid ? "Not Paid" : "Paid"}</TableCell>
 
-							<TableCell>
-								<select
-									value={rowData?.status || ""}
-									onChange={(e) =>
-										handleInputChange(request.id, "status", e.target.value)
-									}
-									className="border rounded px-2 py-1 text-sm"
-								>
-									<option value="Pending">Pending</option>
-									<option value="Ongoing">Ongoing</option>
-									<option value="Completed">Completed</option>
-									<option value="Canceled">Canceled</option>
-								</select>
-							</TableCell>
+								<TableCell>
+									<input
+										type="date"
+										value={rowData?.schedule_date || ""}
+										onChange={(e) =>
+											handleInputChange(
+												request.id,
+												"schedule_date",
+												e.target.value
+											)
+										}
+										className="border border-gray-300 rounded px-2 py-1 text-sm"
+									/>
+								</TableCell>
 
-							<TableCell className="flex items-center gap-2">
-								<ButtonClear onClick={() => openRequestSheet(request)}>
-									<MessageIcon strokeWidth={2} className="w-6 p-0" />
-								</ButtonClear>
-							</TableCell>
-						</TableRow>
-					);
-				})}
-			</TableBody>
-		</Table>
+								<TableCell>
+									<select
+										value={rowData?.status || ""}
+										onChange={(e) =>
+											handleInputChange(request.id, "status", e.target.value)
+										}
+										className="border border-gray-300 rounded px-2 py-1 text-sm"
+									>
+										<option value="Pending">Pending</option>
+										<option value="Ongoing">Ongoing</option>
+										<option value="Completed">Completed</option>
+										<option value="Canceled">Canceled</option>
+									</select>
+								</TableCell>
+
+								<TableCell className="flex items-center gap-2">
+									<ButtonClear onClick={() => openRequestSheet(request)}>
+										<MessageIcon strokeWidth={2} className="w-6 p-0" />
+									</ButtonClear>
+									<Button
+										onClick={async () => {
+											if (!rowData) return;
+											const result = await updateRequest(
+												rowData.id,
+												rowData.schedule_date,
+												rowData.status,
+												request.service_id
+											);
+											if (result) {
+												setModalType("success");
+												router.refresh();
+											}
+										}}
+										disabled={isDisabled}
+										className={
+											isDisabled
+												? "opacity-50 cursor-not-allowed"
+												: "bg-black text-white"
+										}
+									>
+										Submit
+									</Button>
+								</TableCell>
+							</TableRow>
+						);
+					})}
+				</TableBody>
+			</Table>
+
+			{modalType === "success" && (
+				<SuccessModal
+					title="Success"
+					content="Request Updated"
+					onClose={() => setModalType(null)}
+				/>
+			)}
+		</>
 	);
 };
 

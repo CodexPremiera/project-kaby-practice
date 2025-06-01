@@ -4,11 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import React, { useEffect, useState } from "react";
-import {
-	getCurrentUser,
-	getServiceById,
-	Service,
-} from "@/lib/clients/ViewServiceClient";
+import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
+import { getCurrentUser, CurrentUser } from "@/lib/clients/useAuthClient";
 import { useRouter, useParams } from "next/navigation";
 import { RiArrowLeftLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
 import { getPublicUrl } from "@/utils/supabase/storage";
@@ -24,10 +21,24 @@ const Payment: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
 
 	const [service, setService] = useState<Service | null>(null);
-	const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+	const [currentUser, setCurrentUser] = useState<CurrentUser>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+
+	const handleSubmit = async (e: any) => {
+		e.preventDefault();
+		console.log("clicked ayyy");
+		const res = await fetch("/api/request", {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				user_id: currentUser,
+				is_paid: true,
+				status: "Ongoing",
+			}),
+		});
+	};
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -42,7 +53,7 @@ const Payment: React.FC = () => {
 				getServiceById(id),
 			]);
 
-			setCurrentUserId(user);
+			setCurrentUser(user);
 			setService(fetchedService);
 			setError(!fetchedService ? "Service not found" : null);
 			setLoading(false);
@@ -207,10 +218,7 @@ const Payment: React.FC = () => {
 								</div>
 							</div>
 							<div className="flex justify-end">
-								<Button
-									variant="secondary"
-									onClick={() => router.push(`/services/${service.id}/payment`)}
-								>
+								<Button variant="secondary" onClick={handleSubmit}>
 									Proceed
 								</Button>
 							</div>

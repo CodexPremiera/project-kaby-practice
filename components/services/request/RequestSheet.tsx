@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Remarks from "./Remarks";
 import Chat from "./Chat";
+import Details from "./Details";
 import { Button } from "@/components/ui/button";
 
 interface Profile {
@@ -15,15 +16,17 @@ interface RequestSheetProps {
 	onClose?: () => void;
 }
 
-type TabOption = "Remarks" | "Chat";
+type TabOption = "Details" | "Remarks" | "Chat";
 
 const RequestSheet: React.FC<RequestSheetProps> = ({ profile, onClose }) => {
 	const [activeTab, setActiveTab] = useState<TabOption>("Remarks");
 
-	const tabs: TabOption[] = ["Remarks", "Chat"];
+	const tabs: TabOption[] = ["Details", "Remarks", "Chat"];
 
 	const renderContent = () => {
 		switch (activeTab) {
+			case "Details":
+				return <Details profile={profile} />;
 			case "Remarks":
 				return <Remarks profile={profile} />;
 			case "Chat":

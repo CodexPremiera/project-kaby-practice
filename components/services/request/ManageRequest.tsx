@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import { useMediaQuery } from "@/app/hooks/useMediaQuery";
@@ -9,45 +9,95 @@ import RequestTableView from "./RequestTableView";
 import RequestSearchBar from "./RequestSearchBar";
 import { RiEditBoxLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
 import { router } from "next/client";
+
 import {
-	getRequestsByService,
 	Request,
 } from "@/lib/clients/RequestServiceClient";
 import RequestSheet from "./RequestSheet";
 import RequestListView from "./RequestListView";
+import SuccessModal from "@/components/modal/SuccessModal";
 
 interface RequestServiceProps {
 	statusFilter: string;
+	serviceId: string;
 }
 
-const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
+const ManageRequest: React.FC<RequestServiceProps> = ({
+	statusFilter,
+	serviceId,
+}) => {
 	const searchParams = useSearchParams();
 	const query = searchParams.get("q") || "";
-
-	const pathname = usePathname();
-	const serviceId = pathname.split("/")[2];
 
 	const [requests, setRequests] = useState<Request[]>([]);
 	const [selectedItems, setSelectedItems] = useState<string[]>([]);
 	const [activeRequest, setActiveRequest] = useState<Request | null>(null);
+	const [selectedStatus, setSelectedStatus] = useState<string>("");
+	const [modalType, setModalType] = useState<"success" | null>(null);
+
+	const updateSelectedStatus = async () => {
+		if (!selectedStatus || selectedItems.length === 0) return;
+
+		try {
+			const updatePromises = selectedItems.map((id) =>
+				fetch(`/api/services/${serviceId}/request/${id}`, {
+					method: "PUT",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ status: selectedStatus }),
+				}).then((res) => {
+					if (!res.ok) {
+						throw new Error(`Failed to update request ${id}`);
+					}
+					return res.json();
+				})
+			);
+
+			await Promise.all(updatePromises);
+
+			const updatedRequests = requests.map((req) =>
+				selectedItems.includes(req.id)
+					? { ...req, status: selectedStatus }
+					: req
+			);
+
+			setRequests(updatedRequests);
+			setSelectedItems([]);
+			setSelectedStatus("");
+			setModalType("success");
+			setTimeout(() => setModalType(null), 3000);
+		} catch (error) {
+			console.error("Batch update error:", error);
+			alert("Failed to update some requests.");
+		}
+	};
 
 	const isLargeScreen = useMediaQuery("(min-width: 768px)");
 
 	useEffect(() => {
 		const fetchRequests = async () => {
-			if (!serviceId) return;
-			const data = await getRequestsByService(
-				serviceId,
-				statusFilter === "All" ? undefined : statusFilter
-			);
-			setRequests(data);
+			try {
+				const res = await fetch(
+					`/api/services/${serviceId}/request${statusFilter ? `?tab=${statusFilter}` : ''}`
+				);
+
+				if (!res.ok) {
+					throw new Error('Failed to fetch service requests');
+				}
+
+				const { requests } = await res.json();
+				setRequests(requests);
+			} catch (error) {
+				console.error(error);
+			}
 		};
 
-		fetchRequests();
+		if (serviceId) {
+			fetchRequests();
+		}
 	}, [serviceId, statusFilter]);
 
 	const filteredRequests = requests.filter((req) =>
-		req.service_id.toLowerCase().includes(query.toLowerCase())
+		req.customer_name.toLowerCase().includes(query.toLowerCase())
 	);
 
 	const toggleSelection = (id: string) => {
@@ -64,94 +114,105 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 		setActiveRequest(null);
 	};
 
-	const cancelSelected = () => {
-		const updatedRequests = requests.map((req) =>
-			selectedItems.includes(req.id) ? { ...req, status: "Canceled" } : req
-		);
-		setRequests(updatedRequests);
-		setSelectedItems([]);
-	};
-
 	return (
-		<div className="flex flex-col gap-8 p-4 sm:p-6 background-1 rounded-[10px]">
-			<div className="flex flex-row justify-between items-center border-b pb-4 border-gray-200 text-md font-semibold">
-				<div>Service Requests</div>
-				<div className="flex items-center gap-4">
-					<div className="flex items-center gap-1">
-						<span>0</span>
-						<RiStarFill className="text-secondary" />
+		<>
+			<div className="flex flex-col gap-8 p-4 background-1 rounded-[10px]">
+				<div className="md:flex md:flex-row md:justify-between justify-center flex-col items-center gap-12">
+					<div className="flex items-center grow max-w-[540px]">
+						<RequestSearchBar />
 					</div>
-					<div className="flex items-center gap-1">
-						<span>0</span>
-						<RiUser2Fill className="text-secondary" />
-					</div>
-					<div>
-						<RiEditBoxLine
-							onClick={() => router.push(`/services/${serviceId}/edit`)}
-							size={22}
-							className="hover:bg-white rounded-full cursor-pointer"
-						/>
+					<div className="flex items-center gap-3 w-full sm:w-fit pt-4">
+						<div className="flex flex-col justify-end gap-1 pr-4 border-r border-secondary">
+							<span className="text-xs sm:text-sm text-secondary text-end">
+								Selected
+							</span>
+							<span className="font-semibold text-end text-sm sm:text-base">
+								{selectedItems.length}{" "}
+								{selectedItems.length > 1 ? "items" : "item"}
+							</span>
+						</div>
+
+						<div className="flex items-center gap-2">
+							<select
+								value={selectedStatus}
+								onChange={(e) => setSelectedStatus(e.target.value)}
+								className="border border-gray-300 rounded px-2 py-2 text-sm"
+								disabled={selectedItems.length === 0}
+							>
+								<option value="">Select Status</option>
+								<option value="Pending">Pending</option>
+								<option value="Ongoing">Ongoing</option>
+								<option value="Completed">Completed</option>
+								<option value="Canceled">Canceled</option>
+							</select>
+
+							<ButtonSecondary
+								onClick={updateSelectedStatus}
+								disabled={selectedItems.length === 0 || !selectedStatus}
+								className={`px-3 py-2 bg-black text-white rounded 
+                ${
+									selectedItems.length === 0 || !selectedStatus
+										? "opacity-50 pointer-events-none"
+										: ""
+								}`}
+							>
+								Submit
+							</ButtonSecondary>
+						</div>
 					</div>
 				</div>
+				{filteredRequests.length > 0 ? (
+					<>
+						{isLargeScreen ? (
+							<RequestTableView
+								requests={filteredRequests}
+								selectedItems={selectedItems}
+								setSelectedItems={setSelectedItems}
+								toggleSelection={toggleSelection}
+								openRequestSheet={openRequestSheet}
+							/>
+						) : (
+							<RequestListView
+								requests={filteredRequests}
+								selectedItems={selectedItems}
+								setSelectedItems={setSelectedItems}
+								toggleSelection={toggleSelection}
+								openRequestSheet={openRequestSheet}
+							/>
+						)}
+
+						{activeRequest && (
+							<>
+								<div className="fixed inset-0 bg-black/20 z-40"></div>
+								<div className="fixed bottom-0 md:right-12 right-0 z-50 w-[450px] h-[500px] bg-white rounded-t-xl shadow-xl overflow-hidden flex flex-col">
+									<RequestSheet
+										profile={{
+											id: activeRequest.id,
+											name: activeRequest.customer_name,
+											address: activeRequest.customer_address,
+											image: activeRequest.customer_photo,
+										}}
+										onClose={closeRequestSheet}
+									/>
+								</div>
+							</>
+						)}
+					</>
+				) : (
+					<div className="text-center text-gray-500 py-10 text-sm">
+						No '{statusFilter}' service
+					</div>
+				)}
 			</div>
 
-			<div className="flex items-center justify-between gap-12">
-				<div className="flex items-center grow max-w-[540px]">
-					<RequestSearchBar />
-				</div>
-
-				<div className="flex items-center gap-3 w-fit">
-					<div className="flex flex-col justify-end gap-1/2 pr-4 border-r border-secondary">
-						<span className="text-sm text-secondary text-end">Selected</span>
-						<span className="font-semibold text-end">
-							{selectedItems.length}{" "}
-							{selectedItems.length > 1 ? "items" : "item"}
-						</span>
-					</div>
-					<ButtonSecondary
-						disabled={selectedItems.length === 0}
-						onClick={cancelSelected}
-					>
-						Cancel {selectedItems.length > 1 ? "all" : ""}
-					</ButtonSecondary>
-				</div>
-			</div>
-
-			{isLargeScreen ? (
-				<RequestTableView
-					requests={filteredRequests}
-					selectedItems={selectedItems}
-					setSelectedItems={setSelectedItems}
-					toggleSelection={toggleSelection}
-					openRequestSheet={openRequestSheet}
-				/>
-			) : (
-				<RequestListView
-					requests={filteredRequests}
-					selectedItems={selectedItems}
-					setSelectedItems={setSelectedItems}
-					toggleSelection={toggleSelection}
-					openRequestSheet={openRequestSheet}
+			{modalType === "success" && (
+				<SuccessModal
+					title="Success"
+					content="Requests updated successfully."
+					onClose={() => setModalType(null)}
 				/>
 			)}
-
-			{activeRequest && (
-				<>
-					<div className="fixed inset-0 bg-black/20 z-40"></div>
-					<div className="fixed bottom-0 md:right-12 right-0 z-50 w-[450px] h-[500px] bg-white rounded-t-xl shadow-xl overflow-hidden flex flex-col">
-						<RequestSheet
-							profile={{
-								id: activeRequest.id,
-								name: activeRequest.owner,
-								address: activeRequest.owner,
-								image: activeRequest.owner,
-							}}
-							onClose={closeRequestSheet}
-						/>
-					</div>
-				</>
-			)}
-		</div>
+		</>
 	);
 };
 

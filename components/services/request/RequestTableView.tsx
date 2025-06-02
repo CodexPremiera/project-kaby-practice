@@ -20,19 +20,6 @@ import { Button } from "@/components/ui/button";
 import SuccessModal from "@/components/modal/SuccessModal";
 import { formatDateToInputValue } from "@/lib/utils";
 
-
-// Helper to format Date to "YYYY-MM-DD"
-function formatDateToInputValue(date: string | Date | undefined): string {
-	if (!date) return "";
-	if (typeof date === "string") {
-		return date.slice(0, 10);
-	}
-	const year = date.getFullYear();
-	const month = (date.getMonth() + 1).toString().padStart(2, "0");
-	const day = date.getDate().toString().padStart(2, "0");
-	return `${year}-${month}-${day}`;
-}
-
 type RequestTableViewProps = {
 	requests: ServiceRequest[];
 	selectedItems: string[];

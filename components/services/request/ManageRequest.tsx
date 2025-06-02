@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import {usePathname, useSearchParams} from "next/navigation";
 
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import { useMediaQuery } from "@/app/hooks/useMediaQuery";
@@ -30,7 +30,7 @@ const ManageRequest: React.FC<RequestServiceProps> = ({
 	const query = searchParams.get("q") || "";
 
 	const pathname = usePathname();
-	const serviceId = pathname.split("/")[2];
+	//const serviceId = pathname.split("/")[2];
 
 	const [requests, setRequests] = useState<ServiceRequest[]>([]);
 	const [selectedItems, setSelectedItems] = useState<string[]>([]);

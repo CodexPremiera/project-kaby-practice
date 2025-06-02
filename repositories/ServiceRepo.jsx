@@ -105,7 +105,7 @@ export default class ServiceRepo extends BaseRepo {
 				serviceData.display_badge,
 				serviceData.eligible_for_badges,
 				serviceData.allow_attach_file,
-				serviceData.status,
+				serviceData.status
 			);
 			newService.category = serviceData.category;
 			// console.log("category",serviceData.category);
@@ -124,5 +124,15 @@ export default class ServiceRepo extends BaseRepo {
 			console.error("Error creating service model:", error);
 			return { error: error.message };
 		}
+	}
+	async updateService(id, service_data) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.update(service_data)
+			.eq("id", id)
+			.select();
+
+		if (error) throw error;
+		return data;
 	}
 }

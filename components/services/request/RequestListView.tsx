@@ -4,6 +4,7 @@ import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import { MessageCircleMore as MessageIcon } from "lucide-react";
 import { ServiceRequest } from "@/lib/clients/RequestServiceClient";
 import { getServiceById } from "@/lib/clients/ViewServiceClient";
+import { getPublicUrl } from "@/utils/supabase/storage";
 
 type RequestListViewProps = {
 	requests: ServiceRequest[];
@@ -62,7 +63,9 @@ const RequestListView: React.FC<RequestListViewProps> = ({
 							<div className="p-1">
 								<Image
 									src={
-										"https://jevvtrbqagijbkdjoveh.supabase.co/storage/v1/object/public/services-pictures/uploads/1747983680603-looking-for-local-electricians.jpg"
+										request.customer_photo
+											? getPublicUrl(request.customer_photo, "profile-pictures")
+											: "/default-image.jpg"
 									}
 									alt={`${request.id}'s Avatar`}
 									width={36}
@@ -80,7 +83,8 @@ const RequestListView: React.FC<RequestListViewProps> = ({
 										{request.owner}
 									</span>
 									<span className="text-secondary text-sm leading-[1.2] font-medium">
-										Last month • Pending
+										{request.schedule_date.toLocaleDateString()} •{" "}
+										{request.status}
 									</span>
 								</div>
 							</div>

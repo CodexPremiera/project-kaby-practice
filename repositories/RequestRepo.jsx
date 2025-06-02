@@ -88,15 +88,32 @@ export default class RequestRepo extends BaseRepo {
 
 		return data;
 	}
+	async updateRequestByServiceId(serviceId, id, fields = {}) {
+		console.log("Updating with fields:", fields);
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.update(fields)
+			.eq("id", id)
+			.eq("service_id", serviceId)
+			.select();
+
+		if (error) {
+			console.log("Update error:", error);
+			throw error;
+		}
+		console.log("Update result data:", data);
+		return data;
+	}
+
 
 	// make a repository that updates the fields using the owner
-	async updateRequestsByOwnerId(owner_id, fields = {}){
+	async updateRequestsByOwnerId(owner_id, fields = {}) {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.update(fields)
 			.eq("owner", owner_id)
 			.select();
-		if(error){
+		if (error) {
 			console.log(error);
 			throw error;
 		}

@@ -26,10 +26,15 @@ class ServiceService {
 	//     return {data,error};
 	// }
 	async createService(serviceData) {
-		console.log("this is createService Servoce",serviceData);
+		console.log("this is createService Servoce", serviceData);
 		const data = await this.repo.create(serviceData);
 		return data;
 	}
+	async updateService(id, serviceData) {
+		const data = await this.repo.updateService(id, serviceData);
+		return data;
+	}
+
 	async getFrontlineServices(barangayUserId) {
 		const data = await this.repo.getFrontlineServices(barangayUserId);
 		return data;

@@ -37,7 +37,7 @@ export async function PUT(request){
         const this_id = await upCitService.getCitByAuthenticatedId(user_id);
         console.log("this dot", user_id, this_id.id)
         // get the remarks-id using cit-id fk
-        const remark_id = await upReqService.getRequestByUser(this_id.id);
+        const remark_id = await upReqService.getRequestByCustomer(this_id.id);
         console.log("idk service", remark_id); 
 
         // update status and is_paid using the remark id 

@@ -28,12 +28,27 @@ export default class RequestRepo extends BaseRepo {
 			.from(this.tableName)
 			.select("id")
 			.eq("customer_id", user_id)
-			.single();
 		console.log("data", data1);
 
 		if (error1) console.log(error1);
 		return data1;
 	}
+
+	async getRequestsByCustomer(customerId) {
+		console.log("Customer ID:", customerId);
+
+		const { data, error } = await this.supabase
+		.rpc("get_requests_with_owner_name", { _customer_id: customerId });
+
+		if (error) {
+			console.error("Error fetching requests with owner name:", error);
+			return null;
+		}
+
+		console.log("Fetched Requests:", data);
+		return data;
+	}
+
 
 	async getRequestsByOwner(owner_id) {
 		console.log(owner_id, "the user id");

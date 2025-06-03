@@ -5,40 +5,17 @@ export interface Profile {
 	image: string;
 	current_badges: number;
 	accumulated_badges: number;
+	status: string;
 }
 
 export const profiles: Profile[] = [
 	{
-		id: "1",
+		id: "654a4039-9553-4c69-8720-f53acb16d7f5",
 		name: "John Doe",
 		address: "South District Cebu City",
-		image: "/assets/profile/bg-profile.png",
+		image: "https://comicbook.com/wp-content/uploads/sites/4/2022/02/66040a7f-aac0-4910-8609-f6a4c7b94c90.jpg?w=1024",
 		current_badges: 10,
 		accumulated_badges: 57,
-	},
-	{
-		id: "2",
-		name: "Jane Doe",
-		address: "North District Cebu City",
-		image: "/assets/profile/bg-profile.png",
-		current_badges: 8,
-		accumulated_badges: 47,
-	},
-	{
-		id: "3",
-		name: "Bondy Might",
-		address: "Mandaue City",
-		image: "/assets/profile/bg-profile.png",
-		current_badges: 11,
-		accumulated_badges: 67,
-	},
-
-	{
-		id: "4",
-		name: "Labangon",
-		address: "Labangon City",
-		image: "/assets/profile/bg-profile.png",
-		current_badges: 11,
-		accumulated_badges: 67,
+		status: "Pending"
 	},
 ];

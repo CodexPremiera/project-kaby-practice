@@ -3,8 +3,8 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import {MessageCircleMore as MessageIcon} from "lucide-react";
-import {router} from "next/client";
 import {useRouter} from "next/navigation";
+import {getPublicUrl} from "@/utils/supabase/storage";
 
 
 function TrackerTableView({
@@ -61,15 +61,19 @@ function TrackerTableView({
               <button className="flex items-center gap-3 w-[18.75rem]"
                       onClick={() => router.push(`/services/${profile.id}`)}>
                 <Image
-                  src={profile.service.image}
-                  alt={`${profile.service.title}'s Avatar`}
+                  src={
+                    profile.image
+                      ? getPublicUrl(profile.image, "services-pictures")
+                      : "/default-image.jpg"
+                  }
+                  alt={`${profile.service_title}'s Avatar`}
                   width={36}
                   height={36}
                   className="object-cover w-10 h-10 rounded-full"
                 />
                 <div className="user_name flex flex-col justify-center items-start p-1 h-9">
-                  <div className="text-primary font-semibold text-md">{profile.service.title}</div>
-                  <div className="text-secondary text-sm">{profile.service.owner}</div>
+                  <div className="text-primary font-semibold text-md">{profile.service_title}</div>
+                  <div className="text-secondary text-sm">{profile.owner_name}</div>
                 </div>
               </button>
             </TableCell>

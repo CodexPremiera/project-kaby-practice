@@ -3,7 +3,6 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import {MessageCircleMore as MessageIcon} from "lucide-react";
-import {useRouter} from "next/navigation";
 import {getPublicUrl} from "@/utils/supabase/storage";
 import {SERVICERequest} from "@/lib/clients/RequestServiceClient";
 import Link from "next/link";
@@ -13,7 +12,7 @@ interface customerRequest extends SERVICERequest {
 }
 
 interface Props {
-  filteredClients : customerRequest[],
+  requests : customerRequest[],
   selectedItems,
   setSelectedItems,
   toggleSelection,
@@ -21,14 +20,12 @@ interface Props {
 }
 
 function TrackerTableView({
-                        filteredClients,
+                        requests,
                         selectedItems,
                         setSelectedItems,
                         toggleSelection,
                         openRequestSheet,
                       } : Props) {
-  console.log(filteredClients)
-
   return (
     <Table className="table-fixed w-full">
       <TableHeader>
@@ -38,15 +35,14 @@ function TrackerTableView({
               type="checkbox"
               className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
               checked={
-                selectedItems.length === filteredClients.length &&
-                filteredClients.length > 0
+                selectedItems.length === requests.length &&
+                requests.length > 0
               }
-              onChange={() => {
-                selectedItems.length === filteredClients.length
+              onChange={() =>
+                selectedItems.length === requests.length
                   ? setSelectedItems([])
-                  : setSelectedItems(filteredClients.map((c) => c.id))
-                console.log(selectedItems);
-              }}
+                  : setSelectedItems(requests.map((c) => c.id))
+              }
             />
           </TableHead>
           <TableHead className="w-[200px] text-secondary text-sm pt-1 pb-5">Service</TableHead>
@@ -57,7 +53,7 @@ function TrackerTableView({
       </TableHeader>
 
       <TableBody className="border-b border-light-color">
-        {filteredClients.map((request) => (
+        {requests.map((request) => (
           <TableRow
             key={request.id}
             className="hover:bg-gray-50 border-light-color h-18"

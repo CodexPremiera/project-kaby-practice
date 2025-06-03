@@ -1,9 +1,6 @@
 "use client";
 
-import React, {useEffect, useMemo, useState} from "react";
-
-import { profiles } from "@/data/profiles";
-import { services } from "@/data/services";
+import React, {useEffect, useState} from "react";
 import TrackerSearchBar from "@/components/tracker/TrackerSearchBar";
 import {useSearchParams} from "next/navigation";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
@@ -76,14 +73,11 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 		);
 
 	const toggleSelection = (id: string) => {
-		setSelectedItems((prev) => {
-			const updated = prev.includes(id)
+		setSelectedItems((prev) =>
+			prev.includes(id)
 				? prev.filter((i) => i !== id)
-				: [...prev, id];
-
-			console.log("Next selectedItems:", updated);
-			return updated;
-		});
+				: [...prev, id]
+		);
 	};
 
 
@@ -126,7 +120,7 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 			{/* Table */}
 			{isLargeScreen ? (
 				<TrackerTableView
-					filteredClients={filteredRequests}
+					requests={filteredRequests}
 					selectedItems={selectedItems}
 					setSelectedItems={setSelectedItems}
 					toggleSelection={toggleSelection}
@@ -134,7 +128,7 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 				/>
 			) : (
 				<TrackerListView
-					filteredClients={filteredRequests}
+					requests={filteredRequests}
 					selectedItems={selectedItems}
 					setSelectedItems={setSelectedItems}
 					toggleSelection={toggleSelection}

@@ -7,8 +7,6 @@ import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import { useMediaQuery } from "@/app/hooks/useMediaQuery";
 import RequestTableView from "./RequestTableView";
 import RequestSearchBar from "./RequestSearchBar";
-import { RiEditBoxLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
-import { router } from "next/client";
 
 import {
 	ServiceRequest,

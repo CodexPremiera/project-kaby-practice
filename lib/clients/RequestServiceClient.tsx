@@ -1,12 +1,15 @@
+
+// This is the request information needed by a SERVICE about a request
+// Used in the Services page of the service provider
 export interface ServiceRequest {
 	id: string;
 	service_id: string;
+	is_paid: boolean;
+	schedule_date: Date;
 	customer_id: string;
 	customer_name: string;
 	customer_photo: string;
 	customer_address: string;
-	is_paid: boolean;
-	schedule_date: Date;
 	status: string;
 	request_files: string | null;
 
@@ -23,6 +26,27 @@ export interface ServiceRequest {
 		title: string
 	}
 }
+
+export interface SERVICERequest {
+	id: string;
+	service_id: string;
+	is_paid: boolean;
+	schedule_date: Date;
+	ratings: string;
+	request_files: string | null;
+	status: string;
+	owner_id: string;
+	customer_id: string;
+	added_date: string;
+	service_title: string;
+	service_photo: string;
+	owner_name: string;
+	customer_fname: string;
+	customer_lname: string;
+	customer_mname: string;
+	customer_photo: string;
+}
+
 
 export const getCustomerName = (request: ServiceRequest) =>
 	`${request.CitizenProfile?.first_name ?? ''} ${

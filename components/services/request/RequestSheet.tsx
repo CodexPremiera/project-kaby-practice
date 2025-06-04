@@ -3,17 +3,22 @@ import Remarks from "./Remarks";
 import Chat from "./Chat";
 import Details from "./Details";
 import { Button } from "@/components/ui/button";
-import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
 
+interface Profile {
+	id: string;
+	name: string;
+	address: string;
+	image: string;
+}
 
 interface RequestSheetProps {
-	request: ServiceRequest;
+	profile: Profile;
 	onClose?: () => void;
 }
 
 type TabOption = "Details" | "Remarks" | "Chat";
 
-const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
+const RequestSheet: React.FC<RequestSheetProps> = ({ profile, onClose }) => {
 	const [activeTab, setActiveTab] = useState<TabOption>("Remarks");
 
 	const tabs: TabOption[] = ["Details", "Remarks", "Chat"];
@@ -23,18 +28,18 @@ const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
 			case "Details":
 				return <Details profile={profile} />;
 			case "Remarks":
-				return <Remarks profile={request} />;
+				return <Remarks profile={profile} />;
 			case "Chat":
-				return <Chat request={request} />;
+				return <Chat request={profile} />;
 			default:
 				return null;
 		}
 	};
 
 	return (
-		<div className="flex flex-col w-full h-full">
-			<div className="flex background-1 justify-between items-center py-2">
-				<div className="font-semibold px-4">{getCustomerName(request)}</div>
+		<div className="flex flex-col w-full">
+			<div className="flex bg-gray-200 justify-between items-center py-2">
+				<div className="font-semibold px-4">{profile.name}</div>
 				<div className="px-2">
 					<Button
 						variant="default"
@@ -48,7 +53,7 @@ const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
 			</div>
 
 			{/* Tabs */}
-			<nav className="flex gap-6 border-b border-gray-200 pl-4 text-primary-1">
+			<nav className="flex gap-6 border-b border-gray-200 pl-4">
 				{tabs.map((tab) => (
 					<TabButton
 						key={tab}
@@ -60,7 +65,7 @@ const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
 			</nav>
 
 			{/* Tab Content */}
-			<div className="mt-4 px-4 h-full">{renderContent()}</div>
+			<div className="mt-4 px-4">{renderContent()}</div>
 		</div>
 	);
 };

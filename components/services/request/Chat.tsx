@@ -2,13 +2,13 @@
 
 import {useEffect, useState} from "react";
 import { Button } from "@/components/ui/button";
-import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import {getCustomerName, Request} from "@/lib/clients/RequestServiceClient";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import TextField from "@/components/ui/form/TextField";
 import Chatbox from "@/components/services/request/Chatbox";
 
 interface ChatProps {
-	request: ServiceRequest;
+	request: Request;
 }
 
 interface Message {

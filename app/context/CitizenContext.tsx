@@ -10,7 +10,7 @@ export type CitizenContext = {
     middleName: string | null;
     // citizenAddress: string | null;
     citizenProfilePic : string | null;
-    access_role :string | null;
+    // access_role :string | null;
 };
 
 export const CitizenContext = createContext<CitizenContext | null>(null);

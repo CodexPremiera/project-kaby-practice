@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RiCloseLine } from "react-icons/ri";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import LoadingModal from "../modal/LoadingModal";
 import ErrorModal from "../modal/ErrorModal";
@@ -11,9 +11,17 @@ import SuccessModal from "../modal/SuccessModal";
 
 interface Props {
 	onClose: () => void;
+	appointment: Appointment | null;
 }
 
-const CreateAccount: React.FC<Props> = ({ onClose }) => {
+interface Appointment {
+	barangay_name: string;
+	email: string;
+	city: string;
+	region: string;
+}
+
+const CreateAccount: React.FC<Props> = ({ onClose, appointment }) => {
 	const [modalType, setModalType] = useState<string | null>(null);
 	const router = useRouter();
 
@@ -30,6 +38,17 @@ const CreateAccount: React.FC<Props> = ({ onClose }) => {
 		password: "",
 		confirmPassword: "",
 	});
+
+	useEffect(() => {
+		if (appointment) {
+			setFormData((prev) => ({
+				...prev,
+				city: appointment.city,
+				region: appointment.region,
+				email: appointment.email,
+			}));
+		}
+	}, [appointment]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -85,16 +104,17 @@ const CreateAccount: React.FC<Props> = ({ onClose }) => {
 											placeholder="Enter City"
 											name="city"
 											value={formData.city}
-											onChange={handleChange}
+											readOnly
 										/>
 										<Input
 											placeholder="Enter Region"
 											name="region"
 											value={formData.region}
-											onChange={handleChange}
+											readOnly
 										/>
 									</div>
 								</div>
+
 								<div className="flex flex-col">
 									<p className="text-sm">Barangay Name:</p>
 									<Input
@@ -104,15 +124,18 @@ const CreateAccount: React.FC<Props> = ({ onClose }) => {
 										onChange={handleChange}
 									/>
 								</div>
+
 								<div className="flex flex-col">
 									<p className="text-sm">Email:</p>
 									<Input
 										placeholder="Enter Email"
 										name="email"
 										value={formData.email}
-										onChange={handleChange}
+										readOnly
 									/>
 								</div>
+
+								{/* Password Fields (Optional) */}
 								{/* <div className="flex flex-col">
 									<p className="text-sm">Password:</p>
 									<Input
@@ -143,7 +166,6 @@ const CreateAccount: React.FC<Props> = ({ onClose }) => {
 				</div>
 			</div>
 
-			{/* Success Modal */}
 			{modalType === "success" && (
 				<SuccessModal
 					title="Success"
@@ -151,7 +173,6 @@ const CreateAccount: React.FC<Props> = ({ onClose }) => {
 					onClose={handleCloseModal}
 				/>
 			)}
-			{/* Error Modal */}
 			{modalType === "error" && (
 				<ErrorModal
 					title="Error"

@@ -1,76 +1,121 @@
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Button } from "@/components/ui/button";
-
-interface Profile {
-	id: string;
-	name: string;
-	address: string;
-	image: string;
-}
+import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
+import TextField from "@/components/ui/form/TextField";
+import Chatbox from "@/components/services/request/Chatbox";
 
 interface ChatProps {
-	profile: Profile;
+	request: ServiceRequest;
 }
 
-const Chat: React.FC<ChatProps> = ({ profile }) => {
-	const [messages, setMessages] = useState<{ sender: string; text: string }[]>(
-		[]
-	);
+interface Message {
+	id: string;
+	request_id: string;
+	message: string;
+	sent_at: string;
+	sender_id: string;
+}
+
+const Chat = ({ request } : ChatProps) => {
+	const requestId = request.id;
+
+	const [messages, setMessages] = useState<Message[]>([]);
 	const [newMessage, setNewMessage] = useState("");
 
-	const handleSendMessage = () => {
+	const handleSendMessage = async () => {
 		if (newMessage.trim() === "") return;
-		setMessages((prev) => [...prev, { sender: "You", text: newMessage }]);
-		setNewMessage("");
+
+		try {
+			const res = await fetch(`/api/services/${request.service_id}/request/${request.id}/Chat`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					message: newMessage,
+					sender_id: request.owner, // Or whoever is the current user
+				}),
+			});
+
+			if (!res.ok) throw new Error("Failed to send message");
+
+			const { chat } = await res.json();
+			setMessages((prev) => [...prev, chat]);
+			setNewMessage("");
+			console.log(chat)
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
-	return (
-		<div className="flex flex-col h-[310px] border border-gray-300  rounded-lg  overflow-hidden justify-between">
-			<div className="p-3 border-b border-gray-200 text-sm font-medium text-gray-700">
-				Chatting with {profile.name}
-			</div>
+	useEffect(() => {
+		const fetchRequests = async () => {
+			try {
+				const res = await fetch(
+						`/api/services/${request.service_id}/request/${requestId}/Chat`
+				);
 
-			{/* Message History */}
-			<div className="flex-1 overflow-y-auto p-3 space-y-2 bg-gray-50 text-sm">
-				{messages.length === 0 ? (
-					<p className="text-gray-500 text-center mt-10">
-						No messages yet. Start a conversation!
-					</p>
-				) : (
-					messages.map((msg, idx) => (
-						<div
-							key={idx}
-							className={`flex ${
-								msg.sender === "You" ? "justify-end" : "justify-start"
-							}`}
-						>
-							<div
-								className={`px-3 py-2 rounded-lg max-w-[70%] break-words ${
-									msg.sender === "You"
-										? "bg-secondary text-white"
-										: "bg-white border border-gray-200"
-								}`}
-							>
-								<p className="break-words whitespace-pre-wrap">{msg.text}</p>
-							</div>
-						</div>
-					))
-				)}
+				if (!res.ok) {
+					throw new Error('Failed to fetch chats');
+				}
+
+				const { chats } = await res.json();
+
+				setMessages(chats);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		if (requestId) {
+			fetchRequests();
+		}
+	}, [requestId]);
+
+	return (
+		<div className="flex flex-col h-full w-full justify-between">
+			<div className="flex flex-col gap-1 w-full h-full border border-light-color rounded-lg">
+				<span className="p-3 border-b border-light-color text-sm font-medium text-primary-1">
+					Chatting with {getCustomerName(request)}
+				</span>
+
+				{/* Message History */}
+				<div className="overflow-hidden flex-1 overflow-y-auto p-3 space-y-2 text-sm gap-1 flex flex-col">
+					{messages.length === 0 ? (
+						<p className="text-gray-500 text-center mt-10">
+							No messages yet. Start a conversation!
+						</p>
+					) : (
+						messages.map((msg) => {
+							if (!msg || !msg.sender_id) return null; // Skip invalid message
+
+							return (
+								<Chatbox
+									key={msg.id}
+									message={msg}
+									isOwner={msg.sender_id === request.owner}
+								/>
+							);
+						})
+					)}
+				</div>
 			</div>
 
 			{/* Message Input */}
-			<div className="fixed bottom-4 w-[420px] py-3 px-1 flex gap-2">
-				<input
-					type="text"
+			<div className="bottom-4 w-full py-3 flex gap-2 items-center">
+				<TextField
+					className="border-light-color"
 					placeholder="Type a message..."
-					className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none"
 					value={newMessage}
 					onChange={(e) => setNewMessage(e.target.value)}
 					onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
 				/>
-				<Button onClick={handleSendMessage}>Send</Button>
+				<ButtonSecondary onClick={handleSendMessage}>
+					Send
+				</ButtonSecondary>
 			</div>
 		</div>
 	);

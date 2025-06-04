@@ -140,5 +140,27 @@ class CitizenService {
 		const data = await this.repo.getCitizenId(id);
 		return data;
 	}
+
+	async incrementCitizenBadges(id){
+		const data = await this.repo.getById(id, [
+			"accumulatedBadge",
+			"currentBadge"
+		]);
+
+		// increment badges
+		const updateFields = {
+			accumulatedBadge: data.accumulatedBadge + 1,
+			currentBadge: data.currentBadge + 1,
+		};
+		
+		const updatedData = await this.repo.incrementBadges(id, updateFields);
+
+		console.log("this is sparta", updatedData);
+		// using the id of parameter above, get the barangay id of the current citizen
+		// once naa nay brgy id, decrement the badges of the brgy
+		// i-call ang mga methods sa brgyprofilerepo
+		// depends if need ang update
+		return updatedData;
+	}
 }
 export default CitizenService;

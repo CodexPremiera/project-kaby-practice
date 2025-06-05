@@ -66,6 +66,7 @@ class BarangayProfileRepo extends BaseRepo {
 
 		return data.id;
 	}
-
+	// add decrement badges
+	// base sa citizen profile
 }
 export default BarangayProfileRepo;

@@ -1,6 +1,7 @@
 "use client";
 
 import {useEffect, useState} from "react";
+import { Button } from "@/components/ui/button";
 import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import TextField from "@/components/ui/form/TextField";
@@ -39,7 +40,7 @@ const Chat = ({ request } : ChatProps) => {
 				},
 				body: JSON.stringify({
 					message: newMessage,
-					sender_id: userId, // Or whoever is the current user
+					sender_id: userId,
 				}),
 			});
 

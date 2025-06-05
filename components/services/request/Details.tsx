@@ -1,16 +1,9 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
 import { format } from "date-fns";
-
-interface Profile {
-	id: string;
-	name: string;
-	address: string;
-	image: string;
-}
+import {ServiceRequest} from "@/lib/clients/RequestServiceClient";
 
 interface DetailsProps {
-	profile: Profile;
+	request: ServiceRequest;
 }
 
 interface Details {
@@ -18,7 +11,7 @@ interface Details {
 	date: Date;
 }
 
-const Details: React.FC<DetailsProps> = ({ profile }) => {
+const Details: React.FC<DetailsProps> = () => {
 	const [remarks, setRemarks] = useState<Details[]>([]);
 	const [newRemark, setNewRemark] = useState("");
 

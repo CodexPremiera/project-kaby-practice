@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Remarks from "./Remarks";
 import Chat from "./Chat";
 import Details from "./Details";
@@ -21,9 +21,9 @@ const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
 	const renderContent = () => {
 		switch (activeTab) {
 			case "Details":
-				return <Details profile={request} />;
+				return <Details request={request} />;
 			case "Remarks":
-				return <Remarks profile={request} />;
+				return <Remarks request={request} />;
 			case "Chat":
 				return <Chat request={request} />;
 			default:

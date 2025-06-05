@@ -1,16 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import {ServiceRequest} from "@/lib/clients/RequestServiceClient";
 
-interface Profile {
-	id: string;
-	name: string;
-	address: string;
-	image: string;
-}
 
 interface ChatProps {
-	profile: Profile;
+	request: ServiceRequest;
 }
 
 interface Remark {
@@ -18,7 +13,7 @@ interface Remark {
 	date: Date;
 }
 
-const Remarks: React.FC<ChatProps> = ({ profile }) => {
+const Remarks: React.FC<ChatProps> = ({ request }) => {
 	const [remarks, setRemarks] = useState<Remark[]>([]);
 	const [newRemark, setNewRemark] = useState("");
 
@@ -36,7 +31,7 @@ const Remarks: React.FC<ChatProps> = ({ profile }) => {
 		<div className="flex flex-col h-[310px] border border-gray-300 rounded-lg overflow-hidden bg-white">
 			{/* Header */}
 			<div className="p-3 border-b border-gray-200 text-sm font-medium text-gray-700">
-				Remarks for {profile.name}
+				Remarks for {request.customer_fname}
 			</div>
 
 			{/* Remarks History */}

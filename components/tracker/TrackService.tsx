@@ -9,6 +9,7 @@ import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import TrackerListView from "@/components/tracker/TrackerListView";
 import {useCitizenContext} from "@/app/context/CitizenContext";
 import {ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import RequestSheet from "@/components/services/request/RequestSheet";
 
 type Profile = {
 	id: string;
@@ -22,7 +23,7 @@ interface TrackServiceProps {
 }
 
 const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
-	const [activeClient, setActiveClient] = useState<Profile | null>(null);
+	const [activeClient, setActiveClient] = useState<ServiceRequest | null>(null);
 
 	// FETCH the requests
 	const customerId = useCitizenContext().citizenId;
@@ -81,9 +82,7 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 	};
 
 
-	const openRequestSheet = () => {
-		setActiveClient(null);
-	};
+	const openRequestSheet = (request: ServiceRequest) => setActiveClient(request);
 
 	const closeRequestSheet = () => {
 		setActiveClient(null);
@@ -140,7 +139,7 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 				<>
 					<div className="fixed inset-0 bg-black/20 z-40"></div>
 					<div className="fixed bottom-0 md:right-12 right-0 z-50 w-[450px] h-[500px] bg-white rounded-t-xl shadow-xl overflow-hidden flex flex-col">
-						{/*<RequestSheet request={activeClient} onClose={closeRequestSheet} />*/}
+						<RequestSheet request={activeClient} onClose={closeRequestSheet} />
 					</div>
 				</>
 			)}

@@ -16,7 +16,8 @@ export default class TransactionChatRepo extends BaseRepo {
 			sent_at,
 			sender_id
 		`)
-		.eq('request_id', requestId);
+		.eq('request_id', requestId)
+		.order('sent_at');
 
 
 		if (error) {

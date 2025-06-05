@@ -5,6 +5,9 @@ import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClien
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import TextField from "@/components/ui/form/TextField";
 import Chatbox from "@/components/services/request/Chatbox";
+import {useUser} from "@/app/context/UserContext";
+
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 interface ChatProps {
 	request: ServiceRequest;
@@ -20,6 +23,7 @@ interface Message {
 
 const Chat = ({ request } : ChatProps) => {
 	const requestId = request.id;
+	const userId = useUser().userId;
 
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [newMessage, setNewMessage] = useState("");
@@ -35,16 +39,13 @@ const Chat = ({ request } : ChatProps) => {
 				},
 				body: JSON.stringify({
 					message: newMessage,
-					sender_id: request.owner_name, // Or whoever is the current user
+					sender_id: userId, // Or whoever is the current user
 				}),
 			});
 
 			if (!res.ok) throw new Error("Failed to send message");
 
-			const { chat } = await res.json();
-			setMessages((prev) => [...prev, chat]);
 			setNewMessage("");
-			console.log(chat)
 		} catch (error) {
 			console.error(error);
 		}
@@ -74,9 +75,38 @@ const Chat = ({ request } : ChatProps) => {
 		}
 	}, [requestId]);
 
+	useEffect(() => {
+		if (!requestId) return;
+
+		const supabase = createClientComponentClient<>();
+
+		const channel = supabase
+			.channel(`chat-${requestId}`)
+			.on(
+				'postgres_changes',
+				{
+					event: 'INSERT',
+					schema: 'public',
+					table: 'TransactionChats',
+					filter: `request_id=eq.${requestId}`,
+				},
+				(payload) => {
+					const newMessage = payload.new;
+					setMessages((prev) => [...prev, newMessage]);
+				}
+			)
+			.subscribe();
+
+		// Cleanup on unmount
+		return () => {
+			supabase.removeChannel(channel);
+		};
+	}, [requestId]);
+
+
 	return (
 		<div className="flex flex-col h-full w-full justify-between">
-			<div className="flex flex-col gap-1 w-full h-full border border-light-color rounded-lg">
+			<div className="flex flex-col gap-1 w-full h-[300px] border border-light-color rounded-lg">
 				<span className="p-3 border-b border-light-color text-sm font-medium text-primary-1">
 					Chatting with {getCustomerName(request)}
 				</span>
@@ -95,7 +125,7 @@ const Chat = ({ request } : ChatProps) => {
 								<Chatbox
 									key={msg.id}
 									message={msg}
-									isOwner={msg.sender_id === request.owner_id}
+									isOwner={msg.sender_id === userId}
 								/>
 							);
 						})

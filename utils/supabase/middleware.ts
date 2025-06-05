@@ -39,7 +39,7 @@ export async function updateSession(request: NextRequest) {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	console.log(user, "this is user");
+	// console.log(user, "this is user");
 
 
 	const publicPaths = [
@@ -124,7 +124,7 @@ export async function updateSession(request: NextRequest) {
 				.eq("citizen_id", citizen_id.id)
 				.maybeSingle();
 
-			const isCitizenManager = workerRole?.access_role === "Citizen Manager";
+			const isCitizenManager = workerRole?.access_role === "Citizen Manager" || workerRole?.access_role === "Chief Operator";
 
 			// if (!isBarangay && !isCitizenManager) {
 			if ( !isCitizenManager) {

@@ -88,6 +88,7 @@ export default class ServiceRepo extends BaseRepo {
 	}
 
 	async create(serviceData) {
+		console.log("this is repo serviceData", serviceData);
 		try {
 			const newService = new ServiceModel(
 				serviceData.title,
@@ -106,7 +107,9 @@ export default class ServiceRepo extends BaseRepo {
 				serviceData.allow_attach_file,
 				serviceData.status
 			);
-
+			newService.category = serviceData.category;
+			// console.log("category",serviceData.category);
+			console.log("this is new Service", newService);
 			const { data, error } = await this.supabase
 				.from(this.tableName)
 				.insert([newService])
@@ -121,5 +124,15 @@ export default class ServiceRepo extends BaseRepo {
 			console.error("Error creating service model:", error);
 			return { error: error.message };
 		}
+	}
+	async updateService(id, service_data) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.update(service_data)
+			.eq("id", id)
+			.select();
+
+		if (error) throw error;
+		return data;
 	}
 }

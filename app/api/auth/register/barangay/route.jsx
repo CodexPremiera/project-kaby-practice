@@ -13,9 +13,11 @@ export async function POST(req) {
     const brgyAppService = new BarangayAppointmentService(supabase);
 
     const body = await req.json();
+    console.log(body, "this is the body");
     const data = await brgyAppService.createAppointment(body);
-    // console.log("this is data",data);
+    console.log("this is data",data);
     
+    // return NextResponse.json({data:"ueu"});
     return NextResponse.json(data);
 
   } catch (err) {

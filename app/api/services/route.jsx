@@ -10,9 +10,9 @@ export async function POST(request) {
 	const supabase = await createClient();
 	const serviceService = new ServiceService(supabase);
 	const authService = new AuthenticationService(supabase);
-
 	try {
 		const body = await request.json();
+		console.log("this is body", body);
 		// Destructure 'owner' out and keep the rest
 		const { owner, ...dataWithoutOwner } = body;
 
@@ -30,6 +30,7 @@ export async function POST(request) {
 		console.log(serviceData, "servicedata");
 
 		return NextResponse.json(serviceData);
+		// return NextResponse.json(body);
 	} catch (err) {
 		console.error("Unexpected error:", err);
 		return new Response(JSON.stringify({ error: "Unexpected error" }), {

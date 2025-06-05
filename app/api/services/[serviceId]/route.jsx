@@ -51,3 +51,28 @@ export async function GET(request, { params }) {
 		owner_name,
 	});
 }
+
+// PUT: update a specific serviceID
+export async function PUT(request, context) {
+	const supabase = await createClient();
+	const serviceService = new ServiceService(supabase);
+
+	const { serviceId } = await context.params;
+	const body = await request.json();
+
+	try {
+		const result = await serviceService.updateService(serviceId, body);
+
+		if (!result || result.length === 0) {
+			return NextResponse.json({ error: "Post not found" }, { status: 404 });
+		}
+
+		return NextResponse.json(result);
+	} catch (err) {
+		console.error("Error updating post:", err);
+		return NextResponse.json(
+			{ error: "Failed to update post" },
+			{ status: 500 }
+		);
+	}
+}

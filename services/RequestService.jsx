@@ -14,12 +14,43 @@ class RequestService {
 		return data;
 	}
 
-	async getRequestsByServiceId(service_id,status) {
+	async getRequestByUser(id) {
+		const data = await this.repo.getRequestsByUser(id);
+		return data;
+	}
+
+	async getRequestByCustomer(customerId) {
+		const data = await this.repo.getRequestsByCustomer(customerId);
+		return data;
+	}
+
+	async getRequestsByServiceId(service_id, status) {
 		const data = await this.repo.getRequestsByServiceId(service_id, status);
 		return data;
 	}
+	async updateRequestByServiceId(serviceId, id, selectedFields = {}) {
+		const data = await this.repo.updateRequestByServiceId(serviceId, id, selectedFields);
+		return data;
+	}
+
+	async getRequestsByOwner(owner_id) {
+		const data = await this.repo.getRequestsByOwner(owner_id);
+		return data;
+	}
+
 	async createRequest(requestData) {
 		const data = await this.repo.create(requestData);
+		return data;
+	}
+
+	async updateRequest(id, selectedFields = {}) {
+		const data = await this.repo.update(id, selectedFields);
+		return data;
+	}
+
+	// call the function from the repo
+	async updateRequestByOwnerId(owner_id, selectedFields = {}) {
+		const data = await this.repo.update(owner_id, selectedFields);
 		return data;
 	}
 }

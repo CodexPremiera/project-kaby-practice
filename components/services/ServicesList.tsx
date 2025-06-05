@@ -13,6 +13,7 @@ type ServiceType = {
 	image: string;
 	description: string;
 	displayBadge?: boolean;
+	category?:string;
 };
 
 type BarangayProfile = {
@@ -33,14 +34,16 @@ type ServicesWithProfile = ServiceType & {
 
 interface SearchServiceProps {
 	tab: "all" | "frontline" | "around-you";
+	category: string | null;
 }
 
-const ServicesList: React.FC<SearchServiceProps> = ({ tab }) => {
+const ServicesList: React.FC<SearchServiceProps> = ({ tab,category }) => {
 	const searchParams = useSearchParams();
 	const query = searchParams.get("q") || "";
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [services, setServices] = useState<ServicesWithProfile[]>([]);
+
 
 	useEffect(() => {
 		async function fetchServices() {
@@ -94,6 +97,11 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab }) => {
 	const filteredAndSearchedServices = useMemo(() => {
 		let filtered = services.filter((service) => service.status !== "Closed");
 
+		if (category && category.toLowerCase() !== "all") {
+			filtered = filtered.filter(
+				(service) => service.category?.toLowerCase() === category.toLowerCase()
+			);
+		}
 		if (query.trim() !== "") {
 			const normalizedQuery = query.toLowerCase().trim();
 			filtered = filtered.filter(
@@ -105,7 +113,7 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab }) => {
 		}
 
 		return filtered;
-	}, [services, query]);
+	}, [services, query,category]);
 
 	if (loading) return <div>Loading services...</div>;
 	if (error) return <div>Error loading services: {error}</div>;

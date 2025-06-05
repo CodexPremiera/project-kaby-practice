@@ -8,10 +8,11 @@ interface TextFieldProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   hasChanged?: boolean
+  className?: string
 }
 
 function TextField({
-                     field_name = "Field name",
+                     field_name,
                      placeholder = "Enter text",
                      value,
                      onChange,
@@ -21,7 +22,7 @@ function TextField({
 
   return (
     <div className="flex flex-col w-full gap-1">
-      <span className="text-sm">{field_name}</span>
+      {field_name && <span className="text-sm">{field_name}</span>}
       <div
         className={`flex items-center gap-2.5 py-3 px-3 rounded-xl border border-secondary w-full transition duration-200`}
       >

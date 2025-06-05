@@ -34,7 +34,7 @@ export default function RequestSearchBar() {
 	return (
 		<SearchBar
 			value={query}
-			placeholder="Search client" // Placeholder text
+			placeholder="Search customer" // Placeholder text
 			onChange={(e) => setQuery(e.target.value)}
 			onKeyDown={handleKeyDown}
 			className="rounded-full border text-primary"

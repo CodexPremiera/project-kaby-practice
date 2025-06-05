@@ -172,12 +172,7 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter, serviceId 
 
 						{/* Slide-up Detail Sheet */}
 						{activeRequest && (
-							<>
-								<div className="fixed inset-0 bg-black/20 z-40"></div>
-								<div className="fixed bottom-0 md:right-12 right-0 z-50 w-[450px] h-[600px] bg-white rounded-t-xl shadow-xl overflow-hidden flex flex-col">
-									<RequestSheet request={activeRequest} onClose={closeRequestSheet} />
-								</div>
-							</>
+							<RequestSheet request={activeRequest} onClose={closeRequestSheet} />
 						)}
 					</>
 				) : (

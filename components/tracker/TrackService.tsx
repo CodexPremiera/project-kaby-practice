@@ -23,7 +23,7 @@ interface TrackServiceProps {
 }
 
 const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
-	const [activeClient, setActiveClient] = useState<ServiceRequest | null>(null);
+	const [activeRequest, setActiveRequest] = useState<ServiceRequest | null>(null);
 
 	// FETCH the requests
 	const customerId = useCitizenContext().citizenId;
@@ -82,10 +82,10 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 	};
 
 
-	const openRequestSheet = (request: ServiceRequest) => setActiveClient(request);
+	const openRequestSheet = (request: ServiceRequest) => setActiveRequest(request);
 
 	const closeRequestSheet = () => {
-		setActiveClient(null);
+		setActiveRequest(null);
 	};
 
 	const cancelSelected = () => {
@@ -135,13 +135,8 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 				/>
 			)}
 
-			{activeClient && (
-				<>
-					<div className="fixed inset-0 bg-black/20 z-40"></div>
-					<div className="fixed bottom-0 md:right-12 right-0 z-50 w-[450px] h-[500px] bg-white rounded-t-xl shadow-xl overflow-hidden flex flex-col">
-						<RequestSheet request={activeClient} onClose={closeRequestSheet} />
-					</div>
-				</>
+			{activeRequest && (
+				<RequestSheet request={activeRequest} onClose={closeRequestSheet} />
 			)}
 		</div>
 	);

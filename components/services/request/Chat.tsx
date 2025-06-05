@@ -63,7 +63,6 @@ const Chat = ({ request } : ChatProps) => {
 				}
 
 				const { chats } = await res.json();
-
 				setMessages(chats);
 			} catch (error) {
 				console.error(error);

@@ -21,7 +21,7 @@ const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
 	const renderContent = () => {
 		switch (activeTab) {
 			case "Details":
-				return <Details profile={profile} />;
+				return <Details profile={request} />;
 			case "Remarks":
 				return <Remarks profile={request} />;
 			case "Chat":

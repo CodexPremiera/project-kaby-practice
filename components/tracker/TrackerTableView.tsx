@@ -4,10 +4,10 @@ import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import {MessageCircleMore as MessageIcon} from "lucide-react";
 import {getPublicUrl} from "@/utils/supabase/storage";
-import {SERVICERequest} from "@/lib/clients/RequestServiceClient";
+import {ServiceRequest} from "@/lib/clients/RequestServiceClient";
 import Link from "next/link";
 
-interface customerRequest extends SERVICERequest {
+interface customerRequest extends ServiceRequest {
   index: number;
 }
 

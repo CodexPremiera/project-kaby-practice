@@ -2,10 +2,10 @@ import React from 'react';
 import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import {MessageCircleMore as MessageIcon} from "lucide-react";
-import {SERVICERequest} from "@/lib/clients/RequestServiceClient";
+import {ServiceRequest} from "@/lib/clients/RequestServiceClient";
 import {getPublicUrl} from "@/utils/supabase/storage";
 
-interface customerRequest extends SERVICERequest {
+interface customerRequest extends ServiceRequest {
   index: number;
 }
 

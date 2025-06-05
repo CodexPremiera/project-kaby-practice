@@ -152,12 +152,12 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 														)
 													: "/default-image.jpg"
 											}
-											alt={`${request.customer_name ?? "User"} image`}
+											alt={`${request.customer_fname ?? "User"} image`}
 											width={36}
 											height={36}
 											className="object-cover w-10 h-10 rounded-full"
 										/>
-										<div>{request.customer_name}</div>
+										<div>{request.customer_fname} {request.customer_lname}</div>
 									</button>
 								</TableCell>
 

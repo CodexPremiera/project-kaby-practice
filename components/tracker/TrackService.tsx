@@ -8,7 +8,7 @@ import TrackerTableView from "@/components/tracker/TrackerTableView";
 import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import TrackerListView from "@/components/tracker/TrackerListView";
 import {useCitizenContext} from "@/app/context/CitizenContext";
-import {SERVICERequest} from "@/lib/clients/RequestServiceClient";
+import {ServiceRequest} from "@/lib/clients/RequestServiceClient";
 
 type Profile = {
 	id: string;
@@ -26,7 +26,7 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 
 	// FETCH the requests
 	const customerId = useCitizenContext().citizenId;
-	const [requests, setRequests] = useState<SERVICERequest[]>([]);
+	const [requests, setRequests] = useState<ServiceRequest[]>([]);
 
 	useEffect(() => {
 		const fetchRequests = async () => {

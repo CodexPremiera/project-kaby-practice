@@ -66,29 +66,7 @@ export default class RequestRepo extends BaseRepo {
 	// THIS GETS THE SERVICES BY ID INCLUDING CITIZEN PROFILE INFO
 	async getRequestsByServiceId(service_id, status) {
 		let query = this.supabase
-		.from(this.tableName)
-		.select(`
-			id,
-			service_id,
-			is_paid,
-			schedule_date,
-			ratings,
-			request_files,
-			status,
-			owner,
-			customer_id,
-			added_date,
-			CitizenProfile (
-				first_name,
-				last_name,
-				middle_name,
-				profile_pic
-			),
-			Services(
-				title	
-			)
-		`)
-		.eq("service_id", service_id);
+		.rpc("get_requests_with_service_id", { _service_id: service_id });
 
 		if (status) {
 			query = query.eq("status", status);
@@ -97,12 +75,13 @@ export default class RequestRepo extends BaseRepo {
 		const { data, error } = await query;
 
 		if (error) {
-			console.error("Error fetching requests with profile info:", error);
+			console.error("Error fetching requests with service info:", error);
 			throw error;
 		}
 
 		return data;
 	}
+
 	async updateRequestByServiceId(serviceId, id, fields = {}) {
 		console.log("Updating with fields:", fields);
 		const { data, error } = await this.supabase

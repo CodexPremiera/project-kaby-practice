@@ -9,6 +9,7 @@ import DateField from "@/components/ui/form/DateField";
 import { profile } from "console";
 import UploadProfilePic from "@/services/UploadProfilePic";
 import { createClient } from "@/utils/supabase/client";
+import {getPublicUrl} from "@/utils/supabase/storage";
 
 
 interface NameIdentityProps {
@@ -240,7 +241,10 @@ function NameAndIdentity({ userId }: NameIdentityProps) {
 const getPublicImageUrl = (path: string | null | undefined) => {
   if (!path) return "/default-avatar.png";
   if (path.startsWith("blob:")) return path;
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-pictures/${path}`;
+  return getPublicUrl(
+    path,
+    "profile-pictures"
+  );
 };
 
 

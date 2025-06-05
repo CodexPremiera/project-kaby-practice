@@ -10,7 +10,7 @@ const Chatbox: React.FC<ChatboxProps> = ({ message, isOwner }) => {
   return (
     <div className={`flex w-full ${isOwner ? "justify-end" : "justify-start"}`}>
       <div
-        className={`px-3 py-2 rounded-lg max-w-[70%] break-words ${
+        className={`px-3 py-2 rounded-xl max-w-[70%] break-words ${
           isOwner ? "bg-accent text-inverse-1" : "background-3"
         }`}
       >

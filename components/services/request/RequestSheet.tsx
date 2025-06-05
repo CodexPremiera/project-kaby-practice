@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import Details from "./Details";
 import Remarks from "./Remarks";
 import Chat from "./Chat";
-import Details from "./Details";
 import { Button } from "@/components/ui/button";
-import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import { ServiceRequest} from "@/lib/clients/RequestServiceClient";
 import { X as CloseIcon } from 'lucide-react';
 import SwitchTab from "@/components/ui/tabs/SwitchTab";
 import {useUser} from "@/app/context/UserContext";

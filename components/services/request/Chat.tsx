@@ -1,8 +1,7 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import { Button } from "@/components/ui/button";
-import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import { ServiceRequest} from "@/lib/clients/RequestServiceClient";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import TextField from "@/components/ui/form/TextField";
 import Chatbox from "@/components/services/request/Chatbox";
@@ -124,7 +123,6 @@ const Chat = ({ request } : ChatProps) => {
 					)
 				)}
 			</div>
-
 
 
 			{/* Message Input */}

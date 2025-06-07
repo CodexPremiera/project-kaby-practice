@@ -53,6 +53,7 @@ export async function updateSession(request: NextRequest) {
 	 	request.nextUrl.pathname.startsWith("/api") ||
 		request.nextUrl.pathname.startsWith("/auth")||
 		request.nextUrl.pathname.startsWith("/register")||
+		// request.nextUrl.pathname.startsWith("/service")||
 		request.nextUrl.pathname.startsWith("/search");
 	
 	if (!user && !isPublicPath) {

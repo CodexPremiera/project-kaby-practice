@@ -4,6 +4,8 @@ import { createClient } from "@/utils/supabase/server";
 import AuthenticationService from "@/services/AuthenticationService";
 import CitizenService from "@/services/CitizenService"
 import { NextResponse } from "next/server";
+import nodemailer from 'nodemailer'
+
 export async function POST(req) {
 	const { email } = await req.json();
 	const supabase = await createClient();
@@ -57,6 +59,23 @@ export async function POST(req) {
 
 
 }
-export async function sendEmail(email,link){
-    console.log("Email is sent to", email, " at link ", link);
+export async function sendEmail(to,link){
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_APP_PASSWORD,
+        },
+    });
+
+  const info = await transporter.sendMail({
+        from: `"Barangay System" <${process.env.GMAIL_USER}>`,
+        to,
+        subject: 'Access Verification Link',
+        html: `<p>Click the link to verify access: <a href="${link}">${link}</a></p>`,
+  });
+  console.log("Email sent to:", to, "with link:", link);
+  console.log("Message sent: %s", info.messageId);
 }

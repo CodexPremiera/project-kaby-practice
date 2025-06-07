@@ -10,16 +10,22 @@ import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
 import {ChevronDown} from "lucide-react";
 import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import { useCitizenContext } from '@/app/context/CitizenContext';
+import SetPasswordModal from '../modal/SetPasswordModal';
 
 
 interface CitSettingsProps {
   citizenId : string ;
-}
-function CitizenSettings({citizenId} : CitSettingsProps) {
+  showSetPasswordModal : boolean ;
 
+}
+function CitizenSettings({citizenId, showSetPasswordModal} : CitSettingsProps) {
+  
+  const [showModal, setShowModal] = useState(!showSetPasswordModal);
   const [activeTab, setActiveTab] = useState<keyof typeof TAB_COMPONENTS>("Identity");
   const [showMobileSwitcher, setShowMobileSwitcher] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+  const closeModal = () => setShowModal(false);
+
 
 
   const handleTabChange = (tab: keyof typeof TAB_COMPONENTS) => {
@@ -83,7 +89,9 @@ function CitizenSettings({citizenId} : CitSettingsProps) {
           </div>
         </div>
       </div>
+      {showSetPasswordModal && <SetPasswordModal onClose={closeModal}/>}
     </div>
+
   )
 
 }

@@ -21,6 +21,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 	const cookieStore = await cookies();
 	const actingBarangayId = cookieStore.get("acting_as_barangay")?.value;
 	const accessRole = cookieStore.get("access_role")?.value;
+	// const accessRole = "Chief Operator";
 
 	console.log("acting barangay id (from cookie):", actingBarangayId);
 	console.log("access role (from cookie):", accessRole);
@@ -97,8 +98,8 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		};
 		console.log("Barangay data: ", barangayData);
 		console.log("brrr brr", citizenData);
-		// Header = <CitizenHeader />;
-		// Mainbar = <CitizenMainbar />;
+		Header = <CitizenHeader />;
+		Mainbar = <CitizenMainbar />;
 	}
 	const LayoutWrapper = ({ children }: { children: React.ReactNode }) => (
 		<div className="flex flex-col w-screen min-h-screen overflow-hidden relative">

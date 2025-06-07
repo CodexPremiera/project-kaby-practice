@@ -29,19 +29,21 @@ export async function PUT(request){
         const upCitService = new CitizenService(supabase);
         const body = await request.json();
 
+        console.log("the body", body);
+
         // FINAL CODE FOR PUT -- DO NOT DELETE --
         // get data sa json
         const {user_id, ...someValues} = body;
-        console.log("the val bolante ", someValues);
+        console.log("the val bolante ", user_id);
         // get cit-id from auth-id
         const this_id = await upCitService.getCitByAuthenticatedId(user_id);
-        console.log("this dot", user_id, this_id.id)
+        console.log("this dot", user_id, "and this is ",this_id)
         // get the remarks-id using cit-id fk
         const remark_id = await upReqService.getRequestByCustomer(this_id.id);
         console.log("idk service", remark_id); 
 
         // update status and is_paid using the remark id 
-        const data = await upReqService.updateRequest(remark_id.id, someValues);
+        const data = await upReqService.updateRequest(remark_id[0].id, someValues);
         console.log("update", remark_id.id, someValues);
 
         console.log("something", data);

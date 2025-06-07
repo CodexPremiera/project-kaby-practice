@@ -10,7 +10,7 @@ import { useRouter, useParams } from "next/navigation";
 import { RiArrowLeftLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import Image from "next/image";
-
+import GCashModal from "@/components/modal/GCashModal";
 interface UploadedFile {
 	name: string;
 	url: string;
@@ -25,19 +25,13 @@ const Payment: React.FC = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+	const [showModal, setShowModal] = useState(false);
 
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		console.log("clicked ayyy");
-		const res = await fetch("/api/request", {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				user_id: currentUser,
-				is_paid: true,
-				status: "Ongoing",
-			}),
-		});
+		setShowModal(true);
+
 	};
 
 	useEffect(() => {
@@ -57,6 +51,7 @@ const Payment: React.FC = () => {
 			setService(fetchedService);
 			setError(!fetchedService ? "Service not found" : null);
 			setLoading(false);
+			console.log("Fetched service:", fetchedService);
 		};
 
 		fetchData();
@@ -84,6 +79,30 @@ const Payment: React.FC = () => {
 			</div>
 		);
 	}
+	const handleFakeSuccess = async () => {
+        try {
+            setLoading(true);
+            setShowModal(false);
+
+            const res = await fetch("/api/request", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user_id: currentUser?.user_id,
+                    is_paid: true,
+                    status: "Ongoing",
+                }),
+            });
+
+            if (!res.ok) throw new Error("Payment failed");
+
+            router.push("/tracker");
+        } catch (err) {
+            setError("Something went wrong!");
+        } finally {
+            setLoading(false);
+        }
+    };
 
 	return (
 		<div>
@@ -226,6 +245,13 @@ const Payment: React.FC = () => {
 					</div>
 				</div>
 			</div>
+			{showModal && (
+				<GCashModal
+					handleFakeSuccess={handleFakeSuccess}
+					setShowModal={setShowModal}
+					service ={service}
+				/>
+			)}
 		</div>
 	);
 };

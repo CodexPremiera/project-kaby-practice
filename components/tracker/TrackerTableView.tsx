@@ -69,7 +69,7 @@ function TrackerTableView({
 
             <TableCell>
               <Link className="flex items-center gap-3 w-[18.75rem]"
-                    href={`/services/${request.service_id}`} target={'_blank'}>
+                    href={`/services/${request.service_id}/payment`} target={'_blank'}>
                 <Image
                   src={
                     request.service_photo

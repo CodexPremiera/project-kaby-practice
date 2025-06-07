@@ -2,15 +2,16 @@ import React from "react";
 import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import { MessageCircleMore as MessageIcon } from "lucide-react";
-import { Request } from "@/lib/clients/RequestServiceClient";
+import { ServiceRequest } from "@/lib/clients/RequestServiceClient";
+import { getServiceById } from "@/lib/clients/ViewServiceClient";
 import { getPublicUrl } from "@/utils/supabase/storage";
 
 type RequestListViewProps = {
-	requests: Request[];
+	requests: ServiceRequest[];
 	selectedItems: string[];
 	setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>;
 	toggleSelection: (id: string) => void;
-	openRequestSheet: (request: Request) => void;
+	openRequestSheet: (request: ServiceRequest) => void;
 };
 
 const RequestListView: React.FC<RequestListViewProps> = ({
@@ -46,7 +47,7 @@ const RequestListView: React.FC<RequestListViewProps> = ({
 			<div className="flex flex-col">
 				{requests.map((request) => (
 					<div
-						key={request.customer_name}
+						key={request.id}
 						className="flex w-full hover:bg-gray-50 border-b border-light-color py-5 justify-between"
 					>
 						<div className="flex w-[18.75rem] gap-2 sm:gap-3">
@@ -54,8 +55,8 @@ const RequestListView: React.FC<RequestListViewProps> = ({
 								<input
 									type="checkbox"
 									className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
-									checked={selectedItems.includes(request.customer_name)}
-									onChange={() => toggleSelection(request.customer_name)}
+									checked={selectedItems.includes(request.id)}
+									onChange={() => toggleSelection(request.id)}
 								/>
 							</div>
 
@@ -66,7 +67,7 @@ const RequestListView: React.FC<RequestListViewProps> = ({
 											? getPublicUrl(request.customer_photo, "profile-pictures")
 											: "/default-image.jpg"
 									}
-									alt={`${request.customer_name}'s Photo`}
+									alt={`${request.id}'s Avatar`}
 									width={36}
 									height={36}
 									className="object-cover w-10 h-10 rounded-full"
@@ -75,11 +76,11 @@ const RequestListView: React.FC<RequestListViewProps> = ({
 
 							<div className="user_name flex flex-col justify-center items-start h-fit">
 								<span className="text-primary font-semibold text-base sm:text-md">
-									{request.customer_name}
+									{request.id}
 								</span>
 								<div className="flex flex-col gap-0">
 									<span className="text-secondary text-sm leading-[1.2] font-medium">
-										{request.customer_address}
+										{request.owner}
 									</span>
 									<span className="text-secondary text-sm leading-[1.2] font-medium">
 										{request.schedule_date.toLocaleDateString()} •{" "}

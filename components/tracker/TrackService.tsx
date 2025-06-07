@@ -1,30 +1,15 @@
 "use client";
 
-import React, {useMemo, useState} from "react";
-import { RiMessage2Line, RiSearch2Line } from "react-icons/ri";
-import {MessageCircleMore as MessageIcon} from 'lucide-react'
-
-import {
-	Table,
-	TableHeader,
-	TableBody,
-	TableRow,
-	TableHead,
-	TableCell,
-} from "@/components/ui/table";
-
-import { profiles } from "@/data/profiles";
-import { services } from "@/data/services";
-import RequestSheet from "../services/request/RequestSheet";
-import ServiceTag from "../services/ServiceTag";
+import React, {useEffect, useState} from "react";
 import TrackerSearchBar from "@/components/tracker/TrackerSearchBar";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useSearchParams} from "next/navigation";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
-import ButtonClear from "@/components/ui/buttons/ButtonClear";
-import Image from "next/image";
 import TrackerTableView from "@/components/tracker/TrackerTableView";
 import {useMediaQuery} from "@/app/hooks/useMediaQuery";
 import TrackerListView from "@/components/tracker/TrackerListView";
+import {useCitizenContext} from "@/app/context/CitizenContext";
+import {ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import RequestSheet from "@/components/services/request/RequestSheet";
 
 type Profile = {
 	id: string;
@@ -38,55 +23,73 @@ interface TrackServiceProps {
 }
 
 const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
-	const currentUser = "Bondy Might"; // Replace with auth logic later
+	const [activeClient, setActiveClient] = useState<ServiceRequest | null>(null);
+
+	// FETCH the requests
+	const customerId = useCitizenContext().citizenId;
+	const [requests, setRequests] = useState<ServiceRequest[]>([]);
+
+	useEffect(() => {
+		const fetchRequests = async () => {
+			try {
+				const res = await fetch(
+					`/api/request/${customerId}`
+				);
+
+				if (!res.ok) {
+					throw new Error('Failed to fetch your requests');
+				}
+
+				const requests = await res.clone().json();
+				const { requests: customerRequests } = requests;
+
+				setRequests(customerRequests);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		fetchRequests();
+	}, []);
+
+	// SETUP selected items
+	const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
 	const searchParams = useSearchParams();
 	const query = searchParams.get("q") || "";
 
-	const [statuses, setStatuses] = useState<string[]>(
-		profiles.map(() => "Pending")
-	);
-	const [selectedItems, setSelectedItems] = useState<number[]>([]);
-	const [activeClient, setActiveClient] = useState<Profile | null>(null);
 
-	const filteredClients = profiles
-		.map((profile, index) => {
-			const service = services[index % services.length];
+	const filteredRequests = requests
+		.map((request, index) => {
 			return {
-				...profile,
-				service,
-				status: statuses[index],
-				index,
+				...request,
+				index
 			};
 		})
-		.filter((profile) =>
-			profile.service.title.toLowerCase().includes(query.toLowerCase())
+		.filter((request) =>
+			request.service_title.toLowerCase().includes(query.toLowerCase())
 		)
-		.filter((profile) =>
-			statusFilter === "All" ? true : profile.status === statusFilter
+		.filter((request) =>
+			statusFilter === "All" ? true : request.status === statusFilter
 		);
 
-	const toggleSelection = (index: number) => {
+	const toggleSelection = (id: string) => {
 		setSelectedItems((prev) =>
-			prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+			prev.includes(id)
+				? prev.filter((i) => i !== id)
+				: [...prev, id]
 		);
 	};
 
-	const openRequestSheet = (client: Profile) => {
-		setActiveClient(client);
-	};
+
+	const openRequestSheet = (request: ServiceRequest) => setActiveClient(request);
 
 	const closeRequestSheet = () => {
 		setActiveClient(null);
 	};
 
 	const cancelSelected = () => {
-		const updatedStatuses = [...statuses];
-		selectedItems.forEach((index) => {
-			updatedStatuses[index] = "Canceled";
-		});
-		setStatuses(updatedStatuses);
-		setSelectedItems([]);
+		console.log()
 	};
 
 	const isLargeScreen = useMediaQuery("(min-width: 768px)");
@@ -116,7 +119,7 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 			{/* Table */}
 			{isLargeScreen ? (
 				<TrackerTableView
-					filteredClients={filteredClients}
+					requests={filteredRequests}
 					selectedItems={selectedItems}
 					setSelectedItems={setSelectedItems}
 					toggleSelection={toggleSelection}
@@ -124,7 +127,7 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 				/>
 			) : (
 				<TrackerListView
-					filteredClients={filteredClients}
+					requests={filteredRequests}
 					selectedItems={selectedItems}
 					setSelectedItems={setSelectedItems}
 					toggleSelection={toggleSelection}
@@ -136,7 +139,7 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 				<>
 					<div className="fixed inset-0 bg-black/20 z-40"></div>
 					<div className="fixed bottom-0 md:right-12 right-0 z-50 w-[450px] h-[500px] bg-white rounded-t-xl shadow-xl overflow-hidden flex flex-col">
-						<RequestSheet profile={activeClient} onClose={closeRequestSheet} />
+						<RequestSheet request={activeClient} onClose={closeRequestSheet} />
 					</div>
 				</>
 			)}

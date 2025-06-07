@@ -1,3 +1,4 @@
+import { userAgent } from "next/server";
 import CitizenModel from "../models/CitizenModel";
 import BaseRepo from "./BaseRepo";
 
@@ -96,5 +97,43 @@ class CitizenProfileRepo extends BaseRepo {
 		if (error) console.log(error);
 		return data;
 	}
+
+	async getBadgesbyId(id){
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select("id")
+			.eq("id", id).single();
+		if(error) 
+			console.log(error);
+		
+		return data;
+	}
+
+	async incrementBadges(id, fields = {}){
+		/* increment badges :) reference update
+		* accumulated and current badges
+		*/
+		try{	
+			// idk how to call the people from above
+			const {data, error} = await this.supabase	// redundant ang await thingy, need an efficient way
+			.from(this.tableName)
+			.update(fields)
+			.eq('id', id)
+			.select();
+
+			if(error){
+				console.error("Update error: ", error);
+				throw error;
+			}
+
+			console.log("Updated data: ", data);
+			return data;
+		}catch(error){
+			console.error("Error in handling request", error);
+			throw error;
+		}
+		// big problem is how to call this function to the other functions
+	}
 }
 export default CitizenProfileRepo;
+

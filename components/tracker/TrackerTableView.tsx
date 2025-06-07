@@ -3,19 +3,29 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import {MessageCircleMore as MessageIcon} from "lucide-react";
-import {router} from "next/client";
-import {useRouter} from "next/navigation";
+import {getPublicUrl} from "@/utils/supabase/storage";
+import {ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import Link from "next/link";
 
+interface customerRequest extends ServiceRequest {
+  index: number;
+}
+
+interface Props {
+  requests : customerRequest[],
+  selectedItems,
+  setSelectedItems,
+  toggleSelection,
+  openRequestSheet,
+}
 
 function TrackerTableView({
-                        filteredClients,
+                        requests,
                         selectedItems,
                         setSelectedItems,
                         toggleSelection,
                         openRequestSheet,
-                      }) {
-  const router = useRouter();
-
+                      } : Props) {
   return (
     <Table className="table-fixed w-full">
       <TableHeader>
@@ -25,13 +35,13 @@ function TrackerTableView({
               type="checkbox"
               className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
               checked={
-                selectedItems.length === filteredClients.length &&
-                filteredClients.length > 0
+                selectedItems.length === requests.length &&
+                requests.length > 0
               }
               onChange={() =>
-                selectedItems.length === filteredClients.length
+                selectedItems.length === requests.length
                   ? setSelectedItems([])
-                  : setSelectedItems(filteredClients.map((c) => c.index))
+                  : setSelectedItems(requests.map((c) => c.id))
               }
             />
           </TableHead>
@@ -43,42 +53,46 @@ function TrackerTableView({
       </TableHeader>
 
       <TableBody className="border-b border-light-color">
-        {filteredClients.map((profile) => (
+        {requests.map((request) => (
           <TableRow
-            key={profile.index}
+            key={request.id}
             className="hover:bg-gray-50 border-light-color h-18"
           >
             <TableCell>
               <input
                 type="checkbox"
                 className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
-                checked={selectedItems.includes(profile.index)}
-                onChange={() => toggleSelection(profile.index)}
+                checked={selectedItems.includes(request.id)}
+                onChange={() => toggleSelection(request.id)}
               />
             </TableCell>
 
             <TableCell>
-              <button className="flex items-center gap-3 w-[18.75rem]"
-                      onClick={() => router.push(`/services/${profile.id}`)}>
+              <Link className="flex items-center gap-3 w-[18.75rem]"
+                    href={`/services/${request.service_id}`} target={'_blank'}>
                 <Image
-                  src={profile.service.image}
-                  alt={`${profile.service.title}'s Avatar`}
+                  src={
+                    request.service_photo
+                      ? getPublicUrl(request.service_photo, "services-pictures")
+                      : "/default-image.jpg"
+                  }
+                  alt={`${request.service_title}'s Avatar`}
                   width={36}
                   height={36}
                   className="object-cover w-10 h-10 rounded-full"
                 />
                 <div className="user_name flex flex-col justify-center items-start p-1 h-9">
-                  <div className="text-primary font-semibold text-md">{profile.service.title}</div>
-                  <div className="text-secondary text-sm">{profile.service.owner}</div>
+                  <div className="text-primary font-semibold text-md">{request.service_title}</div>
+                  <div className="text-secondary text-sm">{request.owner_name}</div>
                 </div>
-              </button>
+              </Link>
             </TableCell>
 
             <TableCell>Apr 23, 2025</TableCell>
             <TableCell>Pending</TableCell>
 
             <TableCell>
-              <ButtonClear onClick={() => openRequestSheet(profile)}>
+              <ButtonClear onClick={() => openRequestSheet(request)}>
                 <MessageIcon strokeWidth={2} className="w-6 p-0"/>
               </ButtonClear>
             </TableCell>

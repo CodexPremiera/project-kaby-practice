@@ -117,8 +117,8 @@ const ViewService: React.FC = () => {
 					<div className="flex items-center gap-2">
 						<RiAlarmLine />
 						<span>
-							{service.end_date
-								? `Scheduled: ${format(new Date(service.start_date), "MMM d")}-${format(new Date(service.end_date), "d, yyyy")}`
+							{service?.end_date
+								? `Scheduled: ${format(new Date(service.start_date!), "MMM d")} - ${format(new Date(service.end_date!), "d, yyyy")}`
 								: "Available Anytime"}
 						</span>
 					</div>

@@ -124,7 +124,7 @@ const Request = () => {
 											/>
 										</div>
 
-										<div className="flex flex-col">
+										<div className="flex flex-col items-start">
 											<div className="flex flex-row items-center justify-center gap-1">
 												<div className="text-base font-semibold">
 													{serviceInfo.title}
@@ -148,16 +148,16 @@ const Request = () => {
 
 									{/* Stats + Status */}
 									<div className="flex flex-wrap items-center justify-between w-full md:w-auto md:gap-6">
-										<div className="text-sm text-gray-500 italic">
-											{serviceInfo.end_date === null ? (
-												"Available anytime"
-											) : (
-												<>
-													{formatDate(serviceInfo.start_date)} •{" "}
-													{formatDate(serviceInfo.end_date)}
-												</>
-											)}
+										{/* Schedule display */}
+										<div className="text-sm italic">
+											<span className="text-gray-500">Schedule: </span>
+											<span className="font-normal text-gray-500">
+												{serviceInfo.end_date
+													? `${formatDate(serviceInfo.start_date)} • ${formatDate(serviceInfo.end_date)}`
+													: "Available anytime"}
+											</span>
 										</div>
+
 										<div className="flex flex-row gap-5">
 											<div className="flex items-center gap-1 text-sm">
 												<RiStarFill className="text-secondary" />

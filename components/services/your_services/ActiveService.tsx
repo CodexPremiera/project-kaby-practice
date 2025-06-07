@@ -39,7 +39,6 @@ const ActiveService: React.FC<UserProps> = ({ userId, userRole }) => {
 	const [services, setServices] = useState<ServiceWithProfile[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const router = useRouter();
 
 	useEffect(() => {
 		const fetchData = async () => {

@@ -1,24 +1,19 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Remarks from "./Remarks";
 import Chat from "./Chat";
 import Details from "./Details";
 import { Button } from "@/components/ui/button";
+import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
 
-interface Profile {
-	id: string;
-	name: string;
-	address: string;
-	image: string;
-}
 
 interface RequestSheetProps {
-	profile: Profile;
+	request: ServiceRequest;
 	onClose?: () => void;
 }
 
 type TabOption = "Details" | "Remarks" | "Chat";
 
-const RequestSheet: React.FC<RequestSheetProps> = ({ profile, onClose }) => {
+const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
 	const [activeTab, setActiveTab] = useState<TabOption>("Remarks");
 
 	const tabs: TabOption[] = ["Details", "Remarks", "Chat"];
@@ -26,20 +21,20 @@ const RequestSheet: React.FC<RequestSheetProps> = ({ profile, onClose }) => {
 	const renderContent = () => {
 		switch (activeTab) {
 			case "Details":
-				return <Details profile={profile} />;
+				return <Details request={request} />;
 			case "Remarks":
-				return <Remarks profile={profile} />;
+				return <Remarks request={request} />;
 			case "Chat":
-				return <Chat profile={profile} />;
+				return <Chat request={request} />;
 			default:
 				return null;
 		}
 	};
 
 	return (
-		<div className="flex flex-col w-full">
-			<div className="flex bg-gray-200 justify-between items-center py-2">
-				<div className="font-semibold px-4">{profile.name}</div>
+		<div className="flex flex-col w-full h-full">
+			<div className="flex background-1 justify-between items-center py-2">
+				<div className="font-semibold px-4">{getCustomerName(request)}</div>
 				<div className="px-2">
 					<Button
 						variant="default"
@@ -53,7 +48,7 @@ const RequestSheet: React.FC<RequestSheetProps> = ({ profile, onClose }) => {
 			</div>
 
 			{/* Tabs */}
-			<nav className="flex gap-6 border-b border-gray-200 pl-4">
+			<nav className="flex gap-6 border-b border-gray-200 pl-4 text-primary-1">
 				{tabs.map((tab) => (
 					<TabButton
 						key={tab}
@@ -65,7 +60,7 @@ const RequestSheet: React.FC<RequestSheetProps> = ({ profile, onClose }) => {
 			</nav>
 
 			{/* Tab Content */}
-			<div className="mt-4 px-4">{renderContent()}</div>
+			<div className="mt-4 px-4 h-full">{renderContent()}</div>
 		</div>
 	);
 };

@@ -1,11 +1,12 @@
 "use client";
 
+import { createClient } from "@/utils/supabase/client";
 import React, { useEffect, useMemo, useState , useRef} from "react";
 import ServiceCard from "@/components/services/view/ServiceCard";
 import { useSearchParams } from "next/navigation";
 import ServiceViewModal from "../modal/ServiceViewModal";
 import ServicePreviewPopover from "../modal/ServiceViewModal";
-import { createClient } from "@/utils/supabase/client";
+import ErrorModal from "../modal/ErrorModal";
 
 type ServiceType = {
 	id: string;
@@ -50,17 +51,7 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab,category }) => {
 	const [services, setServices] = useState<ServicesWithProfile[]>([]);
 	const [selectedService, setSelectedService] = useState(null);
 	const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-	const [user, setUser] = useState<any>(null);
-	useEffect(() => {
-	const getUser = async () => {
-		const {
-		data: { user },
-		} = await supabase.auth.getUser();
-		setUser(user);
-	};
-
-	getUser();
-	}, []);
+	const [modalType, setModalType] = useState<"success" | "error" | null>(null);
 
 	useEffect(() => {
 		async function fetchServices() {
@@ -134,23 +125,23 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab,category }) => {
 
 	if (loading) return <div>Loading services...</div>;
 	if (error) return <div>Error loading services: {error}</div>;
-		const handleMouseEnter = (service: ServicesWithProfile) => {
-		if (hoverTimeoutRef.current) {
-			clearTimeout(hoverTimeoutRef.current);
-		}
-		setSelectedService(service);
-	};
+	// 	const handleMouseEnter = (service: ServicesWithProfile) => {
+	// 	if (hoverTimeoutRef.current) {
+	// 		clearTimeout(hoverTimeoutRef.current);
+	// 	}
+	// 	setSelectedService(service);
+	// };
 
-	const handleMouseLeave = () => {
-		hoverTimeoutRef.current = setTimeout(() => {
-			setSelectedService(null);
-		}, 200); // Delay to prevent flickering
-	};
+	// const handleMouseLeave = () => {
+	// 	hoverTimeoutRef.current = setTimeout(() => {
+	// 		setSelectedService(null);
+	// 	}, 200); // Delay to prevent flickering
+	// };
 
 
 	return (
 		<>			
-			{filteredAndSearchedServices.map((service) => (
+			{/* {filteredAndSearchedServices.map((service) => (
 				<div
 					key={service.id}
 					className="relative w-full flex flex-col"
@@ -176,9 +167,13 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab,category }) => {
 					{ !user && (
 						<div
 						className="absolute inset-0 z-50 cursor-not-allowed"
-						onClick={(e) => e.preventDefault()}
+						onClick={(e) =>{
+							e.preventDefault();
+						} }
 						/>
+						
 					)}
+					
 
 					{selectedService?.id === service.id && (
 						<div className="absolute top-full left-0 z-50">
@@ -186,7 +181,40 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab,category }) => {
 						</div>
 					)}
 				</div>
+			))} */}
+			<>
+			{filteredAndSearchedServices.map((service) => (
+				<div
+				key={service.id}
+				className="relative w-full flex flex-col"
+				
+				>
+				<ServiceCard
+					service={{
+					id: service.id,
+					title: service.title,
+					owner: service.ownerName,
+					type: service.type,
+					image: service.image,
+					display_badge: service.displayBadge,
+					status: service.status,
+					}}
+					routePrefix="/services"
+					
+				/>
+				{/* Your hover popover if needed */}
+				</div>
 			))}
+
+			{modalType === "error" && (
+				<ErrorModal
+				title="Error"
+				content="Need to login first."
+				onClose={() => setModalType(null)}
+				/>
+			)}
+			</>
+
 		</>
 	);
 };

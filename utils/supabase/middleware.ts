@@ -46,6 +46,7 @@ export async function updateSession(request: NextRequest) {
 		"/",              // root
 		"/login",         // login page
 		"/auth/callback", 
+		"/login/verify",
 		"/petition",      // petition page
 	];
 	const isPublicPath = publicPaths.includes(request.nextUrl.pathname) ||

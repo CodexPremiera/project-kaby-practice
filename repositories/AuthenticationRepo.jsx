@@ -111,7 +111,17 @@ class AuthenticationRepo {
 		}
 		return { success: true, data };	
 	}
-	
+	async getIdUsingEmail(email) {
+    	const {data, error} = await this.supabase.from('email_user_view').select("user_id").eq("email",email).single();
+		console.log(data,"this is email", email);
+		if(error){
+			return {error};
+		}
+		return data.user_id;
+
+	}
+
+
 	// registration magic link part
 	// async signInWithEmail() {
 	// 	const { data, error } = await supabase.auth.signInWithOtp({

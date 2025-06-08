@@ -125,12 +125,53 @@ const Request = () => {
 										</div>
 
 										<div className="flex flex-col items-start">
-											<div className="flex flex-row items-center justify-center gap-1">
+											<div className="flex flex-row items-center justify-center gap-4 py-2">
 												<div className="text-base font-semibold">
 													{serviceInfo.title}
 												</div>
+												<div
+													className={`h-6 flex items-center px-2 rounded text-white text-sm font-semibold ${
+														serviceInfo.status === "Active"
+															? "bg-green-400"
+															: "bg-gray-400"
+													}`}
+												>
+													{serviceInfo.status}
+												</div>
+											</div>
+											<div className="text-sm text-gray-500">
+												{serviceInfo.type} • {serviceInfo.category}
+											</div>
+											{/* Schedule display */}
+											<div className="text-sm">
+												<span className="text-gray-500">Schedule: </span>
+												<span className="font-normal text-gray-500">
+													{serviceInfo.end_date
+														? `${formatDate(serviceInfo.start_date)} • ${formatDate(serviceInfo.end_date)}`
+														: "Available anytime"}
+												</span>
+											</div>
+										</div>
+									</div>
 
-												<div>
+									<div>
+										<div className="flex flex-row items-center md:justify-between justify-end w-full gap-4">
+											{/* Ratings & Avail & Edit*/}
+											<div className="flex flex-row gap-8 items-center">
+												<div className="flex items-center gap-1 text-sm">
+													<RiStarFill className="text-secondary" />
+													<span className="text-base font-semibold">
+														{serviceInfo.ratings}
+													</span>
+												</div>
+
+												<div className="flex items-center gap-1 text-sm">
+													<RiUser2Fill className="text-secondary" />
+													<span className="text-base font-semibold">
+														{serviceInfo.avail}
+													</span>
+												</div>
+												<div className="flex flex-row items-center gap-1">
 													<RiEdit2Line
 														onClick={() =>
 															router.push(`/services/${serviceId}/edit`)
@@ -139,44 +180,6 @@ const Request = () => {
 														className="hover:bg-gray-100 p-1 rounded-full cursor-pointer"
 													/>
 												</div>
-											</div>
-											<div className="text-sm text-gray-500">
-												{serviceInfo.type} • {serviceInfo.category}
-											</div>
-										</div>
-									</div>
-
-									{/* Stats + Status */}
-									<div className="flex flex-wrap items-center justify-between w-full md:w-auto md:gap-6">
-										{/* Schedule display */}
-										<div className="text-sm italic">
-											<span className="text-gray-500">Schedule: </span>
-											<span className="font-normal text-gray-500">
-												{serviceInfo.end_date
-													? `${formatDate(serviceInfo.start_date)} • ${formatDate(serviceInfo.end_date)}`
-													: "Available anytime"}
-											</span>
-										</div>
-
-										<div className="flex flex-row gap-5">
-											<div className="flex items-center gap-1 text-sm">
-												<RiStarFill className="text-secondary" />
-												<span>{serviceInfo.ratings}</span>
-											</div>
-
-											<div className="flex items-center gap-1 text-sm">
-												<RiUser2Fill className="text-secondary" />
-												<span>{serviceInfo.avail}</span>
-											</div>
-
-											<div
-												className={`h-9 flex items-center px-4 rounded text-white text-sm font-semibold ${
-													serviceInfo.status === "Active"
-														? "bg-green-400"
-														: "bg-gray-400"
-												}`}
-											>
-												{serviceInfo.status}
 											</div>
 										</div>
 									</div>

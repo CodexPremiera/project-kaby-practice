@@ -7,8 +7,6 @@ import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import { useMediaQuery } from "@/app/hooks/useMediaQuery";
 import RequestTableView from "./RequestTableView";
 import RequestSearchBar from "./RequestSearchBar";
-import { RiEditBoxLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
-import { router } from "next/client";
 import {
 	getRequestsByService,
 	Request,
@@ -111,7 +109,7 @@ const ManageRequest: React.FC<RequestServiceProps> = ({
 					<div className="flex items-center grow max-w-[540px]">
 						<RequestSearchBar />
 					</div>
-					<div className="flex items-center gap-3 w-full sm:w-fit pt-4">
+					<div className="flex items-center gap-3 w-full sm:w-fit sm:pt-0 pt-4">
 						<div className="flex flex-col justify-end gap-1 pr-4 border-r border-secondary">
 							<span className="text-xs sm:text-sm text-secondary text-end">
 								Selected

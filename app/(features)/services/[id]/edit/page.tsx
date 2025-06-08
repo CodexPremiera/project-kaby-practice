@@ -7,14 +7,14 @@ import { RiArrowLeftLine } from "react-icons/ri";
 import { useMediaQuery } from "@/app/hooks/useMediaQuery";
 import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
 import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
-import ServiceOverview from "@/components/services/view/ServiceDetails/ServiceOverview";
-import ServicePayment from "@/components/services/view/ServiceDetails/ServicePayment";
-import ServiceSettings from "@/components/services/view/ServiceDetails/ServiceSettings";
 import SuccessModal from "@/components/modal/SuccessModal";
 import ErrorModal from "@/components/modal/ErrorModal";
 import ConfirmationModal from "@/components/modal/ConfirmationModal";
+import EditOverview from "@/components/services/edit/ServiceDetails/EditOverview";
+import EditPayment from "@/components/services/edit/ServiceDetails/EditPayment";
+import EditSettings from "@/components/services/edit/ServiceDetails/EditSettings";
 
-const EditPage = () => {
+const EditServicePage = () => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const serviceId = pathname.split("/")[2];
@@ -97,9 +97,9 @@ const EditPage = () => {
 	};
 
 	const TAB_COMPONENTS = {
-		Overview: <ServiceOverview service={service} setService={setService} />,
-		Payment: <ServicePayment service={service} setService={setService} />,
-		Settings: <ServiceSettings service={service} setService={setService} />,
+		Overview: <EditOverview service={service} setService={setService} />,
+		Payment: <EditPayment service={service} setService={setService} />,
+		Settings: <EditSettings service={service} setService={setService} />,
 	};
 
 	const handleTabChange = (tab: typeof activeTab) => {
@@ -238,4 +238,4 @@ const EditPage = () => {
 	);
 };
 
-export default EditPage;
+export default EditServicePage;

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
-import { getCurrentUser, CurrentUser } from "@/lib/clients/useAuthClient";
+import { getCurrentUser, CurrentUser } from "@/lib/clients/UseAuthClient";
 import { useRouter, useParams } from "next/navigation";
 import {
 	DropdownMenu,

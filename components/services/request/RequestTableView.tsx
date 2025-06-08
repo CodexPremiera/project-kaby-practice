@@ -57,7 +57,6 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 	) => {
 		setEditableData((prev) =>
 			prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
-			prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
 		);
 	};
 

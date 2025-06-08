@@ -88,42 +88,12 @@ export default class ServiceRepo extends BaseRepo {
 	}
 
 	async create(serviceData) {
-		console.log("this is repo serviceData", serviceData);
-		try {
-			const newService = new ServiceModel(
-				serviceData.title,
-				serviceData.owner,
-				serviceData.image,
-				serviceData.description,
-				serviceData.type,
-				serviceData.service_cost,
-				serviceData.agreement_fee,
-				serviceData.convenience_fee,
-				serviceData.total_price,
-				serviceData.start_date,
-				serviceData.end_date,
-				serviceData.display_badge,
-				serviceData.eligible_for_badges,
-				serviceData.allow_attach_file,
-				serviceData.status
-			);
-			newService.category = serviceData.category;
-			// console.log("category",serviceData.category);
-			console.log("this is new Service", newService);
-			const { data, error } = await this.supabase
-				.from(this.tableName)
-				.insert([newService])
-				.select();
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.insert([serviceData])
+			.select("*");
 
-			if (error) {
-				console.log("Insert error:", error);
-				return { error };
-			}
-			return data;
-		} catch (error) {
-			console.error("Error creating service model:", error);
-			return { error: error.message };
-		}
+		return { data, error };
 	}
 	async updateService(id, service_data) {
 		const { data, error } = await this.supabase

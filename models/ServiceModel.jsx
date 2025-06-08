@@ -21,7 +21,9 @@ class ServiceModel {
 		date_closed = null,
 		date_created = new Date().toISOString(),
 		status = "Active",
-		category
+		category,
+		payment_type,
+		percentage = 0
 	) {
 		this.title = title;
 		this.owner = owner;
@@ -34,7 +36,6 @@ class ServiceModel {
 			);
 		}
 		this.type = type;
-
 		this.service_cost = service_cost;
 		this.agreement_fee = agreement_fee;
 		this.convenience_fee = convenience_fee;
@@ -49,8 +50,9 @@ class ServiceModel {
 		this.date_closed = date_closed;
 		this.date_created = date_created;
 		this.status = status;
-		this.category = category; 
-
+		this.category = category;
+		this.payment_type = payment_type;
+		this.percentage = percentage;
 	}
 }
 

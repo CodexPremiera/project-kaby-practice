@@ -13,8 +13,8 @@ import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
-import { getCurrentUser, CurrentUser } from "@/lib/clients/useAuthClient";
 import { format } from "date-fns";
+import { CurrentUser, getCurrentUser } from "@/lib/clients/UseAuthClient";
 
 const ViewService: React.FC = () => {
 	const router = useRouter();
@@ -143,13 +143,13 @@ const ViewService: React.FC = () => {
 							<div className="flex-1">
 								<p className="text-sm">Service Fee:</p>
 								<p className="font-semibold text-secondary text-lg">
-									{service.service_cost}
+									₱{service.service_cost}
 								</p>
 							</div>
 							<div className="flex-1">
 								<p className="text-sm">Agreement Fee:</p>
 								<p className="font-semibold text-secondary text-lg">
-									{service.agreement_fee}
+									₱{service.agreement_fee}
 								</p>
 							</div>
 						</div>

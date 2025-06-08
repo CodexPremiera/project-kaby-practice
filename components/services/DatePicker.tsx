@@ -33,7 +33,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
 	return (
 		<div className="flex sm:gap-6">
 			<div className="flex-1 w-full">
-				<p className="text-sm">Start:</p>
+				<p className="text-sm">Start Date:</p>
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button variant="gray">
@@ -54,7 +54,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
 			</div>
 
 			<div className="flex-1 w-full">
-				<p className="text-sm">End:</p>
+				<p className="text-sm">End Date:</p>
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button variant="gray">

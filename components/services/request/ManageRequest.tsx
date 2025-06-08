@@ -14,60 +14,55 @@ import SuccessModal from "@/components/modal/SuccessModal";
 
 // Types
 import { ServiceRequest } from "@/lib/clients/RequestServiceClient";
+import ConfirmationModal from "@/components/modal/ConfirmationModal";
 
 interface RequestServiceProps {
 	statusFilter: string;
 	serviceId: string;
+	initializedRequests: ServiceRequest[];
 }
 
-const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter, serviceId }) => {
+const ManageRequest: React.FC<RequestServiceProps> = ({
+	statusFilter,
+	serviceId,
+	initializedRequests,
+}) => {
 	const searchParams = useSearchParams();
 	const query = searchParams.get("q")?.toLowerCase() || "";
 
 	const [requests, setRequests] = useState<ServiceRequest[]>([]);
 	const [selectedItems, setSelectedItems] = useState<string[]>([]);
-	const [activeRequest, setActiveRequest] = useState<ServiceRequest | null>(null);
+	const [activeRequest, setActiveRequest] = useState<ServiceRequest | null>(
+		null
+	);
 	const [selectedStatus, setSelectedStatus] = useState<string>("");
+	const [showConfirmModal, setShowConfirmModal] = useState(false);
 	const [modalType, setModalType] = useState<"success" | null>(null);
 
 	const isLargeScreen = useMediaQuery("(min-width: 768px)");
 
-	// Fetch requests on load
+	// Sync local requests when initializedRequests changes (tab changes)
 	useEffect(() => {
-		const fetchRequests = async () => {
-			try {
-				const url = `/api/services/${serviceId}/request${statusFilter ? `?tab=${statusFilter}` : ""}`;
-				const res = await fetch(url);
+		setRequests(initializedRequests);
+		setSelectedItems([]);
+		setSelectedStatus("");
+	}, [initializedRequests]);
 
-				if (!res.ok) throw new Error("Failed to fetch service requests");
-
-				const data = await res.json();
-				setRequests(data.requests);
-			} catch (error) {
-				console.error(error);
-			}
-		};
-
-		if (serviceId) fetchRequests();
-	}, [serviceId, statusFilter]);
-
-	// Filter requests based on search query
+	// Filter requests by search query on last name
 	const filteredRequests = requests.filter((req) =>
 		req.customer_lname.toLowerCase().includes(query)
 	);
 
-	// Toggle item selection
 	const toggleSelection = (id: string) => {
 		setSelectedItems((prev) =>
 			prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
 		);
 	};
 
-	// Open and close the request sheet
-	const openRequestSheet = (request: ServiceRequest) => setActiveRequest(request);
+	const openRequestSheet = (request: ServiceRequest) =>
+		setActiveRequest(request);
 	const closeRequestSheet = () => setActiveRequest(null);
 
-	// Bulk status update
 	const updateSelectedStatus = async () => {
 		if (!selectedStatus || selectedItems.length === 0) return;
 
@@ -85,17 +80,22 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter, serviceId 
 
 			await Promise.all(updateRequests);
 
-			// Locally update the status
 			setRequests((prev) =>
 				prev.map((req) =>
-					selectedItems.includes(req.id) ? { ...req, status: selectedStatus } : req
+					selectedItems.includes(req.id)
+						? { ...req, status: selectedStatus }
+						: req
 				)
 			);
 
 			setSelectedItems([]);
 			setSelectedStatus("");
 			setModalType("success");
-			setTimeout(() => setModalType(null), 3000);
+
+			setTimeout(() => {
+				setModalType(null);
+				window.location.reload();
+			}, 3000);
 		} catch (error) {
 			console.error("Batch update error:", error);
 			alert("Failed to update some requests.");
@@ -112,12 +112,15 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter, serviceId 
 					</div>
 
 					{/* Bulk Status Update Controls */}
-					<div className="flex items-center gap-3 w-full sm:w-fit pt-4">
+					<div className="flex items-center gap-3 w-full sm:w-fit">
 						<div className="flex flex-col justify-end gap-1 pr-4 border-r border-secondary text-end">
-							<span className="text-xs sm:text-sm text-secondary">Selected</span>
+							<span className="text-xs sm:text-sm text-secondary">
+								Selected
+							</span>
 							<span className="font-semibold text-sm sm:text-base">
-                {selectedItems.length} {selectedItems.length === 1 ? "item" : "items"}
-              </span>
+								{selectedItems.length}{" "}
+								{selectedItems.length === 1 ? "item" : "items"}
+							</span>
 						</div>
 
 						<div className="flex items-center gap-2">
@@ -135,7 +138,7 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter, serviceId 
 							</select>
 
 							<ButtonSecondary
-								onClick={updateSelectedStatus}
+								onClick={() => setShowConfirmModal(true)}
 								disabled={selectedItems.length === 0 || !selectedStatus}
 								className={`px-3 py-2 bg-black text-white rounded ${
 									selectedItems.length === 0 || !selectedStatus
@@ -172,7 +175,10 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter, serviceId 
 
 						{/* Slide-up Detail Sheet */}
 						{activeRequest && (
-							<RequestSheet request={activeRequest} onClose={closeRequestSheet} />
+							<RequestSheet
+								request={activeRequest}
+								onClose={closeRequestSheet}
+							/>
 						)}
 					</>
 				) : (
@@ -188,6 +194,18 @@ const ManageRequest: React.FC<RequestServiceProps> = ({ statusFilter, serviceId 
 					title="Success"
 					content="Requests updated successfully."
 					onClose={() => setModalType(null)}
+				/>
+			)}
+			{/* Confirmation Modal */}
+			{showConfirmModal && (
+				<ConfirmationModal
+					title="Confirm Status Update"
+					content={`Are you sure you want to update the status of ${selectedItems.length} ${selectedItems.length === 1 ? "request" : "requests"} to "${selectedStatus}"?`}
+					onConfirm={() => {
+						setShowConfirmModal(false);
+						updateSelectedStatus();
+					}}
+					onClose={() => setShowConfirmModal(false)}
 				/>
 			)}
 		</>

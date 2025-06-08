@@ -45,7 +45,7 @@ const Requirements: React.FC = () => {
 	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
-		const res = await fetch("/api/request", {
+		const res = await fetch("/api/tracker", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({

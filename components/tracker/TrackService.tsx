@@ -1,91 +1,124 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import TrackerSearchBar from "@/components/tracker/TrackerSearchBar";
-import {useSearchParams} from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import TrackerTableView from "@/components/tracker/TrackerTableView";
-import {useMediaQuery} from "@/app/hooks/useMediaQuery";
+import { useMediaQuery } from "@/app/hooks/useMediaQuery";
 import TrackerListView from "@/components/tracker/TrackerListView";
-import {useCitizenContext} from "@/app/context/CitizenContext";
-import {ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import { useCitizenContext } from "@/app/context/CitizenContext";
+import { ServiceRequest } from "@/lib/clients/RequestServiceClient";
 import RequestSheet from "@/components/services/request/RequestSheet";
+import SuccessModal from "../modal/SuccessModal";
+import ErrorModal from "../modal/ErrorModal";
+import ConfirmationModal from "../modal/ConfirmationModal";
+import { getServiceById } from "@/lib/clients/ViewServiceClient";
 
 interface RequestServiceProps {
 	statusFilter: string;
+	onCountChange: (count: number) => void;
+	initialRequests?: ServiceRequest[];
 }
 
-const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
-	const [activeRequest, setActiveRequest] = useState<ServiceRequest | null>(null);
+interface ServiceFees {
+	service_cost: number;
+	agreement_fee: number;
+}
 
-	// FETCH the requests
-	const customerId = useCitizenContext().citizenId;
-	const [requests, setRequests] = useState<ServiceRequest[]>([]);
-
-	useEffect(() => {
-		const fetchRequests = async () => {
-			try {
-				const res = await fetch(
-					`/api/request/${customerId}`
-				);
-
-				if (!res.ok) {
-					throw new Error('Failed to fetch your requests');
-				}
-
-				const requests = await res.clone().json();
-				const { requests: customerRequests } = requests;
-
-				setRequests(customerRequests);
-			} catch (error) {
-				console.error(error);
-			}
-		};
-
-		fetchRequests();
-	}, []);
-
-	// SETUP selected items
+const TrackService: React.FC<RequestServiceProps> = ({
+	statusFilter,
+	onCountChange,
+	initialRequests = [],
+}) => {
+	const [activeRequest, setActiveRequest] = useState<ServiceRequest | null>(
+		null
+	);
+	const [requests, setRequests] = useState<ServiceRequest[]>(initialRequests);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [selectedItems, setSelectedItems] = useState<string[]>([]);
+	const [modalType, setModalType] = useState<"success" | "error" | null>(null);
+	const [showConfirmModal, setShowConfirmModal] = useState(false);
+	const [serviceFees, setServiceFees] = useState<{
+		[serviceId: string]: ServiceFees;
+	}>({});
 
 	const searchParams = useSearchParams();
 	const query = searchParams.get("q") || "";
+	const customerId = useCitizenContext().citizenId;
 
+	const fetchServiceFees = async (serviceId: string) => {
+		if (serviceFees[serviceId] !== undefined) return;
 
+		const service = await getServiceById(serviceId);
+		if (service) {
+			setServiceFees((prev) => ({
+				...prev,
+				[serviceId]: {
+					service_cost: service.service_cost,
+					agreement_fee: service.agreement_fee,
+				},
+			}));
+		}
+	};
+
+	// Sync requests and notify parent of count whenever initialRequests changes
+	useEffect(() => {
+		setRequests(initialRequests);
+		onCountChange(initialRequests.length);
+	}, [initialRequests, onCountChange]);
+
+	// filteredRequests based on search query only,
+	// status filtering is done in parent
 	const filteredRequests = requests
-		.map((request, index) => {
-			return {
-				...request,
-				index
-			};
-		})
+		.map((request, index) => ({ ...request, index }))
 		.filter((request) =>
 			request.service_title.toLowerCase().includes(query.toLowerCase())
-		)
-		.filter((request) =>
-			statusFilter === "All" ? true : request.status === statusFilter
 		);
+
+	useEffect(() => {
+		filteredRequests.forEach((req) => {
+			fetchServiceFees(req.service_id);
+		});
+	}, [filteredRequests]);
 
 	const toggleSelection = (id: string) => {
 		setSelectedItems((prev) =>
-			prev.includes(id)
-				? prev.filter((i) => i !== id)
-				: [...prev, id]
+			prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
 		);
 	};
 
+	const openRequestSheet = (request: ServiceRequest) =>
+		setActiveRequest(request);
+	const closeRequestSheet = () => setActiveRequest(null);
 
-	const openRequestSheet = (request: ServiceRequest) => setActiveRequest(request);
+	const cancelSelected = async () => {
+		if (selectedItems.length === 0) return;
+		try {
+			const res = await fetch(`/api/tracker/${customerId}`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ ids: selectedItems }),
+			});
+			if (!res.ok) throw new Error("Failed to cancel selected requests");
 
-	const closeRequestSheet = () => {
-		setActiveRequest(null);
-	};
-
-	const cancelSelected = () => {
-		console.log()
+			setSelectedItems([]);
+			setModalType("success");
+			setTimeout(() => {
+				setModalType(null);
+				window.location.reload();
+			}, 2000);
+		} catch (error) {
+			console.error(error);
+			setModalType("error");
+		}
 	};
 
 	const isLargeScreen = useMediaQuery("(min-width: 768px)");
+
+	const closeModal = () => {
+		setModalType(null);
+	};
 
 	return (
 		<>
@@ -108,37 +141,73 @@ const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 								{selectedItems.length > 1 ? "items" : "item"}
 							</span>
 						</div>
-
-						<div className="flex items-center gap-2">
-							<ButtonSecondary>Cancel</ButtonSecondary>
-						</div>
+						<ButtonSecondary
+							onClick={() => setShowConfirmModal(true)}
+							disabled={selectedItems.length === 0}
+						>
+							Cancel
+						</ButtonSecondary>
 					</div>
 				</div>
 			</div>
 
-			{/* Table */}
-			{isLargeScreen ? (
-				<TrackerTableView
-					requests={filteredRequests}
-					selectedItems={selectedItems}
-					setSelectedItems={setSelectedItems}
-					toggleSelection={toggleSelection}
-					openRequestSheet={openRequestSheet}
-				/>
+			{filteredRequests.length > 0 ? (
+				<>
+					{isLargeScreen ? (
+						<TrackerTableView
+							requests={filteredRequests}
+							selectedItems={selectedItems}
+							setSelectedItems={setSelectedItems}
+							toggleSelection={toggleSelection}
+							openRequestSheet={openRequestSheet}
+							serviceFees={serviceFees}
+						/>
+					) : (
+						<TrackerListView
+							requests={filteredRequests}
+							selectedItems={selectedItems}
+							setSelectedItems={setSelectedItems}
+							toggleSelection={toggleSelection}
+							openRequestSheet={openRequestSheet}
+						/>
+					)}
+
+					{activeRequest && (
+						<RequestSheet request={activeRequest} onClose={closeRequestSheet} />
+					)}
+				</>
 			) : (
-				<TrackerListView
-					requests={filteredRequests}
-					selectedItems={selectedItems}
-					setSelectedItems={setSelectedItems}
-					toggleSelection={toggleSelection}
-					openRequestSheet={openRequestSheet}
-				/>
+				<div className="text-center text-gray-500 py-10 text-sm">
+					No '{statusFilter}' requests
+				</div>
 			)}
 
-			{activeRequest && (
-				<RequestSheet request={activeRequest} onClose={closeRequestSheet} />
+			{modalType === "success" && (
+				<SuccessModal
+					title="Success"
+					content="Selected requests canceled successfully."
+					onClose={closeModal}
+				/>
 			)}
-		</div>
+			{modalType === "error" && (
+				<ErrorModal
+					title="Error"
+					content="Something went wrong while canceling."
+					onClose={closeModal}
+				/>
+			)}
+			{showConfirmModal && (
+				<ConfirmationModal
+					title="Confirm Cancel"
+					content="Are you sure you want to cancel? This action cannot be undone."
+					onConfirm={() => {
+						setShowConfirmModal(false);
+						cancelSelected();
+					}}
+					onClose={() => setShowConfirmModal(false)}
+				/>
+			)}
+		</>
 	);
 };
 

@@ -15,11 +15,14 @@ import { getServiceById } from "@/lib/clients/ViewServiceClient";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import Image from "next/image";
 import { formatDate } from "@/lib/utils";
+import { ServiceRequest } from "@/lib/clients/RequestServiceClient";
 
 const Request = () => {
 	const router = useRouter();
 	const pathname = usePathname();
-	const serviceId = pathname.split("/")[2];
+
+	// Make sure serviceId is safely extracted; add a check in case pathname format is unexpected
+	const serviceId = pathname?.split("/")[2] || "";
 
 	const [activeTab, setActiveTab] = useState<
 		"Pending" | "Ongoing" | "Completed" | "Canceled"
@@ -35,32 +38,39 @@ const Request = () => {
 		type: string;
 		status: string;
 		category?: string;
-		start_date?: Date;
-		end_date?: Date;
+		start_date?: Date | string; // sometimes backend returns string dates
+		end_date?: Date | string;
 	} | null>(null);
 
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
+		if (!serviceId) return;
+
 		const fetchServiceInfo = async () => {
-			if (!serviceId) return;
 			setLoading(true);
-			const data = await getServiceById(serviceId);
-			if (data) {
-				setServiceInfo({
-					title: data.title,
-					ratings: data.ratings,
-					avail: data.no_of_avail,
-					photo: data.image ?? undefined,
-					type: data.type,
-					status: data.status,
-					category: data.category ?? undefined,
-					start_date: data.start_date ?? undefined,
-					end_date: data.end_date ?? undefined,
-				});
+			try {
+				const data = await getServiceById(serviceId);
+				if (data) {
+					setServiceInfo({
+						title: data.title,
+						ratings: data.ratings,
+						avail: data.no_of_avail,
+						photo: data.image ?? undefined,
+						type: data.type,
+						status: data.status,
+						category: data.category ?? undefined,
+						start_date: data.start_date ?? undefined,
+						end_date: data.end_date ?? undefined,
+					});
+				}
+			} catch (error) {
+				console.error("Failed to fetch service info:", error);
+			} finally {
+				setLoading(false);
 			}
-			setLoading(false);
 		};
+
 		fetchServiceInfo();
 	}, [serviceId]);
 
@@ -69,18 +79,90 @@ const Request = () => {
 		setShowMobileSwitcher(false);
 	};
 
+	const [allRequests, setAllRequests] = useState<ServiceRequest[]>([]);
+	const [counts, setCounts] = useState({
+		Pending: 0,
+		Ongoing: 0,
+		Completed: 0,
+		Canceled: 0,
+	});
+
+	useEffect(() => {
+		if (!serviceId) return;
+
+		const fetchRequests = async () => {
+			try {
+				const res = await fetch(`/api/services/${serviceId}/request`);
+				if (!res.ok) throw new Error("Failed to fetch requests");
+				const data = await res.json();
+
+				setAllRequests(data.requests || []);
+
+				const statusCount = {
+					Pending: 0,
+					Ongoing: 0,
+					Completed: 0,
+					Canceled: 0,
+				};
+				(data.requests || []).forEach((req: ServiceRequest) => {
+					if (req.status && statusCount.hasOwnProperty(req.status)) {
+						statusCount[req.status as keyof typeof statusCount]++;
+					}
+				});
+				setCounts(statusCount);
+			} catch (err) {
+				console.error(err);
+			}
+		};
+
+		fetchRequests();
+	}, [serviceId]);
+
+	// Filter requests for activeTab
+	const filteredRequests = allRequests.filter(
+		(req) => req.status === activeTab
+	);
+
+	const TAB_COMPONENTS = {
+		Pending: (
+			<ManageRequest
+				key="pending"
+				statusFilter="Pending"
+				serviceId={serviceId}
+				initializedRequests={filteredRequests}
+			/>
+		),
+		Ongoing: (
+			<ManageRequest
+				key="ongoing"
+				statusFilter="Ongoing"
+				serviceId={serviceId}
+				initializedRequests={filteredRequests}
+			/>
+		),
+		Completed: (
+			<ManageRequest
+				key="completed"
+				statusFilter="Completed"
+				serviceId={serviceId}
+				initializedRequests={filteredRequests}
+			/>
+		),
+		Canceled: (
+			<ManageRequest
+				key="canceled"
+				statusFilter="Canceled"
+				serviceId={serviceId}
+				initializedRequests={filteredRequests}
+			/>
+		),
+	};
+
 	const TAB_LABELS = {
 		Pending: "Pending",
 		Ongoing: "Ongoing",
 		Completed: "Completed",
 		Canceled: "Canceled",
-	};
-
-	const TAB_COMPONENTS = {
-		Pending: <ManageRequest statusFilter="Pending" serviceId={serviceId} />,
-		Ongoing: <ManageRequest statusFilter="Ongoing" serviceId={serviceId} />,
-		Completed: <ManageRequest statusFilter="Completed" serviceId={serviceId} />,
-		Canceled: <ManageRequest statusFilter="Canceled" serviceId={serviceId} />,
 	};
 
 	return (
@@ -121,6 +203,7 @@ const Request = () => {
 												alt={`${serviceInfo.title} image`}
 												fill
 												className="object-cover"
+												sizes="(max-width: 768px) 100vw, 120px"
 											/>
 										</div>
 
@@ -178,6 +261,7 @@ const Request = () => {
 														}
 														size={26}
 														className="hover:bg-gray-100 p-1 rounded-full cursor-pointer"
+														title="Edit Service"
 													/>
 												</div>
 											</div>
@@ -201,6 +285,7 @@ const Request = () => {
 									<TabSwitcher
 										tabComponents={TAB_COMPONENTS}
 										tabLabels={TAB_LABELS}
+										tabCounts={counts}
 										defaultTab="Pending"
 										className="flex w-[200px] flex-col absolute bottom-0 left-0 translate-y-full background-1 p-4 rounded-xl drop-shadow-xl items-start gap-6 z-10"
 										activeTab={activeTab}
@@ -214,6 +299,7 @@ const Request = () => {
 							<TabSwitcher
 								tabComponents={TAB_COMPONENTS}
 								tabLabels={TAB_LABELS}
+								tabCounts={counts}
 								defaultTab="Pending"
 								className="flex flex-col sticky top-0 gap-6 w-fit pt-4"
 								activeTab={activeTab}

@@ -29,7 +29,7 @@ const Payment: React.FC = () => {
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		console.log("clicked ayyy");
-		const res = await fetch("/api/request", {
+		const res = await fetch("/api/tracker", {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({

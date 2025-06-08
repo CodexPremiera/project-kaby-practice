@@ -55,7 +55,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 			}}
 			className={`flex flex-col border border-light-color w-full cursor-pointer transition-opacity duration-300 rounded-xl background-1 ${
 				service.status === "Closed" ? "opacity-50" : ""
-			}`}
+			} hover:shadow-md`}
 		>
 			<div className="relative w-full h-[140px] sm:h-[180px] md:h-[160px] lg:h-[144px] xl:h-[180px] overflow-hidden rounded-t-[10px]">
 				<Image

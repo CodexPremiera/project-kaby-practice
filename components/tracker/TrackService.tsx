@@ -1,89 +1,91 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-
+import React, {useEffect, useState} from "react";
+import TrackerSearchBar from "@/components/tracker/TrackerSearchBar";
+import {useSearchParams} from "next/navigation";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
-import { useMediaQuery } from "@/app/hooks/useMediaQuery";
-import {
-	getRequestsByService,
-	Request,
-} from "@/lib/clients/RequestServiceClient";
-import SuccessModal from "@/components/modal/SuccessModal";
-import TrackerSearchBar from "./TrackerSearchBar";
-import TrackerTableView from "./TrackerTableView";
-import RequestSheet from "../services/request/RequestSheet";
-import TrackerListView from "./TrackerListView";
+import TrackerTableView from "@/components/tracker/TrackerTableView";
+import {useMediaQuery} from "@/app/hooks/useMediaQuery";
+import TrackerListView from "@/components/tracker/TrackerListView";
+import {useCitizenContext} from "@/app/context/CitizenContext";
+import {ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import RequestSheet from "@/components/services/request/RequestSheet";
 
 interface RequestServiceProps {
 	statusFilter: string;
 }
 
-const TrackService: React.FC<RequestServiceProps> = ({ statusFilter }) => {
+const TrackService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
+	const [activeRequest, setActiveRequest] = useState<ServiceRequest | null>(null);
+
+	// FETCH the requests
+	const customerId = useCitizenContext().citizenId;
+	const [requests, setRequests] = useState<ServiceRequest[]>([]);
+
+	useEffect(() => {
+		const fetchRequests = async () => {
+			try {
+				const res = await fetch(
+					`/api/request/${customerId}`
+				);
+
+				if (!res.ok) {
+					throw new Error('Failed to fetch your requests');
+				}
+
+				const requests = await res.clone().json();
+				const { requests: customerRequests } = requests;
+
+				setRequests(customerRequests);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		fetchRequests();
+	}, []);
+
+	// SETUP selected items
+	const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
 	const searchParams = useSearchParams();
 	const query = searchParams.get("q") || "";
 
-	const [requests, setRequests] = useState<Request[]>([]);
-	const [selectedItems, setSelectedItems] = useState<string[]>([]);
-	const [activeRequest, setActiveRequest] = useState<Request | null>(null);
-	const [selectedStatus, setSelectedStatus] = useState<string>("");
-	const [modalType, setModalType] = useState<"success" | null>(null);
 
-	const updateSelectedStatus = async () => {
-		if (!selectedStatus || selectedItems.length === 0) return;
-
-		try {
-			const updatePromises = selectedItems.map((id) =>
-				fetch(`/api/tracker`, {
-					method: "PUT",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ status: selectedStatus }),
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`Failed to update request ${id}`);
-					}
-					return res.json();
-				})
-			);
-
-			await Promise.all(updatePromises);
-
-			const updatedRequests = requests.map((req) =>
-				selectedItems.includes(req.id)
-					? { ...req, status: selectedStatus }
-					: req
-			);
-
-			setRequests(updatedRequests);
-			setSelectedItems([]);
-			setSelectedStatus("");
-			setModalType("success");
-			setTimeout(() => setModalType(null), 3000);
-		} catch (error) {
-			console.error("Batch update error:", error);
-			alert("Failed to update some requests.");
-		}
-	};
-
-	const isLargeScreen = useMediaQuery("(min-width: 768px)");
-
-	const filteredRequests = requests.filter((req) =>
-		req.customer_name.toLowerCase().includes(query.toLowerCase())
-	);
+	const filteredRequests = requests
+		.map((request, index) => {
+			return {
+				...request,
+				index
+			};
+		})
+		.filter((request) =>
+			request.service_title.toLowerCase().includes(query.toLowerCase())
+		)
+		.filter((request) =>
+			statusFilter === "All" ? true : request.status === statusFilter
+		);
 
 	const toggleSelection = (id: string) => {
 		setSelectedItems((prev) =>
-			prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+			prev.includes(id)
+				? prev.filter((i) => i !== id)
+				: [...prev, id]
 		);
 	};
 
-	const openRequestSheet = (request: Request) => {
-		setActiveRequest(request);
-	};
+
+	const openRequestSheet = (request: ServiceRequest) => setActiveRequest(request);
 
 	const closeRequestSheet = () => {
 		setActiveRequest(null);
 	};
+
+	const cancelSelected = () => {
+		console.log()
+	};
+
+	const isLargeScreen = useMediaQuery("(min-width: 768px)");
 
 	return (
 		<>
@@ -112,58 +114,31 @@ const TrackService: React.FC<RequestServiceProps> = ({ statusFilter }) => {
 						</div>
 					</div>
 				</div>
-				{filteredRequests.length > 0 ? (
-					<>
-						{isLargeScreen ? (
-							<TrackerTableView
-								requests={filteredRequests}
-								selectedItems={selectedItems}
-								setSelectedItems={setSelectedItems}
-								toggleSelection={toggleSelection}
-								openRequestSheet={openRequestSheet}
-							/>
-						) : (
-							<TrackerListView
-								requests={filteredRequests}
-								selectedItems={selectedItems}
-								setSelectedItems={setSelectedItems}
-								toggleSelection={toggleSelection}
-								openRequestSheet={openRequestSheet}
-							/>
-						)}
-
-						{activeRequest && (
-							<>
-								<div className="fixed inset-0 bg-black/20 z-40"></div>
-								<div className="fixed bottom-0 md:right-12 right-0 z-50 w-[450px] h-[500px] bg-white rounded-t-xl shadow-xl overflow-hidden flex flex-col">
-									<RequestSheet
-										profile={{
-											id: activeRequest.id,
-											name: activeRequest.customer_name,
-											address: activeRequest.customer_address,
-											image: activeRequest.customer_photo,
-										}}
-										onClose={closeRequestSheet}
-									/>
-								</div>
-							</>
-						)}
-					</>
-				) : (
-					<div className="text-center text-gray-500 py-10 text-sm">
-						No '{statusFilter}' requests
-					</div>
-				)}
 			</div>
 
-			{modalType === "success" && (
-				<SuccessModal
-					title="Success"
-					content="Requests updated successfully."
-					onClose={() => setModalType(null)}
+			{/* Table */}
+			{isLargeScreen ? (
+				<TrackerTableView
+					requests={filteredRequests}
+					selectedItems={selectedItems}
+					setSelectedItems={setSelectedItems}
+					toggleSelection={toggleSelection}
+					openRequestSheet={openRequestSheet}
+				/>
+			) : (
+				<TrackerListView
+					requests={filteredRequests}
+					selectedItems={selectedItems}
+					setSelectedItems={setSelectedItems}
+					toggleSelection={toggleSelection}
+					openRequestSheet={openRequestSheet}
 				/>
 			)}
-		</>
+
+			{activeRequest && (
+				<RequestSheet request={activeRequest} onClose={closeRequestSheet} />
+			)}
+		</div>
 	);
 };
 

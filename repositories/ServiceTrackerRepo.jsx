@@ -1,4 +1,3 @@
-import RequestCardModel from "../models/RequestCardModel";
 import BaseRepo from "./BaseRepo";
 
 export default class ServiceTrackerRepo extends BaseRepo{

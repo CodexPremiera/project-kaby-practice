@@ -13,18 +13,19 @@ import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import { MessageCircleMore as MessageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Request } from "@/lib/clients/RequestServiceClient";
+import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import { Service } from "@/lib/clients/ViewServiceClient";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import { Button } from "@/components/ui/button";
 import SuccessModal from "@/components/modal/SuccessModal";
 import { formatDateToInputValue } from "@/lib/utils";
 
 type RequestTableViewProps = {
-	requests: Request[];
+	requests: ServiceRequest[];
 	selectedItems: string[];
 	setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>;
 	toggleSelection: (id: string) => void;
-	openRequestSheet: (request: Request) => void;
+	openRequestSheet: (request: ServiceRequest) => void;
 };
 
 const RequestTableView: React.FC<RequestTableViewProps> = ({
@@ -86,6 +87,8 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 
 	const allSelected =
 		selectedItems.length === requests.length && requests.length > 0;
+
+	const [service, setService] = useState<Service | null>(null);
 
 	return (
 		<>
@@ -149,12 +152,12 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 														)
 													: "/default-image.jpg"
 											}
-											alt={`${request.customer_name ?? "User"} image`}
+											alt={`${request.customer_fname ?? "User"} image`}
 											width={36}
 											height={36}
 											className="object-cover w-10 h-10 rounded-full"
 										/>
-										<div>{request.customer_name}</div>
+										<div>{request.customer_fname} {request.customer_lname}</div>
 									</button>
 								</TableCell>
 

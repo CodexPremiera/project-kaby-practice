@@ -1,79 +1,125 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
+"use client";
 
-interface Profile {
-	id: string;
-	name: string;
-	address: string;
-	image: string;
+import {useEffect, useState} from "react";
+import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
+import TextField from "@/components/ui/form/TextField";
+import RemarkBox from "@/components/services/request/RemarkBox";
+import {useUser} from "@/app/context/UserContext";
+
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import {Remark} from "@/types/ChatType";
+
+interface RemarkProps {
+	request: ServiceRequest;
 }
 
-interface ChatProps {
-	profile: Profile;
-}
+const Remark = ({ request }: RemarkProps) => {
+	const requestId = request.id;
+	const userId = useUser().userId;
 
-interface Remark {
-	text: string;
-	date: Date;
-}
-
-const Remarks: React.FC<ChatProps> = ({ profile }) => {
 	const [remarks, setRemarks] = useState<Remark[]>([]);
-	const [newRemark, setNewRemark] = useState("");
+	const [newMessage, setNewMessage] = useState("");
 
-	const handleAddRemark = () => {
-		if (newRemark.trim() === "") return;
-		const remark: Remark = {
-			text: newRemark,
-			date: new Date(),
-		};
-		setRemarks([...remarks, remark]);
-		setNewRemark("");
+	const handleSendMessage = async () => {
+		if (newMessage.trim() === "") return;
+
+		try {
+			const res = await fetch(`/api/services/${request.service_id}/request/${request.id}/Remark`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ content: newMessage }),
+			});
+
+			if (!res.ok) throw new Error("Failed to send remark");
+
+			setNewMessage("");
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
-	return (
-		<div className="flex flex-col h-[310px] border border-gray-300 rounded-lg overflow-hidden bg-white">
-			{/* Header */}
-			<div className="p-3 border-b border-gray-200 text-sm font-medium text-gray-700">
-				Remarks for {profile.name}
-			</div>
+	useEffect(() => {
+		const fetchRemarks = async () => {
+			try {
+				const res = await fetch(
+					`/api/services/${request.service_id}/request/${requestId}/Remark`);
 
-			{/* Remarks History */}
-			<div className="flex-1 overflow-y-auto p-3 space-y-2 text-sm bg-gray-50">
+				if (!res.ok) {
+					throw new Error("Failed to fetch remarks");
+				}
+
+				const { remarks } = await res.json();
+				setRemarks(remarks);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		if (requestId) {
+			fetchRemarks();
+		}
+	}, [requestId]);
+
+	useEffect(() => {
+		if (!requestId) return;
+
+		const supabase = createClientComponentClient();
+
+		const channel = supabase
+			.channel(`remark-${requestId}`)
+			.on(
+				"postgres_changes",
+				{
+					event: "INSERT",
+					schema: "public",
+					table: "TransactionRemarks",
+					filter: `request_id=eq.${requestId}`,
+				},
+				(payload) => {
+					const newRemark: Remark = payload.new;
+					setRemarks((prev) => [...prev, newRemark]);
+				}
+			)
+			.subscribe();
+
+		return () => {
+			supabase.removeChannel(channel);
+		};
+	}, [requestId]);
+
+	return (
+		<div className="flex flex-col h-full w-full">
+			<div className="flex-1 overflow-y-auto px-4 py-4 space-y-2 text-sm">
+				{/* Remarks History */}
 				{remarks.length === 0 ? (
 					<p className="text-gray-500 text-center mt-10">
-						No remarks yet. Add one below!
+						No remarks yet. Start the discussion!
 					</p>
 				) : (
-					remarks.map((remark, idx) => (
-						<div
-							key={idx}
-							className="border border-gray-200 rounded p-2 bg-white"
-						>
-							<p className="text-gray-700">{remark.text}</p>
-							<p className="text-xs text-gray-500 mt-1">
-								Date posted: {format(remark.date, "PPpp")}
-							</p>
-						</div>
+					remarks.map((remark) => (
+						<RemarkBox key={remark.id} message={remark} isOwner/>
 					))
 				)}
 			</div>
 
-			{/* Input Area */}
-			<div className="fixed bottom-4 w-[420px] py-3 px-1 flex gap-2">
-				<input
-					type="text"
-					placeholder="Type a remark..."
-					className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none"
-					value={newRemark}
-					onChange={(e) => setNewRemark(e.target.value)}
-					onKeyDown={(e) => e.key === "Enter" && handleAddRemark()}
-				/>
-				<Button onClick={handleAddRemark}>Add</Button>
-			</div>
+			{/* Input */}
+			{userId === request.owner_id && (
+				<div className="border-t-2 border-light-color w-full py-4 px-4 flex gap-2 items-center">
+					<TextField
+						className="border-light-color"
+						placeholder="Type a remark..."
+						value={newMessage}
+						onChange={(e) => setNewMessage(e.target.value)}
+						onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+					/>
+					<ButtonSecondary onClick={handleSendMessage}>Send</ButtonSecondary>
+				</div>
+			)}
 		</div>
 	);
 };
 
-export default Remarks;
+export default Remark;

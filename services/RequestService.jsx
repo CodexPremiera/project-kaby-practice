@@ -19,6 +19,11 @@ class RequestService {
 		return data;
 	}
 
+	async getRequestByCustomer(customerId) {
+		const data = await this.repo.getRequestsByCustomer(customerId);
+		return data;
+	}
+
 	async getRequestsByServiceId(service_id, status) {
 		const data = await this.repo.getRequestsByServiceId(service_id, status);
 		return data;

@@ -1,42 +1,41 @@
 import BaseRepo from "./BaseRepo";
 
-export default class TransactionChatRepo extends BaseRepo {
+export default class TransactionRemarkRepo extends BaseRepo {
 	constructor(supabase) {
-		super("TransactionChats", supabase);
+		super("TransactionRemarks", supabase);
 		this.supabase = supabase;
 	}
 	
-	async getChatsByRequestId(requestId) {
+	async getRemarksByRequestId(requestId) {
 		const { data, error } = await this.supabase
-		.from("TransactionChats")
+		.from("TransactionRemarks")
 		.select(`
 			id,
 			request_id,
-			message,
-			sent_at,
-			sender_id
+			content,
+			sent_at
 		`)
 		.eq('request_id', requestId)
 		.order('sent_at');
 
 
 		if (error) {
-			console.error("Error fetching chats for this transaction", error);
+			console.error("Error fetching remarks for this transaction", error);
 			throw error;
 		}
 
 		return data;
 	}
 
-	async createChat(chatData) {
+	async createRemark(remarkData) {
 		const { data, error } = await this.supabase
-		.from("TransactionChats")
-		.insert([chatData])
+		.from("TransactionRemarks")
+		.insert([remarkData])
 		.select()
 		.single();
 
 		if (error) {
-			console.error("Error creating chat message", error);
+			console.error("Error creating remark message", error);
 			throw error;
 		}
 

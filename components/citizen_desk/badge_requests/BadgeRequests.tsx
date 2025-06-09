@@ -1,125 +1,118 @@
 "use client";
 
-import React, {useState} from "react";
-import {profiles} from "@/data/profiles";
-import {useMediaQuery} from "@/app/hooks/useMediaQuery";
-import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
-import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";
-import BadgeRequestsTable from "@/components/citizen_desk/badge_requests/BadgeRequestsTable";
-import BadgeActions from "@/components/citizen_desk/badge_requests/BadgeActions";
+import React, { useState, useEffect } from "react";
+import { useMediaQuery } from "@/app/hooks/useMediaQuery";
 import SearchBar from "@/components/ui/form/SearchBar";
+import BadgeActions from "@/components/citizen_desk/badge_requests/BadgeActions";
+import BadgeRequestsTable from "@/components/citizen_desk/badge_requests/BadgeRequestsTable";
 import BadgeRequestsList from "@/components/citizen_desk/badge_requests/BadgeRequestsList";
 
-type Profile = {
-	id: string;
-	name: string;
-	address: string;
-	image: string;
-};
-
 const BadgeRequests = () => {
-	const [statuses, setStatuses] = useState<string[]>(
-		profiles.map(() => "Pending")
-	);
-	const [dates] = useState<Date[]>(profiles.map(() => new Date()));
+	const [requests, setRequests] = useState<any[]>([]);
+	const [selectedService, setSelectedService] = useState<string>("");
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
+	const isLargeScreen = useMediaQuery("(min-width: 768px)");
+
+	const fetchBadgeRequests = async () => {
+		try {
+			const res = await fetch("/api/barangay/badge_request");
+			if (!res.ok) throw new Error("Failed to fetch badge requests");
+			const data = await res.json();
+			setRequests(data);
+		} catch (error) {
+			console.error("Error fetching badge requests:", error);
+		}
+	};
+
+	useEffect(() => {
+		fetchBadgeRequests();
+	}, []);
+
+	const filteredRequests = requests.filter((req) => {
+		const fullName =
+			`${req.customer_fname} ${req.customer_lname}`.toLowerCase();
+		const matchesSearch = fullName.includes(searchTerm.toLowerCase());
+		const matchesService = selectedService
+			? req.service_title === selectedService
+			: true;
+		return matchesSearch && matchesService;
+	});
+
+	const uniqueServices = Array.from(
+		new Map(
+			requests.map((req) => [req.service_id, req.service_title])
+		).entries()
+	).map(([id, title]) => ({ id, title }));
 
 	const toggleSelection = (index: number) => {
-		setSelectedItems((prev) =>
-			prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+		setSelectedItems((prevSelected) =>
+			prevSelected.includes(index)
+				? prevSelected.filter((item) => item !== index)
+				: [...prevSelected, index]
 		);
 	};
-
-	const filteredClients = profiles
-		.map((profile, index) => ({
-			...profile,
-			status: statuses[index],
-			date: dates[index],
-			index,
-		}))
-		.filter((profile) =>
-			profile.name.toLowerCase().includes(searchTerm.toLowerCase())
-		);
 
 	const handleSelectAll = () => {
-		setSelectedItems(
-			selectedItems.length === filteredClients.length
-				? []
-				: filteredClients.map((c) => c.index)
-		);
+		if (selectedItems.length === filteredRequests.length) {
+			setSelectedItems([]);
+		} else {
+			setSelectedItems(filteredRequests.map((_, index) => index));
+		}
 	};
-
-
-	const isLargeScreen = useMediaQuery("(min-width: 768px)");
 
 	return (
 		<div className="flex flex-col gap-8 p-4 background-1 rounded-xl">
-			{/* Header */}
 			<div className="flex flex-col items-start gap-2 w-full">
-				<span className="text-xl font-semibold hidden xl:block">Badge Request</span>
+				<span className="text-xl font-semibold hidden xl:block">
+					Badge Requests
+				</span>
 				<div className="text-sm text-muted-foreground">
 					Review, manage, and grant badges as requested by your citizens.
 				</div>
 			</div>
 
-			{/* Services + Actions */}
-			<div className="flex items-center justify-between gap-4">
-				<div className="flex items-center grow max-w-[540px]">
+			{/* Search + Filter */}
+			<div className="flex flex-col md:flex-row items-center md:gap-12 gap-2 w-full">
+				<div className="flex items-center grow max-w-[540px] w-full">
 					<SearchBar
 						value={searchTerm}
-						placeholder="Services a client by name"
+						placeholder="Search a customer name"
 						onChange={(e) => setSearchTerm(e.target.value)}
-						className="rounded-full border text-primary"
+						className="rounded-full border text-primary w-full"
 					/>
 				</div>
 
-
-				<div className="flex items-center gap-3 w-fit">
-					<div className="flex flex-col justify-end gap-1/2 pr-4 border-r border-secondary">
-						<span className="text-sm text-secondary text-end">Selected</span>
-						<span
-							className="font-semibold text-end">{selectedItems.length} {selectedItems.length > 1 ? "items" : "item"}</span>
-					</div>
-					<div className="flex gap-2 py-4 rounded-xl z-50">
-						<ButtonSecondary
-							onClick={() => {
-								// handle rejection logic here
-								// setShowActions(false);
-							}}
-							className="!p-3 !text-sm">
-							Reject
-						</ButtonSecondary>
-						<ButtonPrimary
-							onClick={() => {
-								// handle approval logic here
-								// setShowActions(false);
-							}}
-							className="!p-3 !text-sm">
-							Accept
-						</ButtonPrimary>
-					</div>
+				<div className="flex-1 w-full">
+					<select
+						value={selectedService}
+						onChange={(e) => setSelectedService(e.target.value)}
+						className="flex items-center gap-2.5 py-2 px-2 border border-secondary text-sm text-black w-full"
+					>
+						<option value="">All Services</option>
+						{uniqueServices.map((service) => (
+							<option key={service.id} value={service.title}>
+								{service.title}
+							</option>
+						))}
+					</select>
 				</div>
 			</div>
 
-			{/* Table */}
-
-
 			{isLargeScreen ? (
 				<BadgeRequestsTable
-					filteredClients={filteredClients}
+					filteredClients={filteredRequests}
 					selectedItems={selectedItems}
 					toggleSelection={toggleSelection}
 					handleSelectAll={handleSelectAll}
-					actionButtons={<BadgeActions/>}
+					onActionComplete={fetchBadgeRequests}
 				/>
 			) : (
 				<BadgeRequestsList
-					filteredClients={filteredClients}
+					filteredClients={filteredRequests}
 					selectedItems={selectedItems}
 					toggleSelection={toggleSelection}
 					handleSelectAll={handleSelectAll}
-					actionButtons={<BadgeActions/>}
 				/>
 			)}
 		</div>

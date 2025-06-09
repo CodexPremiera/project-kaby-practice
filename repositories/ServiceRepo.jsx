@@ -87,6 +87,21 @@ export default class ServiceRepo extends BaseRepo {
 		return data;
 	}
 
+	async getAllEligibleForBadgesServices(barangayUserId) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select("*")
+			.eq("owner", barangayUserId)
+			.eq("eligible_for_badges", true);
+
+		if (error) {
+			console.error("Error fetching eligible services:", error);
+			throw error;
+		}
+
+		return data;
+	}
+
 	async create(serviceData) {
 		const { data, error } = await this.supabase
 			.from(this.tableName)

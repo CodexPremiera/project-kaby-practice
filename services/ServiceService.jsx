@@ -49,5 +49,11 @@ class ServiceService {
 		const data = await this.repo.getServicesByOwners(ownerIds);
 		return data;
 	}
+
+	async getAllEligibleForBadgesServices(barangayUserId) {
+		const data =
+			await this.repo.getAllEligibleForBadgesServices(barangayUserId);
+		return data;
+	}
 }
 export default ServiceService;

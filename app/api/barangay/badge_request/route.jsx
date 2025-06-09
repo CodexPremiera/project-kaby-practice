@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 import CitizenService from "@/services/CitizenService";
 import BarangayService from "@/services/BarangayService";
+import MonthlyBadgeService from "@/services/MonthlyBadgeService";
 
 export async function GET() {
 	const supabase = await createClient();
@@ -12,26 +13,18 @@ export async function GET() {
 	const authService = new AuthenticationService(supabase);
 	const serviceService = new ServiceService(supabase);
 	const requestService = new RequestService(supabase);
+	const badgeService = new MonthlyBadgeService(supabase);
 
 	const userId = await authService.loggedInUserId();
 	if (!userId)
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-	// Get MonthlyBadge logs for this barangay
-	const { data: badgeLogs, error: badgeError } = await supabase
-		.from("MonthlyBadge")
-		.select("citizen_id, service_id")
-		.eq("barangay_id", userId);
+	// Get Set of given badge logs
+	const givenBadgesSet = await badgeService.getGivenBadgesSet(userId);
 
-	if (badgeError)
-		return NextResponse.json({ error: badgeError.message }, { status: 500 });
-
-	const givenBadgesSet = new Set(
-		badgeLogs?.map((b) => `${b.citizen_id}|${b.service_id}`)
-	);
 	// get services eligible for badges
 	const services = await serviceService.getAllEligibleForBadgesServices(userId);
-	// get requests, exclude those already in MonthlyBadge
+
 	const requests = await Promise.all(
 		services.map(async (service) => {
 			const reqs = await requestService.getRequestsByServiceId(
@@ -84,26 +77,23 @@ export async function PUT(request) {
 }
 
 //Store the records in my Monthly Badge (barangay_id, citizen_id, date_given, status)
-
 export async function POST(request) {
 	const supabase = await createClient();
+	const badgeService = new MonthlyBadgeService(supabase);
 
 	try {
 		const { citizen_id, barangay_id, service_id, date_given, status } =
 			await request.json();
 
-		const { data, error } = await supabase.from("MonthlyBadge").insert([
-			{
-				citizen_id,
-				barangay_id,
-				service_id,
-				date_given,
-				status,
-			},
-		]);
+		const data = await badgeService.createBadgeLog({
+			citizen_id,
+			barangay_id,
+			service_id,
+			date_given,
+			status,
+		});
 
 		if (error) throw error;
-
 		return NextResponse.json({ data });
 	} catch (error) {
 		console.error(error);

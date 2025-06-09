@@ -25,8 +25,8 @@ type BadgeRequest = {
 	customer_fname: string;
 	customer_lname: string;
 	customer_photo: string;
-  added_date: string;
-  owner_id: string;
+	added_date: string;
+	owner_id: string;
 };
 
 type Props = {
@@ -132,10 +132,10 @@ function BadgeRequestsTable({
 
 						{/* Actions */}
 						<TableCell className="flex items-center justify-center h-18">
-              <BadgeActions
-                customer_id={profile.customer_id}
-                owner_id={profile.owner_id}
-                service_id={profile.service_id}
+							<BadgeActions
+								customer_id={profile.customer_id}
+								owner_id={profile.owner_id}
+								service_id={profile.service_id}
 								onActionComplete={onActionComplete}
 							/>
 						</TableCell>

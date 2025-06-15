@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
-import { getCurrentUser, CurrentUser } from "@/lib/clients/useAuthClient";
+import { getCurrentUser, CurrentUser } from "@/lib/clients/UseAuthClient";
 import { useRouter, useParams } from "next/navigation";
 import {
 	DropdownMenu,
@@ -45,7 +45,7 @@ const Requirements: React.FC = () => {
 	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
-		const res = await fetch("/api/request", {
+		const res = await fetch("/api/tracker", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({

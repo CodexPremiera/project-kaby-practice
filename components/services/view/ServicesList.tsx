@@ -4,9 +4,9 @@ import { createClient } from "@/utils/supabase/client";
 import React, { useEffect, useMemo, useState , useRef} from "react";
 import ServiceCard from "@/components/services/view/ServiceCard";
 import { useSearchParams } from "next/navigation";
-import ServiceViewModal from "../modal/ServiceViewModal";
-import ServicePreviewPopover from "../modal/ServiceViewModal";
-import ErrorModal from "../modal/ErrorModal";
+import ServiceViewModal from "@/components/modal/ServiceViewModal";
+import ServicePreviewPopover from "@/components/modal/ServiceViewModal";
+import ErrorModal from "@/components/modal/ErrorModal";
 
 type ServiceType = {
 	id: string;

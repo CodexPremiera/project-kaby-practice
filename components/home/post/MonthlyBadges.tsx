@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { useBarangayContext } from "@/app/context/BarangayContext";
+import { set } from "date-fns";
+import { getPublicUrl } from "@/utils/supabase/storage";
 
-const featuredCitizensData = [
-	{
-		name: "Jasmine Junelle Agutaya Atayadafsdaf asdf",
-		email: "jamminejunelle.agutaya@email.codddddddddddm",
-		avatar: "/assets/img/profile/bg-profile.png",
-	},
-];
+interface Citizen {
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  email: string;
+  profile_pic: string;
+}
 
 const FeaturedCitizenCard = ({
 	name,
@@ -31,8 +34,11 @@ const FeaturedCitizenCard = ({
 );
 
 const MonthlyBadges = () => {
+	const {barangayId} = useBarangayContext();
 	const [isSmallScreen, setIsSmallScreen] = useState(false);
 	const [showModal, setShowModal] = useState(false);
+	const [citizens, setCitizens] = useState<Citizen[]>([]);
+
 
 	useEffect(() => {
 		const mediaQuery = window.matchMedia("(max-width: 767px)");
@@ -42,6 +48,25 @@ const MonthlyBadges = () => {
 		mediaQuery.addEventListener("change", handler);
 		return () => mediaQuery.removeEventListener("change", handler);
 	}, []);
+	  useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const res = await fetch(
+					`/api/monthly_badge/${barangayId}`,
+					{
+						method: "GET",
+						cache: "no-store",
+					}
+				);
+				const data = await res.json();
+				console.log("Monthly Badges Data:", data);
+				setCitizens(data.data);
+			} catch (err) {
+				console.error("Failed to fetch monthly badges:", err);
+			}
+		};
+    fetchData();
+  }, []);
 
 	const openModal = () => setShowModal(true);
 	const closeModal = () => setShowModal(false);
@@ -93,7 +118,7 @@ const MonthlyBadges = () => {
 										/>
 									</svg>
 									<span className="font-bold text-primary truncate">
-										Month of March
+										Month of {new Date().toLocaleString("default", { month: "long" })}
 									</span>
 								</div>
 								<span className="text-secondary text-sm block mb-4 text-center">
@@ -101,8 +126,13 @@ const MonthlyBadges = () => {
 								</span>
 								<div className="grid grid-cols-2 gap-4">
 									<div className="w-full mt-6">
-										{featuredCitizensData.map((citizen, idx) => (
-											<FeaturedCitizenCard key={idx} {...citizen} />
+										{citizens.map((citizen, idx) => (
+											<FeaturedCitizenCard
+												key={idx}
+												name={`${citizen.first_name} ${citizen.middle_name || ""} ${citizen.last_name}`}
+												email={citizen.email}
+												avatar="/assets/img/profile/bg-profile.png"
+											/>
 										))}
 									</div>
 								</div>
@@ -132,7 +162,7 @@ const MonthlyBadges = () => {
 						/>
 					</svg>
 					<span className="font-bold text-primary truncate">
-						Month of March
+						Month of {new Date().toLocaleString("default", { month: "long" })}
 					</span>
 				</div>
 				<span className="text-secondary text-sm block mb-4">
@@ -140,8 +170,14 @@ const MonthlyBadges = () => {
 				</span>
 				<div className="grid grid-cols-2 gap-4">
 					<div className="w-full mt-6">
-						{featuredCitizensData.map((citizen, idx) => (
-							<FeaturedCitizenCard key={idx} {...citizen} />
+						{citizens.map((citizen, idx) => (
+							<FeaturedCitizenCard
+								key={idx}
+								name={`${citizen.first_name} ${citizen.middle_name || ""} ${citizen.last_name}`}
+								email={citizen.email}
+								avatar={getPublicUrl(citizen.profile_pic, "profile-pictures")}
+
+							/>
 						))}
 					</div>
 				</div>

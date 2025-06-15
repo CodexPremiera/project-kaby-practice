@@ -26,7 +26,7 @@ interface PaymentForm {
 	totalPrice: number;
 }
 
-const ServicePayment: React.FC<Props> = ({ service, setService }) => {
+const EditPayment: React.FC<Props> = ({ service, setService }) => {
 	const paymentTypes = ["Fixed", "Quote"];
 
 	const [form, setForm] = useState<PaymentForm>(() => ({
@@ -47,27 +47,40 @@ const ServicePayment: React.FC<Props> = ({ service, setService }) => {
 			form.agreementFeePercent
 		);
 
-		setForm((prev) => ({
-			...prev,
-			agreementFeeValue,
-			convenienceFee,
-			totalPrice,
-		}));
+		// Only update if any of these values changed (to avoid infinite loop)
+		if (
+			agreementFeeValue !== form.agreementFeeValue ||
+			convenienceFee !== form.convenienceFee ||
+			totalPrice !== form.totalPrice
+		) {
+			setForm((prev) => ({
+				...prev,
+				agreementFeeValue,
+				convenienceFee,
+				totalPrice,
+			}));
 
-		setService((prev) =>
-			prev
-				? {
-						...prev,
-						service_cost: form.serviceCost,
-						payment_type: form.paymentType,
-						percentage: form.agreementFeePercent,
-						agreement_fee: agreementFeeValue,
-						convenience_fee: convenienceFee,
-						total_price: totalPrice,
-					}
-				: prev
-		);
-	}, [form.serviceCost, form.paymentType, form.agreementFeePercent]);
+			setService((prev) =>
+				prev
+					? {
+							...prev,
+							service_cost: form.serviceCost,
+							payment_type: form.paymentType,
+							percentage: form.agreementFeePercent,
+							agreement_fee: agreementFeeValue,
+							convenience_fee: convenienceFee,
+							total_price: totalPrice,
+						}
+					: prev
+			);
+		}
+	}, [
+		form.serviceCost,
+		form.paymentType,
+		form.agreementFeePercent,
+		service,
+		setService,
+	]);
 
 	if (!service) return <p>No payment data available</p>;
 
@@ -75,6 +88,7 @@ const ServicePayment: React.FC<Props> = ({ service, setService }) => {
 		<div>
 			<div className="flex items-center justify-between gap-4">
 				<div className="text-xl font-semibold">Payment Details</div>
+
 				<div
 					className={`w-3 h-3 rounded-full ${
 						service.status === "Active" ? "bg-green-400" : "bg-gray-400"
@@ -82,7 +96,10 @@ const ServicePayment: React.FC<Props> = ({ service, setService }) => {
 					title={`Status: ${service.status}`}
 				/>
 			</div>
-
+			<div className="py-2 text-sm">
+				Enter the service cost and payment type. Fees are calculated
+				automatically based on your inputs.
+			</div>
 			<div className="flex flex-col gap-2 text-sm py-6">
 				{/* Service Cost */}
 				<div className="flex items-center gap-2 w-full">
@@ -123,7 +140,8 @@ const ServicePayment: React.FC<Props> = ({ service, setService }) => {
 											setForm((prev) => ({
 												...prev,
 												paymentType: type,
-												agreementFeePercent: type === "Fixed" ? 100 : 5,
+												agreementFeePercent:
+													type === "Fixed" ? 100 : prev.agreementFeePercent,
 											}))
 										}
 									>
@@ -184,9 +202,13 @@ const ServicePayment: React.FC<Props> = ({ service, setService }) => {
 						</span>
 					</div>
 				</div>
+				<div className="text-sm">
+					Customers will pay this total price upfront to confirm their booking.
+					The full service cost will be paid separately in person.
+				</div>
 			</div>
 		</div>
 	);
 };
 
-export default ServicePayment;
+export default EditPayment;

@@ -3,6 +3,7 @@ import UserService from "@/services/UserService";
 import CitizenService from "@/services/CitizenService";
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import BarangayService from "@/services/BarangayService";
 
 export async function POST(req) {
 	console.log("logging in");
@@ -46,17 +47,27 @@ export async function POST(req) {
 		});
 	}
 }
-
 export async function GET() {
 	try {
 		const supabase = await createClient();
 		const authService = new AuthenticationService(supabase);
 		const userService = new UserService(supabase);
+		const barangayService = new BarangayService(supabase);
+		const citizenService = new CitizenService(supabase);
 
 		const user_id = await authService.loggedInUserId();
 		const role = await userService.getUserRole(user_id);
+		let id = null;
 
-		return NextResponse.json({ role, user_id });
+		if (role === "barangay") {
+			const barangayData = await barangayService.getIDByUserID(user_id);
+			id = barangayData?.id ?? null;
+		} else if (role === "citizen") {
+			const citizenData = await citizenService.getCitizenIdUsingAuth(user_id);
+			id = citizenData?.id ?? null;
+		}
+
+		return NextResponse.json({ id, role, user_id });
 	} catch (err) {
 		console.error("Failed to fetch logged-in user ID:", err);
 		return NextResponse.json(

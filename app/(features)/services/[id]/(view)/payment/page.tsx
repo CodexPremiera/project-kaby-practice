@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 
 import React, { useEffect, useState } from "react";
 import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
-import { getCurrentUser, CurrentUser } from "@/lib/clients/useAuthClient";
+import { getCurrentUser, CurrentUser } from "@/lib/clients/UseAuthClient";
 import { useRouter, useParams } from "next/navigation";
 import { RiArrowLeftLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
 import { getPublicUrl } from "@/utils/supabase/storage";
@@ -30,6 +30,15 @@ const Payment: React.FC = () => {
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		console.log("clicked ayyy");
+		const res = await fetch("/api/tracker", {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				user_id: currentUser,
+				is_paid: true,
+				status: "Ongoing",
+			}),
+		});
 		setShowModal(true);
 
 	};

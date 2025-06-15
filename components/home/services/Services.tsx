@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import ServicesList from "@/components/services/ServicesList";
+import ServicesList from "@/components/services/view/ServicesList";
 import ButtonTab from "@/components/ui/tabs/ButtonTab";
 import { useRouter, useSearchParams } from "next/navigation";
 import ServiceSearchBar from "@/components/services/ServiceSearchBar";

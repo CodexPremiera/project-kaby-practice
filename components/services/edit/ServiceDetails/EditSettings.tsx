@@ -11,7 +11,7 @@ interface Props {
 	setService: React.Dispatch<React.SetStateAction<Service | null>>;
 }
 
-const ServiceSettings: React.FC<Props> = ({ service, setService }) => {
+const EditSettings: React.FC<Props> = ({ service, setService }) => {
 	const [showStatus, setShowStatus] = useState(true);
 	const [showDelete, setShowDelete] = useState(false);
 
@@ -134,4 +134,4 @@ const ServiceSettings: React.FC<Props> = ({ service, setService }) => {
 	);
 };
 
-export default ServiceSettings;
+export default EditSettings;

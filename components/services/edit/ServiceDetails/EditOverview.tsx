@@ -17,7 +17,7 @@ interface Props {
 	setService: React.Dispatch<React.SetStateAction<Service | null>>;
 }
 
-const ServiceOverview: React.FC<Props> = ({ service, setService }) => {
+const EditOverview: React.FC<Props> = ({ service, setService }) => {
 	const serviceTypes = ["Barangay", "Personal", "Event"];
 	const serviceCategories = [
 		"Environmental",
@@ -219,31 +219,51 @@ const ServiceOverview: React.FC<Props> = ({ service, setService }) => {
 				)}
 			</div>
 
-			<div className="mt-2 flex gap-4 items-center">
-				<label
-					htmlFor="image-upload"
-					className="cursor-pointer px-4 py-2 text-sm bg-gray-200 rounded hover:bg-gray-300"
-				>
-					{service.image ? "Change Photo" : "Upload Photo"}
-				</label>
-				<input
-					id="image-upload"
-					type="file"
-					accept="image/*"
-					className="hidden"
-					onChange={handleImageChange}
-				/>
-
-				{service.image && (
-					<button
-						onClick={() =>
-							setService((prev) => (prev ? { ...prev, image: "" } : prev))
-						}
-						className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
+			<div className="flex flex-col md:flex-row gap-4 py-2">
+				{/* Image Upload / Remove Buttons */}
+				<div className="flex flex-row gap-4 flex-1 w-full">
+					<label
+						htmlFor="image-upload"
+						className="cursor-pointer px-4 py-2 text-sm bg-gray-200 rounded hover:bg-gray-300 text-center flex-1"
 					>
-						Remove Photo
-					</button>
-				)}
+						{service.image ? "Change Photo" : "Upload Photo"}
+					</label>
+					<input
+						id="image-upload"
+						type="file"
+						accept="image/*"
+						className="hidden"
+						onChange={handleImageChange}
+					/>
+
+					{service.image && (
+						<button
+							onClick={() =>
+								setService((prev) => (prev ? { ...prev, image: "" } : prev))
+							}
+							className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm flex-1"
+						>
+							Remove
+						</button>
+					)}
+				</div>
+
+				{/* Allow Attach Requirements */}
+				<div className="flex items-center gap-2 flex-shrink-0">
+					<input
+						type="checkbox"
+						name="display_badge"
+						checked={Boolean(service.allow_attach_file)}
+						onChange={handleChange}
+						className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+					/>
+					<label
+						htmlFor="display_badge"
+						className="text-sm cursor-pointer hover:text-gray-800 transition-colors"
+					>
+						Allow Attach Requirements
+					</label>
+				</div>
 			</div>
 
 			<div className="mt-4">
@@ -260,4 +280,4 @@ const ServiceOverview: React.FC<Props> = ({ service, setService }) => {
 	);
 };
 
-export default ServiceOverview;
+export default EditOverview;

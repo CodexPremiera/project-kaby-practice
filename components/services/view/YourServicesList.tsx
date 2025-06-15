@@ -1,22 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import ServiceCard from "../view/ServiceCard";
-
-type UserProps = {
-	userId: string;
-	userRole: string;
-};
+import React, { useEffect, useMemo, useState } from "react";
+import ServiceCard from "@/components/services/view/ServiceCard";
+import { useSearchParams } from "next/navigation";
+import { getCurrentUser } from "@/lib/clients/UseAuthClient";
+import LoadingModal from "@/components/modal/LoadingModal";
 
 type ServiceType = {
 	id: string;
-	owner: string;
-	title: string;
-	type: string;
-	image: string;
-	displayBadge: boolean;
 	status: string;
+	owner: string;
+	type: string;
+	title: string;
+	image: string;
+	description: string;
+	displayBadge?: boolean;
 };
 
 type BarangayProfile = {
@@ -30,15 +28,22 @@ type CitizenProfile = {
 	last_name: string;
 };
 
-type ServiceWithProfile = ServiceType & {
+type ServicesWithProfile = ServiceType & {
 	profile: BarangayProfile | CitizenProfile | null;
 	ownerName: string;
 };
 
-const ActiveService: React.FC<UserProps> = ({ userId, userRole }) => {
-	const [services, setServices] = useState<ServiceWithProfile[]>([]);
+interface YourServicesListProps {
+	tab: "active" | "closed";
+}
+
+const YourServicesList: React.FC<YourServicesListProps> = ({ tab }) => {
+	const searchParams = useSearchParams();
+	const query = searchParams.get("q")?.toLowerCase() || "";
+
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [services, setServices] = useState<ServicesWithProfile[]>([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -46,53 +51,56 @@ const ActiveService: React.FC<UserProps> = ({ userId, userRole }) => {
 				setLoading(true);
 				setError(null);
 
-				// Fetch all services
+				const user = await getCurrentUser();
+				if (!user) throw new Error("User not found");
+
 				const resServices = await fetch("/api/services");
 				if (!resServices.ok) throw new Error("Failed to fetch services");
 				const serviceData: ServiceType[] = await resServices.json();
 
-				// Fetch profiles list based on userRole
 				let profiles: BarangayProfile[] | CitizenProfile[] = [];
 
-				if (userRole === "barangay") {
+				if (user.role === "barangay") {
 					const resBarangayProfiles = await fetch("/api/barangay");
 					if (!resBarangayProfiles.ok)
 						throw new Error("Failed to fetch barangay profiles");
-					const barangayProfilesJson = await resBarangayProfiles.json();
-					profiles = barangayProfilesJson.data || [];
-				} else if (userRole === "citizen") {
+					profiles = (await resBarangayProfiles.json()).data || [];
+				} else if (user.role === "citizen") {
 					const resCitizenProfiles = await fetch("/api/citizen");
 					if (!resCitizenProfiles.ok)
 						throw new Error("Failed to fetch citizen profiles");
-					const citizenProfilesJson = await resCitizenProfiles.json();
-					profiles = citizenProfilesJson.data || [];
+					profiles = (await resCitizenProfiles.json()).data || [];
 				}
 
-				// Find the profile for current userId
 				const matchedProfile =
-					profiles.find((p) => p.user_id === userId) || null;
+					profiles.find((p) => p.user_id === user.user_id) || null;
 
-				// Filter services owned by user and active
-				const myActiveServices = serviceData
+				const filteredServices = serviceData
 					.filter(
-						(service) => service.owner === userId && service.status === "Active"
+						(service) =>
+							service.owner === user.user_id &&
+							service.status.toLowerCase() === tab &&
+							service.title.toLowerCase().includes(query)
 					)
 					.map((service) => {
 						let ownerName = "Unknown User";
 
-						if (userRole === "barangay" && matchedProfile) {
+						if (user.role === "barangay" && matchedProfile) {
 							ownerName = (matchedProfile as BarangayProfile).barangayName;
-						} else if (userRole === "citizen" && matchedProfile) {
+						} else if (user.role === "citizen" && matchedProfile) {
 							const citizenProfile = matchedProfile as CitizenProfile;
 							ownerName = `${citizenProfile.first_name} ${citizenProfile.last_name}`;
 						}
 
-						return { ...service, ownerName, profile: matchedProfile };
+						return {
+							...service,
+							ownerName,
+							profile: matchedProfile,
+						};
 					});
 
-				setServices(myActiveServices);
+				setServices(filteredServices);
 			} catch (err: any) {
-				console.error(err);
 				setError(err.message || "Unknown error");
 				setServices([]);
 			} finally {
@@ -101,28 +109,18 @@ const ActiveService: React.FC<UserProps> = ({ userId, userRole }) => {
 		};
 
 		fetchData();
-	}, [userId, userRole]);
+	}, [tab, query]);
 
-	if (loading) {
+	if (loading)
 		return (
-			<div className="text-center py-10 text-gray-500">Loading services...</div>
-		);
-	}
-
-	if (error) {
-		return <div className="text-center py-10 text-red-500">Error: {error}</div>;
-	}
-
-	if (services.length === 0) {
-		return (
-			<div className="text-center py-10 text-gray-500">
-				No active services found.
+			<div>
+				<LoadingModal title="Loading Services" content="Please wait..." />
 			</div>
 		);
-	}
+	if (error) return <div>Error loading services: {error}</div>;
 
 	return (
-		<div className="w-full grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto justify-items-center py-4">
+		<>
 			{services.map((service) => (
 				<ServiceCard
 					key={service.id}
@@ -138,8 +136,8 @@ const ActiveService: React.FC<UserProps> = ({ userId, userRole }) => {
 					routePrefix="/services/:id/request"
 				/>
 			))}
-		</div>
+		</>
 	);
 };
 
-export default ActiveService;
+export default YourServicesList;

@@ -67,7 +67,6 @@ export default class RequestRepo extends BaseRepo {
 	async getRequestsByServiceId(service_id, status) {
 		let query = this.supabase
 		.rpc("get_requests_with_service_id", { _service_id: service_id });
-
 		if (status) {
 			query = query.eq("status", status);
 		}

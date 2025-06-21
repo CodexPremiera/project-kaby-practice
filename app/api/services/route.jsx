@@ -45,14 +45,14 @@ export async function GET() {
 	const serviceService = new ServiceService(supabase);
 	const citizenService = new CitizenService(supabase);
 
-	const {
-		data: { user },
-		error: userError,
-	} = await supabase.auth.getUser();
+	// const {
+	// 	data: { user },
+	// 	error: userError,
+	// } = await supabase.auth.getUser();
 
-	if (userError || !user) {
-		return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-	}
+	// if (userError || !user) {
+	// 	return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+	// }
 
 	try {
 		const services = await serviceService.getAllServices();

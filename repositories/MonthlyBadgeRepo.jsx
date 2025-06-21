@@ -36,5 +36,17 @@ class MonthlyBadgeRepo extends BaseRepo {
 		if (error) throw new Error(error.message);
 		return data;
 	}
+	async getBadgesByBarangayThisMonth(barangayId) {
+		const { data, error } = await this.supabase
+			.from("view_monthly_citizen_badges")
+			.select("*")
+			.eq("barangay_id", barangayId);
+
+		if (error) {
+			throw new Error(error.message);
+		}
+
+		return data;
+	}
 }
 export default MonthlyBadgeRepo;

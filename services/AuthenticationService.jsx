@@ -78,6 +78,10 @@ class AuthenticationService{
         const {updated} = await this.repo.setAllUserPassword();
         return updated;
     }
+    async getIdByEmail(email){
+        const id = await this.repo.getIdUsingEmail(email);
+        return id;
+    }
 
 }
 export default AuthenticationService;

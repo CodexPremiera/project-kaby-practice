@@ -44,6 +44,7 @@ class RequestService {
 	}
 
 	async updateRequest(id, selectedFields = {}) {
+		console.log("this is selectedFields", selectedFields, "and this is id", id);
 		const data = await this.repo.update(id, selectedFields);
 		return data;
 	}

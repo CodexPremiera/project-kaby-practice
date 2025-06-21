@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
 import { format } from "date-fns";
-import { CurrentUser, getCurrentUser } from "@/lib/clients/UseAuthClient";
+import { CurrentUser, getCurrentUser } from "@/lib/clients/useAuthClient";
 import { getRequestsByCustomer } from "@/lib/clients/RequestServiceClient";
 
 const ViewService: React.FC = () => {

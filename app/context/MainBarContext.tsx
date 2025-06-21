@@ -9,6 +9,7 @@ export type MainBarContext = {
     barangay_name : string | null;
     barangay_address: string |null;
     badge_stock: number |null;
+    badge_given : number |null;
     officials_count: number |null;
     residents_count: number |null;
     profile_pic: string |null;

@@ -13,5 +13,8 @@ class MonthlyBadgeService {
 	async createBadgeLog(badgeData) {
 		return await this.repo.createBadgeLog(badgeData);
 	}
+	async getBadgesByBarangayThisMonth(barangayId) {
+		return await this.repo.getBadgesByBarangayThisMonth(barangayId);
+	}
 }
 export default MonthlyBadgeService;

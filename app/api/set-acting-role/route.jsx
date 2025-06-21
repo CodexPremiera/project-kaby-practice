@@ -1,20 +1,21 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
-	const { actingAs } = await req.json();
-    console.log("this is acting as", actingAs);
+  const { acting_as_barangay, access_role } = await req.json();
 
-	if (!["citizen", "barangay"].includes(actingAs)) {
-		return NextResponse.json({ error: "Invalid role" }, { status: 400 });
-	}
+  const response = NextResponse.json({ success: true });
 
-	cookies().set("actingAs", actingAs, {
-		path: "/",
-		httpOnly: false,
-		sameSite: "lax",
-		maxAge: 60 * 60 * 24,
-	});
+  response.cookies.set("acting_as_barangay", acting_as_barangay, {
+    httpOnly: false,
+    path: "/",
+    maxAge: 60 * 60,
+  });
 
-	return NextResponse.json({ message: "Role set" });
+  response.cookies.set("access_role", access_role, {
+    httpOnly: false,
+    path: "/",
+    maxAge: 60 * 60,
+  });
+
+  return response;
 }

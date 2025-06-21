@@ -1,9 +1,11 @@
+"use client";
 import React from 'react';
-import AccountRouter from "./AccountRouter";
+import SettingsRouter from "./AccountRouter";
 
-async function Page() {
+ function Page() {
+	// console.log("Account page loaded");
 	return(
-		<AccountRouter />
+		<SettingsRouter />
 	)
 }
 

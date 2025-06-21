@@ -15,6 +15,7 @@ type ServiceType = {
 	image: string;
 	description: string;
 	displayBadge?: boolean;
+	end_date: Date | null;
 };
 
 type BarangayProfile = {
@@ -99,6 +100,9 @@ const YourServicesList: React.FC<YourServicesListProps> = ({ tab }) => {
 						};
 					});
 
+				console.log("filteredServices:");
+				console.log(filteredServices);
+
 				setServices(filteredServices);
 			} catch (err: any) {
 				setError(err.message || "Unknown error");
@@ -132,6 +136,7 @@ const YourServicesList: React.FC<YourServicesListProps> = ({ tab }) => {
 						image: service.image,
 						display_badge: service.displayBadge,
 						status: service.status,
+						end_date: service.end_date
 					}}
 					routePrefix="/services/:id/request"
 				/>

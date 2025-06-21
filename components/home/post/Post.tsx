@@ -5,6 +5,7 @@ import MonthlyBadges from "./MonthlyBadges";
 import PostComposerForm from "./PostComposerForm";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import { timeAgo } from "@/utils/timeAgo";
+import LoadingModal from "@/components/modal/LoadingModal";
 
 type UserProps = {
 	userRole: string;
@@ -121,7 +122,9 @@ const Post: React.FC<UserProps> = ({ userRole }) => {
 					{userRole === "barangay" && <PostComposerForm />}
 					<div className="flex flex-col gap-4">
 						{loading ? (
-							<p>Loading posts...</p>
+							<div>
+								<LoadingModal title="Loading Posts" content="Please wait..." />
+							</div>
 						) : postsToDisplay.length === 0 ? (
 							<p>No posts to display.</p>
 						) : (
@@ -173,7 +176,9 @@ const Post: React.FC<UserProps> = ({ userRole }) => {
 				{userRole === "barangay" && <PostComposerForm />}
 				<div className="flex flex-col gap-4">
 					{loading ? (
-						<p>Loading posts...</p>
+						<div>
+							<LoadingModal title="Loading Posts" content="Please wait..." />
+						</div>
 					) : postsToDisplay.length === 0 ? (
 						<p>No posts to display.</p>
 					) : (

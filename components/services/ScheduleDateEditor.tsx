@@ -88,8 +88,8 @@ const ScheduleDateEditor: React.FC<Props> = ({
 							<input
 								type="date"
 								value={tempStartDate}
-								onChange={(e) => setTempStartDate(e.target.value)}
-								className="border border-gray-300 rounded px-2 py-1 text-sm"
+								disabled
+								className="border border-gray-300 rounded px-2 py-1 text-sm text-gray-500"
 								max={tempEndDate}
 							/>
 						</div>

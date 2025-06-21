@@ -13,12 +13,14 @@ import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import { MessageCircleMore as MessageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import { ServiceRequest } from "@/lib/clients/RequestServiceClient";
 import { Service } from "@/lib/clients/ViewServiceClient";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import { Button } from "@/components/ui/button";
 import SuccessModal from "@/components/modal/SuccessModal";
 import { formatDateToInputValue } from "@/lib/utils";
+import ConfirmationModal from "@/components/modal/ConfirmationModal";
+import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 
 type RequestTableViewProps = {
 	requests: ServiceRequest[];
@@ -39,7 +41,11 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 	const [editableData, setEditableData] = useState<
 		{ id: string; schedule_date: string; status: string }[]
 	>([]);
+
 	const [modalType, setModalType] = useState<"success" | null>(null);
+	const [confirmingRequestId, setConfirmingRequestId] = useState<string | null>(
+		null
+	);
 
 	useEffect(() => {
 		setEditableData(
@@ -88,14 +94,12 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 	const allSelected =
 		selectedItems.length === requests.length && requests.length > 0;
 
-	const [service, setService] = useState<Service | null>(null);
-
 	return (
 		<>
 			<Table className="table-fixed w-full">
 				<TableHeader>
 					<TableRow className="border-b border-light-color text-sm">
-						<TableHead className="w-[30px] pt-1 pb-5">
+						<TableHead className="w-[30px] pt-1 ">
 							<input
 								type="checkbox"
 								className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
@@ -157,7 +161,9 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 											height={36}
 											className="object-cover w-10 h-10 rounded-full"
 										/>
-										<div>{request.customer_fname} {request.customer_lname}</div>
+										<div>
+											{request.customer_fname} {request.customer_lname}
+										</div>
 									</button>
 								</TableCell>
 
@@ -197,35 +203,49 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 									<ButtonClear onClick={() => openRequestSheet(request)}>
 										<MessageIcon strokeWidth={2} className="w-6 p-0" />
 									</ButtonClear>
-									<Button
-										onClick={async () => {
-											if (!rowData) return;
-											const result = await updateRequest(
-												rowData.id,
-												rowData.schedule_date,
-												rowData.status,
-												request.service_id
-											);
-											if (result) {
-												setModalType("success");
-												router.refresh();
-											}
-										}}
+									<button
+										onClick={() => setConfirmingRequestId(request.id)}
 										disabled={isDisabled}
-										className={
-											isDisabled
-												? "opacity-50 cursor-not-allowed"
-												: "bg-black text-white"
-										}
+										className="bg-black text-white px-4 py-2 rounded disabled:bg-gray disabled:cursor-not-allowed"
 									>
 										Submit
-									</Button>
+									</button>
 								</TableCell>
 							</TableRow>
 						);
 					})}
 				</TableBody>
 			</Table>
+
+			{/* Submit Confirmation Modal */}
+			{confirmingRequestId && (
+				<ConfirmationModal
+					title="Confirm Update"
+					content="Are you sure you want to update this request?"
+					onConfirm={async () => {
+						const rowData = editableData.find(
+							(item) => item.id === confirmingRequestId
+						);
+						const requestItem = requests.find(
+							(r) => r.id === confirmingRequestId
+						);
+						if (!rowData || !requestItem) return;
+
+						const result = await updateRequest(
+							confirmingRequestId,
+							rowData.schedule_date,
+							rowData.status,
+							requestItem.service_id
+						);
+						if (result) {
+							setModalType("success");
+							window.location.reload();
+						}
+						setConfirmingRequestId(null);
+					}}
+					onClose={() => setConfirmingRequestId(null)}
+				/>
+			)}
 
 			{modalType === "success" && (
 				<SuccessModal

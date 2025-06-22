@@ -32,10 +32,10 @@ export async function POST(req) {
 			return NextResponse.json({ redirectTo: "/login/verify" });
 
 		}
-		// else if(role === "citizen"){
-		// 	return NextResponse.json({ redirectTo: "/home" });
+		else if(role === "citizen"){
+			return NextResponse.json({ redirectTo: "/home" });
 
-		// }
+		}
 		return NextResponse.json({ redirectTo: "/home" });
 
 		

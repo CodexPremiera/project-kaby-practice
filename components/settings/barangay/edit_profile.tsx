@@ -10,6 +10,8 @@ import BarangayService from "@/services/BarangayService";
 import { createClient } from "@/utils/supabase/client";
 import { useBarangayContext } from "@/app/context/BarangayContext";
 
+import SuccessModal from "@/components/modal/SuccessModal";
+
 interface BarangayProfile {
   profile_pic: string;
   barangayName: string;
@@ -24,9 +26,14 @@ const EditProfile = () => {
   const [originalData, setOriginalData] = useState<BarangayProfile | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDisabled, setIsDisabled] = useState(true);
+  const [modalType, setModalType] = useState<null | "success" | "error">(null);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const supabase = createClient();
-
+  const handleCloseModal = () => {
+    setModalType(null);
+    // onClose();
+  };
   useEffect(() => {
     const fetchProfile = async () => {
       const barangayService = new BarangayService(supabase);
@@ -79,7 +86,9 @@ const EditProfile = () => {
     };
 
     await barangayService.updateBarangayProfile(barangayId, updatedData);
-    alert("Profile updated successfully");
+    setSuccessMessage("Profile updated successfully");
+      
+    setModalType("success");
 
     const updatedProfile = await barangayService.getBarangayFieldsById(barangayId);
     setFormData(updatedProfile);
@@ -89,7 +98,15 @@ const EditProfile = () => {
   if (!formData) return <p>Loading...</p>;
 
   return (
+    
     <div className="flex flex-col gap-8 w-full mt-6">
+      {modalType === "success" && (
+        <SuccessModal
+          title="Success"
+          content={successMessage}
+          onClose={handleCloseModal}
+        />
+      )}
       <div className="flex justify-center items-center mb-6">
         <div className="relative w-32 h-32">
           <img

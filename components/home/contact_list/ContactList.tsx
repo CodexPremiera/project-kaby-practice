@@ -48,7 +48,7 @@ const ContactList = () => {
 
 
     if (loading) return <div>Loading Contacts...</div>;
-    if (!contacts || contacts.length === 0) return <div>No contacts found.</div>;
+    // if (!contacts || contacts.length === 0) return <div>No contacts found.</div>;
     
   return (
     <div id="contacts" className="flex flex-col p-2 gap-2">

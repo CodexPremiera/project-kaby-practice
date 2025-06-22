@@ -50,7 +50,7 @@ const ManageRequest: React.FC<RequestServiceProps> = ({
 
 	// Filter requests by search query on last name
 	const filteredRequests = requests.filter((req) =>
-		req.customer_lname.toLowerCase().includes(query)
+		req.customer_lname?.toLowerCase().includes(query)
 	);
 
 	const toggleSelection = (id: string) => {

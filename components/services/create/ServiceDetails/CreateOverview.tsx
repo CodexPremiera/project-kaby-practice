@@ -8,7 +8,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CurrentUser, getCurrentUser } from "@/lib/clients/UseAuthClient";
+import { CurrentUser, getCurrentUser } from "@/lib/clients/useAuthClient";
 import Image from "next/image";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import supabase from "@/lib/supabaseClient";

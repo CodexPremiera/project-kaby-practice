@@ -67,7 +67,6 @@ export default function PetitionForm() {
 				setModalType("error");
 			}
 		} catch (err) {
-			alert(err);
 			setModalType("error");
 		}
 	};

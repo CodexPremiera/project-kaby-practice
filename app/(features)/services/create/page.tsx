@@ -12,7 +12,7 @@ import ConfirmationModal from "@/components/modal/ConfirmationModal";
 import CreateOverview from "@/components/services/create/ServiceDetails/CreateOverview";
 import CreateRequirements from "@/components/services/create/ServiceDetails/CreateRequirements";
 import CreatePayment from "@/components/services/create/ServiceDetails/CreatePayment";
-import { CurrentUser, getCurrentUser } from "@/lib/clients/UseAuthClient";
+import { CurrentUser, getCurrentUser } from "@/lib/clients/useAuthClient";
 
 export type ServiceFormData = {
 	title: string;

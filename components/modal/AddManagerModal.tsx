@@ -130,6 +130,8 @@
 
 import React, { useState } from "react";
 
+import SuccessModal from "@/components/modal/SuccessModal";
+import ErrorModal from "@/components/modal/ErrorModal";
 interface AddManagerModalProps {
   onClose: () => void;
   non_managers: Citizen[] | null;
@@ -153,6 +155,8 @@ const AddManagerModal = ({ onClose, non_managers, managers, refresh }: AddManage
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRoles, setSelectedRoles] = useState<Record<string, string>>({});
   const [view, setView] = useState<"non_managers" | "managers">("non_managers");
+  const [modalType, setModalType] = useState<null | "success" | "error">(null);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const list = view === "non_managers" ? non_managers : managers;
 
@@ -174,18 +178,25 @@ const AddManagerModal = ({ onClose, non_managers, managers, refresh }: AddManage
       if(!res.ok){
         throw new Error("Failed to delete");
       }
-      alert("Successfully unassigned role citizen");
-      refresh();
+      setSuccessMessage("Successfully unassigned the citizen from their position.");
+      setModalType("success");
+      
     }catch(error){
       alert("failed to delete");
     }
   }
+    const handleCloseModal = () => {
+    setModalType(null);
+    refresh();
+    // onClose();
+  };
   console.log(non_managers, "these are non managers");
   const handleSubmit = async (citizen: Citizen) => {
 	console.log(citizen, "this is the citizen chosen");
     const selectedRole = selectedRoles[citizen.citizen_id];
     if (!selectedRole) {
-      alert("Please select a role.");
+      setSuccessMessage(`Please select a role for ${citizen.first_name}.`);
+      setModalType("error"); 
       return;
     }
 
@@ -207,7 +218,10 @@ const AddManagerModal = ({ onClose, non_managers, managers, refresh }: AddManage
 
       const data = await res.json();
       console.log("Success:", data);
-      alert(`${view === "non_managers" ? "Assigned" : "Updated"} successfully`);
+      // alert(`${view === "non_managers" ? "Assigned" : "Updated"} successfully`);
+      setSuccessMessage(`${view === "non_managers" ? "Available Workers" : "Updated"} ${citizen.first_name} as ${selectedRole}`);
+      
+      setModalType("success");
       refresh();
     } catch (error) {
       console.error("Error:", error);
@@ -221,6 +235,20 @@ const AddManagerModal = ({ onClose, non_managers, managers, refresh }: AddManage
         <h2 className="text-xl font-semibold text-center border-b border-gray/20 pb-1 h4">
           {view === "non_managers" ? "Available Workers" : "Current Managers"}
         </h2>
+      {modalType === "success" && (
+        <SuccessModal
+          title="Success"
+          content={successMessage}
+          onClose={handleCloseModal}
+        />
+      )}
+      {modalType === "error" && (
+        <ErrorModal
+          title="Error"
+          content={successMessage}
+          onClose={handleCloseModal}
+        />
+      )}
 
         <div className="flex justify-between mb-2">
           <input

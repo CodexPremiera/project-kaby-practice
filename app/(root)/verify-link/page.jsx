@@ -37,7 +37,7 @@ export default function VerifyLinkPage() {
         router.push("/home");
 
       } else {
-        alert(result.error || "Invalid or expired token.");
+        //alert(result.error || "Invalid or expired token.");
       }
     };
 

@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import ServiceCard from "@/components/services/view/ServiceCard";
 import { useSearchParams } from "next/navigation";
-import { getCurrentUser } from "@/lib/clients/useAuthClient";
+import { getCurrentUser } from "@/lib/clients/UseAuthClient";
 import LoadingModal from "@/components/modal/LoadingModal";
 
 type ServiceType = {

@@ -56,16 +56,20 @@ class AuthenticationRepo {
 
 	async createUserAccountInvite(userDetails) {
 		const { email } = userDetails;
-		const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
-			email,
-			email_confirm: false,
-			user_metadata :{has_password :false}
-		});
+		console.log("this is email", email);
+		console.log("this is userDetails", userDetails);
 
-		if (createError) {
-			console.log("User creation error:", createError);
-			return { error: createError };
-		}
+
+		// const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
+		// 	email,
+		// 	email_confirm: false,
+		// 	user_metadata :{has_password :false}
+		// });
+
+		// if (createError) {
+		// 	console.log("User creation error:", createError);
+		// 	return { error: createError };
+		// }
 		const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email);
 		if (inviteError) {
 			console.log("Invite error:", inviteError);

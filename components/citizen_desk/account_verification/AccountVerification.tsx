@@ -9,6 +9,8 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import {Button} from "@/components/ui/button";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {format} from "date-fns";
+import SuccessModal from "@/components/modal/SuccessModal";
+import ErrorModal from "@/components/modal/ErrorModal";
 
 interface Profile {
 	id: string;
@@ -24,9 +26,12 @@ interface Profile {
 const AccountVerification = ()=> {
 
 	// ==============
+	
 	const {barangayName,barangayAddress} = useBarangayContext();
 	console.log("this is brf=gy name:" , barangayName);
 	const [profiles, setProfiles] = useState<Profile[]>([]);
+	const [modalType, setModalType] = useState<null | "success" | "error">(null);
+	const [successMessage, setSuccessMessage] = useState("");
 	useEffect(() => {
 		if (!barangayName) return;
 		const fetchData = async () => {
@@ -48,6 +53,7 @@ const AccountVerification = ()=> {
 	const handleSubmit = async (index: number) => {
 		const profileId = profiles[index].id;
 		const updatedStatus = statuses[index];
+		
 
 		const email = profiles[index].email;
 		console.log("Emailzzz: ", email)
@@ -60,15 +66,21 @@ const AccountVerification = ()=> {
 				body: JSON.stringify({ id: profileId, status: updatedStatus }),
 			});
 			if(!res.ok){
+				alert(res)
 				throw new Error("Failed to update appointment status")
 			}
-
+			setSuccessMessage("Successfully verified a citizen.");
+      		setModalType("success");
 
 
 		} catch (err) {
 			console.error("error ", err);
 		}
 	};
+	const handleCloseModal = () => {
+    setModalType(null);
+    // onClose();
+  };
 	const [statuses, setStatuses] = useState<string[]>(
 		profiles.map(() => "Pending")
 	);
@@ -98,6 +110,13 @@ const AccountVerification = ()=> {
 
 	return (
 		<div className="flex flex-col gap-6 p-6 pb-20 rounded-xl">
+			{modalType === "success" && (
+        <SuccessModal
+          title="Success"
+          content={successMessage}
+          onClose={handleCloseModal}
+        />
+      )}
 			{/* Header */}
 			<div className="flex flex-col mb-4 gap-2 mt-2">
 				<div className="text-lg font-semibold">Account Verification</div>
@@ -171,7 +190,8 @@ const AccountVerification = ()=> {
 								/>
 							</TableHead>
 							<TableHead className="w-[180px]">Administrator</TableHead>
-							<TableHead className="w-[230px]">Address</TableHead>
+							<TableHead className="w-[230px]">Email</TableHead>
+							{/* <TableHead className="w-[230px]">Barangay</TableHead> */}
 							<TableHead className="w-[150px]">Requested</TableHead>
 							<TableHead className="w-[130px]">Status</TableHead>
 							<TableHead className="w-[110px]">Action</TableHead>
@@ -194,7 +214,8 @@ const AccountVerification = ()=> {
 								<TableCell className="w-[180px] cursor-pointer">
 									{profile.first_name} {profile.last_name}
 								</TableCell>
-								<TableCell className="w-[230px]">{profile.barangay}</TableCell>
+								<TableCell className="w-[230px]">{profile.email}</TableCell>
+								{/* <TableCell className="w-[230px]">{profile.barangay}</TableCell> */}
 								<TableCell className="w-[150px]">
 									{/* {format(dates[profile.index], "MMMM dd, yyyy")} */}
 									{format(new Date(profile.created_at), "MMMM dd, yyyy")}

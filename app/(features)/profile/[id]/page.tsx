@@ -1,15 +1,6 @@
-import React from "react";
 import CitizenProfileTab from "@/components/profile/CitizenProfileTab";
 
-interface ProfilePageProps {
-	params: { id: string };
+export default function Page() {
+	return <CitizenProfileTab />;
 }
-const Profile = ({ params }: ProfilePageProps) => {
-	return (
-		<div>
-			<CitizenProfileTab params={params} />
-		</div>
-	);
-};
 
-export default Profile;

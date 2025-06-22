@@ -14,7 +14,7 @@ type ServiceType = {
 	title: string;
 	image: string;
 	description: string;
-	displayBadge?: boolean;
+	display_badge: boolean;
 	end_date: Date | null;
 };
 
@@ -100,9 +100,6 @@ const YourServicesList: React.FC<YourServicesListProps> = ({ tab }) => {
 						};
 					});
 
-				console.log("filteredServices:");
-				console.log(filteredServices);
-
 				setServices(filteredServices);
 			} catch (err: any) {
 				setError(err.message || "Unknown error");
@@ -134,7 +131,7 @@ const YourServicesList: React.FC<YourServicesListProps> = ({ tab }) => {
 						owner: service.ownerName,
 						type: service.type,
 						image: service.image,
-						display_badge: service.displayBadge,
+						display_badge: service.display_badge,
 						status: service.status,
 						end_date: service.end_date
 					}}

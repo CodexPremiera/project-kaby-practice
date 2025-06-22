@@ -14,7 +14,7 @@ interface Service {
   owner: string;
   type: string;
   image: string;
-  display_badge?: boolean;
+  display_badge: boolean;
   status?: string;
   end_date: Date | null;
 }
@@ -78,7 +78,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           service.status === "Closed" ? "opacity-50" : ""
         } hover:shadow-md`}
       >
-        <div className="relative w-full h-[140px] sm:h-[180px] md:h-[160px] lg:h-[144px] xl:h-[180px] overflow-hidden rounded-t-[10px]">
+        <div
+          className="relative w-full h-[140px] sm:h-[180px] md:h-[160px] lg:h-[144px] xl:h-[180px] overflow-hidden rounded-t-[10px]">
           <Image
             src={
               service.image
@@ -90,8 +91,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
             className="object-cover"
           />
           {service.display_badge && (
-            <span className="absolute top-2 right-2 bg-accent rounded-full p-1.5">
-              <BadgeIcon size={16} color="white" fill="white" />
+            <span className="absolute top-2 right-2 bg-accent rounded-full p-1.5 z-50">
+              <BadgeIcon size={16} color="white" fill="white"/>
             </span>
           )}
         </div>

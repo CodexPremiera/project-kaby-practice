@@ -26,7 +26,7 @@ const Details: React.FC<DetailsProps> = () => {
 	};
 
 	return (
-		<div className="flex flex-col h-[280px] border border-gray-300 rounded-lg overflow-hidden bg-white">
+		<div className="flex flex-col h-[280px] overflow-hidden bg-white py-2 px-1">
 			{/* Header */}
 			<div className="p-3 border-b border-gray-200 text-sm font-medium text-gray-700">
 				Requirements

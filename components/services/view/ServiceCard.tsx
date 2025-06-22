@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Crown as BadgeIcon } from "lucide-react";
+import { Crown as BadgeIcon, AlarmClockCheck as AlarmIcon } from "lucide-react";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import { createClient } from "@/utils/supabase/client";
 import ErrorModal from "@/components/modal/ErrorModal";
@@ -14,8 +14,9 @@ interface Service {
   owner: string;
   type: string;
   image: string;
-  display_badge?: boolean;
+  display_badge: boolean;
   status?: string;
+  end_date: Date | null;
 }
 
 interface ServiceCardProps {
@@ -77,7 +78,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           service.status === "Closed" ? "opacity-50" : ""
         } hover:shadow-md`}
       >
-        <div className="relative w-full h-[140px] sm:h-[180px] md:h-[160px] lg:h-[144px] xl:h-[180px] overflow-hidden rounded-t-[10px]">
+        <div
+          className="relative w-full h-[140px] sm:h-[180px] md:h-[160px] lg:h-[144px] xl:h-[180px] overflow-hidden rounded-t-[10px]">
           <Image
             src={
               service.image
@@ -89,17 +91,18 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
             className="object-cover"
           />
           {service.display_badge && (
-            <span className="absolute top-2 right-2 bg-accent rounded-full p-1.5">
-              <BadgeIcon size={16} color="white" fill="white" />
+            <span className="absolute top-2 right-2 bg-accent rounded-full p-1.5 z-50">
+              <BadgeIcon size={16} color="white" fill="white"/>
             </span>
           )}
         </div>
         <div className="px-6 pt-3 pb-5">
           <p className="font-semibold">{service.title}</p>
-          <p className="flex gap-1 text-secondary">
+          <p className="flex gap-1 text-secondary items-center">
             <span>{service.owner}</span>
             <span>•</span>
             <span>{service.type}</span>
+            {service.end_date !== null && <span><AlarmIcon size={16} /></span>}
           </p>
         </div>
       </div>

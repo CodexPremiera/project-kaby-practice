@@ -14,7 +14,8 @@ type ServiceType = {
 	title: string;
 	image: string;
 	description: string;
-	displayBadge?: boolean;
+	display_badge: boolean;
+	end_date: Date | null;
 };
 
 type BarangayProfile = {
@@ -130,8 +131,9 @@ const YourServicesList: React.FC<YourServicesListProps> = ({ tab }) => {
 						owner: service.ownerName,
 						type: service.type,
 						image: service.image,
-						display_badge: service.displayBadge,
+						display_badge: service.display_badge,
 						status: service.status,
+						end_date: service.end_date
 					}}
 					routePrefix="/services/:id/request"
 				/>

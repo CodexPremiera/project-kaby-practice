@@ -8,7 +8,7 @@ interface CustomButtonProps {
   className?: string;
 }
 
-const ButtonSecondary: React.FC<CustomButtonProps> = ({
+const ButtonClear: React.FC<CustomButtonProps> = ({
                                                         onClick,
                                                         disabled = false,
                                                         children,
@@ -26,4 +26,4 @@ const ButtonSecondary: React.FC<CustomButtonProps> = ({
   );
 };
 
-export default ButtonSecondary;
+export default ButtonClear;

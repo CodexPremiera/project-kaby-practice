@@ -43,8 +43,10 @@ const Requirements: React.FC = () => {
 	const [error, setError] = useState<string | null>(null);
 	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
+
 		const res = await fetch("/api/tracker", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
@@ -53,12 +55,19 @@ const Requirements: React.FC = () => {
 				is_paid: false,
 				status: "Pending",
 				owner: service?.owner,
+				user_id: currentUser?.id,
+				schedule_date: selectedDate
 			}),
 		});
 
 		if (res.ok) {
 			const data = await res.json();
-			router.push(`/services/${service?.id}/payment`);
+			const request = data[0];
+			router.push(`/tracker/${request?.id}/payment`);
+		} else if (res.status === 409) {
+			const { message } = await res.json();
+			alert(message); // or show toast
+			router.push(`/tracker`); // Or redirect to existing request view
 		} else {
 			router.push(`/services/${service?.id}/requirements`);
 		}
@@ -128,7 +137,7 @@ const Requirements: React.FC = () => {
 			<div className="flex justify-between w-full bg-secondary py-2 px-3 items-center rounded-t-xl text-sm ">
 				<div className="flex gap-4 font-medium  text-white ">
 					<RiArrowLeftLine
-						onClick={() => router.push(`/services/${service.id}`)}
+						onClick={() => router.push(`/services/${service?.id}`)}
 						size={22}
 						className="hover:bg-white rounded-full"
 					/>
@@ -209,9 +218,9 @@ const Requirements: React.FC = () => {
 														onSelect={(date) => setSelectedDate(date)}
 														initialFocus
 														disabled={(date) =>
-															(service.start_date &&
+															(service?.start_date &&
 																isBefore(date, new Date(service.start_date))) ||
-															(service.end_date &&
+															(service?.end_date &&
 																isAfter(date, new Date(service.end_date)))
 														}
 													/>

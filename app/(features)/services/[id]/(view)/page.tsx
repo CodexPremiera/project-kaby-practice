@@ -54,9 +54,8 @@ const ViewService: React.FC = () => {
 				if (user) {
 					const customerRequests = await getRequestsByCustomer(user.id);
 
-					// Check if this service is already in the tracker
 					const alreadyAdded = customerRequests.some(
-						(req: any) => req.service_id === id
+						(req: any) => (req.service_id === id && !(req.status === "Canceled" || req.status === "Completed"))
 					);
 
 					setIsInTracker(alreadyAdded);
@@ -224,7 +223,7 @@ const ViewService: React.FC = () => {
 										<Button
 											variant="secondary"
 											onClick={() =>
-												router.push(`/services/${service.id}/requirements`)
+												router.push(`/services/${service?.id}/requirements`)
 											}
 										>
 											Avail Service

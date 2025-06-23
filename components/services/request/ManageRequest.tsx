@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useMediaQuery } from "@/app/hooks/useMediaQuery";
 
 // UI Components
@@ -48,9 +48,11 @@ const ManageRequest: React.FC<RequestServiceProps> = ({
 		setSelectedStatus("");
 	}, [initializedRequests]);
 
+	console.log(requests);
+
 	// Filter requests by search query on last name
 	const filteredRequests = requests.filter((req) =>
-		req.customer_lname.toLowerCase().includes(query)
+		(req.customer_lname || "").toLowerCase().includes(query)
 	);
 
 	const toggleSelection = (id: string) => {

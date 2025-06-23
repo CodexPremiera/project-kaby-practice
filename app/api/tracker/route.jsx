@@ -3,25 +3,38 @@ import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 import CitizenService from "@/services/CitizenService";
 
-export async function POST(request){
-        const supabase = await createClient();
-        const reqService = new RequestService(supabase);
-        const citService = new CitizenService(supabase); //i hate semicolons
+export async function POST(request) {
+        try {
+                const supabase = await createClient();
+                const reqService = new RequestService(supabase);
+                const citService = new CitizenService(supabase);
 
-        const body = await request.json();
-        const {user_id, ...otherValues} = body; 
-        const cust_id = await citService.getCitByAuthenticatedId(user_id)
+                const body = await request.json();
+                const { user_id, ...otherValues } = body;
 
-        const newRequestData = {
-                ...otherValues,
-                customer_id : cust_id?.id
+                const cust_id = await citService.getCitizenById(user_id);
+                if (!cust_id) throw new Error("Customer not found");
+
+                const newRequestData = {
+                        ...otherValues,
+                        customer_id: cust_id.id,
+                };
+
+                const result = await reqService.createRequest(newRequestData);
+
+                if (result.error) {
+                        return NextResponse.json(
+                            { message: result.error, existing: result.existing },
+                            { status: 409 }
+                        );
+                }
+
+                return NextResponse.json(result.data);
+        } catch (err) {
+                console.error("API Error in /api/tracker:", err); // <- Look here!
+                return NextResponse.json({ error: "Internal Server Error", details: err.message }, { status: 500 });
         }
-
-        const data = await reqService.createRequest(newRequestData);
-        console.log(data, "pakening");
-        return NextResponse.json(data);
 }
-
 //for updating 'pending' status
 export async function PUT(request){
         const supabase = await createClient();

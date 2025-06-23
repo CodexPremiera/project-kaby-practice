@@ -64,7 +64,7 @@ const TrackerTableView: React.FC<Props> = ({
 					<TableHead className="w-[110px] ">Agreement Fee</TableHead>
 					<TableHead className="w-[80px] ">Schedule</TableHead>
 					<TableHead className="w-[80px] ">Status</TableHead>
-					<TableHead className="w-[50px] ">Actions</TableHead>
+					<TableHead className="w-[80px] ">Actions</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
@@ -81,6 +81,7 @@ const TrackerTableView: React.FC<Props> = ({
 								/>
 							</TableCell>
 							<TableCell>
+
 								<Link
 									className="flex items-center gap-3"
 									href={`/services/${request.service_id}`}
@@ -131,10 +132,21 @@ const TrackerTableView: React.FC<Props> = ({
 								{formatDateToInputValue(request.schedule_date)}
 							</TableCell>
 							<TableCell className="text-gray-500">{request.status}</TableCell>
-							<TableCell>
+							<TableCell className="flex gap-2">
 								<ButtonClear onClick={() => openRequestSheet(request)}>
 									<MessageIcon strokeWidth={2} className="w-6" />
 								</ButtonClear>
+								{request.is_paid ? (
+									<div className="button-secondary background-3 text-secondary opacity-80">
+										Pay
+									</div>
+								) : (
+									<Link
+										href={`/tracker/${request?.id}/payment`}
+										className="button-secondary">
+										Pay
+									</Link>
+								)}
 							</TableCell>
 						</TableRow>
 					);

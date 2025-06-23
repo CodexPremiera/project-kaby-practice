@@ -1,13 +1,9 @@
+import {Service} from "@/lib/clients/ViewServiceClient";
+
 interface GCashModalProps {
 	handleFakeSuccess: () => void;
 	setShowModal: (show: boolean) => void;
-	service: {
-		service_id: string;
-		title: string;
-		service_cost: number;
-        agreement_fee : number;
-        convenience_fee: number;
-	};
+	service: Service
 }
 
 export default function GCashModal({

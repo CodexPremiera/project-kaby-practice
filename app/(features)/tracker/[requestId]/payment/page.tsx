@@ -1,35 +1,40 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import React, { useEffect, useState } from "react";
-import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
-import { getCurrentUser, CurrentUser } from "@/lib/clients/UseAuthClient";
-import { useRouter, useParams } from "next/navigation";
-import { RiArrowLeftLine, RiStarFill, RiUser2Fill } from "react-icons/ri";
+import { Service } from "@/lib/clients/ViewServiceClient";
+import { CurrentUser } from "@/lib/clients/UseAuthClient";
+import {useRouter, useParams} from "next/navigation";
+import { RiStarFill, RiUser2Fill } from "react-icons/ri";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import Image from "next/image";
 import GCashModal from "@/components/modal/GCashModal";
-interface UploadedFile {
+import {Request} from "@/lib/clients/RequestServiceClient";
+import {formatDate} from "@/lib/utils";
+import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";
+import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
+
+/*interface UploadedFile {
 	name: string;
 	url: string;
-}
+}*/
 
 const Payment: React.FC = () => {
 	const router = useRouter();
-	const { id } = useParams<{ id: string }>();
+	const { requestId } = useParams<{ requestId: string }>();
+	console.log(requestId);
 
 	const [service, setService] = useState<Service | null>(null);
+	const [request, setRequest] = useState<Request | null>(null);
 	const [currentUser, setCurrentUser] = useState<CurrentUser>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+	// const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 	const [showModal, setShowModal] = useState(false);
 
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
-		console.log("clicked ayyy");
 		const res = await fetch("/api/tracker", {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
@@ -40,31 +45,38 @@ const Payment: React.FC = () => {
 			}),
 		});
 		setShowModal(true);
-
 	};
 
 	useEffect(() => {
-		const fetchData = async () => {
-			if (!id) {
-				setError("Invalid service ID");
+		const fetchRequestAndService = async () => {
+			if (!requestId) return;
+
+			try {
+				const res = await fetch(`/api/request/${requestId}`);
+				if (!res.ok) throw new Error("Request not found");
+
+				const data = await res.json();
+				const fetchedRequest: Request = data.requests;
+				setRequest(fetchedRequest);
+
+				if (!fetchedRequest?.service_id) throw new Error("Missing service ID");
+
+				const serviceRes = await fetch(`/api/services/${fetchedRequest.service_id}`);
+				if (!serviceRes.ok) throw new Error("Service not found");
+
+				const serviceData = await serviceRes.json();
+				setService(serviceData);
+			} catch (err) {
+				console.error(err);
+				setError("Failed to fetch request or service data");
+			} finally {
 				setLoading(false);
-				return;
 			}
-
-			const [user, fetchedService] = await Promise.all([
-				getCurrentUser(),
-				getServiceById(id),
-			]);
-
-			setCurrentUser(user);
-			setService(fetchedService);
-			setError(!fetchedService ? "Service not found" : null);
-			setLoading(false);
-			console.log("Fetched service:", fetchedService);
 		};
 
-		fetchData();
-	}, [id]);
+		fetchRequestAndService();
+	}, [requestId]);
+
 
 	if (loading) {
 		return (
@@ -113,15 +125,12 @@ const Payment: React.FC = () => {
         }
     };
 
+	console.log(request)
+
 	return (
 		<div>
 			<div className="flex justify-between w-full bg-secondary py-2 px-3 items-center rounded-t-xl text-sm ">
 				<div className="flex gap-4 font-medium  text-white ">
-					<RiArrowLeftLine
-						onClick={() => router.push(`/services/${service.id}/requirements`)}
-						size={22}
-						className="hover:bg-white rounded-full"
-					/>
 					Make Payment: {service.title}
 				</div>
 				<div className=" text-white ">2/2</div>
@@ -132,9 +141,8 @@ const Payment: React.FC = () => {
 						<div className="flex justify-between items-center gap-3 w-full">
 							<div className="flex gap-3 items-center">
 								<div className="font-semibold text-md">
-									Scheduled Date: April 4th
+									{request?.schedule_date === null ? "Not scheduled" : `Scheduled on ${formatDate(request?.schedule_date)}`}
 								</div>
-								<p className="text-gray-600 text-sm">Friday</p>
 							</div>
 						</div>
 					</div>
@@ -245,10 +253,11 @@ const Payment: React.FC = () => {
 									provider.
 								</div>
 							</div>
-							<div className="flex justify-end">
-								<Button variant="secondary" onClick={handleSubmit}>
-									Proceed
-								</Button>
+							<div className="flex gap-4 justify-end">
+								<ButtonSecondary onClick={() => router.push(`/tracker`)}>
+									Go to tracker
+								</ButtonSecondary>
+								<ButtonPrimary onClick={handleSubmit}>Proceed</ButtonPrimary>
 							</div>
 						</div>
 					</div>

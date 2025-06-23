@@ -4,6 +4,7 @@ import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import {MessageCircleMore as MessageIcon} from "lucide-react";
 import {ServiceRequest} from "@/lib/clients/RequestServiceClient";
 import {getPublicUrl} from "@/utils/supabase/storage";
+import Link from "next/link";
 
 interface customerRequest extends ServiceRequest {
   index: number;
@@ -86,9 +87,22 @@ function TrackerListView({
               </div>
             </div>
 
-            <ButtonClear onClick={() => openRequestSheet(request)}>
-              <MessageIcon strokeWidth={2} className="w-6 p-0"/>
-            </ButtonClear>
+            <div className="flex gap-2">
+              <ButtonClear onClick={() => openRequestSheet(request)}>
+                <MessageIcon strokeWidth={2} className="w-6 p-0" />
+              </ButtonClear>
+              {request.is_paid ? (
+                <div className="button-secondary background-3 text-secondary opacity-80">
+                  Pay
+                </div>
+              ) : (
+                <Link
+                  href={`/tracker/${request?.id}/payment`}
+                  className="button-secondary">
+                  Pay
+                </Link>
+              )}
+            </div>
           </div>
         ))}
       </div>

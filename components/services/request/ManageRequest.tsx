@@ -48,8 +48,6 @@ const ManageRequest: React.FC<RequestServiceProps> = ({
 		setSelectedStatus("");
 	}, [initializedRequests]);
 
-	console.log(requests);
-
 	// Filter requests by search query on last name
 	const filteredRequests = requests.filter((req) =>
 		(req.customer_lname || "").toLowerCase().includes(query)

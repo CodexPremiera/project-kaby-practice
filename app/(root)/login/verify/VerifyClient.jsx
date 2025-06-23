@@ -46,7 +46,6 @@ export default function VerifyClientForm() {
                     // Redirect after short delay while showing loading state
                     setTimeout(() => {
                         // router.push(data.redirectTo);
-                        alert("this is data",data);
                     }, 1500);
                 }else{
                     setModalType("error");

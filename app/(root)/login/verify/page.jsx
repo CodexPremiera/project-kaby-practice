@@ -32,7 +32,7 @@ export default function VerifyPage() {
         // Optionally: update session, redirect, etc.
         router.push("/home"); // Or wherever you want
       } else {
-        alert(result.error || "Invalid or expired token.");
+        console.error("Verification failed:", result.error || "Invalid or expired token.");
       }
     };
 

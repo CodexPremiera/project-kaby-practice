@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { RiCloseFill } from "react-icons/ri";
 import PasswordField from "@/components/ui/form/PasswordField";
 import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";
+import SuccessModal from "@/components/modal/SuccessModal";
+import ErrorModal from "@/components/modal/ErrorModal";
 interface PassModalProps{
   onClose : () => void | null;
 }
@@ -13,14 +15,24 @@ const SetPasswordModal = ({onClose} : PassModalProps) => {
       const [newPassword, setNewPassword] = useState("");
       const [submitting, setSubmitting] = useState(false);
     
+      const [modalType, setModalType] = useState<null | "success" | "error">(null);
+      const [successMessage, setSuccessMessage] = useState("");
+
+        const handleCloseModal = () => {
+          setModalType(null);
+          // refresh();
+          // onClose();
+        };
       const handleChangePassword = async () => {
         if (!currentPassword || !newPassword) {
-          alert("Please fill out both password fields.");
+          setSuccessMessage("Please fill out both password fields.");
+          setModalType("error");
           return;
         }
         
         if (currentPassword !== newPassword) {
-          alert("Both passwords must be the same.");
+          setSuccessMessage("Both passwords must be the same.");
+          setModalType("error");
           return;
         }
     
@@ -41,18 +53,20 @@ const SetPasswordModal = ({onClose} : PassModalProps) => {
           const result = await res.json();
     
           if (result.error || result.success === false) {
-            alert(result.error || "Password change failed.");
+            setSuccessMessage(result.error || "Password change failed.");
+            setModalType("error");
           } else {
-            alert("Password changed successfully!");
+            setSuccessMessage("Password changed successfully!");
+            setModalType("success");
             setCurrentPassword("");
             setNewPassword("");
             console.log(newPassword)
-            window.location.reload();
+            // window.location.reload();
             if (onClose) onClose();
           }
         } catch (error) {
           console.error("Password change error:", error);
-          alert("An error occurred while changing your password.");
+          // alert("An error occurred while changing your password.");
         } finally {
           setSubmitting(false);
         }
@@ -60,6 +74,20 @@ const SetPasswordModal = ({onClose} : PassModalProps) => {
     
 	return (
 		<>
+    {modalType === "success" && (
+        <SuccessModal
+          title="Success"
+          content={successMessage}
+          onClose={handleCloseModal}
+        />
+      )}
+      {modalType === "error" && (
+        <ErrorModal
+          title="Error"
+          content={successMessage}
+          onClose={handleCloseModal}
+        />
+      )}
 			<div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
 				<Link href="/login" passHref>
 					<button className="absolute top-5 right-5 text-white hover:text-black text-3xl z-50 transition-transform duration-300">

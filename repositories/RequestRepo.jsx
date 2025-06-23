@@ -3,7 +3,6 @@ import BaseRepo from "./BaseRepo";
 export default class RequestRepo extends BaseRepo {
 	constructor(supabase) {
 		super("Requests", supabase);
-		this.supabase = supabase;
 	}
 	async getAllRequests() {
 		return await this.repo.getAll();

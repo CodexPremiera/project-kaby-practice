@@ -115,9 +115,13 @@ export default class ServiceRepo extends BaseRepo {
 			.from(this.tableName)
 			.update(service_data)
 			.eq("id", id)
-			.select();
+			.select()
+			.single();
 
-		if (error) throw error;
+		if (error) {
+			console.error("Supabase update error:", error);
+			throw error;
+		}
 		return data;
 	}
 }

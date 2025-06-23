@@ -7,15 +7,14 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { toast } from "sonner"
 
 import Image from "next/image";
-import ButtonClear from "@/components/ui/buttons/ButtonClear";
-import { MessageCircleMore as MessageIcon } from "lucide-react";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import { ServiceRequest } from "@/lib/clients/RequestServiceClient";
 import Link from "next/link";
 import { formatDateToInputValue } from "@/lib/utils";
+import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
+import GiveRatingDialog from "@/components/tracker/GiveRatingDialog";
 
 interface customerRequest extends ServiceRequest {
 	index: number;
@@ -35,43 +34,23 @@ interface Props {
 	serviceFees: { [serviceId: string]: ServiceFees };
 }
 
-const TrackerTableView: React.FC<Props> = ({
-	requests,
-	selectedItems,
-	setSelectedItems,
-	toggleSelection,
-	openRequestSheet,
-	serviceFees,
-}) => {
+const TrackerTableViewCompleted: React.FC<Props> = ({
+																						 requests,
+																						 selectedItems,
+																						 setSelectedItems,
+																						 toggleSelection,
+																						 openRequestSheet,
+																						 serviceFees,
+																					 }) => {
 	return (
 		<Table className="table-fixed w-full">
 			<TableHeader>
 				<TableRow className="border-b border-light-color text-sm">
-					<TableHead className="w-[30px] pt-1">
-						<input
-							type="checkbox"
-							className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
-							checked={
-								selectedItems.length === requests.length && requests.length > 0
-							}
-							onChange={() => {
-								if (selectedItems.length === requests.length) {
-									setSelectedItems([]);
-									return;
-								}
-
-								setSelectedItems(requests.filter(request => request.is_paid).map((c) => c.id))
-								if (selectedItems.length !== requests.length) {
-									toast("Your unpaid requests could not be selected for cancellation.")
-								}
-							}}
-						/>
-					</TableHead>
-					<TableHead className="w-[200px] ">Service</TableHead>
-					<TableHead className="w-[100px] ">Service Cost</TableHead>
-					<TableHead className="w-[110px] ">Agreement Fee</TableHead>
+					<TableHead className="w-[220px] ">Service</TableHead>
+					<TableHead className="w-[120px] ">Service Cost</TableHead>
+					<TableHead className="w-[120px] ">Agreement Fee</TableHead>
 					<TableHead className="w-[80px] ">Schedule</TableHead>
-					<TableHead className="w-[80px] ">Actions</TableHead>
+					<TableHead className="w-[110px] ">Actions</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
@@ -79,17 +58,6 @@ const TrackerTableView: React.FC<Props> = ({
 					const fees = serviceFees[request.service_id];
 					return (
 						<TableRow key={request.id} className="hover:bg-gray-50">
-							<TableCell>
-								<input
-									type="checkbox"
-									className="w-3 h-3 border border-secondary rounded-sm text-primary"
-									checked={selectedItems.includes(request.id)}
-									onChange={() => {
-										if (request.is_paid)
-											toggleSelection(request.id);
-									}}
-								/>
-							</TableCell>
 							<TableCell>
 
 								<Link
@@ -101,9 +69,9 @@ const TrackerTableView: React.FC<Props> = ({
 										src={
 											request.service_photo
 												? getPublicUrl(
-														request.service_photo,
-														"services-pictures"
-													)
+													request.service_photo,
+													"services-pictures"
+												)
 												: "/default-image.jpg"
 										}
 										alt={request.service_title}
@@ -134,8 +102,8 @@ const TrackerTableView: React.FC<Props> = ({
 									? fees.agreement_fee === 0
 										? "Free"
 										: `₱${fees.agreement_fee.toLocaleString()} - ${
-												request.is_paid ? "Paid" : "Not Paid"
-											}`
+											request.is_paid ? "Paid" : "Not Paid"
+										}`
 									: "Loading..."}
 							</TableCell>
 							<TableCell className="text-gray-500">
@@ -143,20 +111,7 @@ const TrackerTableView: React.FC<Props> = ({
 							</TableCell>
 
 							<TableCell className="flex gap-2">
-								<ButtonClear onClick={() => openRequestSheet(request)}>
-									<MessageIcon strokeWidth={2} className="w-6" />
-								</ButtonClear>
-								{request.is_paid ? (
-									<div className="button-secondary background-3 text-secondary opacity-80">
-										Pay
-									</div>
-								) : (
-									<Link
-										href={`/tracker/${request?.id}/payment`}
-										className="button-secondary">
-										Pay
-									</Link>
-								)}
+								<GiveRatingDialog requestId={request.id} currentRating={request.ratings} />
 							</TableCell>
 						</TableRow>
 					);
@@ -166,4 +121,4 @@ const TrackerTableView: React.FC<Props> = ({
 	);
 };
 
-export default TrackerTableView;
+export default TrackerTableViewCompleted;

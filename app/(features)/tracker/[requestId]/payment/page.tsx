@@ -23,7 +23,6 @@ import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 const Payment: React.FC = () => {
 	const router = useRouter();
 	const { requestId } = useParams<{ requestId: string }>();
-	console.log(requestId);
 
 	const [service, setService] = useState<Service | null>(null);
 	const [request, setRequest] = useState<Request | null>(null);
@@ -124,8 +123,6 @@ const Payment: React.FC = () => {
             setLoading(false);
         }
     };
-
-	console.log(request)
 
 	return (
 		<div>

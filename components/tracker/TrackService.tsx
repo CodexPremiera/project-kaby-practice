@@ -14,6 +14,7 @@ import SuccessModal from "../modal/SuccessModal";
 import ErrorModal from "../modal/ErrorModal";
 import ConfirmationModal from "../modal/ConfirmationModal";
 import { getServiceById } from "@/lib/clients/ViewServiceClient";
+import TrackerTableViewCompleted from "@/components/tracker/TrackerTableViewCompleted";
 
 interface RequestServiceProps {
 	statusFilter: string;
@@ -94,6 +95,8 @@ const TrackService: React.FC<RequestServiceProps> = ({
 
 	const cancelSelected = async () => {
 		if (selectedItems.length === 0) return;
+		if (statusFilter === "Canceled" || statusFilter === "Completed") return;
+
 		try {
 			const res = await fetch(`/api/tracker/${customerId}`, {
 				method: "PUT",
@@ -131,37 +134,52 @@ const TrackService: React.FC<RequestServiceProps> = ({
 					<div className="flex items-center grow max-w-[540px]">
 						<TrackerSearchBar />
 					</div>
-					<div className="flex items-center gap-3 w-full sm:w-fit sm:pt-0 pt-4">
-						<div className="flex flex-col justify-end gap-1 pr-4 border-r border-secondary">
+					{!(statusFilter === "Canceled" || statusFilter === "Completed") && (
+						<div className="flex items-center gap-3 w-full sm:w-fit sm:pt-0 pt-4">
+							<div className="flex flex-col justify-end gap-1 pr-4 border-r border-secondary">
 							<span className="text-xs sm:text-sm text-secondary text-end">
 								Selected
 							</span>
-							<span className="font-semibold text-end text-sm sm:text-base">
+								<span className="font-semibold text-end text-sm sm:text-base">
 								{selectedItems.length}{" "}
-								{selectedItems.length > 1 ? "items" : "item"}
+									{selectedItems.length > 1 ? "items" : "item"}
 							</span>
+							</div>
+							<ButtonSecondary
+								onClick={() => setShowConfirmModal(true)}
+								disabled={selectedItems.length === 0}
+							>
+								Cancel
+							</ButtonSecondary>
 						</div>
-						<ButtonSecondary
-							onClick={() => setShowConfirmModal(true)}
-							disabled={selectedItems.length === 0}
-						>
-							Cancel
-						</ButtonSecondary>
-					</div>
+					)}
 				</div>
 			</div>
 
 			{filteredRequests.length > 0 ? (
 				<>
 					{isLargeScreen ? (
-						<TrackerTableView
-							requests={filteredRequests}
-							selectedItems={selectedItems}
-							setSelectedItems={setSelectedItems}
-							toggleSelection={toggleSelection}
-							openRequestSheet={openRequestSheet}
-							serviceFees={serviceFees}
-						/>
+						<>
+							{statusFilter === "Completed" ? (
+								<TrackerTableViewCompleted
+									requests={filteredRequests}
+									selectedItems={selectedItems}
+									setSelectedItems={setSelectedItems}
+									toggleSelection={toggleSelection}
+									openRequestSheet={openRequestSheet}
+									serviceFees={serviceFees}
+								/>
+							) : (
+								<TrackerTableView
+									requests={filteredRequests}
+									selectedItems={selectedItems}
+									setSelectedItems={setSelectedItems}
+									toggleSelection={toggleSelection}
+									openRequestSheet={openRequestSheet}
+									serviceFees={serviceFees}
+								/>
+							)}
+						</>
 					) : (
 						<TrackerListView
 							requests={filteredRequests}
@@ -196,7 +214,7 @@ const TrackService: React.FC<RequestServiceProps> = ({
 					onClose={closeModal}
 				/>
 			)}
-			{showConfirmModal && (
+			{(showConfirmModal && !(statusFilter === "Canceled" || statusFilter === "Completed")) && (
 				<ConfirmationModal
 					title="Confirm Cancel"
 					content="Are you sure you want to cancel? This action cannot be undone."

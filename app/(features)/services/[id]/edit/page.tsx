@@ -59,7 +59,6 @@ const EditServicePage = () => {
 		setModalType(null);
 
 		const { owner_name, ...serviceToUpdate } = service;
-
 		try {
 			const response = await fetch(`/api/services/${service.id}`, {
 				method: "PUT",
@@ -80,7 +79,7 @@ const EditServicePage = () => {
 			setOriginalService(updatedService);
 			setService(updatedService);
 			setModalType("success");
-			window.location.reload();
+			//window.location.reload();
 		} catch (err) {
 			setModalType("error");
 		} finally {

@@ -61,7 +61,6 @@ class RequestService {
 	}
 
 	async updateRequest(id, selectedFields = {}) {
-		console.log("this is selectedFields", selectedFields, "and this is id", id);
 		return await this.repo.update(id, selectedFields);
 	}
 

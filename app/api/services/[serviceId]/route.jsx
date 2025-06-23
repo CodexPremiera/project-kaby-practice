@@ -59,6 +59,7 @@ export async function PUT(request, context) {
 
 	const { serviceId } = await context.params;
 	const body = await request.json();
+	console.log(body)
 
 	try {
 		const result = await serviceService.updateService(serviceId, body);

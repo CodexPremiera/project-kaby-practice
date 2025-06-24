@@ -1,11 +1,8 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
-import React, { useEffect, useMemo, useState , useRef} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ServiceCard from "@/components/services/view/ServiceCard";
 import { useSearchParams } from "next/navigation";
-import ServiceViewModal from "@/components/modal/ServiceViewModal";
-import ServicePreviewPopover from "@/components/modal/ServiceViewModal";
 import ErrorModal from "@/components/modal/ErrorModal";
 
 type ServiceType = {
@@ -42,15 +39,11 @@ interface SearchServiceProps {
 }
 
 const ServicesList: React.FC<SearchServiceProps> = ({ tab,category }) => {
-	const supabase = createClient();
-
 	const searchParams = useSearchParams();
 	const query = searchParams.get("q") || "";
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [services, setServices] = useState<ServicesWithProfile[]>([]);
-	const [selectedService, setSelectedService] = useState(null);
-	const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const [modalType, setModalType] = useState<"success" | "error" | null>(null);
 
 	useEffect(() => {
@@ -119,7 +112,6 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab,category }) => {
 					service.description.toLowerCase().includes(normalizedQuery)
 			);
 		}
-
 		return filtered;
 	}, [services, query,category]);
 
@@ -137,7 +129,6 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab,category }) => {
 	// 		setSelectedService(null);
 	// 	}, 200); // Delay to prevent flickering
 	// };
-
 
 	return (
 		<>			
@@ -197,7 +188,7 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab,category }) => {
 					type: service.type,
 					image: service.image,
 					display_badge: service.displayBadge,
-					status: service.status,
+					status: service.status
 					}}
 					routePrefix="/services"
 					

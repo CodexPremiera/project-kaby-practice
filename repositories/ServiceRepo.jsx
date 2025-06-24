@@ -1,4 +1,3 @@
-import ServiceModel from "@/models/ServiceModel";
 import BaseRepo from "./BaseRepo";
 
 export default class ServiceRepo extends BaseRepo {
@@ -7,8 +6,18 @@ export default class ServiceRepo extends BaseRepo {
 		this.supabase = supabase;
 	}
 
-	async getAllServices() {
-		return await this.repo.getAll();
+	async getAll() {
+		const { data, error } = await this.supabase
+		.from(this.tableName)
+		.select()
+		.eq("is_permanently_deleted", false);
+
+		if (error) {
+			console.error("Error fetching services:", error);
+			return [];
+		}
+
+		return data.filter(item => !item.is_permanently_deleted);
 	}
 
 	async getById(id) {
@@ -16,6 +25,7 @@ export default class ServiceRepo extends BaseRepo {
 			.from(this.tableName)
 			.select()
 			.eq("id", id)
+			.eq("is_permanently_deleted", false)
 			.single();
 
 		if (error) {
@@ -29,6 +39,7 @@ export default class ServiceRepo extends BaseRepo {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select("*")
+			.eq("is_permanently_deleted", false)
 			.in("owner", ownerIds);
 
 		if (error) {
@@ -54,6 +65,7 @@ export default class ServiceRepo extends BaseRepo {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select()
+			.eq("is_permanently_deleted", false)
 			.eq("owner_id", citizen.user_id);
 
 		if (error) console.log(error);
@@ -64,6 +76,7 @@ export default class ServiceRepo extends BaseRepo {
 		const { data: services, error: servicesError } = await this.supabase
 			.from(this.tableName)
 			.select("*")
+			.eq("is_permanently_deleted", false)
 			.eq("owner", barangayUserId);
 
 		if (servicesError) {
@@ -79,6 +92,7 @@ export default class ServiceRepo extends BaseRepo {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select()
+			.eq("is_permanently_deleted", false)
 			.in("owner", citizensUserId);
 		if (error) {
 			console.error(error);
@@ -91,6 +105,7 @@ export default class ServiceRepo extends BaseRepo {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select("*")
+			.eq("is_permanently_deleted", false)
 			.eq("owner", barangayUserId)
 			.eq("eligible_for_badges", true);
 

@@ -6,9 +6,9 @@ import { formatDate } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import ScheduleDateEditor from "../../ScheduleDateEditor";
 import {Button} from "@/components/ui/button";
-import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import {toast} from "sonner";
-import {router} from "next/client";
+import {useRouter} from "next/navigation";
+
 import {
 	AlertDialog, AlertDialogAction, AlertDialogCancel,
 	AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
@@ -23,26 +23,42 @@ interface Props {
 }
 
 const EditSettings: React.FC<Props> = ({ service, setService }) => {
+	const router = useRouter();
+
 	const handleDelete = async () => {
+		if (!service) return;
+
+		const updatedService = {
+			...service,
+			is_permanently_deleted: true,
+		};
+		delete updatedService.owner_name;
+
+		setService(updatedService); // optimistic update
+
 		try {
-			const res = await fetch(`/api/services/${service.id}`, {
-				method: "DELETE",
+			const response = await fetch(`/api/services/${service.id}`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(updatedService),
 			});
 
-			const data = await res.json();
-
-			if (!res.ok) {
-				throw new Error(data?.error || "Failed to delete service");
+			if (!response.ok) {
+				const error = await response.json();
+				toast.error(error.message);
+				return;
 			}
 
-			toast.success("Service deleted successfully");
+			const result = await response.json();
+			setService(result); // update with confirmed response
+			toast.success("Service deleted.");
 
-			// Optional: Redirect to home or services page
 			router.push("/services");
 		} catch (err: any) {
-			toast.error(err.message || "Failed to delete service");
+			toast.error(err.message || "Failed to delete service.");
 		}
 	};
+
 
 	const [showStatus, setShowStatus] = useState(true);
 	const [showDelete, setShowDelete] = useState(false);
@@ -161,12 +177,6 @@ const EditSettings: React.FC<Props> = ({ service, setService }) => {
 								Please proceed only if you're absolutely certain.
 							</p>
 						</div>
-						{/*<ButtonSecondary
-							className="w-fit"
-							onClick={handleDelete}
-						>
-							Delete
-						</ButtonSecondary>*/}
 
 						<AlertDialog>
 							<AlertDialogTrigger asChild>

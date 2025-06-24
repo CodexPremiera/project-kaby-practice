@@ -224,7 +224,6 @@ const Requirements: React.FC = () => {
 														mode="single"
 														selected={selectedDate}
 														onSelect={(date) => setSelectedDate(date)}
-														initialFocus
 														disabled={(date) =>
 															(service?.start_date &&
 																isBefore(date, new Date(service.start_date))) ||

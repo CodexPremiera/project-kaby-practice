@@ -106,14 +106,14 @@ const ManageRequest: React.FC<RequestServiceProps> = ({
 		<>
 			<div className="flex flex-col gap-8 p-4 background-1 rounded-[10px]">
 				{/* Top Bar: Search + Bulk Actions */}
-				<div className="md:flex md:justify-between flex-col md:flex-row items-center gap-12">
+				<div className="flex md:justify-between flex-col md:flex-row items-center gap-4">
 					<div className="max-w-[540px] w-full">
 						<RequestSearchBar />
 					</div>
 
 					{/* Bulk Status Update Controls */}
-					<div className="flex items-center gap-3 w-full sm:w-fit">
-						<div className="flex flex-col justify-end gap-1 pr-4 border-r border-secondary text-end">
+					<div className="flex justify-between items-center gap-3 w-full md:w-fit">
+						<div className="flex flex-col justify-end gap-1 pr-4 md:border-r border-secondary md:text-end ">
 							<span className="text-xs sm:text-sm text-secondary">
 								Selected
 							</span>

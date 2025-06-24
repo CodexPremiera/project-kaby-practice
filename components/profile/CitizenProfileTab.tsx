@@ -6,12 +6,16 @@ import Image from "next/image";
 import React from "react";
 import {getPublicImageUrl} from "@/components/profile/BarangayProfileClient";
 import {CitizenProfile, getAddress, getName} from "@/models/CitizenProfile";
-
-
+import {useCitizenContext} from "@/app/context/CitizenContext";
 
 
 const CitizenProfileTab = () => {
-	const { id } = useParams() as { id: string };
+	let { id } = useParams() as { id: string | undefined | null };
+	if (id === undefined || id === null) {
+		const citizen = useCitizenContext();
+		id = citizen.citizenId;
+	}
+
 	const [profile, setProfile] = useState<CitizenProfile | null>(null);
 	const [loading, setLoading] = useState(true);
 
@@ -44,10 +48,8 @@ const CitizenProfileTab = () => {
 		return <div className="p-6 text-red-500">Profile not found.</div>;
 	}
 
-	console.log(profile);
-
 	return (
-		<div className="container mx-auto p-6">
+		<div className="container mx-4 sm:mx-auto mb-5 	">
 			<div className="flex flex-col lg:flex-row items-center justify-between gap-6 card-custom p-6 shadow background-1 rounded-3xl">
 				<div className="flex gap-4 items-center text-center sm:text-left">
 					<Image
@@ -55,7 +57,7 @@ const CitizenProfileTab = () => {
 						width={60}
 						height={60}
 						alt="Profile"
-						className="min-w-[60px] min-h-[60px] rounded-full"
+						className="w-[60px] h-[60px] object-cover rounded-full"
 					/>
 					<div className="flex flex-col">
 						<p className="text-lg font-semibold">{getName(profile)}</p>

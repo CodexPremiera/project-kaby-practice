@@ -111,11 +111,11 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 								}
 							/>
 						</TableHead>
-						<TableHead className="w-[200px]">Customer</TableHead>
+						<TableHead className="w-[160px]">Customer</TableHead>
 						<TableHead className="w-[80px]">Payment</TableHead>
-						<TableHead className="w-[140px]">Schedule</TableHead>
-						<TableHead className="w-[120px]">Status</TableHead>
-						<TableHead className="w-[90px]">Actions</TableHead>
+						<TableHead className="w-[120px]">Schedule</TableHead>
+						<TableHead className="w-[80px]">Status</TableHead>
+						<TableHead className="w-[40px]">Chat</TableHead>
 					</TableRow>
 				</TableHeader>
 
@@ -161,7 +161,7 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 											height={36}
 											className="object-cover w-10 h-10 rounded-full"
 										/>
-										<div>
+										<div className="font-medium">
 											{request.customer_fname} {request.customer_lname}
 										</div>
 									</button>
@@ -180,36 +180,18 @@ const RequestTableView: React.FC<RequestTableViewProps> = ({
 												e.target.value
 											)
 										}
-										className="border border-gray-300 rounded px-2 py-1 text-sm"
+										className="border border-gray-300 rounded px-2 py-1 text-sm max-w-[80px] md:max-w-[120px] lg:max-w-[160px]"
 									/>
 								</TableCell>
 
 								<TableCell>
-									<select
-										value={rowData?.status || ""}
-										onChange={(e) =>
-											handleInputChange(request.id, "status", e.target.value)
-										}
-										className="border border-gray-300 rounded px-2 py-1 text-sm"
-									>
-										<option value="Pending">Pending</option>
-										<option value="Ongoing">Ongoing</option>
-										<option value="Completed">Completed</option>
-										<option value="Canceled">Canceled</option>
-									</select>
+									<span className="">{rowData?.status || ""}</span>
 								</TableCell>
 
 								<TableCell className="flex items-center gap-2">
 									<ButtonClear onClick={() => openRequestSheet(request)}>
 										<MessageIcon strokeWidth={2} className="w-6 p-0" />
 									</ButtonClear>
-									<button
-										onClick={() => setConfirmingRequestId(request.id)}
-										disabled={isDisabled}
-										className="bg-black text-white px-4 py-2 rounded disabled:bg-gray disabled:cursor-not-allowed"
-									>
-										Submit
-									</button>
 								</TableCell>
 							</TableRow>
 						);

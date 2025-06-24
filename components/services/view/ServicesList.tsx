@@ -117,62 +117,9 @@ const ServicesList: React.FC<SearchServiceProps> = ({ tab,category }) => {
 
 	if (loading) return <div>Loading services...</div>;
 	if (error) return <div>Error loading services: {error}</div>;
-	// 	const handleMouseEnter = (service: ServicesWithProfile) => {
-	// 	if (hoverTimeoutRef.current) {
-	// 		clearTimeout(hoverTimeoutRef.current);
-	// 	}
-	// 	setSelectedService(service);
-	// };
-
-	// const handleMouseLeave = () => {
-	// 	hoverTimeoutRef.current = setTimeout(() => {
-	// 		setSelectedService(null);
-	// 	}, 200); // Delay to prevent flickering
-	// };
 
 	return (
-		<>			
-			{/* {filteredAndSearchedServices.map((service) => (
-				<div
-					key={service.id}
-					className="relative w-full flex flex-col"
- 					//  className={`relative w-full flex flex-col ${!user ? "pointer-events-none  opacity-80" : ""}`}
-
-					onMouseEnter={() => setSelectedService(service)}
-					onMouseLeave={() => setSelectedService(null)}
-
-				
-				>
-					<ServiceCard
-						service={{
-							id: service.id,
-							title: service.title,
-							owner: service.ownerName,
-							type: service.type,
-							image: service.image,
-							display_badge: service.displayBadge,
-							status: service.status,
-						}}
-						routePrefix="/services"
-					/>
-					{ !user && (
-						<div
-						className="absolute inset-0 z-50 cursor-not-allowed"
-						onClick={(e) =>{
-							e.preventDefault();
-						} }
-						/>
-						
-					)}
-					
-
-					{selectedService?.id === service.id && (
-						<div className="absolute top-full left-0 z-50">
-							<ServicePreviewPopover service={service} />
-						</div>
-					)}
-				</div>
-			))} */}
+		<>
 			<>
 			{filteredAndSearchedServices.map((service) => (
 				<div

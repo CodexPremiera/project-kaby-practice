@@ -3,7 +3,6 @@ import Image from "next/image";
 import ButtonClear from "@/components/ui/buttons/ButtonClear";
 import { MessageCircleMore as MessageIcon } from "lucide-react";
 import { ServiceRequest } from "@/lib/clients/RequestServiceClient";
-import { getServiceById } from "@/lib/clients/ViewServiceClient";
 import { getPublicUrl } from "@/utils/supabase/storage";
 import { formatDateToInputValue } from "@/lib/utils";
 
@@ -51,8 +50,8 @@ const RequestListView: React.FC<RequestListViewProps> = ({
 						key={request.id}
 						className="flex w-full hover:bg-gray-50 border-b border-light-color py-5 justify-between"
 					>
-						<div className="flex w-[18.75rem] gap-2 sm:gap-3">
-							<div className="h-full w-fit py-3 pr-1 sm:pr-6">
+						<div className="flex w-[18.75rem] gap-1 sm:gap-2">
+							<div className="h-full w-fit py-3 pr-1">
 								<input
 									type="checkbox"
 									className="w-3 h-3 border-[1.2px] border-secondary rounded-sm text-primary"
@@ -77,15 +76,11 @@ const RequestListView: React.FC<RequestListViewProps> = ({
 
 							<div className="user_name flex flex-col justify-center items-start h-fit">
 								<span className="text-primary font-semibold text-base sm:text-md">
-									{request.id}
+									{request.customer_fname} {request.customer_lname}
 								</span>
 								<div className="flex flex-col gap-0">
 									<span className="text-secondary text-sm leading-[1.2] font-medium">
-										{request.owner_name}
-									</span>
-									<span className="text-secondary text-sm leading-[1.2] font-medium">
-										{formatDateToInputValue(request.schedule_date)} •{" "}
-										{request.status}
+										{!request.is_paid ? "Not Paid" : "Paid"} • {request.status}
 									</span>
 								</div>
 							</div>

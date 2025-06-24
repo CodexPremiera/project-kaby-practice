@@ -47,7 +47,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
   const handleClick = () => {
     if (!user) {
-      setModalType("error"); // ✅ Set modal to show
+      setModalType("error");
       return;
     }
 

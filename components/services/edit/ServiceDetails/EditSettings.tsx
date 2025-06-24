@@ -5,6 +5,8 @@ import { Service } from "@/lib/clients/ViewServiceClient";
 import { formatDate } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import ScheduleDateEditor from "../../ScheduleDateEditor";
+import {Button} from "@/components/ui/button";
+import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 
 interface Props {
 	service: Service | null;
@@ -117,16 +119,20 @@ const EditSettings: React.FC<Props> = ({ service, setService }) => {
 				</div>
 
 				{showDelete && (
-					<div className="text-sm py-4 flex flex-col gap-4 border-r border-l border-b border-gray-200 p-4 ">
-						<p>
-							You cannot delete this service while there are active or ongoing
-							requests. A service must be officially closed before deletion is
-							allowed.
-						</p>
-						<p className=" font-medium">
-							Warning: Deleting a service is permanent and cannot be undone.
-							Please proceed only if you're absolutely certain.
-						</p>
+					<div className="text-sm py-4 flex flex-col lg:flex-row justify-between gap-4 border-r border-l border-b border-gray-200 p-4 ">
+						<div className="flex flex-col gap-4">
+							<p>
+								You cannot delete this service while there are active or ongoing
+								requests. A service must be officially closed before deletion is
+								allowed.
+							</p>
+							<p className=" font-medium">
+								Warning: Deleting a service is permanent and cannot be undone.
+								Please proceed only if you're absolutely certain.
+							</p>
+						</div>
+						<ButtonSecondary className="w-fit">Delete</ButtonSecondary>
+
 					</div>
 				)}
 			</div>

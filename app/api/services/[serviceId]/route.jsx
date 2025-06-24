@@ -59,7 +59,6 @@ export async function PUT(request, context) {
 
 	const { serviceId } = await context.params;
 	const body = await request.json();
-	console.log(body)
 
 	try {
 		const result = await serviceService.updateService(serviceId, body);
@@ -70,9 +69,9 @@ export async function PUT(request, context) {
 
 		return NextResponse.json(result);
 	} catch (err) {
-		console.error("Error updating post:", err);
+		console.error("Error updating post:", err.message);
 		return NextResponse.json(
-			{ error: "Failed to update post" },
+			{ error: "Failed to update post", message: err.message},
 			{ status: 500 }
 		);
 	}

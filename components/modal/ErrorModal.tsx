@@ -2,6 +2,7 @@
 
 import React from "react";
 import { RiCloseFill, RiCloseLine } from "react-icons/ri";
+import {AlertCircleIcon} from "lucide-react";
 
 interface ErrorModalProps {
 	title: string;

@@ -209,25 +209,23 @@ const ViewService: React.FC = () => {
 						{!isOwnerOrBarangay && (
 							<>
 								{isInTracker ? (
-									<Button disabled variant="outline">
-										Added to Tracker
+									<Button variant="outline" onClick={() => router.push(`/tracker`)}>
+										Go to Tracker
 									</Button>
 								) : (
 									<>
-										<Button
-											variant="outline"
-											onClick={() => router.push(`/tracker`)}
-										>
-											Add to Tracker
-										</Button>
-										<Button
-											variant="secondary"
-											onClick={() =>
-												router.push(`/services/${service?.id}/requirements`)
-											}
-										>
-											Avail Service
-										</Button>
+										{service?.status === "Closed" ? (
+											<span className="italic text-gray-500">This service is closed</span>
+										) : (
+											<Button
+												variant="secondary"
+												onClick={() =>
+													router.push(`/services/${service?.id}/requirements`)
+												}
+											>
+												Avail Service
+											</Button>
+										)}
 									</>
 								)}
 							</>

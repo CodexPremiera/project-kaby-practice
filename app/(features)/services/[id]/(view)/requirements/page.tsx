@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
 import { getCurrentUser, CurrentUser } from "@/lib/clients/UseAuthClient";
-import { useRouter, useParams } from "next/navigation";
+import {useRouter, useParams, redirect} from "next/navigation";
 import {
 	DropdownMenu,
 	DropdownMenuTrigger,
@@ -27,6 +27,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import {toast} from "sonner";
 
 interface UploadedFile {
 	file: File;
@@ -34,13 +35,41 @@ interface UploadedFile {
 }
 
 const Requirements: React.FC = () => {
-	const router = useRouter();
-	const { id } = useParams<{ id: string }>();
-
-	const [service, setService] = useState<Service | null>(null);
 	const [currentUser, setCurrentUser] = useState<CurrentUser>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [service, setService] = useState<Service | null>(null);
+	const { id } = useParams<{ id: string }>();
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (!id) {
+				setError("Invalid service ID");
+				setLoading(false);
+				return;
+			}
+
+			const [user, fetchedService] = await Promise.all([
+				getCurrentUser(),
+				getServiceById(id),
+			]);
+
+			setCurrentUser(user);
+			setService(fetchedService);
+			setError(!fetchedService ? "Service not found" : null);
+			setLoading(false);
+		};
+
+		fetchData();
+	}, [id]);
+
+	// Ensure the service is open in order to access this page
+	if (service?.status === "Closed") {
+		redirect(`/services/${service?.id}`);
+	}
+
+	const router = useRouter();
+
 	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
@@ -66,34 +95,13 @@ const Requirements: React.FC = () => {
 			router.push(`/tracker/${request?.id}/payment`);
 		} else if (res.status === 409) {
 			const { message } = await res.json();
-			alert(message); // or show toast
+			toast(message);
 			router.push(`/tracker`); // Or redirect to existing request view
 		} else {
 			router.push(`/services/${service?.id}/requirements`);
 		}
 	};
 
-	useEffect(() => {
-		const fetchData = async () => {
-			if (!id) {
-				setError("Invalid service ID");
-				setLoading(false);
-				return;
-			}
-
-			const [user, fetchedService] = await Promise.all([
-				getCurrentUser(),
-				getServiceById(id),
-			]);
-
-			setCurrentUser(user);
-			setService(fetchedService);
-			setError(!fetchedService ? "Service not found" : null);
-			setLoading(false);
-		};
-
-		fetchData();
-	}, [id]);
 
 	if (loading) {
 		return (

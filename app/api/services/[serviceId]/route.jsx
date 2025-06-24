@@ -59,6 +59,8 @@ export async function PUT(request, context) {
 
 	const { serviceId } = await context.params;
 	const body = await request.json();
+	console.log("\n\n\n\nbody")
+	console.log(body)
 
 	try {
 		const result = await serviceService.updateService(serviceId, body);
@@ -67,6 +69,8 @@ export async function PUT(request, context) {
 			return NextResponse.json({ error: "Post not found" }, { status: 404 });
 		}
 
+		console.log("\n\n\n\nresult")
+		console.log(result)
 		return NextResponse.json(result);
 	} catch (err) {
 		console.error("Error updating post:", err.message);

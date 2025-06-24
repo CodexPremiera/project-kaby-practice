@@ -117,12 +117,11 @@ const EditServicePage = () => {
 			setOriginalService(updatedService);
 			setService(updatedService);
 			setModalType("success");
-			window.location.reload();
 		} catch (err) {
 			setModalType("error");
 		} finally {
 			setSaving(false);
-			window.location.reload();
+			//window.location.reload();
 		}
 	};
 

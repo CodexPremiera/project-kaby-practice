@@ -61,7 +61,7 @@ const EditServicePage = () => {
 		if (tabParam === "Overview" || tabParam === "Payment" || tabParam === "Settings") {
 			setActiveTab(tabParam);
 		} else {
-			setActiveTab("Settings"); // fallback
+			setActiveTab("Overview"); // fallback
 		}
 	}, [searchParams]);
 
@@ -119,6 +119,7 @@ const EditServicePage = () => {
 			setModalType("success");
 		} catch (err) {
 			setModalType("error");
+			console.log(err)
 		} finally {
 			setSaving(false);
 			//window.location.reload();

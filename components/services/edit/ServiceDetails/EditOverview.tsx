@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import { Service } from "@/lib/clients/ViewServiceClient";
 import Image from "next/image";
 import { getPublicUrl } from "@/utils/supabase/storage";
@@ -11,6 +11,9 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import supabase from "@/lib/supabaseClient";
+import {useUser} from "@/app/context/UserContext";
+import {CitizenProfile} from "@/models/CitizenProfile";
+import {useCitizenContext} from "@/app/context/CitizenContext";
 
 interface Props {
 	service: Service | null;
@@ -18,6 +21,39 @@ interface Props {
 }
 
 const EditOverview: React.FC<Props> = ({ service, setService }) => {
+	const [owner, setOwner] = useState<CitizenProfile | null>(null);
+	const [loading, setLoading] = useState(true);
+
+	const user = useUser();
+	let id : string | null = null;
+
+	if (user.role === "citizen") {
+		const citizen = useCitizenContext();
+		id = citizen.citizenId;
+
+		useEffect(() => {
+			const fetchProfile = async () => {
+				try {
+					const res = await fetch(`/api/profile/${id}`);
+
+					if (!res.ok) throw new Error("Failed to fetch profile");
+					const data = await res.json();
+					setOwner(data);
+				} catch (error) {
+					console.error("Error fetching profile:", error);
+				} finally {
+					setLoading(false);
+				}
+			};
+
+			if (id) {
+				fetchProfile();
+			}
+		}, [id]);
+	}
+
+	console.log(owner)
+
 	const serviceTypes = ["Barangay", "Personal", "Event"];
 	const serviceCategories = [
 		"Environmental",
@@ -53,6 +89,7 @@ const EditOverview: React.FC<Props> = ({ service, setService }) => {
 		if (e.target instanceof HTMLInputElement && e.target.type === "checkbox") {
 			const isChecked = e.target.checked;
 			setService((prev) => (prev ? { ...prev, [name]: isChecked } : prev));
+			console.log(service)
 		} else {
 			setService((prev) => (prev ? { ...prev, [name]: value } : prev));
 		}
@@ -61,14 +98,14 @@ const EditOverview: React.FC<Props> = ({ service, setService }) => {
 	const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.files || e.target.files.length === 0) return;
 
-		const file = e.target.files[0];
+		const file = e.target?.files[0];
 		const fileExt = file.name.split(".").pop();
 		const fileName = `${service?.id}_${Date.now()}.${fileExt}`;
 		const filePath = `uploads/${fileName}`;
 
-		const { data, error } = await supabase.storage
+		/*const { data, error } = await supabase.storage
 			.from("services-pictures")
-			.upload(filePath, file, { upsert: true });
+			.upload(filePath, file, { upsert: true });*/
 
 		setService((prev) => (prev ? { ...prev, image: filePath } : prev));
 	};
@@ -167,7 +204,7 @@ const EditOverview: React.FC<Props> = ({ service, setService }) => {
 						</div>
 
 						<div className="flex gap-4 text-gray-600">
-							{(service.type === "Personal" || service.type === "Event") && (
+							{((service.type === "Personal" || service.type === "Event") && user.role !== "barangay") && (
 								<label className="flex items-center justify-between gap-3 text-sm cursor-pointer hover:text-gray-800 transition-colors">
 									<input
 										type="checkbox"
@@ -178,7 +215,7 @@ const EditOverview: React.FC<Props> = ({ service, setService }) => {
 									/>
 									Display Badge
 									<p className="text-sm text-gray-600 italic px-4">
-										You currently have 0 Badges
+										You currently have <span className="font-medium">{owner?.currentBadge} {owner?.currentBadge === 1 ? "badge" : "badges"}</span>
 									</p>
 								</label>
 							)}

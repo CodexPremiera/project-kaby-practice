@@ -7,6 +7,15 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import ScheduleDateEditor from "../../ScheduleDateEditor";
 import {Button} from "@/components/ui/button";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
+import {toast} from "sonner";
+import {router} from "next/client";
+import {
+	AlertDialog, AlertDialogAction, AlertDialogCancel,
+	AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
 
 interface Props {
 	service: Service | null;
@@ -14,6 +23,27 @@ interface Props {
 }
 
 const EditSettings: React.FC<Props> = ({ service, setService }) => {
+	const handleDelete = async () => {
+		try {
+			const res = await fetch(`/api/services/${service.id}`, {
+				method: "DELETE",
+			});
+
+			const data = await res.json();
+
+			if (!res.ok) {
+				throw new Error(data?.error || "Failed to delete service");
+			}
+
+			toast.success("Service deleted successfully");
+
+			// Optional: Redirect to home or services page
+			router.push("/services");
+		} catch (err: any) {
+			toast.error(err.message || "Failed to delete service");
+		}
+	};
+
 	const [showStatus, setShowStatus] = useState(true);
 	const [showDelete, setShowDelete] = useState(false);
 
@@ -131,8 +161,31 @@ const EditSettings: React.FC<Props> = ({ service, setService }) => {
 								Please proceed only if you're absolutely certain.
 							</p>
 						</div>
-						<ButtonSecondary className="w-fit">Delete</ButtonSecondary>
+						{/*<ButtonSecondary
+							className="w-fit"
+							onClick={handleDelete}
+						>
+							Delete
+						</ButtonSecondary>*/}
 
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<Button variant="outline">Delete</Button>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+									<AlertDialogDescription>
+										This action cannot be undone. This will permanently delete your
+										service.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
 					</div>
 				)}
 			</div>

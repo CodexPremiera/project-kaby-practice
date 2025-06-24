@@ -76,3 +76,41 @@ export async function PUT(request, context) {
 		);
 	}
 }
+
+export async function DELETE(request, context) {
+	const supabase = await createClient();
+	const { serviceId } = context.params;
+
+	try {
+		const { data: requests, error: requestError } = await supabase
+		.from("Requests")
+		.select("id")
+		.eq("service_id", serviceId)
+		.in("status", ["Pending", "Ongoing"]);
+
+		if (requestError) throw requestError;
+
+		if (requests.length > 0) {
+			return NextResponse.json(
+				{ error: "Cannot delete service with active requests." },
+				{ status: 400 }
+			);
+		}
+
+		const { error: deleteError } = await supabase
+		.from("Services")
+		.delete()
+		.eq("id", serviceId);
+
+		if (deleteError) throw deleteError;
+
+		return NextResponse.json({ message: "Service deleted successfully." });
+	} catch (err) {
+		console.error("Delete error:", err.message);
+		return NextResponse.json(
+			{ error: "Failed to delete service", message: err.message },
+			{ status: 500 }
+		);
+	}
+}
+

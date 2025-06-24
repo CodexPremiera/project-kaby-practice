@@ -4,6 +4,8 @@ import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import ButtonInverse from "@/components/ui/buttons/ButtonInverse";
 import ButtonTab from "@/components/ui/tabs/ButtonTab";
 
+import SuccessModal from "@/components/modal/SuccessModal";
+import ErrorModal from "@/components/modal/ErrorModal";
 
 
 interface Citizen {
@@ -19,6 +21,9 @@ const AssignWorkerModal = ({ onClose, citizens, refresh }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [positions, setPositions] = useState<Record<string, string>>({});
   const [view, setView] = useState<"citizens" | "workers">("citizens");
+  const [modalType, setModalType] = useState<null | "success" | "error">(null);
+  const [successMessage, setSuccessMessage] = useState("");
+
 
   const filteredCitizens = citizens
     ?.filter((c) => view === "citizens" ? !c.is_worker : c.is_worker)
@@ -41,17 +46,25 @@ const AssignWorkerModal = ({ onClose, citizens, refresh }) => {
       if(!res.ok){
         throw new Error("Failed to delete");
       }
-      alert("Successfully unassigned position citizen");
-      refresh();
+      setSuccessMessage("Successfully unassigned the citizen from their position.");
+      setModalType("success");
+
     }catch(error){
-      alert("failed to delete");
+      // alert("failed to delete");
     }
   } 
+  const handleCloseModal = () => {
+    setModalType(null);
+    refresh();
+    // onClose();
+  };
   const handleSubmit = async (citizen: Citizen) => {
     const position = positions[citizen.id];
 
     if (!position) {
-      alert("Please enter a position before submitting.");
+      setSuccessMessage(`Pkease select a position for ${citizen.first_name}.`);
+      setModalType("error"); 
+
       return;
     }
 
@@ -69,12 +82,13 @@ const AssignWorkerModal = ({ onClose, citizens, refresh }) => {
       if (!res.ok) throw new Error(`Failed to ${view === "citizens" ? "assign" : "update"}: ${res.status}`);
 
       const data = await res.json();
-      alert(`${view === "citizens" ? "Assigned" : "Updated"} ${citizen.first_name} as ${position}`);
-      setPositions((prev) => ({ ...prev, [citizen.id]: "" })); 
-      refresh();
+      
+      setSuccessMessage(`${view === "citizens" ? "Assigned" : "Updated"} ${citizen.first_name} as ${position}`);
+      setModalType("success");
+      setPositions((prev) => ({ ...prev, [citizen.id]: "" }));
+
     } catch (error) {
       console.error("Error submitting:", error);
-      alert("Failed. See console for details.");
     }
   };
 
@@ -84,6 +98,20 @@ const AssignWorkerModal = ({ onClose, citizens, refresh }) => {
         <h2 className="text-xl font-semibold text-center border-b border-gray/20 pb-1 h4">
           {view === "citizens" ? "Assign Citizen as Worker" : "Update Worker Role"}
         </h2>
+      {modalType === "success" && (
+        <SuccessModal
+          title="Success"
+          content={successMessage}
+          onClose={handleCloseModal}
+        />
+      )}
+      {modalType === "error" && (
+        <ErrorModal
+          title="Error"
+          content={successMessage}
+          onClose={handleCloseModal}
+        />
+      )}
 
         <div className="flex gap-3 items-center">
           <ButtonTab onClick={() => setView("citizens")} active={view === "citizens"}>Citizens</ButtonTab>
@@ -105,7 +133,7 @@ const AssignWorkerModal = ({ onClose, citizens, refresh }) => {
                 {citizen.last_name}, {citizen.first_name} {citizen.middle_name || ""}
               </div>
 
-              <input
+              {/* <input
                 type="text"
                 placeholder="Position"
                 value={positions[citizen.id] || ""}
@@ -116,8 +144,22 @@ const AssignWorkerModal = ({ onClose, citizens, refresh }) => {
                   }))
                 }
                 className="px-3 py-2 border border-secondary rounded-full w-[200px]"
-              />
-
+              /> */}
+              <select
+                value={positions[citizen.id] || ""}
+                onChange={(e) =>
+                  setPositions((prev) => ({
+                    ...prev,
+                    [citizen.id]: e.target.value,
+                  }))
+                }
+                className="px-3 py-2 border border-secondary rounded-full w-[200px] bg-white text-black"
+              >
+                <option value="" disabled>Select position</option>
+                <option value="Captain">Captain</option>
+                <option value="Councilor">Kagawad</option>
+                {/* <option value="Secretary">Secretary</option> */}
+              </select>
               {view === "workers" && (
                 <ButtonSecondary onClick={() => handleDelete(citizen)}>
                   Unassign

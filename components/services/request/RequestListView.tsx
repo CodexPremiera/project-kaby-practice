@@ -5,6 +5,7 @@ import { MessageCircleMore as MessageIcon } from "lucide-react";
 import { ServiceRequest } from "@/lib/clients/RequestServiceClient";
 import { getServiceById } from "@/lib/clients/ViewServiceClient";
 import { getPublicUrl } from "@/utils/supabase/storage";
+import { formatDateToInputValue } from "@/lib/utils";
 
 type RequestListViewProps = {
 	requests: ServiceRequest[];
@@ -80,10 +81,10 @@ const RequestListView: React.FC<RequestListViewProps> = ({
 								</span>
 								<div className="flex flex-col gap-0">
 									<span className="text-secondary text-sm leading-[1.2] font-medium">
-										{request.owner}
+										{request.owner_name}
 									</span>
 									<span className="text-secondary text-sm leading-[1.2] font-medium">
-										{request.schedule_date.toLocaleDateString()} •{" "}
+										{formatDateToInputValue(request.schedule_date)} •{" "}
 										{request.status}
 									</span>
 								</div>

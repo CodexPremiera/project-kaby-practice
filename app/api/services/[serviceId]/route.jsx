@@ -59,6 +59,8 @@ export async function PUT(request, context) {
 
 	const { serviceId } = await context.params;
 	const body = await request.json();
+	console.log("\n\n\n\nbody")
+	console.log(body)
 
 	try {
 		const result = await serviceService.updateService(serviceId, body);
@@ -67,12 +69,52 @@ export async function PUT(request, context) {
 			return NextResponse.json({ error: "Post not found" }, { status: 404 });
 		}
 
+		console.log("\n\n\n\nresult")
+		console.log(result)
 		return NextResponse.json(result);
 	} catch (err) {
-		console.error("Error updating post:", err);
+		console.error("Error updating post:", err.message);
 		return NextResponse.json(
-			{ error: "Failed to update post" },
+			{ error: "Failed to update post", message: err.message},
 			{ status: 500 }
 		);
 	}
 }
+
+export async function DELETE(request, context) {
+	const supabase = await createClient();
+	const { serviceId } = context.params;
+
+	try {
+		const { data: requests, error: requestError } = await supabase
+		.from("Requests")
+		.select("id")
+		.eq("service_id", serviceId)
+		.in("status", ["Pending", "Ongoing"]);
+
+		if (requestError) throw requestError;
+
+		if (requests.length > 0) {
+			return NextResponse.json(
+				{ error: "Cannot delete service with active requests." },
+				{ status: 400 }
+			);
+		}
+
+		const { error: deleteError } = await supabase
+		.from("Services")
+		.delete()
+		.eq("id", serviceId);
+
+		if (deleteError) throw deleteError;
+
+		return NextResponse.json({ message: "Service deleted successfully." });
+	} catch (err) {
+		console.error("Delete error:", err.message);
+		return NextResponse.json(
+			{ error: "Failed to delete service", message: err.message },
+			{ status: 500 }
+		);
+	}
+}
+

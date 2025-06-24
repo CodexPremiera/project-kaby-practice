@@ -10,12 +10,12 @@ import MainbarItem from "@/components/mainbar/MainbarItem";
 import { usePathname } from "next/navigation";
 
 interface BarangayProps {
-	role: string | null;
+	role: string | undefined;
 }
 
 const BarangayMainbar = ({ role }: BarangayProps) => {
 	const pathname = usePathname();
-
+	console.log("Current pathname:", role);
 	const filtered_nav = [
 		{ name: "Home", path: "/home", icon: RiCommunityLine },
 	];

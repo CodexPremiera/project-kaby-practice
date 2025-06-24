@@ -18,6 +18,15 @@ import {MainBarProvider} from "@/app/context/MainBarProvider";
 import UserProvider from "@/app/context/UserProvider";
 import { cookies } from "next/headers";
 const GeneralLayout = async ({ children }: { children: ReactNode }) => {
+	const cookieStore = await cookies();
+	const actingBarangayId = cookieStore.get("acting_as_barangay")?.value;
+	const accessRole = cookieStore.get("access_role")?.value;
+	// const accessRole = "Chief Operator";
+
+	console.log("acting barangay id (from cookie):", actingBarangayId);
+	console.log("access role (from cookie):", accessRole);
+
+
 	const supabase = await createClient();
 	const authService = new AuthenticationService(supabase);
 	const userService = new UserService(supabase);
@@ -56,7 +65,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 
 		// conte
 		Header = <BarangayHeader />;
-		Mainbar = <BarangayMainbar role = {"barangay"}/>;
+		Mainbar = <BarangayMainbar role = {accessRole}/>;
 	} else if (role === "citizen") {
 		const citizenService = new CitizenService(supabase);
 		const barangayService = new BarangayService(supabase);
@@ -77,21 +86,7 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		console.log("womppp womppp  womppp",citizen);
 		
 		// TODO: HIDDE THIS OR SOMETHING
-		const {data:access,error} = await supabase.from("worker_roles_view").select("access_role").eq("citizen_id",citizen.id).maybeSingle();
-		console.log("this is access role", access?.access_role);
-
-		// const cookieStore = cookies(); // from "next/headers"
-		// const actingAs = (await cookieStore).get("actingAs")?.value || "citizen";
-		// console.log("acting as",actingAs);
-		// if(access?.access_role  && actingAs === "barangay"){
-		if(access?.access_role  ){
-			Header = <BarangayHeader />;
-  			Mainbar = <BarangayMainbar role = {access.access_role}/>;
-		}else{
-
-			Header = <CitizenHeader />;
-			Mainbar = <CitizenMainbar />;
-		}
+	
 		// ================================================
 		citizenData = {
 			citizenId: citizen.id,
@@ -103,13 +98,13 @@ const GeneralLayout = async ({ children }: { children: ReactNode }) => {
 		};
 		console.log("Barangay data: ", barangayData);
 		console.log("brrr brr", citizenData);
-		// Header = <CitizenHeader />;
-		// Mainbar = <CitizenMainbar />;
+		Header = <CitizenHeader />;
+		Mainbar = <CitizenMainbar />;
 	}
 	const LayoutWrapper = ({ children }: { children: React.ReactNode }) => (
 		<div className="flex flex-col w-screen min-h-screen overflow-hidden relative">
 			{Header}
-			<div className="flex flex-row flex-1 sm:ml-[75px] h-full">
+			<div className="flex flex-row flex-1 sm:ml-[75px] h-full background-1">
 				{Mainbar}
 				<div className="flex-1 sm:rounded-tl-[20px] sm:px-7 py-6 border-light-color bg-gradient mt-16 pb-18">
 					{children}

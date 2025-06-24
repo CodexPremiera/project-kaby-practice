@@ -39,7 +39,8 @@ class BaseRepo {
 			.from(this.tableName)
 			.update(fields)
 			.eq("id", id)
-			.select();
+			.select()
+			.single();
 		if (error){
 			console.log(error);
 			throw error;

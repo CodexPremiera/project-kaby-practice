@@ -46,12 +46,14 @@ export async function updateSession(request: NextRequest) {
 		"/",              // root
 		"/login",         // login page
 		"/auth/callback", 
+		"/login/verify",
 		"/petition",      // petition page
 	];
 	const isPublicPath = publicPaths.includes(request.nextUrl.pathname) ||
 	 	request.nextUrl.pathname.startsWith("/api") ||
 		request.nextUrl.pathname.startsWith("/auth")||
 		request.nextUrl.pathname.startsWith("/register")||
+		// request.nextUrl.pathname.startsWith("/service")||
 		request.nextUrl.pathname.startsWith("/search");
 	
 	if (!user && !isPublicPath) {

@@ -26,12 +26,14 @@ class ServiceService {
 	//     return {data,error};
 	// }
 	async createService(serviceData) {
-		console.log("this is createService Servoce", serviceData);
 		const data = await this.repo.create(serviceData);
 		return data;
 	}
 	async updateService(id, serviceData) {
 		const data = await this.repo.updateService(id, serviceData);
+
+		console.log("this is updateService Service", serviceData);
+		console.log("this is data", data);
 		return data;
 	}
 
@@ -47,6 +49,12 @@ class ServiceService {
 
 	async getServicesByOwners(ownerIds) {
 		const data = await this.repo.getServicesByOwners(ownerIds);
+		return data;
+	}
+
+	async getAllEligibleForBadgesServices(barangayUserId) {
+		const data =
+			await this.repo.getAllEligibleForBadgesServices(barangayUserId);
 		return data;
 	}
 }

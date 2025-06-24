@@ -29,7 +29,7 @@ const SuccessModal = ({ title, content, onClose }: SuccessModalProps) => {
 
 				<button
 					onClick={onClose}
-					className="mt-4 px-6 py-2 bg-black text-white rounded-md "
+					className="mt-4 px-6 py-2 bg-gray-400 text-white rounded-md "
 				>
 					Close
 				</button>

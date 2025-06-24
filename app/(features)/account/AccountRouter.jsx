@@ -8,14 +8,17 @@ import CitizenSettings from "@/components/settings/citizen_settings";
 import BarangaySettings from "@/components/settings/barangay_settings";
 
 export default function SettingsRouter() {
+  // console.log("SettingsRouter component rendered");
   const { role,has_password } = useUser();
   const citizenCtx = useCitizenContext();
+  console.log("this is the role", role, "this is the has password", has_password);
   let citizenId = citizenCtx?.citizenId || null;
   console.log("has passowrd is ", has_password);
 
   const shouldShowModal = !has_password;
 
   if (role === "barangay" ) {
+    console.log("this is a barangayyy");
     return <BarangaySettings showSetPasswordModal={shouldShowModal}/>;
   }
   else if (role === "citizen") {

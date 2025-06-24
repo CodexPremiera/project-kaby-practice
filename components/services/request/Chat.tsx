@@ -1,8 +1,7 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import { Button } from "@/components/ui/button";
-import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
+import { ServiceRequest} from "@/lib/clients/RequestServiceClient";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import TextField from "@/components/ui/form/TextField";
 import Chatbox from "@/components/services/request/Chatbox";
@@ -105,36 +104,29 @@ const Chat = ({ request } : ChatProps) => {
 
 
 	return (
-		<div className="flex flex-col h-full w-full justify-between">
-			<div className="flex flex-col gap-1 w-full h-[300px] border border-light-color rounded-lg">
-				<span className="p-3 border-b border-light-color text-sm font-medium text-primary-1">
-					Chatting with {getCustomerName(request)}
-				</span>
-
-				{/* Message History */}
-				<div className="overflow-hidden flex-1 overflow-y-auto p-3 space-y-2 text-sm gap-1 flex flex-col">
-					{messages.length === 0 ? (
-						<p className="text-gray-500 text-center mt-10">
-							No messages yet. Start a conversation!
-						</p>
-					) : (
-						messages.map((msg) => {
-							if (!msg || !msg.sender_id) return null; // Skip invalid message
-
-							return (
-								<Chatbox
-									key={msg.id}
-									message={msg}
-									isOwner={msg.sender_id === userId}
-								/>
-							);
-						})
-					)}
-				</div>
+		<div className="flex flex-col h-full w-full">
+			{/* Scrollable Message History */}
+			<div className="flex-1 overflow-y-auto px-4 py-4 space-y-2 text-sm">
+				{messages.length === 0 ? (
+					<p className="text-gray-500 text-center mt-10">
+						No messages yet. Start a conversation!
+					</p>
+				) : (
+					messages.map((msg) =>
+						msg && msg.sender_id ? (
+							<Chatbox
+								key={msg.id}
+								message={msg}
+								isOwner={msg.sender_id === userId}
+							/>
+						) : null
+					)
+				)}
 			</div>
 
+
 			{/* Message Input */}
-			<div className="bottom-4 w-full py-3 flex gap-2 items-center">
+			<div className="border-t-2 border-light-color w-full py-4 px-4 flex gap-2 items-center">
 				<TextField
 					className="border-light-color"
 					placeholder="Type a message..."
@@ -142,9 +134,7 @@ const Chat = ({ request } : ChatProps) => {
 					onChange={(e) => setNewMessage(e.target.value)}
 					onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
 				/>
-				<ButtonSecondary onClick={handleSendMessage}>
-					Send
-				</ButtonSecondary>
+				<ButtonSecondary onClick={handleSendMessage}>Send</ButtonSecondary>
 			</div>
 		</div>
 	);

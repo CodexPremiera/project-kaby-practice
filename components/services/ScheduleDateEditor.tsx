@@ -17,9 +17,9 @@ const ScheduleDateEditor: React.FC<Props> = ({
 	const [isEditing, setIsEditing] = useState(false);
 	const [tempStartDate, setTempStartDate] = useState("");
 	const [tempEndDate, setTempEndDate] = useState("");
+	const todayISO = formatDateToInputValue(new Date());
 
 	const handleEditSchedule = () => {
-		const todayISO = formatDateToInputValue(new Date());
 		setTempStartDate(startDate ? formatDateToInputValue(startDate) : todayISO);
 		setTempEndDate(endDate ? formatDateToInputValue(endDate) : todayISO);
 		setIsEditing(true);
@@ -88,9 +88,10 @@ const ScheduleDateEditor: React.FC<Props> = ({
 							<input
 								type="date"
 								value={tempStartDate}
-								onChange={(e) => setTempStartDate(e.target.value)}
-								className="border border-gray-300 rounded px-2 py-1 text-sm"
+								disabled
+								className="border border-gray-300 rounded px-2 py-1 text-sm text-gray-500"
 								max={tempEndDate}
+								min={todayISO}
 							/>
 						</div>
 						<div className="flex items-center gap-1">
@@ -100,7 +101,7 @@ const ScheduleDateEditor: React.FC<Props> = ({
 								value={tempEndDate}
 								onChange={(e) => setTempEndDate(e.target.value)}
 								className="border border-gray-300 rounded px-2 py-1 text-sm"
-								min={tempStartDate}
+								min={todayISO}
 							/>
 						</div>
 					</div>

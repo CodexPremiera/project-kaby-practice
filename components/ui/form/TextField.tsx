@@ -9,6 +9,7 @@ interface TextFieldProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   hasChanged?: boolean
   className?: string
+  editable? : boolean
 }
 
 function TextField({
@@ -16,7 +17,8 @@ function TextField({
                      placeholder = "Enter text",
                      value,
                      onChange,
-                     hasChanged
+                     hasChanged,
+                     editable = true
                    }: TextFieldProps) {
   const color = hasChanged ? "text-primary" : "text-secondary";
 
@@ -32,6 +34,7 @@ function TextField({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          disabled={!editable}
         />
       </div>
     </div>

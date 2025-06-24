@@ -3,7 +3,6 @@ import BaseRepo from "./BaseRepo";
 export default class RequestRepo extends BaseRepo {
 	constructor(supabase) {
 		super("Requests", supabase);
-		this.supabase = supabase;
 	}
 	async getAllRequests() {
 		return await this.repo.getAll();
@@ -67,7 +66,6 @@ export default class RequestRepo extends BaseRepo {
 	async getRequestsByServiceId(service_id, status) {
 		let query = this.supabase
 		.rpc("get_requests_with_service_id", { _service_id: service_id });
-
 		if (status) {
 			query = query.eq("status", status);
 		}

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RiCloseLine } from "react-icons/ri";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import LoadingModal from "../modal/LoadingModal";
 import ErrorModal from "../modal/ErrorModal";
@@ -19,6 +19,8 @@ interface Appointment {
 	email: string;
 	city: string;
 	region: string;
+	city_name: string;
+	region_name: string;
 }
 
 const CreateAccount: React.FC<Props> = ({ onClose, appointment }) => {
@@ -43,8 +45,8 @@ const CreateAccount: React.FC<Props> = ({ onClose, appointment }) => {
 		if (appointment) {
 			setFormData((prev) => ({
 				...prev,
-				city: appointment.city,
-				region: appointment.region,
+				city: appointment.city_name,
+				region: appointment.region_name,
 				email: appointment.email,
 			}));
 		}
@@ -103,13 +105,13 @@ const CreateAccount: React.FC<Props> = ({ onClose, appointment }) => {
 										<Input
 											placeholder="Enter City"
 											name="city"
-											value={formData.city}
+											value={appointment?.city_name}
 											readOnly
 										/>
 										<Input
 											placeholder="Enter Region"
 											name="region"
-											value={formData.region}
+											value={appointment?.region_name}
 											readOnly
 										/>
 									</div>

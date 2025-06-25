@@ -27,12 +27,11 @@ export async function POST(req) {
 		const userService = new UserService(supabase);
 		const role = await userService.getUserRole(data.user.id);
 		// const {data:access,error:access_err} = await supabase.from("worker_roles_view").select("access_role").eq("citizen_id",citizen.id).maybeSingle();
-		if(role === "barangay"){
-			console.log("User role:", role);
-			return NextResponse.json({ redirectTo: "/login/verify" });
-
-		}
-		else if(role === "citizen"){
+		// if(role === "barangay"){
+		// 	console.log("User role:", role);
+		// 	return NextResponse.json({ redirectTo: "/login/verify" });
+		// }
+		if(role === "citizen"){
 			return NextResponse.json({ redirectTo: "/home" });
 
 		}

@@ -115,6 +115,8 @@ const BarangayAppointment = ({ appointments }: Props) => {
 		.map((appointment, index) => ({
 			...appointment,
 			status: statuses[index] || appointment.status,
+			city_name: getCityName(appointment.city),
+			region_name: getRegionName(appointment.region),
 			index,
 		}));
 

@@ -27,7 +27,7 @@ const Details: React.FC<DetailsProps> = ({ request }) => {
 	const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
 	const supabase = createClient();
-	
+	console.log(request, "request details");
 	useEffect(() => {
 		const fetchService = async () => {
 			try {
@@ -47,10 +47,10 @@ const Details: React.FC<DetailsProps> = ({ request }) => {
 	useEffect(() => {
 		const fetchFiles = async () => {
 			if (!request?.service_id) return;
-
+			const path = `${request.customer_id}/${request.service_id}/`;
 			const { data, error } = await supabase.storage
 				.from("service-requirements")
-				.list(request.service_id + "/", { limit: 100 });
+				.list(path, { limit: 100 });
 
 			if (error) {
 				console.error("Error fetching files:", error);
@@ -66,7 +66,7 @@ const Details: React.FC<DetailsProps> = ({ request }) => {
 		const file = e.target.files?.[0];
 		if (!file || !request?.service_id) return;
 
-		const filePath = `${request.service_id}/${file.name}`;
+		const filePath = `${request.customer_id}/${request.service_id}/${file.name}`;
 		console.log("Uploading file:", filePath);
 		const { error } = await supabase.storage
 			.from("service-requirements")
@@ -124,7 +124,7 @@ const Details: React.FC<DetailsProps> = ({ request }) => {
 							{uploadedFiles.map((filename, index) => {
 								const publicUrl = supabase.storage
 									.from("service-requirements")
-									.getPublicUrl(`${request.service_id}/${filename}`).data.publicUrl;
+									.getPublicUrl(`${request.customer_id}/${request.service_id}/${filename}`).data.publicUrl;
 
 								return (
 									<li key={index}>

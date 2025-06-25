@@ -47,7 +47,8 @@ export async function PUT(request){
         // FINAL CODE FOR PUT -- DO NOT DELETE --
         // get data sa json
         const {user_id, ...someValues} = body;
-        console.log("the val bolante ", user_id);
+        console.log("the val bolante ", body);
+
         // get cit-id from auth-id
         const this_id = await upCitService.getCitByAuthenticatedId(user_id);
         console.log("this dot", user_id, "and this is ",this_id)

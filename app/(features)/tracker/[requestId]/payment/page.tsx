@@ -14,6 +14,8 @@ import {Request} from "@/lib/clients/RequestServiceClient";
 import {formatDate} from "@/lib/utils";
 import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
+import { useCitizenContext } from "@/app/context/CitizenContext";
+import { createClient } from "@/utils/supabase/client";
 
 /*interface UploadedFile {
 	name: string;
@@ -31,14 +33,15 @@ const Payment: React.FC = () => {
 	const [error, setError] = useState<string | null>(null);
 	// const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 	const [showModal, setShowModal] = useState(false);
-
+	const {citizenId} = useCitizenContext();
+	console.log(citizenId, "citizenId");
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		const res = await fetch("/api/tracker", {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
-				user_id: currentUser,
+				user_id: citizenId,
 				is_paid: true,
 				status: "Ongoing",
 			}),
@@ -103,19 +106,34 @@ const Payment: React.FC = () => {
         try {
             setLoading(true);
             setShowModal(false);
+            // const res = await fetch(`/api/tracker`, {
+				//     method: "PUT",
+				//     headers: { "Content-Type": "application/json" },
+				//     body: JSON.stringify({
+					//         user_id: citizenId,
+					//         is_paid: true,
+					//         status: "Ongoing",
+					//     }),
+					// });
+					
+					// if (!res.ok) throw new Error("Payment failed");
+			const supabase = createClient();
+			const { data, error } = await supabase
+				.from("Requests")
+				.update({
+					is_paid: true,
+					status: "Ongoing",
+				})
+				.eq("customer_id", citizenId)
+				.eq("service_id", service.id);  
+				
+			if (error) {
+				console.error("Update error:", error);
+				throw new Error("Payment update failed");
+			}
 
-            const res = await fetch("/api/request", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    user_id: currentUser?.user_id,
-                    is_paid: true,
-                    status: "Ongoing",
-                }),
-            });
-
-            if (!res.ok) throw new Error("Payment failed");
-
+			console.log("Update success:", data);
+			router.push("/tracker");
             router.push("/tracker");
         } catch (err) {
             setError("Something went wrong!");

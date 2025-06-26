@@ -1,12 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-	getCurrentUser,
-	getServiceById,
-	Service,
-} from "@/lib/clients/ViewServiceClient";
-import { useRouter, useParams } from "next/navigation";
+import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
+import { getCurrentUser, CurrentUser } from "@/lib/clients/UseAuthClient";
+import {useRouter, useParams, redirect} from "next/navigation";
 import {
 	DropdownMenu,
 	DropdownMenuTrigger,
@@ -30,6 +27,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import {toast} from "sonner";
 
 interface UploadedFile {
 	file: File;
@@ -37,38 +35,11 @@ interface UploadedFile {
 }
 
 const Requirements: React.FC = () => {
-	const router = useRouter();
-	const { id } = useParams<{ id: string }>();
-
-	const [service, setService] = useState<Service | null>(null);
-	const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+	const [currentUser, setCurrentUser] = useState<CurrentUser>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-	const handleSubmit = async (e:any) => {
-		e.preventDefault();
-		const res = await fetch("/api/request", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				service_id: service?.id,
-				is_paid: false,
-				status: "Pending",
-				owner: service?.owner,
-				user_id: currentUserId
-			}),
-		});
-
-		if(res.ok){
-			const data = await res.json();
-			console.log(data, currentUserId);
-			router.push(`/services/${service?.id}/payment`)
-		} else {
-			router.push(`/services/${service?.id}/requirements`)
-		}
-
-	};
+	const [service, setService] = useState<Service | null>(null);
+	const { id } = useParams<{ id: string }>();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -83,7 +54,7 @@ const Requirements: React.FC = () => {
 				getServiceById(id),
 			]);
 
-			setCurrentUserId(user);
+			setCurrentUser(user);
 			setService(fetchedService);
 			setError(!fetchedService ? "Service not found" : null);
 			setLoading(false);
@@ -91,6 +62,46 @@ const Requirements: React.FC = () => {
 
 		fetchData();
 	}, [id]);
+
+	// Ensure the service is open in order to access this page
+	if (service?.status === "Closed") {
+		redirect(`/services/${service?.id}`);
+	}
+
+	const router = useRouter();
+
+	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+
+	const handleSubmit = async (e: any) => {
+		e.preventDefault();
+
+		const res = await fetch("/api/tracker", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				service_id: service?.id,
+				is_paid: false,
+				status: "Pending",
+				owner: service?.owner,
+				user_id: currentUser?.id,
+				schedule_date: selectedDate
+			}),
+		});
+
+		if (res.ok) {
+			const data = await res.json();
+			const request = data[0];
+			router.push(`/tracker/${request?.id}/payment`);
+		} else if (res.status === 409) {
+			const { message } = await res.json();
+			toast(message);
+			router.push(`/tracker`); // Or redirect to existing request view
+		} else {
+			router.push(`/services/${service?.id}/requirements`);
+		}
+	};
+
 
 	if (loading) {
 		return (
@@ -134,7 +145,7 @@ const Requirements: React.FC = () => {
 			<div className="flex justify-between w-full bg-secondary py-2 px-3 items-center rounded-t-xl text-sm ">
 				<div className="flex gap-4 font-medium  text-white ">
 					<RiArrowLeftLine
-						onClick={() => router.push(`/services/${service.id}`)}
+						onClick={() => router.push(`/services/${service?.id}`)}
 						size={22}
 						className="hover:bg-white rounded-full"
 					/>
@@ -213,11 +224,10 @@ const Requirements: React.FC = () => {
 														mode="single"
 														selected={selectedDate}
 														onSelect={(date) => setSelectedDate(date)}
-														initialFocus
 														disabled={(date) =>
-															(service.start_date &&
+															(service?.start_date &&
 																isBefore(date, new Date(service.start_date))) ||
-															(service.end_date &&
+															(service?.end_date &&
 																isAfter(date, new Date(service.end_date)))
 														}
 													/>
@@ -317,10 +327,7 @@ const Requirements: React.FC = () => {
 						</div>
 					</div>
 					<div className="flex justify-end">
-						<Button
-							variant="secondary"
-							onClick={handleSubmit}
-						>	
+						<Button variant="secondary" onClick={handleSubmit}>
 							Proceed
 						</Button>
 					</div>

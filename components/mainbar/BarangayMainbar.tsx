@@ -3,29 +3,41 @@
 import {
 	RiCommunityLine,
 	RiServiceLine,
-	RiSettings4Line,
 	RiTableLine,
+	RiSettings4Line
 } from "react-icons/ri";
 import MainbarItem from "@/components/mainbar/MainbarItem";
-import {usePathname} from "next/navigation";
+import { usePathname } from "next/navigation";
 
-const nav_items = [
-	{ name: "Home", path: "/home", icon: RiCommunityLine },
-	{ name: "Citizen Desk", path: "/citizen_desk", icon: RiTableLine },
-	{ name: "Your Services", path: "/services", icon: RiServiceLine },
-	{ name: "Settings", path: "/account", icon: RiSettings4Line },
-];
+interface BarangayProps {
+	role: string | undefined;
+}
 
-const BarangayMainbar = () => {
+const BarangayMainbar = ({ role }: BarangayProps) => {
 	const pathname = usePathname();
+	console.log("Current pathname:", role);
+	const filtered_nav = [
+		{ name: "Home", path: "/home", icon: RiCommunityLine },
+	];
+
+	if (role === "Service Manager") {
+		filtered_nav.push({ name: "Your Services", path: "/services", icon: RiServiceLine });
+	} else if (role === "Citizen Manager") {
+		filtered_nav.push({ name: "Citizen Desk", path: "/citizen_desk", icon: RiTableLine });
+	} else if(role === "barangay" || role === "Chief Operator"){
+		filtered_nav.push({ name: "Your Services", path: "/services", icon: RiServiceLine });
+		filtered_nav.push({ name: "Citizen Desk", path: "/citizen_desk", icon: RiTableLine });
+		filtered_nav.push({ name: "Settings", path: "/account", icon: RiSettings4Line });
+
+	}
 
 	return (
 		<div className="mainbar">
-			{nav_items.map((item) => (
-				<MainbarItem key={item.path} {...item} pathname={pathname}/>
+			{filtered_nav.map((item) => (
+				<MainbarItem key={item.path} {...item} pathname={pathname} />
 			))}
 		</div>
-	)
+	);
 };
 
 export default BarangayMainbar;

@@ -5,19 +5,28 @@ import PasswordField from "@/components/ui/form/PasswordField";
 import ButtonSecondary from "@/components/ui/buttons/ButtonSecondary";
 import ButtonPrimary from "@/components/ui/buttons/ButtonPrimary";
 
+import SuccessModal from "@/components/modal/SuccessModal";
+import ErrorModal from "@/components/modal/ErrorModal";
+
 function PasswordAndSecurity() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  
+  const [modalType, setModalType] = useState<null | "success" | "error">(null);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChangePassword = async () => {
     if (!currentPassword || !newPassword) {
-      alert("Please fill out both password fields.");
+        setSuccessMessage("Please fill out both password fields.");
+        setModalType("error");
+
       return;
     }
 
     if (currentPassword === newPassword) {
-      alert("New password cannot be the same as current password.");
+      setSuccessMessage("Both passwords must be the same.");
+          setModalType("error");
       return;
     }
 
@@ -38,22 +47,43 @@ function PasswordAndSecurity() {
       const result = await res.json();
 
       if (result.error || result.success === false) {
-        alert(result.error || "Password change failed.");
+        setSuccessMessage(result.error || "Password change failed.");
+            setModalType("error");
       } else {
-        alert("Password changed successfully!");
+        
+            setSuccessMessage("Password changed successfully!");
+            setModalType("success");
         setCurrentPassword("");
         setNewPassword("");
       }
     } catch (error) {
       console.error("Password change error:", error);
-      alert("An error occurred while changing your password.");
+      // alert("An error occurred while changing your password.");
     } finally {
       setSubmitting(false);
     }
   };
-
+const handleCloseModal = () => {
+          setModalType(null);
+          // refresh();
+          // onClose();
+        };
   return (
     <>
+    {modalType === "success" && (
+        <SuccessModal
+          title="Success"
+          content={successMessage}
+          onClose={handleCloseModal}
+        />
+      )}
+      {modalType === "error" && (
+        <ErrorModal
+          title="Error"
+          content={successMessage}
+          onClose={handleCloseModal}
+        />
+      )}
       {/* Header */}
       <div className="flex flex-col items-start gap-2 lg:gap-4 w-full">
         <h1 className="text-[1.75rem] font-semibold hidden lg:block">

@@ -1,27 +1,46 @@
 export interface ServiceRequest {
 	id: string;
 	service_id: string;
-	owner: string;
 	is_paid: boolean;
 	schedule_date: Date;
-	status: string;
+	ratings: string;
 	request_files: string | null;
-	customer_id: string | null;
-	added_date: string; // ISO string from Supabase
+	status: string;
+	owner_id: string;
+	customer_id: string;
+	added_date: string;
+	service_title: string;
+	service_photo: string;
+	owner_name: string;
+	customer_fname: string;
+	customer_lname: string;
+	customer_mname: string;
+	customer_photo: string;
+}
 
-	CitizenProfile?: {
-		first_name: string | null;
-		last_name: string | null;
-		middle_name: string | null;
-		profile_pic: string | null;
-	};
-
-	Services?: {
-		title: string
-	}
+export interface Request {
+	id: string;
+	service_id: string;
+	is_paid: boolean;
+	schedule_date: string | null;
+	ratings: number | null;
+	request_files: string | null;
+	status: "Pending" | "Ongoing" | "Completed" | "Canceled" | string; // adjust enum as needed
+	owner: string;
+	customer_id: string;
+	added_date: string; // ISO 8601 datetime string
 }
 
 export const getCustomerName = (request: ServiceRequest) =>
-	`${request.CitizenProfile?.first_name ?? ''} ${
-		request.CitizenProfile?.middle_name ? request.CitizenProfile.middle_name[0] + '.' : ''
-	} ${request.CitizenProfile?.last_name ?? ''}`.trim();
+	`${request.customer_fname ?? ""} ${
+		request.customer_mname ? request.customer_mname[0] + "." : ""
+	} ${request.customer_lname ?? ""}`.trim();
+
+export const getRequestsByCustomer = async (customerId: string) => {
+	const res = await fetch(`/api/tracker/${customerId}`);
+	if (!res.ok) {
+		return [];
+	}
+	const data = await res.json();
+	return data.requests;
+};

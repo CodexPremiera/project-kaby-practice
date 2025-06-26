@@ -4,8 +4,8 @@ import { RiCloseFill } from "react-icons/ri";
 interface ConfirmationModalProps {
 	title: string;
 	content: string;
-	onConfirm: () => void; // called when user clicks Yes
-	onClose: () => void; // called when user clicks No or closes modal
+	onConfirm: () => void;
+	onClose: () => void;
 }
 
 const ConfirmationModal = ({
@@ -23,20 +23,22 @@ const ConfirmationModal = ({
 				<RiCloseFill className="w-[25px] h-[25px]" />
 			</button>
 
-			<div className="relative flex flex-col items-center bg-white p-8 rounded-lg shadow-lg w-[350px]">
+			<div className="relative flex flex-col items-center bg-white p-8 py-10 gap-2 rounded-lg shadow-lg w-[400px]">
 				<h2 className="text-xl font-semibold text-center mb-4">{title}</h2>
-				<p className="text-sm text-center text-gray-600 mb-4">{content}</p>
+				<div className="text-sm text-gray-600 text-center mb-6 break-words">
+					{content}
+				</div>
 
-				<div className="flex gap-3">
+				<div className="flex gap-4 w-full">
 					<button
 						onClick={onConfirm}
-						className="mt-4 px-6 py-2 bg-black text-white rounded-md"
+						className="flex-1 py-2 rounded-lg bg-black text-white font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black transition"
 					>
 						Yes
 					</button>
 					<button
 						onClick={onClose}
-						className="mt-4 px-6 py-2 bg-gray-400 text-white rounded-md"
+						className="flex-1 py-2 rounded-lg bg-gray-300 text-gray-800 font-medium hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
 					>
 						No
 					</button>

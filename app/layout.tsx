@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "easymde/dist/easymde.min.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import {Toaster} from "@/components/ui/sonner";
 
 const workSans = localFont({
 	src: [
@@ -75,6 +76,7 @@ export default function RootLayout({
 					disableTransitionOnChange
 				>
 					{children}
+					<Toaster />
 				</ThemeProvider>
 			</body>
 		</html>

@@ -8,6 +8,7 @@ interface ResidenceProps {
   userId: string | null;
 }
 
+
 function Demographics({userId} :ResidenceProps ) {
   // Mock original values
   const [originalData, setOriginalData] = useState({
@@ -115,6 +116,8 @@ function Demographics({userId} :ResidenceProps ) {
             value={formData.region}
             onChange={(e) => setFormData({...formData, region: e.target.value})}
             hasChanged={formData.region !== originalData.region}
+            editable = {false}
+
           />
           <TextField
             field_name="Province"
@@ -122,6 +125,7 @@ function Demographics({userId} :ResidenceProps ) {
             value={formData.province}
             onChange={(e) => setFormData({...formData, province: e.target.value})}
             hasChanged={formData.province !== originalData.province}
+            editable = {false}
           />
         </div>
 
@@ -133,6 +137,7 @@ function Demographics({userId} :ResidenceProps ) {
             value={formData.city}
             onChange={(e) => setFormData({...formData, city: e.target.value})}
             hasChanged={formData.city !== originalData.city}
+            editable = {false}
           />
           <TextField
             field_name="Barangay"
@@ -140,7 +145,9 @@ function Demographics({userId} :ResidenceProps ) {
             value={formData.barangay}
             onChange={(e) => setFormData({...formData, barangay: e.target.value})}
             hasChanged={formData.barangay !== originalData.barangay}
+            editable = {false}
           />
+          
         </div>
 
         <div className="flex max-md:flex-col gap-4 w-full">

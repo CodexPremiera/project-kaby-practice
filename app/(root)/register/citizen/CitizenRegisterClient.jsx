@@ -56,11 +56,7 @@ export default function CitizenRegisterClientForm() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		// Password mismatch check
-		// if (form.password !== form.confirm_password) {
-		// 	alert("Passwords do not match!");
-		// 	return;
-		// }
+		
 		setModalType("loading");
 
 		const res = await fetch("/api/auth/register/citizen", {

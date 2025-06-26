@@ -66,7 +66,39 @@ class BarangayProfileRepo extends BaseRepo {
 
 		return data.id;
 	}
-	// add decrement badges
+	async decrementStockAndIncrementGiven(user_id) {
+		const { data: currentData, error: fetchError } = await this.supabase
+			.from(this.tableName)
+			.select("badge_stock, badge_given")
+			.eq("user_id", user_id) 
+			.single();
+
+		if (fetchError) {
+			throw fetchError;
+		}
+
+		const { badge_stock, badge_given } = currentData;
+
+		if (badge_stock <= 0) {
+			throw new Error("No badge stock available.");
+		}
+
+		const { data, error: updateError } = await this.supabase
+			.from(this.tableName)
+			.update({
+				badge_stock: badge_stock - 1,
+				badge_given: badge_given + 1,
+			})
+			.eq("user_id", user_id)
+			.select();
+
+		if (updateError) {
+			throw updateError;
+		}
+
+		return data;
+	}
+
 	// base sa citizen profile
 	async decrementBarangayBadges(id, fields = {}){
 		try{

@@ -56,16 +56,20 @@ class AuthenticationRepo {
 
 	async createUserAccountInvite(userDetails) {
 		const { email } = userDetails;
-		const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
-			email,
-			email_confirm: false,
-			user_metadata :{has_password :false}
-		});
+		console.log("this is email", email);
+		console.log("this is userDetails", userDetails);
 
-		if (createError) {
-			console.log("User creation error:", createError);
-			return { error: createError };
-		}
+
+		// const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
+		// 	email,
+		// 	email_confirm: false,
+		// 	user_metadata :{has_password :false}
+		// });
+
+		// if (createError) {
+		// 	console.log("User creation error:", createError);
+		// 	return { error: createError };
+		// }
 		const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email);
 		if (inviteError) {
 			console.log("Invite error:", inviteError);
@@ -111,7 +115,17 @@ class AuthenticationRepo {
 		}
 		return { success: true, data };	
 	}
-	
+	async getIdUsingEmail(email) {
+    	const {data, error} = await this.supabase.from('email_user_view').select("user_id").eq("email",email).single();
+		console.log(data,"this is email", email);
+		if(error){
+			return {error};
+		}
+		return data.user_id;
+
+	}
+
+
 	// registration magic link part
 	// async signInWithEmail() {
 	// 	const { data, error } = await supabase.auth.signInWithOtp({

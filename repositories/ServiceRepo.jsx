@@ -1,4 +1,3 @@
-import ServiceModel from "@/models/ServiceModel";
 import BaseRepo from "./BaseRepo";
 
 export default class ServiceRepo extends BaseRepo {
@@ -7,8 +6,18 @@ export default class ServiceRepo extends BaseRepo {
 		this.supabase = supabase;
 	}
 
-	async getAllServices() {
-		return await this.repo.getAll();
+	async getAll() {
+		const { data, error } = await this.supabase
+		.from(this.tableName)
+		.select()
+		.eq("is_permanently_deleted", false);
+
+		if (error) {
+			console.error("Error fetching services:", error);
+			return [];
+		}
+
+		return data.filter(item => !item.is_permanently_deleted);
 	}
 
 	async getById(id) {
@@ -16,6 +25,7 @@ export default class ServiceRepo extends BaseRepo {
 			.from(this.tableName)
 			.select()
 			.eq("id", id)
+			.eq("is_permanently_deleted", false)
 			.single();
 
 		if (error) {
@@ -29,6 +39,7 @@ export default class ServiceRepo extends BaseRepo {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select("*")
+			.eq("is_permanently_deleted", false)
 			.in("owner", ownerIds);
 
 		if (error) {
@@ -54,6 +65,7 @@ export default class ServiceRepo extends BaseRepo {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select()
+			.eq("is_permanently_deleted", false)
 			.eq("owner_id", citizen.user_id);
 
 		if (error) console.log(error);
@@ -64,6 +76,7 @@ export default class ServiceRepo extends BaseRepo {
 		const { data: services, error: servicesError } = await this.supabase
 			.from(this.tableName)
 			.select("*")
+			.eq("is_permanently_deleted", false)
 			.eq("owner", barangayUserId);
 
 		if (servicesError) {
@@ -79,6 +92,7 @@ export default class ServiceRepo extends BaseRepo {
 		const { data, error } = await this.supabase
 			.from(this.tableName)
 			.select()
+			.eq("is_permanently_deleted", false)
 			.in("owner", citizensUserId);
 		if (error) {
 			console.error(error);
@@ -87,42 +101,42 @@ export default class ServiceRepo extends BaseRepo {
 		return data;
 	}
 
-	async create(serviceData) {
-		console.log("this is repo serviceData", serviceData);
-		try {
-			const newService = new ServiceModel(
-				serviceData.title,
-				serviceData.owner,
-				serviceData.image,
-				serviceData.description,
-				serviceData.type,
-				serviceData.service_cost,
-				serviceData.agreement_fee,
-				serviceData.convenience_fee,
-				serviceData.total_price,
-				serviceData.start_date,
-				serviceData.end_date,
-				serviceData.display_badge,
-				serviceData.eligible_for_badges,
-				serviceData.allow_attach_file,
-				serviceData.status,
-			);
-			newService.category = serviceData.category;
-			// console.log("category",serviceData.category);
-			console.log("this is new Service", newService);
-			const { data, error } = await this.supabase
-				.from(this.tableName)
-				.insert([newService])
-				.select();
+	async getAllEligibleForBadgesServices(barangayUserId) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.select("*")
+			.eq("is_permanently_deleted", false)
+			.eq("owner", barangayUserId)
+			.eq("eligible_for_badges", true);
 
-			if (error) {
-				console.log("Insert error:", error);
-				return { error };
-			}
-			return data;
-		} catch (error) {
-			console.error("Error creating service model:", error);
-			return { error: error.message };
+		if (error) {
+			console.error("Error fetching eligible services:", error);
+			throw error;
 		}
+
+		return data;
+	}
+
+	async create(serviceData) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.insert([serviceData])
+			.select("*");
+
+		return { data, error };
+	}
+	async updateService(id, service_data) {
+		const { data, error } = await this.supabase
+			.from(this.tableName)
+			.update(service_data)
+			.eq("id", id)
+			.select()
+			.maybeSingle();
+
+		if (error) {
+			console.log("Supabase update error:", error);
+			throw error;
+		}
+		return data;
 	}
 }

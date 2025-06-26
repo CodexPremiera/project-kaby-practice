@@ -1,115 +1,264 @@
 "use client";
-import DatePicker from "@/components/services/DatePicker";
-import PaymentArrangement from "@/components/services/PaymentArrangement";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
+import React, { useEffect, useState, useMemo } from "react";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
-import React, { useState } from "react";
+	usePathname,
+	useRouter,
+	useSearchParams,
+} from "next/navigation";
+import { ChevronDown } from "lucide-react";
+import { RiArrowLeftLine } from "react-icons/ri";
 
-const serviceTypes = ["Barangay", "Personal", "Event"];
-const dateOptions = ["Available Date", "Not Applicable"];
+import { useMediaQuery } from "@/app/hooks/useMediaQuery";
+import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
 
-const EditService = () => {
-	const [serviceType, setServiceType] = useState("Barangay");
-	const [dateOption, setDateOption] = useState("Available Date");
+import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
+import SuccessModal from "@/components/modal/SuccessModal";
+import ErrorModal from "@/components/modal/ErrorModal";
+import ConfirmationModal from "@/components/modal/ConfirmationModal";
+import EditOverview from "@/components/services/edit/ServiceDetails/EditOverview";
+import EditPayment from "@/components/services/edit/ServiceDetails/EditPayment";
+import EditSettings from "@/components/services/edit/ServiceDetails/EditSettings";
+
+// === Tab Config ===
+const TAB_LABELS = {
+	Overview: "Overview",
+	Payment: "Payment",
+	Settings: "Settings",
+};
+
+const EditServicePage = () => {
+	// === Routing & Layout ===
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const serviceId = pathname.split("/")[2];
+	const isLargeScreen = useMediaQuery("(min-width: 1280px)");
+
+	// === UI State ===
+	const [activeTab, setActiveTab] = useState<"Overview" | "Payment" | "Settings">("Overview");
+	const [showMobileSwitcher, setShowMobileSwitcher] = useState(false);
+	const [saving, setSaving] = useState(false);
+	const [modalType, setModalType] = useState<"success" | "error" | null>(null);
+	const [showConfirmModal, setShowConfirmModal] = useState(false);
+	const [loading, setLoading] = useState(true);
+	const [message, setMessage] = useState("");
+
+	// === Service State ===
+	const [service, setService] = useState<Service | null>(null);
+	const [originalService, setOriginalService] = useState<Service | null>(null);
+
+	// === Tab Components ===
+	const TAB_COMPONENTS = {
+		Overview: <EditOverview service={service} setService={setService} />,
+		Payment: <EditPayment service={service} setService={setService} />,
+		Settings: <EditSettings service={service} setService={setService} />,
+	};
+
+	// === Effects ===
+	useEffect(() => {
+		const tabParam = searchParams.get("tab");
+		if (tabParam === "Overview" || tabParam === "Payment" || tabParam === "Settings") {
+			setActiveTab(tabParam);
+		} else {
+			setActiveTab("Overview"); // fallback
+		}
+	}, [searchParams]);
+
+	useEffect(() => {
+		async function fetchService() {
+			if (!serviceId) return;
+			setLoading(true);
+			const data = await getServiceById(serviceId);
+			if (data) {
+				setService(data);
+				setOriginalService(data);
+			}
+			setLoading(false);
+		}
+		fetchService();
+	}, [serviceId]);
+
+	// === Derived State ===
+	const hasChanges = useMemo(() => {
+		if (!service || !originalService) return false;
+		return JSON.stringify(service) !== JSON.stringify(originalService);
+	}, [service, originalService]);
+
+	// === Handlers ===
+	const handleTabChange = (tab: typeof activeTab) => {
+		setActiveTab(tab);
+		setShowMobileSwitcher(false);
+		router.replace(`${pathname}?tab=${tab}`);
+	};
+
+	const handleSubmit = async () => {
+		if (!service) return;
+		setSaving(true);
+		setModalType(null);
+
+		const { owner_name, ...serviceToUpdate } = service;
+
+		try {
+			const response = await fetch(`/api/services/${service.id}`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(serviceToUpdate),
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				setMessage(error.message);
+				setModalType("error");
+				return;
+			}
+
+			const updatedService = await response.json();
+			setOriginalService(updatedService);
+			setService(updatedService);
+			setModalType("success");
+		} catch (err) {
+			setModalType("error");
+			console.log(err)
+		} finally {
+			setSaving(false);
+			//window.location.reload();
+		}
+	};
+
+	const closeModal = () => setModalType(null);
+
+	const renderSaveButton = () => {
+		if (!["Overview", "Payment", "Settings"].includes(activeTab)) return null;
+
+		const buttonText =
+			activeTab === "Overview"
+				? "Save Overview"
+				: activeTab === "Payment"
+					? "Save Payment"
+					: "Save Settings";
+
+		return (
+			<div className="flex justify-end gap-4">
+				<button
+					onClick={() => setShowConfirmModal(true)}
+					disabled={!hasChanges || saving}
+					className={`px-6 py-2 rounded text-white ${
+						hasChanges && !saving
+							? "bg-black hover:bg-opacity-90 cursor-pointer"
+							: "bg-gray-400 cursor-not-allowed"
+					}`}
+				>
+					{saving ? "Saving..." : buttonText}
+				</button>
+			</div>
+		);
+	};
+
+	// === UI ===
 	return (
-		<div>
-			<div className="relative rounded-2xl w-full pb-20 sm:px-22 px-0 mt-8">
-				<div className="flex flex-col gap-4 bg-white  rounded-t-[20px] ">
-					<div className="flex justify-between items-center  py-3 pt-5 bg-gray-100 sm:rounded-t-[20px]">
-						<div className="text-medium font-semibold text-black px-10">
-							Edit Service
+		<div className="flex flex-col relative w-full justify-center gap-6">
+			{loading ? (
+				<div className="flex flex-col gap-4 p-8 items-center justify-center">
+					<p className="text-gray-500">Getting service details...</p>
+				</div>
+			) : (
+				<>
+					{/* Breadcrumb */}
+					<div className="flex flex-col gap-2">
+						<div className="flex flex-row items-center text-sm gap-3">
+							<div
+								className="flex flex-row items-center gap-3 hover:text-secondary cursor-pointer"
+								onClick={() => router.push(`/services/`)}
+							>
+								<RiArrowLeftLine />
+								Back to Service Desk
+							</div>
+							<div
+								className="flex flex-row items-center gap-3 hover:text-secondary cursor-pointer"
+								onClick={() => router.push(`/services/${service?.id}/request`)}
+							>
+								/ {service?.title}
+							</div>
+							<div className="text-black">/ Edit</div>
 						</div>
 					</div>
 
-					{/* Form content goes here */}
-					<div className="flex flex-col md:flex-row gap-10 py-2 px-10">
-						<div className="flex flex-col">
-							<div className="w-[350px] h-[255px] flex justify-center items-center bg-black/80 rounded-lg overflow-hidden text-white ">
-								Upload
-							</div>
-						</div>
-
-						<div className="flex flex-col w-full gap-4">
-							<div className="flex flex-col flex-1">
-								<p className="text-sm">Service Name:</p>
-								<Input placeholder="Enter name" />
-							</div>
-
-							{/* Service Type + Schedule Option + DatePickers */}
-							<div className="flex flex-col md:flex-row gap-6">
-								<div className="flex-1">
-									<p className="text-sm">Service Type:</p>
-									<DropdownMenu>
-										<DropdownMenuTrigger asChild>
-											<Button variant="gray" className="w-full justify-between">
-												{serviceType}
-											</Button>
-										</DropdownMenuTrigger>
-										<DropdownMenuContent className="bg-white">
-											{serviceTypes.map((type) => (
-												<DropdownMenuItem
-													key={type}
-													onClick={() => setServiceType(type)}
-												>
-													{type}
-												</DropdownMenuItem>
-											))}
-										</DropdownMenuContent>
-									</DropdownMenu>
-								</div>
-
-								<div className="flex-1">
-									<p className="text-sm">Schedule Option:</p>
-									<DropdownMenu>
-										<DropdownMenuTrigger asChild>
-											<Button variant="gray" className="w-full justify-between">
-												{dateOption}
-											</Button>
-										</DropdownMenuTrigger>
-										<DropdownMenuContent className="bg-white">
-											{dateOptions.map((opt) => (
-												<DropdownMenuItem
-													key={opt}
-													onClick={() => setDateOption(opt)}
-												>
-													{opt}
-												</DropdownMenuItem>
-											))}
-										</DropdownMenuContent>
-									</DropdownMenu>
-								</div>
-
-								{dateOption === "Available Date" && (
-									<div className="flex-1 flex flex-col gap-4"></div>
+					{/* Layout */}
+					<div className="main flex flex-col xl:flex-row items-start w-full max-w-[1440px] mx-auto gap-6 xl:gap-20">
+						{/* Mobile Tab Switcher */}
+						{!isLargeScreen && (
+							<div className="flex w-fit gap-4 items-center relative mx-6 px-2">
+								<h1 className="text-2xl font-semibold">{TAB_LABELS[activeTab]}</h1>
+								<button onClick={() => setShowMobileSwitcher((prev) => !prev)}>
+									<ChevronDown className="w-6 h-6" />
+								</button>
+								{showMobileSwitcher && (
+									<TabSwitcher
+										tabComponents={TAB_COMPONENTS}
+										tabLabels={TAB_LABELS}
+										defaultTab="Overview"
+										className="flex w-[200px] flex-col absolute bottom-0 left-0 translate-y-full background-1 p-4 rounded-xl drop-shadow-xl items-start gap-6 z-10"
+										activeTab={activeTab}
+										setActiveTab={handleTabChange}
+									/>
 								)}
 							</div>
+						)}
 
-							<div className="flex flex-col flex-1">
-								<p className="text-sm">Description:</p>
-								<textarea
-									placeholder="Enter service description"
-									className="border border-gray-300 rounded-md px-3 py-2 text-sm h-41 resize-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/30 focus-visible:border-ring w-full overflow-y-auto"
-								/>
+						{/* Desktop Tab Switcher */}
+						{isLargeScreen && (
+							<TabSwitcher
+								tabComponents={TAB_COMPONENTS}
+								tabLabels={TAB_LABELS}
+								defaultTab="Overview"
+								className="flex flex-col sticky top-0 gap-6 w-fit pt-4"
+								activeTab={activeTab}
+								setActiveTab={handleTabChange}
+							/>
+						)}
+
+						{/* Content + Save Button */}
+						<div className="w-full px-4 flex flex-col gap-4">
+							<div className="flex flex-col gap-6 w-full background-1 sm:rounded-3xl border border-light-color p-2 lg:p-4 xl:p-6 rounded-xl mb-4">
+								{TAB_COMPONENTS[activeTab]}
 							</div>
+							{renderSaveButton()}
 						</div>
 					</div>
 
-					{/* Payment Arrangement */}
-					<PaymentArrangement />
-					{/* Save Button */}
-					<div className="flex flex-col sm:flex-row justify-end pb-6 px-6">
-						<Button className="w-full sm:w-auto">Save</Button>
-					</div>
-				</div>
-			</div>
+					{/* Modals */}
+					{modalType === "success" && (
+						<SuccessModal
+							title="Success"
+							content="Service updated successfully!"
+							onClose={closeModal}
+						/>
+					)}
+
+					{modalType === "error" && (
+						<ErrorModal
+							title="Error"
+							content={message}
+							onClose={closeModal}
+						/>
+					)}
+
+					{showConfirmModal && (
+						<ConfirmationModal
+							title="Confirm Save"
+							content="Are you sure you want to save these changes?"
+							onConfirm={() => {
+								setShowConfirmModal(false);
+								handleSubmit();
+							}}
+							onClose={() => setShowConfirmModal(false)}
+						/>
+					)}
+				</>
+			)}
 		</div>
 	);
 };
 
-export default EditService;
+export default EditServicePage;

@@ -7,6 +7,7 @@ import ContactList from "@/components/home/contact_list/ContactList";
 import OfficialsList from "@/components/home/official_list/OfficialsList";
 import BarangayProfileTab from "@/components/profile/BarangayProfileTab";
 import TabSwitcher from "@/components/ui/tabs/TabSwitcher";
+import LoadingModal from "@/components/modal/LoadingModal";
 const TAB_LABELS = {
 	Services: "Services",
 	Posts: "Posts",
@@ -41,7 +42,9 @@ const Home = () => {
 		Posts: userRole ? (
 			<Post userRole={userRole} />
 		) : (
-			<div>Loading posts...</div>
+			<div>
+				<LoadingModal title="Loading Posts" content="Please wait..." />
+			</div>
 		),
 		Officials: <OfficialsList />,
 		Contact: <ContactList />,

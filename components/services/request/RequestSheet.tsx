@@ -1,26 +1,34 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import Details from "./Details";
 import Remarks from "./Remarks";
 import Chat from "./Chat";
 import { Button } from "@/components/ui/button";
-import {getCustomerName, ServiceRequest} from "@/lib/clients/RequestServiceClient";
-
+import { ServiceRequest } from "@/lib/clients/RequestServiceClient";
+import { X as CloseIcon } from "lucide-react";
+import SwitchTab from "@/components/ui/tabs/SwitchTab";
+import { useUser } from "@/app/context/UserContext";
+import { getPublicUrl } from "@/utils/supabase/storage";
+import Image from "next/image";
 
 interface RequestSheetProps {
 	request: ServiceRequest;
 	onClose?: () => void;
 }
 
-type TabOption = "Remarks" | "Chat";
+type TabOption = "Details" | "Remarks" | "Chat";
 
-const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
+const RequestSheet = ({ request, onClose }: RequestSheetProps) => {
 	const [activeTab, setActiveTab] = useState<TabOption>("Remarks");
+	const user = useUser();
 
-	const tabs: TabOption[] = ["Remarks", "Chat"];
+	const tabs: TabOption[] = ["Details", "Remarks", "Chat"];
 
 	const renderContent = () => {
 		switch (activeTab) {
+			case "Details":
+				return <Details request={request} />;
 			case "Remarks":
-				return <Remarks profile={request} />;
+				return <Remarks request={request} />;
 			case "Chat":
 				return <Chat request={request} />;
 			default:
@@ -29,56 +37,74 @@ const RequestSheet = ({ request, onClose }: RequestSheetProps	) => {
 	};
 
 	return (
-		<div className="flex flex-col w-full h-full">
-			<div className="flex background-1 justify-between items-center py-2">
-				<div className="font-semibold px-4">{getCustomerName(request)}</div>
-				<div className="px-2">
+		<>
+			<div className="flex flex-col py-4 fixed bottom-0 md:right-12 right-0 z-50 w-full md:w-[450px] h-full md:h-[600px] background-1 rounded-t-xl shadow-xl border border-light-color overflow-hidden">
+				<div className="flex background-1 justify-between items-center pl-5 pr-2 mb-4">
+					<div className="flex gap-3 font-semibold items-center">
+						{user.userId === request.owner_id ? (
+							<>
+								<Image
+									src={
+										request.customer_photo
+											? getPublicUrl(request.customer_photo, "profile-pictures")
+											: "/default-image.jpg"
+									}
+									alt={`${request.customer_fname ?? "User"} image`}
+									width={36}
+									height={36}
+									className="object-cover w-8 h-8 rounded-full border border-light-color"
+								/>
+								<span>
+									{request.customer_fname} {request.customer_lname}
+								</span>
+							</>
+						) : (
+							<>
+								<Image
+									src={
+										request.service_photo
+											? getPublicUrl(request.service_photo, "services-pictures")
+											: "/default-image.jpg"
+									}
+									alt={`${request.customer_fname ?? "User"} image`}
+									width={36}
+									height={36}
+									className="object-cover w-12 h-8 rounded-lg border border-light-color"
+								/>
+								<span>{request.service_title}</span>
+							</>
+						)}
+					</div>
+
 					<Button
-						variant="default"
+						variant="clear"
 						size="sm"
 						className="rounded-full"
 						onClick={onClose}
 					>
-						✕
+						<CloseIcon size={8} />
 					</Button>
 				</div>
+
+				{/* Tabs */}
+				<nav className="flex gap-4 border-b border-gray-200 text-primary-1 px-3">
+					{tabs.map((tab) => (
+						<SwitchTab
+							key={tab}
+							className="font-normal px-2"
+							active={activeTab === tab}
+							onClick={() => setActiveTab(tab)}
+						>
+							{tab}
+						</SwitchTab>
+					))}
+				</nav>
+
+				{/* Tab Content container grows to fill remaining space */}
+				<div className="flex-1 overflow-hidden">{renderContent()}</div>
 			</div>
-
-			{/* Tabs */}
-			<nav className="flex gap-6 border-b border-gray-200 pl-4 text-primary-1">
-				{tabs.map((tab) => (
-					<TabButton
-						key={tab}
-						label={tab}
-						active={activeTab === tab}
-						onClick={() => setActiveTab(tab)}
-					/>
-				))}
-			</nav>
-
-			{/* Tab Content */}
-			<div className="mt-4 px-4 h-full">{renderContent()}</div>
-		</div>
+		</>
 	);
 };
-
-interface TabButtonProps {
-	label: string;
-	active: boolean;
-	onClick: () => void;
-}
-
-const TabButton: React.FC<TabButtonProps> = ({ label, active, onClick }) => (
-	<button
-		onClick={onClick}
-		className={`text-sm px-4 py-3 border-b-2 font-medium transition-colors focus:outline-none ${
-			active
-				? "border-secondary text-secondary"
-				: "border-transparent text-gray-600 hover:text-secondary"
-		}`}
-	>
-		{label}
-	</button>
-);
 
 export default RequestSheet;

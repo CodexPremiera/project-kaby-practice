@@ -14,9 +14,6 @@ class AccessRoleRepo extends BaseRepo{
 		return data;
 	}
 
-
-
-
 	async updateRoleUsingWorkerFK(worker_id, selectedFields={}){
 		console.log("this is fields", selectedFields);
 		const { data, error } = await this.supabase

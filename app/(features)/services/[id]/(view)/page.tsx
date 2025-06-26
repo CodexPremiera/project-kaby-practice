@@ -7,21 +7,25 @@ import {
 	RiAlarmLine,
 	RiUser2Fill,
 	RiVipCrown2Fill,
+	RiArrowLeftLine,
 } from "react-icons/ri";
 import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getPublicUrl } from "@/utils/supabase/storage";
-import { getCurrentUser, getServiceById, Service } from "@/lib/clients/ViewServiceClient";
+import { getServiceById, Service } from "@/lib/clients/ViewServiceClient";
 import { format } from "date-fns";
+import { CurrentUser, getCurrentUser } from "@/lib/clients/UseAuthClient";
+import { getRequestsByCustomer } from "@/lib/clients/RequestServiceClient";
 
 const ViewService: React.FC = () => {
 	const router = useRouter();
 	const { id } = useParams<{ id: string }>();
 
 	const [service, setService] = useState<Service | null>(null);
-	const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+	const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [isInTracker, setIsInTracker] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -31,15 +35,41 @@ const ViewService: React.FC = () => {
 				return;
 			}
 
-			const [user, fetchedService] = await Promise.all([
-				getCurrentUser(),
-				getServiceById(id),
-			]);
+			setLoading(true);
+			try {
+				const [user, fetchedService] = await Promise.all([
+					getCurrentUser(),
+					getServiceById(id),
+				]);
 
-			setCurrentUserId(user);
-			setService(fetchedService);
-			setError(!fetchedService ? "Service not found" : null);
-			setLoading(false);
+				setCurrentUser(user);
+				setService(fetchedService);
+
+				if (!fetchedService) {
+					setError("Service not found");
+					setLoading(false);
+					return;
+				}
+
+				if (user) {
+					const customerRequests = await getRequestsByCustomer(user.id);
+
+					const alreadyAdded = customerRequests.some(
+						(req: any) => (req.service_id === id && !(req.status === "Canceled" || req.status === "Completed"))
+					);
+
+					setIsInTracker(alreadyAdded);
+				} else {
+					setIsInTracker(false);
+				}
+
+				setError(null);
+			} catch (err) {
+				console.error(err);
+				setError("Failed to load data");
+			} finally {
+				setLoading(false);
+			}
 		};
 
 		fetchData();
@@ -68,14 +98,24 @@ const ViewService: React.FC = () => {
 		);
 	}
 
-	// To disable Add To Tracker and Avail Services Button if the service owner is the current logged in user
-	const isOwner = currentUserId === service.owner;
+	// Disable buttons if current user is owner or has role 'barangay'
+	const isOwnerOrBarangay =
+		currentUser?.user_id === service.owner || currentUser?.role === "barangay";
 
 	return (
 		<div className="flex flex-col md:flex-row max-w-7xl mx-auto sm:h-[550px] h-full py-2">
 			<div className="w-full rounded-[10px] bg-white">
 				<div className="flex flex-row justify-between items-center border-b p-4 mb-4 border-gray-200 text-md font-semibold px-6">
-					<div>{service.title}</div>
+					<div className="flex flex-row items-center gap-3">
+						<div
+							className="flex flex-row items-center gap-3 hover:text-secondary cursor-pointer"
+							onClick={() => router.push(`/home/`)}
+						>
+							<RiArrowLeftLine />
+						</div>
+
+						{service.title}
+					</div>
 					<div className="flex items-center gap-4">
 						<div className="flex items-center gap-1">
 							<span>{service.ratings}</span>
@@ -105,10 +145,9 @@ const ViewService: React.FC = () => {
 					<div className="flex items-center gap-2">
 						<RiAlarmLine />
 						<span>
-							Scheduled:{" "}
-							{service.end_date
-								? `${format(new Date(service.start_date), "MMM d")}-${format(new Date(service.end_date), "d, yyyy")}`
-								: "Not Applicable"}
+							{service?.end_date
+								? `Scheduled: ${format(new Date(service.start_date!), "MMM d, yyyy")} - ${format(new Date(service.end_date!), "MMM d, yyyy")}`
+								: "Available Anytime"}
 						</span>
 					</div>
 				</div>
@@ -132,13 +171,13 @@ const ViewService: React.FC = () => {
 							<div className="flex-1">
 								<p className="text-sm">Service Fee:</p>
 								<p className="font-semibold text-secondary text-lg">
-									{service.service_cost}
+									₱{service.service_cost}
 								</p>
 							</div>
 							<div className="flex-1">
 								<p className="text-sm">Agreement Fee:</p>
 								<p className="font-semibold text-secondary text-lg">
-									{service.agreement_fee}
+									₱{service.agreement_fee}
 								</p>
 							</div>
 						</div>
@@ -154,28 +193,43 @@ const ViewService: React.FC = () => {
 
 				<div className="flex justify-between items-center gap-3 py-4 px-5">
 					<div className="sm:col-span-1 italic text-gray-500 text-xs">
-						Note: Adding this service to your tracker will allow you to chat
-						with the owner.
+						{isOwnerOrBarangay ? (
+							<>
+								Note: Barangay users and service owners cannot avail this
+								service.
+							</>
+						) : (
+							<>
+								Note: Adding this service to your tracker will allow you to chat
+								with the owner.
+							</>
+						)}
 					</div>
 					<div className="flex items-center gap-4">
-						<Button
-							variant="outline"
-							onClick={() => router.push(`/tracker`)}
-							disabled={isOwner}
-							title={isOwner ? "You are the service owner" : undefined}
-						>
-							Add to Tracker
-						</Button>
-						<Button
-							variant="secondary"
-							onClick={() =>
-								router.push(`/services/${service.id}/requirements`)
-							}
-							disabled={isOwner}
-							title={isOwner ? "You are the service owner" : undefined}
-						>
-							Avail Service
-						</Button>
+						{!isOwnerOrBarangay && (
+							<>
+								{isInTracker ? (
+									<Button variant="outline" onClick={() => router.push(`/tracker`)}>
+										Go to Tracker
+									</Button>
+								) : (
+									<>
+										{service?.status === "Closed" ? (
+											<span className="italic text-gray-500">This service is closed</span>
+										) : (
+											<Button
+												variant="secondary"
+												onClick={() =>
+													router.push(`/services/${service?.id}/requirements`)
+												}
+											>
+												Avail Service
+											</Button>
+										)}
+									</>
+								)}
+							</>
+						)}
 					</div>
 				</div>
 			</div>

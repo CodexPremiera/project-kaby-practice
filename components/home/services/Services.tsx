@@ -1,15 +1,35 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import ServicesList from "@/components/services/ServicesList";
+import ServicesList from "@/components/services/view/ServicesList";
 import ButtonTab from "@/components/ui/tabs/ButtonTab";
 import { useRouter, useSearchParams } from "next/navigation";
 import ServiceSearchBar from "@/components/services/ServiceSearchBar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-const serviceCategory = ["All","Environmental", "Livelihood Support", "Education", "Disaster Response", "Infrastructure", "Social Welfare", "Health & Wellness", "Beauty & Grooming", "Therapeutic & Counseling", "Coaching", "Pet Care", "Household", "Legal & Certification", "Other"];
+const serviceCategory = [
+	"All",
+	"Environmental",
+	"Livelihood Support",
+	"Education",
+	"Disaster Response",
+	"Infrastructure",
+	"Social Welfare",
+	"Health & Wellness",
+	"Beauty & Grooming",
+	"Therapeutic & Counseling",
+	"Coaching",
+	"Pet Care",
+	"Household",
+	"Legal & Certification",
+	"Other",
+];
 
 const TAB_COMPONENTS = {
 	all: [],
@@ -32,8 +52,7 @@ const Services = () => {
 	const [activeTab, setActiveTab] =
 		useState<keyof typeof TAB_COMPONENTS>(defaultTab);
 
-	const[category,setCategory] = useState<string | null>(null);
-	
+	const [category, setCategory] = useState<string | null>(null);
 
 	const changeTab = (tab: keyof typeof TAB_COMPONENTS) => {
 		setActiveTab(tab);
@@ -75,34 +94,34 @@ const Services = () => {
 					{/* Services */}
 					<ServiceSearchBar />
 
-						{/* ========== */}
-						<DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="default" size="sm">
-                                    {/* Filter	 */}
-									{category || "All"}
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="z-10 bg-white">
-								{serviceCategory.map((category) => (
+					{/* ========== */}
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant="default">
+								{/* Filter	 */}
+								{category || "Filter"}
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent className="z-10 bg-white">
+							{serviceCategory.map((category) => (
 								<DropdownMenuItem
 									key={category}
 									onClick={() => {
-									setCategory(category);
+										setCategory(category);
 									}}
 								>
 									{category}
 								</DropdownMenuItem>
-								))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-    
-						{/* ========== */}
+							))}
+						</DropdownMenuContent>
+					</DropdownMenu>
+
+					{/* ========== */}
 				</div>
 
 				{/* Results Content */}
 				<div className="w-full grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto justify-items-center py-4">
-					<ServicesList tab={activeTab} category = {category} />
+					<ServicesList tab={activeTab} category={category} />
 				</div>
 			</div>
 		</div>

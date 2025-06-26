@@ -116,7 +116,7 @@ const CitizenService: React.FC<TrackServiceProps> = ({ statusFilter }) => {
 			{/* Table */}
 			{isLargeScreen ? (
 				<TrackerTableView
-					filteredClients={filteredClients}
+					requests={filteredClients}
 					selectedItems={selectedItems}
 					setSelectedItems={setSelectedItems}
 					toggleSelection={toggleSelection}

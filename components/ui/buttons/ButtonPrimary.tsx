@@ -2,9 +2,9 @@ import clsx from "clsx";
 import React from "react";
 
 interface CustomButtonProps {
-	onClick?: () => void;
+	onClick?: (e?: any) => void | Promise<void>;
 	disabled?: boolean;
-	type?: "button" | "submit" | "reset";
+	type?: "button" | "submit" | "reset" | string;
 	children: React.ReactNode;
 	className?: string;
 }

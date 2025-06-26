@@ -69,5 +69,21 @@ class BarangayService {
 	//     const data = await this.repo.getIdUsingRole(id);
 	//     return data;
 	// }
+
+	// for badge stock - katong 1k to be given
+	async decrementBarangayBadges(id){
+		const data = await this.repo.getById(id, ["badge_stock"]);
+
+		// decrement badges
+		const updateField = {
+			badge_stock: data.badge_stock - 1
+		};
+
+		const updatedData = await this.repo.decrementBarangayBadges(id, updateField);
+
+		console.log("Give out badges ", updatedData);
+
+		return updatedData;
+	}
 }
 export default BarangayService;

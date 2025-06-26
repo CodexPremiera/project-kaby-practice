@@ -68,5 +68,25 @@ class BarangayProfileRepo extends BaseRepo {
 	}
 	// add decrement badges
 	// base sa citizen profile
+	async decrementBarangayBadges(id, fields = {}){
+		try{
+			const {data, error} = await this.supabase
+			.from(this.tableName)
+			.update(fields)
+			.eq('id', id)
+			.select();
+
+			if(error){
+				console.log("Update error: ", error);
+				throw error;
+			}
+
+			console.log("Updated data: ", data);
+			return data;
+		}catch(error){
+			console.error("Error in handling request: ", error);
+			throw error;
+		}
+	}
 }
 export default BarangayProfileRepo;

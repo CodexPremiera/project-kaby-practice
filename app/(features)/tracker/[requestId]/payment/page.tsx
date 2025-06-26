@@ -37,15 +37,15 @@ const Payment: React.FC = () => {
 	console.log(citizenId, "citizenId");
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
-		const res = await fetch("/api/tracker", {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				user_id: citizenId,
-				is_paid: true,
-				status: "Ongoing",
-			}),
-		});
+		// const res = await fetch("/api/tracker", {
+		// 	method: "PUT",
+		// 	headers: { "Content-Type": "application/json" },
+		// 	body: JSON.stringify({
+		// 		user_id: citizenId,
+		// 		is_paid: true,
+		// 		status: "Ongoing",
+		// 	}),
+		// });
 		setShowModal(true);
 	};
 
@@ -243,6 +243,7 @@ const Payment: React.FC = () => {
 										src="/assets/gcash-logo.png"
 										alt="GCash"
 										className="w-20 h-20 object-contain"
+										onClick={handleSubmit}
 									/>
 								</div>
 							</div>
@@ -272,7 +273,17 @@ const Payment: React.FC = () => {
 								<ButtonSecondary onClick={() => router.push(`/tracker`)}>
 									Go to tracker
 								</ButtonSecondary>
-								<ButtonPrimary onClick={handleSubmit}>Proceed</ButtonPrimary>
+								{/* <ButtonPrimary onClick={handleSubmit}>Proceed</ButtonPrimary> */}
+								<ButtonPrimary
+								onClick={() =>
+									// router.push(`/services/${service.id}/pay`)
+									router.push(`/services/${service.id}/pay?requestId=${request.id}`)
+
+								}
+								>
+									Proceed
+								</ButtonPrimary>
+
 							</div>
 						</div>
 					</div>
